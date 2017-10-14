@@ -1,0 +1,44 @@
+\BOOKMARK [1][-]{section.1}{Purpose}{}% 1
+\BOOKMARK [1][-]{section.2}{Scope}{}% 2
+\BOOKMARK [1][-]{section.3}{Definitions, Acronyms, Abbreviations}{}% 3
+\BOOKMARK [1][-]{section.4}{Revision history}{}% 4
+\BOOKMARK [1][-]{section.5}{Reference Documents}{}% 5
+\BOOKMARK [1][-]{section.6}{Document Structure}{}% 6
+\BOOKMARK [1][-]{section.7}{Product perspective}{}% 7
+\BOOKMARK [1][-]{section.8}{Product functions}{}% 8
+\BOOKMARK [1][-]{section.9}{User characteristics}{}% 9
+\BOOKMARK [1][-]{section.10}{Assumptions, dependencies and constraints}{}% 10
+\BOOKMARK [1][-]{section.11}{External Interface Requirements}{}% 11
+\BOOKMARK [2][-]{subsection.11.1}{User Interfaces}{section.11}% 12
+\BOOKMARK [2][-]{subsection.11.2}{Hardware Interfaces}{section.11}% 13
+\BOOKMARK [2][-]{subsection.11.3}{Software Interfaces}{section.11}% 14
+\BOOKMARK [2][-]{subsection.11.4}{Communication Interfaces}{section.11}% 15
+\BOOKMARK [1][-]{section.12}{Functional Requirements}{}% 16
+\BOOKMARK [2][-]{subsection.12.1}{Scenarios}{section.12}% 17
+\BOOKMARK [2][-]{subsection.12.2}{Use case descriptions}{section.12}% 18
+\BOOKMARK [3][-]{subsubsection.12.2.1}{Registration}{subsection.12.2}% 19
+\BOOKMARK [3][-]{subsubsection.12.2.2}{Login}{subsection.12.2}% 20
+\BOOKMARK [3][-]{subsubsection.12.2.3}{Create event}{subsection.12.2}% 21
+\BOOKMARK [3][-]{subsubsection.12.2.4}{Define preferences}{subsection.12.2}% 22
+\BOOKMARK [3][-]{subsubsection.12.2.5}{Define flexible breaks}{subsection.12.2}% 23
+\BOOKMARK [3][-]{subsubsection.12.2.6}{Arrange trips}{subsection.12.2}% 24
+\BOOKMARK [3][-]{subsubsection.12.2.7}{Locate the nearest sharing vehicle}{subsection.12.2}% 25
+\BOOKMARK [3][-]{subsubsection.12.2.8}{Add ticket possessed}{subsection.12.2}% 26
+\BOOKMARK [3][-]{subsubsection.12.2.9}{Obtain feasible travel paths}{subsection.12.2}% 27
+\BOOKMARK [3][-]{subsubsection.12.2.10}{Create personalized event profiles}{subsection.12.2}% 28
+\BOOKMARK [3][-]{subsubsection.12.2.11}{View calendar}{subsection.12.2}% 29
+\BOOKMARK [3][-]{subsubsection.12.2.12}{Choose between overlapping events}{subsection.12.2}% 30
+\BOOKMARK [2][-]{subsection.12.3}{Use case diagrams}{section.12}% 31
+\BOOKMARK [3][-]{subsubsection.12.3.1}{Visitors}{subsection.12.3}% 32
+\BOOKMARK [3][-]{subsubsection.12.3.2}{User}{subsection.12.3}% 33
+\BOOKMARK [1][-]{section.13}{Performance Requirements}{}% 34
+\BOOKMARK [1][-]{section.14}{Design Constraints}{}% 35
+\BOOKMARK [2][-]{subsection.14.1}{Standards compliance}{section.14}% 36
+\BOOKMARK [2][-]{subsection.14.2}{Hardware limitations}{section.14}% 37
+\BOOKMARK [2][-]{subsection.14.3}{Any other constraint}{section.14}% 38
+\BOOKMARK [1][-]{section.15}{Software System Attributes}{}% 39
+\BOOKMARK [2][-]{subsection.15.1}{Reliability}{section.15}% 40
+\BOOKMARK [2][-]{subsection.15.2}{Availability}{section.15}% 41
+\BOOKMARK [2][-]{subsection.15.3}{Security}{section.15}% 42
+\BOOKMARK [2][-]{subsection.15.4}{Maintainability}{section.15}% 43
+\BOOKMARK [2][-]{subsection.15.5}{Portability}{section.15}% 44

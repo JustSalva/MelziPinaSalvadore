@@ -1,0 +1,31 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors & Generic visitor\\
+		\hline
+		Entry Condition & There are no entry conditions.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The visitor clicks on the “Register” button displayed onto the homepage;
+				\item The visitor fills all the mandatory fields shown required by the system including his email, his password (twice) and a captcha;
+				\item The visitor clicks on “Confirm” button;
+				\item The visitor receives a confirmation email and clicks on the confirmation link;
+				\item The system saves all user data inserted.
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The visitor’s registration is completed successfully, so the visitor is registered as an user of Travlendar+ and he can log in into the system as a registered user. \\
+		\hline
+		Exception & If:
+				\begin{itemize}
+   					\item The visitor insert an email already connected to an existing account;
+   					\item Insert invalid infos into in some mandatory field;
+   					\item Leave empty a mandatory field;
+   				\end{itemize}
+   		Then the system will request the visitor to complete/ revise all uncorrected field, highlighting them.
+if the visitor doesn’t activate the account, after a month the activation link will expire and all user data will be deleted.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}

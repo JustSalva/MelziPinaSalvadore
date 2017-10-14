@@ -1,7 +1,20 @@
-\documentclass{report}
+\documentclass[11pt]{report}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=25mm,
+ right=25mm,
+ top=30mm,
+ bottom=25mm,
+ headsep=7mm}
+
+\interfootnotelinepenalty=10000
 
 \usepackage{graphicx}
 \usepackage{todonotes}
+\usepackage{float}
 
 
 \begin{document}
@@ -58,7 +71,7 @@
 			\subsection{Communication Interfaces}
 				\todo{TODO}
 		\section{Functional Requirements}
-			\todo{TODO}
+			\input{./3-SpecificRequirements/Functional_requirements.tex}
 		\section{Performance Requirements}
 			\todo{TODO}
 		\section{Design Constraints}

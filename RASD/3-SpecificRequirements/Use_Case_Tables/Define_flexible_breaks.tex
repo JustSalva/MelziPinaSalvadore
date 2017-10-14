@@ -1,0 +1,23 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors & User\\
+		\hline
+		Entry Condition & The user must be logged/registered in Travlendar+.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user click on the dedicated button to add breaks into the schedule;
+				\item The user inserts a flexible period of time (specifying start and end times) into which the break must happen and the minimum amount of time that must be dedicated to the break;
+				\item The user also specifies the return period of the break (daily, weekly, monthly or until a specified date) or if it refers only to certain days of the week (until a specified date);
+			\end{enumerate} \\
+		\hline
+		Exit Condition &  The system notifies the user that the info about break are correctly saved.\\
+		\hline
+		Exception & It is not possible to dedicate the required time into the schedule of one or more days because of previous added events. The system asks to the user to change the length of the break.
+\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}

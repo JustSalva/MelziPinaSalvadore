@@ -1,0 +1,23 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors & User\\
+		\hline
+		Entry Condition & The user must be logged/registered in Travlendar+.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user insert: date, starting time, eventually ending time, location, name of the event, type of event (predefined or personalized), description, starting location (previous one or others);
+				\item The user confirms the event’s creation;
+				\item The system computes the best possible path according to user’s preferences
+Describe the Exit Condition;
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The system redirects the user to the calendar and add the travel time slot required to reach that event (comprehensive of travel description). \\
+		\hline
+		Exception & The inserted event overlaps with one or more previously added events (also the travel is considered in the eventual overlap). The user is notified with a warning message and the overlapping event isn’t considered in the user travel planning schedule ( but remain saved into the calendar), the system have to choose which one of the overlapped event he want to attend.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
