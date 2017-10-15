@@ -1,15 +1,19 @@
 \subsection{Reliability}
 \label{subsect:Reliability}
-	\todo{TODO}
+	The reliability (Nb = 1 - Probability of failure) requested is related to many factors: the software developed must be stable and efficient in both server and client side, the user must satisfy the minimum requirement specifications specified in this document otherwise the reliability of the client app or the browser interface are not guaranteed; The reliability of the servers must be also taken into account and guaranteed by a proper maintenance .
+
 \subsection{Availability}
 \label{subsect:Availability}
-	\todo{TODO}
+	The system must offer an availability of 99\% (an overall 24/7 service). The remaining 1\% (at maximum) shall take into account the time spent for ordinary maintenance sessions. A backup server will be provided in order to maintain the availability of the service even after the main server failure.
 \subsection{Security}
 \label{subsect:Security}
-	\todo{TODO}
+	All user's data will be stored and encrypted using a proper hashing mechanism, even system administrators must not been able to access personal user's data. The GPS location of the users, detected by the mobile app, during the user's travels, is not to be memorized. All the connections established between users and server must use the
+HTTPS protocol. Every communication between server and client will be encrypted.
 \subsection{Maintainability}
 \label{subsect:Maintainability}
-	\todo{TODO}
+	A version control system will be used in order to manage and organize all the different code revisions. In the development phase the entire source code will be properly documented and commented in order to ease the effort of possible future developers of understanding how the system has been designed and how it works. The documentation will also facilitate the system's maintenance. 
 \subsection{Portability}
 \label{subsect:Portability}
-	\todo{TODO}
+	The web application must support main browsers (such as Google Chrome, Mozilla Firefox, Microsoft Edge, Safari) latest version.\newline 
+	The mobile application will be developed at first for Android architecture and then for iOS architecture.
+	The server-side of the application \todo{Posso dire che il server è scritto in java e che può essere eseguito su qualsiasi piattaforma con una VM?}
