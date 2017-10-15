@@ -15,13 +15,15 @@
 \usepackage{graphicx}
 \usepackage{todonotes}
 \usepackage{float}
+\usepackage{hyperref}
+\graphicspath{ {images/} }
 
 
 \begin{document}
 
 	\begin{titlepage}
 		\centering
-		\includegraphics{images/logo.png}\par\vspace{1cm}
+		\includegraphics{logo.png}\par\vspace{1cm}
 		{\scshape\LARGE Politecnico di Milano \par}
 		\vspace{1cm}
 		{\scshape\Large Software Engineering 2\par}
@@ -39,67 +41,87 @@
 	\tableofcontents{}
 
 	\chapter{INTRODUCTION}
+	\label{ch:INTRODUCTION}
+	
 		\section{Purpose}
+		\label{sect:Purpose}
 			\todo{TODO}
+			
 		\section{Scope}
+		\label{sect:Scope}
 			\todo{TODO}
 			\input{./1-Introduction/goals.tex}
 			\input{./1-Introduction/domain_properties.tex}
+			
 		\section{Definitions, Acronyms, Abbreviations}
+		\label{sect:Definitions, Acronyms, Abbreviations}
 			\todo{TODO}
+			
 		\section{Revision history}
+		\label{sect:Revision history}
 			\todo{TODO}
+			
 		\section{Reference Documents}
+		\label{sect:Documents}
 			\todo{TODO}
+			
 		\section{Document Structure}
+		\label{sect:Document Structure}
 			\todo{TODO}
+			
 	\chapter{OVERALL DESCRIPTION}
+	\label{ch:OVERALL DESCRIPTION}
+	
 		\section{Product perspective}
+		\label{sect:Product perspective}
 			\todo{TODO}
+			
 		\section{Product functions}
+		\label{sect:Product functions}
 			\todo{TODO}
 			\input{./2-OverallDescription/requirements.tex}
+			
 		\section{User characteristics}
+		\label{sect:User characteristics}
 			\todo{TODO}
+			
 		\section{Assumptions, dependencies and constraints}
+		\label{sect:Assumptions, dependencies and constraints}
 			\todo{TODO}
+			
 	\chapter{SPECIFIC REQUIREMENTS}
+	\label{ch:SPECIFIC REQUIREMENTS}
+	
 		\section{External Interface Requirements}
-			\subsection{User Interfaces}
-				\todo{TODO}
-			\subsection{Hardware Interfaces}
-				\todo{TODO}
-			\subsection{Software Interfaces}
-				\todo{TODO}
-			\subsection{Communication Interfaces}
-				\todo{TODO}
+		\label{sect:External Interface Requirements}
+			\input{./3-SpecificRequirements/External_Interface_Requirements.tex}
+			
 		\section{Functional Requirements}
+		\label{sect:Functional Requirements}
 			\input{./3-SpecificRequirements/Functional_requirements.tex}
+			
 		\section{Performance Requirements}
+		\label{sect:Performance Requirements}
 			\todo{TODO}
+			
 		\section{Design Constraints}
-			\subsection{Standards compliance}
-				\todo{TODO}
-			\subsection{Hardware limitations}
-				\todo{TODO}
-			\subsection{Any other constraint}
-				\todo{TODO}
+		\label{sect:Design Constraints}
+			\input{./3-SpecificRequirements/Design_constraints.tex}
+			
 		\section{Software System Attributes}
-			\subsection{Reliability}
-				\todo{TODO}
-			\subsection{Availability}
-				\todo{TODO}
-			\subsection{Security}
-				\todo{TODO}
-			\subsection{Maintainability}
-				\todo{TODO}
-			\subsection{Portability}
-				\todo{TODO}
+		\label{sect:Software System Attributes}
+			\input{./3-SpecificRequirements/Software_System_Attributes.tex}
+			
 	\chapter{FORMAL ANALYSIS USING ALLOY}
+	\label{ch:FORMAL ANALYSIS USING ALLOY}
 		\todo{TODO}
+		
 	\chapter{EFFORT SPENT}
+	\label{ch:EFFORT SPENT}
 		\todo{TODO}
+		
 	\chapter{REFERENCES}
+	\label{ch:REFERENCES}
 		\todo{TODO}
 
 \end{document}
