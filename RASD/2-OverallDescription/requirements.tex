@@ -100,17 +100,23 @@
 	\item[[R30]] if there is enough time for a break, the system reserves it within the specified flexible interval;
 	\item[[R31]] if there isn’t enough time into the flexible interval specified a warning is thrown.
 	\end{description}
-\item[[G11]] arrange trips:
+\item[[G11.1]] arrange trips/buy needed tickets:
 	\begin{description}
 	\item[[D14]] to use a public transport a ticket is required; 
 	\item[[D15]] a ticket may have a daily validity or a different periodicity; 
 	\item[[D16]] user can own day/week/season passes;
-	\item[[D17]] to use a sharing vehicle a payment is required;
-	\item[[D18]] a sharing vehicle must be parked in an allowed position.
 	\newline
-	\item[[R32]] the system shows to the user if he holds a ticket for a proposed travel;
-	\item[[R33]] the system allows the user to buy public transportation tickets according to proposed travel;
-	\item[[R34]] the system shows to the user where sharing vehicles are located;
+	\item[[R32]] the system allows the user to specify all the ticket he owns;
+	\item[[R33]] the system shows to the user if he holds a ticket for a proposed travel;
+	\item[[R34]] the system allows the user to buy public transportation tickets according to proposed travel;
 	\item[[R35]] the system provides information about time of departure and arrival of the proposed travels.
+	\end{description}
+\item[[G11.2]] arrange trips/find available sharing vehicle:
+	\begin{description}
+	\item[[D17]] to use a sharing vehicle a payment is required;
+	\item[[D18]] a sharing vehicle must be parked in an allowed position;
+	\newline
+	\item[[R36]] the system shows to the user where sharing vehicles are located;
+	\item[[R37]] the system provides information about travel time with shared vehicles.
 	\end{description}
 \end{description}
