@@ -2,22 +2,22 @@
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Participating actors &  User, Transport service provider\\
+		Participating actors &  User, Transport service provider.\\
 		\hline
-		Entry Condition & The user has opened the arrange trip tab and is about to travel.\\
+		Entry Condition & The user has opened the "Arrange trip" tab and is about to travel.\\
 		\hline
 		Event Flow & 
 			\begin{enumerate}
-				\item The user open the map;
-				\item The system shows in the map the nearest vehicle of car sharing according to the chosen path and the infos provided by the transport service provider;
+				\item The user opens the map;
+				\item The system shows the nearest car sharing vehicle in the map, according to the chosen path and the info provided by the transport service provider;
 			\end{enumerate} \\
 		\hline
-		Exit Condition & The user take and use the suggested vehicle. \\
+		Exit Condition & The user reaches and uses the suggested vehicle. \\
 		\hline
 		Exception &
 				\begin{itemize}
-   					\item If no near vehicle is found the system re-compute another path and show it to the user;
-   					\item if the user take a shared vehicle, but not the suggested one nothing happen, just as he has taken the suggested vehicle;
+   					\item If no vehicle is found near the user, the system re-computes another path and shows it to the user;
+   					\item If the user takes a shared vehicle, but not the suggested one, nothing happens, because the user is not obligated to take the suggested vehicle;
    				\end{itemize} \\ 
 		\hline
 		\end{tabular}
