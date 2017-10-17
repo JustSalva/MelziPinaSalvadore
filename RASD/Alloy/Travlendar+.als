@@ -37,7 +37,7 @@ abstract sig Constraint{
 	isAbout: one TravelMean,
 }
 
-sig DIstanceConstraint extends Constraint{
+sig DistanceConstraint extends Constraint{
 	maxLenght: one Int,
 	minLenght: one Int
 } {
@@ -76,6 +76,7 @@ sig TravelMean{
 	name: one StringModel,
 	//TODO forse meglio lasciare così
 }
+
 //TODO rivedere travel mean
 sig PrivateTravelMean extends TravelMean{ }
 sig SharingTravelMean extends TravelMean{ }
@@ -91,13 +92,14 @@ sig Event{
 	startingTime: one Int,
 	endingTime: one Int,
 	type: one TypeOfEvent,
-	feasiblePath: set Travel,
+	feasiblePath: some Travel,
 	departureLocation: one Location,
 	eventLocation: one Location,
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
 	startingTime < endingTime
+	
 	//TODO condizione sui luoghi di partenza e arrivo
 }
 
@@ -112,6 +114,8 @@ sig TravelComponent{
 	endingTime: one Int,
 	ticketUsed: lone Ticket, //TODO chiedo 
 	travelMeanUsed: one TravelMean,
+}{
+	departureLocation != arrivalLocation
 }
 
 sig Location{
@@ -131,9 +135,27 @@ sig Float {}
 }*/
 
 /*******************FACTS*******************/
+fact email_Is_Unique{
+	no disjoint u, u' : User | u.email = u'.email
+}
+
+fact travelsAlwaysLeadToDestination{
+	all e: Event, t: Travel  | (	t in e.feasiblePath) implies 
+			(one begin : t.composed | begin.departureLocation = e.departureLocation ) and
+			(one end : t.composed | end.arrivalLocation = e.eventLocation)
+	//condizione cui segmenti intermedi che devono essere tutti connessi
+
+	//	( #feasiblePath = 0 )<=>( departureLocation = eventLocation ) da usare per il caso degenere in cui 
+	//  partenza e arrivo sono lo stesso posto
+}
+
+
+
+
+/*******************PREDICATES*******************/
 
 
 
 pred show{ }
 
-run show for 2
+run show for 2 but 1 Event
