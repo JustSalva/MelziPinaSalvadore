@@ -1,4 +1,12 @@
 open util/integer
+/* NOTE modellazione
+1 - Period class has not been modelled cause its aim is to avoid the user to insert 
+a periodic event again and again, but for modelling issues it's the same as have many
+ different events at different times
+2- per ora non faccio enviroment condition => semmai aggiungere alla fine
+
+*/
+
 // to be tested strings sets have to be specified, so I've created an alias just for simplicity
 sig StringModel{ }
 
@@ -32,7 +40,7 @@ abstract sig Constraint{
 sig DIstanceConstraint extends Constraint{
 	maxLenght: one Int,
 	minLenght: one Int
-}{
+} {
 	maxLenght > 0
 	minLenght > 0
 	maxLenght > minLenght
@@ -44,32 +52,88 @@ sig DayPeriodConstraint extends Constraint{
 	maxHour: one Int, 
 	minHour: one Int,
 }{
-	maxHour >= 0 and maxHour =< 24
-	minHour >= 0 and minHour =< 24
+	/*maxHour >= 0 and maxHour =< 24
+	minHour >= 0 and minHour =< 24*/
 	maxHour > minHour
 }
-
-sig Ticket{
-	//TODO
+//Tickets models may be useless => check later
+abstract sig Ticket{
+	cost: one Float, 
+	distance: one Float, //Controllo
 }
+
+/*sig GeneralTicket extends Ticket{
+	lineName: one StringModel,
+}
+sig DistanceTicket extends Ticket{
+	distance: one StringModel,
+}
+sig GeneralTicket extends Ticket{
+	lineName: one StringModel,
+}*/
 
 sig TravelMean{
-	//TODO
+	name: one StringModel,
+	//TODO forse meglio lasciare così
 }
+//TODO rivedere travel mean
+sig PrivateTravelMean extends TravelMean{ }
+sig SharingTravelMean extends TravelMean{ }
+sig PublicTravelMean extends TravelMean{ }
 
 sig BreakEvent{
-	//TODO
+	flexibleStart: one Int,
+	flexibleEnd: one Int,
+	minimum: one Int, //NB minimum time required to make a break
 }
 
 sig Event{
-	//TODO
+	startingTime: one Int,
+	endingTime: one Int,
+	type: one TypeOfEvent,
+	feasiblePath: set Travel,
+	departureLocation: one Location,
+	eventLocation: one Location,
+	/* descriptive variables are omitted, the variable prevLocChoice is
+	omitted cause it's only an operative variable and it would not enrich the model */
+} {
+	startingTime < endingTime
+	//TODO condizione sui luoghi di partenza e arrivo
 }
-sig Date{ }
+
+sig Travel{
+	composed: some TravelComponent
+}
+
+sig TravelComponent{
+	departureLocation: one Location,
+	arrivalLocation: one Location,
+	startingTime: one Int,
+	endingTime: one Int,
+	ticketUsed: lone Ticket, //TODO chiedo 
+	travelMeanUsed: one TravelMean,
+}
+
+sig Location{
+	latitude: one Float,
+	longitude: one Float,
+	address: one StringModel, //Maybe Useless
+}
+
+sig Date{//Maybe not necessary 
+}
+
+//Float abstraction
+sig Float {}
 
 /*fact NoBreak{
 	all u: User  |  #u.breaks=1
 }*/
 
+/*******************FACTS*******************/
+
+
+
 pred show{ }
 
-run show for 3 
+run show for 2
