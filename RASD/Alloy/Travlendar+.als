@@ -15,26 +15,23 @@ sig User{
 	surname: one StringModel,
 	email: one Int, // in this model email is an integer to allow comparisons.
 	//TODO vedo se è il caso mettere sig email
-	preferences: one Preferences,
+	preferences: some TypeOfEvent,
 	breaks: set BreakEvent,
 	hold: set Ticket, //tickets owned
 	plan: set Event, //Planned Events
-	//TODO home and office relations?
+	preferredLocations: set Location,
 	
 }
 
-sig Preferences{
-//TODO param firstPath+ enable notification
-contain: some TypeOfEvent,
-}
-
 sig TypeOfEvent{
+	/*Param first path not modeled since it's used only 
+	to decide which path suggest first to the user*/
 	deactivate: set TravelMean,
 	isLimitedBy: set Constraint,
 }
 
 abstract sig Constraint{
-	isAbout: one TravelMean,
+	concerns: one TravelMean,
 }
 
 sig DistanceConstraint extends Constraint{
@@ -46,7 +43,7 @@ sig DistanceConstraint extends Constraint{
 	maxLenght > minLenght
 }
 
-sig DayPeriodConstraint extends Constraint{
+sig PeriodOfDayConstraint extends Constraint{
 	/*min and max Hour are modeled as integer to allow easier comparisons,
  	the concept modeled is just the same, but we avoid useless complexity*/
 	maxHour: one Int, 
@@ -59,46 +56,58 @@ sig DayPeriodConstraint extends Constraint{
 //Tickets models may be useless => check later
 abstract sig Ticket{
 	cost: one Float, 
-	distance: one Float, //Controllo
+	ticketUsed: set TravelComponent,
+	relatedTo: some PublicTravelMean,
 }
 
-/*sig GeneralTicket extends Ticket{
+sig GeneralTicket extends Ticket{
 	lineName: one StringModel,
 }
+
+sig PathTicket extends GeneralTicket{
+	departureLocation: one Location,
+	arrivalLocation: one Location,
+}
+
 sig DistanceTicket extends Ticket{
 	distance: one StringModel,
 }
-sig GeneralTicket extends Ticket{
-	lineName: one StringModel,
-}*/
 
-sig TravelMean{
+sig PeriodTicket extends Ticket{
 	name: one StringModel,
-	//TODO forse meglio lasciare così
+	startDate: one Int,
+	endDate: one Int,
+	decorator: one Ticket,
 }
 
-//TODO rivedere travel mean
+abstract sig TravelMean{
+	name: one StringModel,
+	//speed and eco consumption are useless to modelling purpose
+}
 sig PrivateTravelMean extends TravelMean{ }
 sig SharingTravelMean extends TravelMean{ }
 sig PublicTravelMean extends TravelMean{ }
 
+abstract sig GenericEvent{
+	startingTime: one Int,
+	endingTime: one Int,
+}
+
 sig BreakEvent{
-	flexibleStart: one Int,
-	flexibleEnd: one Int,
 	minimum: one Int, //NB minimum time required to make a break
 }
 
-sig Event{
-	startingTime: one Int,
-	endingTime: one Int,
+sig Event extends GenericEvent{
 	type: one TypeOfEvent,
 	feasiblePath: some Travel,
 	departureLocation: one Location,
 	eventLocation: one Location,
+	date: one Date,
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
-	startingTime < endingTime
+	startingTime <	endingTime
+	eventLocation != departureLocation
 	
 	//TODO condizione sui luoghi di partenza e arrivo
 }
@@ -113,7 +122,7 @@ sig TravelComponent{
 	startingTime: one Int,
 	endingTime: one Int,
 	ticketUsed: lone Ticket, //TODO chiedo 
-	travelMeanUsed: one TravelMean,
+	meanUsed: one TravelMean,
 }{
 	departureLocation != arrivalLocation
 }
@@ -140,13 +149,28 @@ fact email_Is_Unique{
 }
 
 fact travelsAlwaysLeadToDestination{
-	all e: Event, t: Travel  | (	t in e.feasiblePath) implies 
+	all e: Event, t: Travel  | (	t in e.feasiblePath) implies (
 			(one begin : t.composed | begin.departureLocation = e.departureLocation ) and
-			(one end : t.composed | end.arrivalLocation = e.eventLocation)
-	//condizione cui segmenti intermedi che devono essere tutti connessi
+			(one end : t.composed | end.arrivalLocation = e.eventLocation)and
+			(#t.composed>2 implies
+			(all intermediate: t.composed | ( (!(intermediate.arrivalLocation =  e.eventLocation)) implies 
+				one disjoint successive: t.composed | intermediate.arrivalLocation= successive.departureLocation)and
+				( (!(intermediate.departureLocation =  e.departureLocation)) implies 
+				one disjoint precedent: t.composed | intermediate.departureLocation= precedent.arrivalLocation)
+			))
+			)
+	//condizione cui segmenti intermedi che devono essere tutti connessi, controllare, non esatta
 
 	//	( #feasiblePath = 0 )<=>( departureLocation = eventLocation ) da usare per il caso degenere in cui 
 	//  partenza e arrivo sono lo stesso posto
+}
+
+fact noTravelsWithoutEvent{
+	no t:Travel | ( all e:Event | !( t = e.feasiblePath) )
+}
+
+fact noTravelsComponentWithoutTravel{
+	no c:TravelComponent | ( all t:Travel | !( c in t.composed) )
 }
 
 
@@ -158,4 +182,4 @@ fact travelsAlwaysLeadToDestination{
 
 pred show{ }
 
-run show for 2 but 1 Event
+run show for 3 but 1 Event
