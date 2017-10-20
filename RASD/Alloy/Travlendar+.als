@@ -13,7 +13,7 @@ sig StringModel{ }
 sig User{
 	name : one StringModel,
 	surname: one StringModel,
-	email: one Int, // in this model email is an integer to allow comparisons.
+	email: one Email, // in this model email is an integer to allow comparisons.
 	//TODO vedo se è il caso mettere sig email
 	preferences: some TypeOfEvent,
 	breaks: set BreakEvent,
@@ -102,7 +102,6 @@ sig Event extends GenericEvent{
 	feasiblePath: some Travel,
 	departureLocation: one Location,
 	eventLocation: one Location,
-	date: one Date,
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
@@ -133,11 +132,10 @@ sig Location{
 	address: one StringModel, //Maybe Useless
 }
 
-sig Date{//Maybe not necessary 
-}
-
 //Float abstraction
 sig Float {}
+
+sig Email{}
 
 /*fact NoBreak{
 	all u: User  |  #u.breaks=1
@@ -149,20 +147,23 @@ fact email_Is_Unique{
 }
 
 fact travelsAlwaysLeadToDestination{
-	all e: Event, t: Travel  | (	t in e.feasiblePath) implies (
-			(one begin : t.composed | begin.departureLocation = e.departureLocation ) and
-			(one end : t.composed | end.arrivalLocation = e.eventLocation)and
-			(#t.composed>2 implies
-			(all intermediate: t.composed | ( (!(intermediate.arrivalLocation =  e.eventLocation)) implies 
-				one disjoint successive: t.composed | intermediate.arrivalLocation= successive.departureLocation)and
-				( (!(intermediate.departureLocation =  e.departureLocation)) implies 
-				one disjoint precedent: t.composed | intermediate.departureLocation= precedent.arrivalLocation)
-			))
-			)
+	/*all e: Event, t: Travel  | (	t in e.feasiblePath) implies (
+			(one begin, end : t.composed | begin.departureLocation = e.departureLocation and end.arrivalLocation = e.eventLocation and ( #t.composed>1 implies
+			(all intermediate: t.composed | intermediate!= end and (one  generic: t.composed | generic.departureLocation= intermediate.arrivalLocation)) and
+			all segment: t.composed | segment!= end and segment!= begin and segment.departureLocation!= e.departureLocation and segment.arrivalLocation != e.eventLocation
+			)))*/
 	//condizione cui segmenti intermedi che devono essere tutti connessi, controllare, non esatta
 
 	//	( #feasiblePath = 0 )<=>( departureLocation = eventLocation ) da usare per il caso degenere in cui 
 	//  partenza e arrivo sono lo stesso posto
+}
+
+fact noTypeOfEventWithoutUser{
+	no type: TypeOfEvent | (all u: User | !(type in u.preferences))
+}
+
+fact noEventWithoutUser{
+	no event: Event | (all u: User | !(event in u.plan))
 }
 
 fact noTravelsWithoutEvent{
@@ -173,13 +174,18 @@ fact noTravelsComponentWithoutTravel{
 	no c:TravelComponent | ( all t:Travel | !( c in t.composed) )
 }
 
+//No two coinciding but distinct locations
+fact NoLocationOverlapping {
+	no disj l, l1: Location | ( l.longitude = l1.longitude and l.latitude = l1.latitude )
+}
+
 
 
 
 /*******************PREDICATES*******************/
 
-
+pred complexTravels{ all t:Travel | #t.composed>1}
 
 pred show{ }
 
-run show for 3 but 1 Event
+run complexTravels for 2 but 1 Event, 1 User
