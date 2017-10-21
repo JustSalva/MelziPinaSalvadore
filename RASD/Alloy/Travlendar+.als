@@ -1,4 +1,5 @@
 open util/integer
+open util/boolean
 /* NOTE modellazione
 1 - Period class has not been modelled cause its aim is to avoid the user to insert 
 a periodic event again and again, but for modelling issues it's the same as have many
@@ -44,23 +45,21 @@ sig DistanceConstraint extends Constraint{
 }
 
 sig PeriodOfDayConstraint extends Constraint{
-	/*min and max Hour are modeled as integer to allow easier comparisons,
+	/*min and max Hour are modeled as an integer, as all other time variables int this model to allow easier comparisons,
  	the concept modeled is just the same, but we avoid useless complexity*/
-	maxHour: one Int, 
-	minHour: one Int,
+	maxPeriodTime: one Int, 
+	minPeriodTime: one Int,
 }{
-	/*maxHour >= 0 and maxHour =< 24
-	minHour >= 0 and minHour =< 24*/
-	maxHour > minHour
+	maxPeriodTime > minPeriodTime
 }
-//Tickets models may be useless => check later
-abstract sig Ticket{
+
+sig Ticket{
 	cost: one Float, 
 	ticketUsed: set TravelComponent,
 	relatedTo: some PublicTravelMean,
 }
 
-sig GeneralTicket extends Ticket{
+/*sig GeneralTicket extends Ticket{
 	lineName: one StringModel,
 }
 
@@ -78,7 +77,7 @@ sig PeriodTicket extends Ticket{
 	startDate: one Int,
 	endDate: one Int,
 	decorator: one Ticket,
-}
+}*/
 
 abstract sig TravelMean{
 	name: one StringModel,
@@ -91,28 +90,32 @@ sig PublicTravelMean extends TravelMean{ }
 abstract sig GenericEvent{
 	startingTime: one Int,
 	endingTime: one Int,
+	isScheduled: one Bool,
 }
 
-sig BreakEvent{
+sig BreakEvent extends GenericEvent{
 	minimum: one Int, //NB minimum time required to make a break
 }
 
 sig Event extends GenericEvent{
 	type: one TypeOfEvent,
-	feasiblePath: some Travel,
+	feasiblePaths: set Travel,
 	departureLocation: one Location,
 	eventLocation: one Location,
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
 	startingTime <	endingTime
-	eventLocation != departureLocation
-	
+	 #feasiblePaths>=0
+	(eventLocation= departureLocation or isScheduled=False)implies #feasiblePaths=0 else #feasiblePaths>0
+
 	//TODO condizione sui luoghi di partenza e arrivo
 }
 
 sig Travel{
-	composed: some TravelComponent
+	composed: seq TravelComponent
+}{
+	#composed>=0
 }
 
 sig TravelComponent{
@@ -120,10 +123,11 @@ sig TravelComponent{
 	arrivalLocation: one Location,
 	startingTime: one Int,
 	endingTime: one Int,
-	ticketUsed: lone Ticket, //TODO chiedo 
 	meanUsed: one TravelMean,
+	travelDinstance: one Int, //Distances are modeled as integers (should be float)
 }{
 	departureLocation != arrivalLocation
+	endingTime > startingTime
 }
 
 sig Location{
@@ -137,25 +141,28 @@ sig Float {}
 
 sig Email{}
 
-/*fact NoBreak{
-	all u: User  |  #u.breaks=1
-}*/
-
 /*******************FACTS*******************/
 fact email_Is_Unique{
 	no disjoint u, u' : User | u.email = u'.email
 }
 
 fact travelsAlwaysLeadToDestination{
-	/*all e: Event, t: Travel  | (	t in e.feasiblePath) implies (
-			(one begin, end : t.composed | begin.departureLocation = e.departureLocation and end.arrivalLocation = e.eventLocation and ( #t.composed>1 implies
-			(all intermediate: t.composed | intermediate!= end and (one  generic: t.composed | generic.departureLocation= intermediate.arrivalLocation)) and
-			all segment: t.composed | segment!= end and segment!= begin and segment.departureLocation!= e.departureLocation and segment.arrivalLocation != e.eventLocation
-			)))*/
+	all e: Event, travel: Travel  | (	travel in e.feasiblePaths) implies 
+		(travel.composed[0].departureLocation=e.departureLocation 
+			and (one i: travel.composed.inds | 	(all i1: travel.composed.inds | ( i1<=i and travel.composed[i].arrivalLocation=e.eventLocation)))
+			/*and (all  i2: travel.composed.inds | travel.composed[i2].departureLocation!=e.eventLocation )*/
+			
+		)
 	//condizione cui segmenti intermedi che devono essere tutti connessi, controllare, non esatta
 
 	//	( #feasiblePath = 0 )<=>( departureLocation = eventLocation ) da usare per il caso degenere in cui 
 	//  partenza e arrivo sono lo stesso posto
+}
+
+fact noLoopsInTravels{
+	/*all travel: Travel | ( !(travel.composed).hasDups  and
+		all i1: travel.composed.inds | one i2: travel.composed.inds | 
+			(travel.composed[i1].arrivalLocation=travel.composed[i2].departureLocation) iff i2=i1+1)*/
 }
 
 fact noTypeOfEventWithoutUser{
@@ -167,25 +174,50 @@ fact noEventWithoutUser{
 }
 
 fact noTravelsWithoutEvent{
-	no t:Travel | ( all e:Event | !( t = e.feasiblePath) )
+	no t:Travel | ( all e:Event | !( t in (e.feasiblePaths)) )
 }
 
 fact noTravelsComponentWithoutTravel{
-	no c:TravelComponent | ( all t:Travel | !( c in t.composed) )
+	no c:TravelComponent | ( all t:Travel | !( c in univ.( t.composed)) )
 }
 
 //No two coinciding but distinct locations
-fact NoLocationOverlapping {
+fact noLocationOverlapping {
 	no disj l, l1: Location | ( l.longitude = l1.longitude and l.latitude = l1.latitude )
 }
 
+fact noScheduledEventsOverlapping{
+	all u:User | (all event1: GenericEvent |( ((event1 in u.plan) and event1.isScheduled=True)
+		implies(no disjoint event2: GenericEvent | (event2 in u.plan) and event2.isScheduled=True and 
+			(event1.startingTime>event2.endingTime or event2.startingTime>event1.endingTime)) 
+		)
+	)
+}
+
+//Forall scheduled breaks is always granted the minumum break time
+fact breakEventAlwaysGranted{
+	all u:User | (all break: BreakEvent | ( ((break in u.breaks) and break.isScheduled=True)
+		implies( no event1: u.plan | (event1.isScheduled=True and 
+		no event2: u.plan | ( event2.isScheduled=True and 
+			let precedent= event1.endingTime | let successor= event2.startingTime |
+			(precedent>break.startingTime or successor>break.endingTime) implies
+				 (successor-precedent<break.minimum)
+				 )  )   )     )      )
+}
+
+fact allTravelsRespectConstraints{
+	all event: Event | ( no component:Travel.composed.meanUsed | component in event.type.deactivate )
+}
 
 
 
 /*******************PREDICATES*******************/
 
-pred complexTravels{ all t:Travel | #t.composed>1}
+pred complexTravels{ 
+all t:Travel | #t.composed>2
+all event:Event |  event.isScheduled= True
+}
 
 pred show{ }
 
-run complexTravels for 2 but 1 Event, 1 User
+run complexTravels for 3 but 1 Event, 1 User, 1 BreakEvent
