@@ -47,10 +47,10 @@ sig DistanceConstraint extends Constraint{
 sig PeriodOfDayConstraint extends Constraint{
 	/*min and max Hour are modeled as an integer, as all other time variables int this model to allow easier comparisons,
  	the concept modeled is just the same, but we avoid useless complexity*/
-	maxPeriodTime: one Int, 
-	minPeriodTime: one Int,
+	maxTime: one Int, 
+	minTime: one Int,
 }{
-	maxPeriodTime > minPeriodTime
+	maxTime > minTime
 }
 
 sig Ticket{
@@ -124,7 +124,7 @@ sig TravelComponent{
 	startingTime: one Int,
 	endingTime: one Int,
 	meanUsed: one TravelMean,
-	travelDinstance: one Int, //Distances are modeled as integers (should be float)
+	travelDistance: one Int, //Distances are modeled as integers (should be float)
 }{
 	departureLocation != arrivalLocation
 	endingTime > startingTime
@@ -205,8 +205,29 @@ fact breakEventAlwaysGranted{
 				 )  )   )     )      )
 }
 
-fact allTravelsRespectConstraints{
-	all event: Event | ( no component:Travel.composed.meanUsed | component in event.type.deactivate )
+fact allTravelsRespectDeactivateConstraints{
+	all event: Event | let travelComponent=event.feasiblePaths.composed |
+			 ( no i: travelComponent.inds | travelComponent[i].meanUsed in event.type.deactivate )
+}
+
+
+fact allTravelsRespectDistanceConstraints{
+	all event: Event | let travelComponent=event.feasiblePaths.composed |
+			 ( no i: travelComponent.inds | 
+				all constraint: event.type.isLimitedBy & DistanceConstraint | 
+					(constraint.concerns=travelComponent[i].meanUsed) implies
+			 			(travelComponent[i].travelDistance>constraint.minLenght and travelComponent[i].travelDistance<constraint.maxLenght)
+			)
+}
+
+fact allTravelsRespectPeriodConstraints{
+	all event: Event | let travelComponent=event.feasiblePaths.composed |
+			 ( no i: travelComponent.inds | 
+				all constraint: event.type.isLimitedBy & PeriodOfDayConstraint | 
+					(constraint.concerns=travelComponent[i].meanUsed) implies(
+						(travelComponent[i].startingTime>constraint.maxTime) or
+						(travelComponent[i].endingTime<constraint.minTime) )
+			)
 }
 
 
