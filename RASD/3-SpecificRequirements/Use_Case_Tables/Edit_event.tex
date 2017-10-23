@@ -1,0 +1,25 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors &  User.\\
+		\hline
+		Entry Condition & The user must be registered and logged in Travlendar+, at least one event must have been added.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user clicks on a specific day;
+				\item The user selects the edit option on the event he wants to modify;
+				\item The system shows the fields where the user can change the information previously inserted;
+				\item The user clicks on the confirm button;
+				\item The system calculates the new travel according to the specifications of the user. The modified event remains in the schedule if it doesn’t overlap with another event.
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The system shows the new daily schedule, eventually with updated travel paths. \\
+		\hline
+		Exception & The user edits the location or the starting/ending time of the event in a way that attend to event is no more feasible. The user is notified with a warning message, the event is removed from the schedule.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Edit event use-case}
+\end{table}

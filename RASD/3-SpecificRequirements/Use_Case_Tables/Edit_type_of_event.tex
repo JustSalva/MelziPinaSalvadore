@@ -1,0 +1,26 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors &  User.\\
+		\hline
+		Entry Condition & The user must be registered and logged in Travlendar+, at least one type of event must have been added.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user selects his preferences;
+				\item The user selects the edit option on the type of event he wants to modify;
+				\item The system shows the settings associated to the type that the user wants to edit;
+				\item The user can add/edit or delete single constraints;
+				\item The user clicks on the confirm button;
+				\item If there is at least one event related to that type of event, the system requires to the user if he wants to apply changes on preferences to the existing events of that type. 
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The system saves the new set of constraints for the type of event modified and, eventually, updates the related events. \\
+		\hline
+		Exception & If an event is no more feasible the system behaves like it is an exception for edit event.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Edit type of event use-case}
+\end{table}

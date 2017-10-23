@@ -1,0 +1,24 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors &  User.\\
+		\hline
+		Entry Condition & The user must be registered and logged in Travlendar+, at least one type of event must have been added.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user selects his preferences;
+				\item The user selects the delete option on the type of event he wants to delete;
+				\item The user clicks on the confirm button;
+				\item If there is at least one event related to that type of event, the system requires to the user if he wants to maintain preferences for the existing events of that type. 
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The system delete that type of event from preferences and, eventually, remove constraints from the related events. \\
+		\hline
+		Exception & There are no exceptions.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Delete type of event use-case}
+\end{table}

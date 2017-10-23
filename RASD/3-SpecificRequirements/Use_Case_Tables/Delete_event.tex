@@ -1,0 +1,24 @@
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Participating actors &  User.\\
+		\hline
+		Entry Condition & The user must be registered and logged in Travlendar+, at least one event must have been added.\\
+		\hline
+		Event Flow & 
+			\begin{enumerate}
+				\item The user clicks on a specific day;
+				\item The user selects the delete option on the event he wants to delete;
+				\item The user clicks on the confirm button;
+				\item If an overlapping event becomes feasible, the system calculates the travel and the event is added to the schedule.
+			\end{enumerate} \\
+		\hline
+		Exit Condition & The system shows the new daily schedule, eventually with updated travel paths. \\
+		\hline
+		Exception & There are no exceptions.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Delete event use-case}
+\end{table}
