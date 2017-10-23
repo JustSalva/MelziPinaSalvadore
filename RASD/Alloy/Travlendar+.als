@@ -97,7 +97,7 @@ sig Event extends GenericEvent{
 }
 
 sig Travel{
-	composed: seq TravelComponent
+	composed: seq TravelComponent,
 }{
 	#composed>=0
 	not composed.hasDups
@@ -119,6 +119,8 @@ sig Location{
 	latitude: one Float,
 	longitude: one Float,
 	address: one StringModel, //Maybe Useless
+}{
+	not latitude=longitude
 }
 
 //Float abstraction
@@ -140,6 +142,7 @@ fact travelsAlwaysLeadToDestination{
 	all e: Event, travel: Travel  | (	travel in e.feasiblePaths) implies (let sequence=travel.composed |
 		(sequence.first.departureLocation=e.departureLocation 
 			and sequence.last.arrivalLocation= e.eventLocation
+			and ( #sequence=2 implies sequence[1].departureLocation=sequence[0].arrivalLocation)
 			and (no element: sequence.rest.butlast.elems | element.departureLocation=e.departureLocation)
 			and (no element: sequence.rest.butlast.elems | element.departureLocation=e.eventLocation)
 			and (no element: sequence.rest.butlast.elems | element.arrivalLocation=e.departureLocation)
@@ -170,24 +173,9 @@ fact noLocationOverlapping {
 	no disj l, l1: Location | ( l.longitude = l1.longitude and l.latitude = l1.latitude )
 }
 
-// returns the difference between end and start travel times
-fun travelTime [travel: Travel]: one Int{
- 	minus[sum[(univ.(travel.composed)).endingTime], sum[(univ.(travel.composed)).startingTime]]
-}
-
-//Compute the time the user has to start travelling to reach the event in time => the time when begins the travel's time slot
-fun relativeStart [event: GenericEvent, travel: Travel ]: one Int{
-	minus[event.startingTime, travelTime[travel] ]
-}
-
 //events and their travels times doesn't overlap (if they are scheduled) with other events.
 fact noScheduledEventsOverlapping{
-	all u:User | (all event1: GenericEvent |( ((event1 in u.plan) and event1.isScheduled=True)
-		implies(no disjoint event2: GenericEvent | (event2 in u.plan) and event2.isScheduled=True and ( 
-			all travel1: Travel | (travel1 in event1.feasiblePaths) and ( all travel2: Travel | (travel2 in event2.feasiblePaths) and
-			(relativeStart[event1, travel1]>event2.endingTime or relativeStart[event2, travel2]>event1.endingTime)) )  )
-		)
-	)
+	all u:User |(all e1:u.plan | (no e2:u.plan|(e1.isScheduled=True and e2.isScheduled=True and((e1.startingTime>e2.startingTime and e1.startingTime<e2.endingTime)or(e1.endingTime>e2.startingTime and e1.endingTime<e2.endingTime)))))
 }
 
 //Forall scheduled breaks is always granted the minumum break time
@@ -195,7 +183,7 @@ fact breakEventAlwaysGranted{
 	all u:User | (all break: BreakEvent | ( ((break in u.breaks) and break.isScheduled=True)
 		implies( no event1: u.plan | (event1.isScheduled=True and 
 		no event2: u.plan | ( event2.isScheduled=True and 
-			let precedent= event1.endingTime |  all travel2: Travel | (travel2 in event2.feasiblePaths) and let successor= relativeStart[event2, travel2] | 
+			let precedent= event1.endingTime |  all travel2: Travel | (travel2 in event2.feasiblePaths) and let successor=event2.startingTime | 
 			(precedent>break.startingTime or successor>break.endingTime) implies
 				 (minus[successor,precedent] < break.minimum)
 				 )  )   )     )      )
@@ -209,7 +197,7 @@ fact allTravelsRespectDeactivateConstraints{
 
 fact allTravelsRespectDistanceConstraints{
 	all event: Event | let travelComponent=event.feasiblePaths.composed |
-			 ( no i: travelComponent.inds | 
+			 ( all i: travelComponent.inds | 
 				all constraint: event.type.isLimitedBy & DistanceConstraint | 
 					(constraint.concerns=travelComponent[i].meanUsed) implies
 			 			(travelComponent[i].travelDistance>constraint.minLenght and travelComponent[i].travelDistance<constraint.maxLenght)
@@ -221,24 +209,62 @@ fact allTravelsRespectPeriodConstraints{
 			 ( no i: travelComponent.inds | 
 				all constraint: event.type.isLimitedBy & PeriodOfDayConstraint | 
 					(constraint.concerns=travelComponent[i].meanUsed) implies(
-						(travelComponent[i].startingTime>constraint.maxTime) or
-						(travelComponent[i].endingTime<constraint.minTime) )
+						(travelComponent[i].endingTime>constraint.maxTime) or
+						(travelComponent[i].startingTime<constraint.minTime) )
 			)
 }
 
+/*******************ASSERTIONS*******************/
 
 
 /*******************PREDICATES*******************/
 
-pred complexTravels{ 
-# Event=1
-# BreakEvent=0
-#Travel=1
-all t:Travel | #t.composed=3
-all event:Event |  event.isScheduled= True
-all event:BreakEvent |  event.isScheduled= True
+pred addEvent[u:User, e:Event, u':User]{
+	//preCondition
+	not(e in u.plan)
+	//postCondition
+	u.name=u'.name
+	u.surname=u'.surname
+	//u.email=u'.email
+	u.preferences=u'.preferences
+	u.breaks=u'.breaks
+	u.hold=u'.hold
+	(u.plan + e)=u'.plan
+	u.preferredLocations=u'.preferredLocations
+	
 }
 
+pred changeTravel[e:Event,travel:Travel, e':Event]{
+	//precondition
+	not ( travel in e.feasiblePaths)
+	//postconditions
+	e.type = e'.type
+	(e.feasiblePaths +travel) = e'.feasiblePaths
+	e.departureLocation = e'.departureLocation
+	e.eventLocation = e'.eventLocation
+}
+
+pred changeEventPreferences[event:Event, type2:TypeOfEvent, event':Event ]{
+	//precondition
+	event.type != type2
+	//postconditions
+	event'.type =type2
+	(event'.feasiblePaths & event.feasiblePaths) = none // if preferences are totally change I expect others paths
+	event'.departureLocation = event.departureLocation
+	event'.eventLocation = event.eventLocation
+}
+run addEvent
+run changeTravel
+run changeEventPreferences
+
+pred complexTravels{ 
+# Event=2
+# BreakEvent=2
+#Travel>4
+#TravelComponent>3
+#TravelMean>1
+}
 pred show{ }
 
-run complexTravels for 3 but 1 User, 1 BreakEvent, 5 Location
+run complexTravels for 5 but 1 User
+

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="univ"/>
+   <type name="boolean/False"/>
+   <type name="boolean/True"/>
+   <type name="seq/Int"/>
+</node>
+
+<node color="Blue">
+   <type name="TravelComponent"/>
+</node>
+
+<node color="Gray">
+   <type name="User"/>
+</node>
+
+<node color="Green">
+   <type name="Constraint"/>
+   <type name="Travel"/>
+</node>
+
+<node color="Red">
+   <type name="TypeOfEvent"/>
+</node>
+
+<node color="White">
+   <type name="TravelMean"/>
+</node>
+
+<node color="Yellow">
+   <type name="GenericEvent"/>
+   <type name="Ticket"/>
+</node>
+
+<node shape="Dbl Octagon">
+   <type name="SharingTravelMean"/>
+</node>
+
+<node shape="Diamond">
+   <type name="PeriodOfDayConstraint"/>
+</node>
+
+<node shape="Egg">
+   <type name="Event"/>
+</node>
+
+<node shape="Ellipse">
+   <type name="BreakEvent"/>
+</node>
+
+<node shape="Hexagon">
+   <type name="PrivateTravelMean"/>
+</node>
+
+<node shape="Octagon">
+   <type name="PublicTravelMean"/>
+</node>
+
+<node shape="Parallelogram">
+   <type name="DistanceConstraint"/>
+</node>
+
+<node visible="no">
+   <type name="boolean/Bool"/>
+</node>
+
+<node visible="no" color="Black">
+   <type name="StringModel"/>
+</node>
+
+<node visible="no" numberatoms="no">
+   <type name="String"/>
+</node>
+
+<node visible="no" shape="Box" color="Blue">
+   <type name="Email"/>
+</node>
+
+<node visible="no" shape="Inv Triangle" color="Red">
+   <type name="Float"/>
+</node>
+
+<node visible="yes" hideunconnected="yes" shape="Lined Diamond" color="Gray">
+   <type name="Location"/>
+</node>
+
+<edge attribute="no">
+   <relation name="arrivalLocation"> <type name="TravelComponent"/> <type name="Location"/> </relation>
+</edge>
+
+<edge color="Gray" constraint="no">
+   <relation name="composed"> <type name="Travel"/> <type name="seq/Int"/> <type name="TravelComponent"/> </relation>
+</edge>
+
+<edge color="Gray" visible="no" attribute="yes" constraint="no">
+   <relation name="isScheduled"> <type name="GenericEvent"/> <type name="boolean/Bool"/> </relation>
+</edge>
+
+<edge visible="no">
+   <relation name="$complexTravels_e"> <type name="Travel"/> <type name="Event"/> </relation>
+   <relation name="$complexTravels_t"> <type name="TravelComponent"/> <type name="Travel"/> </relation>
+   <relation name="$complexTravels_u"> <type name="TypeOfEvent"/> <type name="User"/> </relation>
+   <relation name="$complexTravels_u&apos;"> <type name="Event"/> <type name="User"/> </relation>
+   <relation name="endingTime"> <type name="TravelComponent"/> <type name="Int"/> </relation>
+</edge>
+
+<edge visible="no" attribute="no">
+   <relation name="startingTime"> <type name="TravelComponent"/> <type name="Int"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes">
+   <relation name="address"> <type name="Location"/> <type name="StringModel"/> </relation>
+   <relation name="cost"> <type name="Ticket"/> <type name="Float"/> </relation>
+   <relation name="email"> <type name="User"/> <type name="Email"/> </relation>
+   <relation name="endingTime"> <type name="GenericEvent"/> <type name="Int"/> </relation>
+   <relation name="latitude"> <type name="Location"/> <type name="Float"/> </relation>
+   <relation name="longitude"> <type name="Location"/> <type name="Float"/> </relation>
+   <relation name="maxLenght"> <type name="DistanceConstraint"/> <type name="Int"/> </relation>
+   <relation name="maxTime"> <type name="PeriodOfDayConstraint"/> <type name="Int"/> </relation>
+   <relation name="minimum"> <type name="BreakEvent"/> <type name="Int"/> </relation>
+   <relation name="minLenght"> <type name="DistanceConstraint"/> <type name="Int"/> </relation>
+   <relation name="minTime"> <type name="PeriodOfDayConstraint"/> <type name="Int"/> </relation>
+   <relation name="name"> <type name="TravelMean"/> <type name="StringModel"/> </relation>
+   <relation name="name"> <type name="User"/> <type name="StringModel"/> </relation>
+   <relation name="startingTime"> <type name="GenericEvent"/> <type name="Int"/> </relation>
+   <relation name="surname"> <type name="User"/> <type name="StringModel"/> </relation>
+   <relation name="travelDistance"> <type name="TravelComponent"/> <type name="Int"/> </relation>
+</edge>
+
+<edge visible="no" merge="no" attribute="no" constraint="no">
+   <relation name="travelTime"> <type name="Travel"/> <type name="Int"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
