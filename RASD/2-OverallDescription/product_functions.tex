@@ -1,20 +1,34 @@
 In order to better define clear boundaries for developing the system, functions that  will or will not be offered by the system will be explained in this section.
 
 \subsection{Registration and login}
-The system will allow visitors to register and perform a login in order to utilize the system functionalities.
+The system will allow visitors to register and perform a login in order to utilize the system functionalities. 
+\newline
+The system will not allow visitors not yet signed in to utilize any functionality of the system, except for registration and login.
 
 \subsection{Event insertion}
-The system will allow the user to insert events, letting him define details and constraints on them.
+The system will allow the user to insert events, letting him define details (like, for example, type of event, locations, departure and ending time), and constraints on them.
+\newline
+The system will allow the user to create personal types of event.
+A type of event can indicate constraints and preferences specifically related to it.
 
 \subsection{Schedule management}
-The system will automatically manage the user's schedule respecting all his preferences and constraints added. 
+The system will automatically manage the user's schedule respecting all his preferences and constraints added.
 \newline
-Events inserted by the user must always be visible, even those that are not inserted in the regular schedule because of overlaps, allowing the user to view and manage them. Under no circumstances an event can be deleted, except for a direct order of the user.
+Events inserted by the user must always be visible, even those that do not show in the regular schedule because of overlaps, allowing the user to view and manage them.
 \newline
-If an event is modified or deleted, the system must adjourn the schedule to assure that efficiency is maintained.
+If an event is added, modified or deleted, the system must update the schedule to assure that maximum efficiency is maintained.
+
+\subsection{Trips arrangement}
+The system will let the user check his travel arrangements.
+\newline
+For each trip the system will show the tickets needed to travel the selected path, specifying if the user needs to buy them. In that case, the option to acquire them on the website of the selected travel mean provider will be presented.
 
 \subsection{Travel means}
-The system allows the user to apply constraints on travel means.
+The system will allow the user to apply constraints on travel means.
 \newline
-If a ticket to use a travel mean is needed, the system redirects the user the travel means provider's website.
-\todo{TODO}
+Travel means not desired by the user can be ignored during the definitions of a type of event.
+
+\subsection{Sharing vehicle location}
+The system will help the user locating available sharing vehicles, such as bikes and cars.
+\newline
+The system will not manage the vehicle sharing functionalities, such as reservations and payments. To perform these actions, the external application of the desired service is required.
