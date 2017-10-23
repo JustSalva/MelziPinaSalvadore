@@ -52,32 +52,12 @@ sig PeriodOfDayConstraint extends Constraint{
 }{
 	maxTime > minTime
 }
-
+/* In this model we keep only a generic ticket*/
 sig Ticket{
 	cost: one Float, 
 	ticketUsed: set TravelComponent,
 	relatedTo: some PublicTravelMean,
 }
-
-/*sig GeneralTicket extends Ticket{
-	lineName: one StringModel,
-}
-
-sig PathTicket extends GeneralTicket{
-	departureLocation: one Location,
-	arrivalLocation: one Location,
-}
-
-sig DistanceTicket extends Ticket{
-	distance: one StringModel,
-}
-
-sig PeriodTicket extends Ticket{
-	name: one StringModel,
-	startDate: one Int,
-	endDate: one Int,
-	decorator: one Ticket,
-}*/
 
 abstract sig TravelMean{
 	name: one StringModel,
@@ -91,10 +71,15 @@ abstract sig GenericEvent{
 	startingTime: one Int,
 	endingTime: one Int,
 	isScheduled: one Bool,
+}{
+	startingTime <	endingTime
 }
 
 sig BreakEvent extends GenericEvent{
 	minimum: one Int, //NB minimum time required to make a break
+}{
+	minus[endingTime, startingTime]>=minimum
+	minimum>0
 }
 
 sig Event extends GenericEvent{
@@ -105,7 +90,6 @@ sig Event extends GenericEvent{
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
-	startingTime <	endingTime
 	 #feasiblePaths>=0
 	(eventLocation= departureLocation or isScheduled=False)implies #feasiblePaths=0 else #feasiblePaths>0
 
@@ -116,6 +100,7 @@ sig Travel{
 	composed: seq TravelComponent
 }{
 	#composed>=0
+	not composed.hasDups
 }
 
 sig TravelComponent{
@@ -146,23 +131,22 @@ fact email_Is_Unique{
 	no disjoint u, u' : User | u.email = u'.email
 }
 
-fact travelsAlwaysLeadToDestination{
-	all e: Event, travel: Travel  | (	travel in e.feasiblePaths) implies 
-		(travel.composed[0].departureLocation=e.departureLocation 
-			and (one i: travel.composed.inds | 	(all i1: travel.composed.inds | ( i1<=i and travel.composed[i].arrivalLocation=e.eventLocation)))
-			/*and (all  i2: travel.composed.inds | travel.composed[i2].departureLocation!=e.eventLocation )*/
-			
-		)
-	//condizione cui segmenti intermedi che devono essere tutti connessi, controllare, non esatta
-
-	//	( #feasiblePath = 0 )<=>( departureLocation = eventLocation ) da usare per il caso degenere in cui 
-	//  partenza e arrivo sono lo stesso posto
+fact location_Is_Unique{
+	no disjoint l, l' : Location | l.latitude=l'.latitude and l.longitude=l'.longitude and l.address=l'.address
 }
 
-fact noLoopsInTravels{
-	/*all travel: Travel | ( !(travel.composed).hasDups  and
-		all i1: travel.composed.inds | one i2: travel.composed.inds | 
-			(travel.composed[i1].arrivalLocation=travel.composed[i2].departureLocation) iff i2=i1+1)*/
+//All travels must have a connected path and lead to the destination
+fact travelsAlwaysLeadToDestination{
+	all e: Event, travel: Travel  | (	travel in e.feasiblePaths) implies (let sequence=travel.composed |
+		(sequence.first.departureLocation=e.departureLocation 
+			and sequence.last.arrivalLocation= e.eventLocation
+			and (no element: sequence.rest.butlast.elems | element.departureLocation=e.departureLocation)
+			and (no element: sequence.rest.butlast.elems | element.departureLocation=e.eventLocation)
+			and (no element: sequence.rest.butlast.elems | element.arrivalLocation=e.departureLocation)
+			and (no element: sequence.rest.butlast.elems | element.arrivalLocation=e.eventLocation)
+			and (all element: sequence.rest.butlast.elems | let i=sequence.indsOf[element]|
+				 (sequence[minus[i,1]].arrivalLocation=element.departureLocation)and (sequence[add[i,1]].departureLocation=element.arrivalLocation))
+		 )  )
 }
 
 fact noTypeOfEventWithoutUser{
@@ -186,10 +170,22 @@ fact noLocationOverlapping {
 	no disj l, l1: Location | ( l.longitude = l1.longitude and l.latitude = l1.latitude )
 }
 
+// returns the difference between end and start travel times
+fun travelTime [travel: Travel]: one Int{
+ 	minus[sum[(univ.(travel.composed)).endingTime], sum[(univ.(travel.composed)).startingTime]]
+}
+
+//Compute the time the user has to start travelling to reach the event in time => the time when begins the travel's time slot
+fun relativeStart [event: GenericEvent, travel: Travel ]: one Int{
+	minus[event.startingTime, travelTime[travel] ]
+}
+
+//events and their travels times doesn't overlap (if they are scheduled) with other events.
 fact noScheduledEventsOverlapping{
 	all u:User | (all event1: GenericEvent |( ((event1 in u.plan) and event1.isScheduled=True)
-		implies(no disjoint event2: GenericEvent | (event2 in u.plan) and event2.isScheduled=True and 
-			(event1.startingTime>event2.endingTime or event2.startingTime>event1.endingTime)) 
+		implies(no disjoint event2: GenericEvent | (event2 in u.plan) and event2.isScheduled=True and ( 
+			all travel1: Travel | (travel1 in event1.feasiblePaths) and ( all travel2: Travel | (travel2 in event2.feasiblePaths) and
+			(relativeStart[event1, travel1]>event2.endingTime or relativeStart[event2, travel2]>event1.endingTime)) )  )
 		)
 	)
 }
@@ -199,9 +195,9 @@ fact breakEventAlwaysGranted{
 	all u:User | (all break: BreakEvent | ( ((break in u.breaks) and break.isScheduled=True)
 		implies( no event1: u.plan | (event1.isScheduled=True and 
 		no event2: u.plan | ( event2.isScheduled=True and 
-			let precedent= event1.endingTime | let successor= event2.startingTime |
+			let precedent= event1.endingTime |  all travel2: Travel | (travel2 in event2.feasiblePaths) and let successor= relativeStart[event2, travel2] | 
 			(precedent>break.startingTime or successor>break.endingTime) implies
-				 (successor-precedent<break.minimum)
+				 (minus[successor,precedent] < break.minimum)
 				 )  )   )     )      )
 }
 
@@ -235,10 +231,14 @@ fact allTravelsRespectPeriodConstraints{
 /*******************PREDICATES*******************/
 
 pred complexTravels{ 
-all t:Travel | #t.composed>2
+# Event=1
+# BreakEvent=0
+#Travel=1
+all t:Travel | #t.composed=3
 all event:Event |  event.isScheduled= True
+all event:BreakEvent |  event.isScheduled= True
 }
 
 pred show{ }
 
-run complexTravels for 3 but 1 Event, 1 User, 1 BreakEvent
+run complexTravels for 3 but 1 User, 1 BreakEvent, 5 Location
