@@ -1,9 +1,18 @@
 \subsection{Standards compliance}
 \label{subsect:Standards compliance}
-	\todo{TODO}
+	The system should produce a log containing all the action performed in the system, in order to able to perform a recovery in case of failures.
+	\newline
+	This recovery functionality is not implemented in this version of the system. 
 \subsection{Hardware limitations}
 \label{subsect:Hardware limitations}
-	\todo{TODO}
+	Since the application is primarily designed to be used on mobile phones while been away from home, low resolution and limited display size will be huge design constraints.
+	\newline
+	This also means that developing an effective user interface that can effectively show quickly and efficiently all the information necessary to the user will be a challenging task.
+	\newline
+	Also depending on the phone hardware, low processing power and small amount of memory are a matter of concern.
+
 \subsection{Any other constraint}
 \label{subsect:Any other constraint}
-	\todo{TODO}
+	Travlendar+ is dependent on external services to locate sharing vehicles, acquire tickets and produce travel paths. Because of this reason, it is critical to perform an update every time that one of these external functionalities changes, with the intent to avoid failures of the system.
+	\newline
+	Possible malfunctions of these external services should be accounted for during the development of Travlendar+, making sure that the system doesn't get hung up or crashes while trying to reach them.
