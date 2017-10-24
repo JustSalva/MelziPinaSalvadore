@@ -20,7 +20,15 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{listings}
 \usepackage{alloy-style}
+\usepackage{fancyhdr}
+
 \graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
 
 \begin{document}
 
