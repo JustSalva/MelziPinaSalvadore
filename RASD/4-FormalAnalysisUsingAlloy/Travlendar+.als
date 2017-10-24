@@ -1,21 +1,20 @@
 open util/integer
 open util/boolean
-/* NOTE modellazione
+/* Modeling Notes
 1 - Period class has not been modelled cause its aim is to avoid the user to insert 
 a periodic event again and again, but for modelling issues it's the same as have many
  different events at different times
-2- per ora non faccio enviroment condition => semmai aggiungere alla fine
-
+2- Enviroment conditions are not modeled 
+3- The time is modeled as incremental integers that rapresent consecutive points in the timeline, even across multiple days
 */
 
-// to be tested strings sets have to be specified, so I've created an alias just for simplicity
+// Strings sets have to be specified, so I've created an alias just for simplicity
 sig StringModel{ }
 
 sig User{
 	name : one StringModel,
 	surname: one StringModel,
-	email: one Email, // in this model email is an integer to allow comparisons.
-	//TODO vedo se è il caso mettere sig email
+	email: one Email,
 	preferences: some TypeOfEvent,
 	breaks: set BreakEvent,
 	hold: set Ticket, //tickets owned
@@ -26,7 +25,7 @@ sig User{
 
 sig TypeOfEvent{
 	/*Param first path not modeled since it's used only 
-	to decide which path suggest first to the user*/
+	to decide which path the system suggests first to the user*/
 	deactivate: set TravelMean,
 	isLimitedBy: set Constraint,
 }
@@ -45,13 +44,15 @@ sig DistanceConstraint extends Constraint{
 }
 
 sig PeriodOfDayConstraint extends Constraint{
-	/*min and max Hour are modeled as an integer, as all other time variables int this model to allow easier comparisons,
- 	the concept modeled is just the same, but we avoid useless complexity*/
+	/*Min and max Hour are modeled as an integer, as all other time variables int this model to allow easier comparisons,
+ 	the concept modeled is just the same, but we avoid useless complexity.
+	Doing so min and max hour becomes min and max time*/
 	maxTime: one Int, 
 	minTime: one Int,
 }{
 	maxTime > minTime
 }
+
 /* In this model we keep only a generic ticket*/
 sig Ticket{
 	cost: one Float, 
@@ -76,7 +77,7 @@ abstract sig GenericEvent{
 }
 
 sig BreakEvent extends GenericEvent{
-	minimum: one Int, //NB minimum time required to make a break
+	minimum: one Int, //NB = minimum time required to make a break
 }{
 	minus[endingTime, startingTime]>=minimum
 	minimum>0
@@ -87,13 +88,12 @@ sig Event extends GenericEvent{
 	feasiblePaths: set Travel,
 	departureLocation: one Location,
 	eventLocation: one Location,
+	travelTime: one Int, //Rapresent the minimum travel time reqired
 	/* descriptive variables are omitted, the variable prevLocChoice is
 	omitted cause it's only an operative variable and it would not enrich the model */
 } {
 	 #feasiblePaths>=0
-	(eventLocation= departureLocation or isScheduled=False)implies #feasiblePaths=0 else #feasiblePaths>0
-
-	//TODO condizione sui luoghi di partenza e arrivo
+	(eventLocation= departureLocation or isScheduled=False)implies (#feasiblePaths=0 and travelTime=0 )else (#feasiblePaths>0 and travelTime>0) 
 }
 
 sig Travel{
@@ -118,7 +118,7 @@ sig TravelComponent{
 sig Location{
 	latitude: one Float,
 	longitude: one Float,
-	address: one StringModel, //Maybe Useless
+	address: one StringModel,
 }{
 	not latitude=longitude
 }
@@ -128,11 +128,14 @@ sig Float {}
 
 sig Email{}
 
-/*******************FACTS*******************/
+/******************FACTS******************/
+
+// any user's email must be univocal
 fact email_Is_Unique{
 	no disjoint u, u' : User | u.email = u'.email
 }
 
+// There must not exists only a location corresponding to a latitude and a longitude
 fact location_Is_Unique{
 	no disjoint l, l' : Location | l.latitude=l'.latitude and l.longitude=l'.longitude and l.address=l'.address
 }
@@ -148,8 +151,13 @@ fact travelsAlwaysLeadToDestination{
 			and (no element: sequence.rest.butlast.elems | element.arrivalLocation=e.departureLocation)
 			and (no element: sequence.rest.butlast.elems | element.arrivalLocation=e.eventLocation)
 			and (all element: sequence.rest.butlast.elems | let i=sequence.indsOf[element]|
-				 (sequence[minus[i,1]].arrivalLocation=element.departureLocation)and (sequence[add[i,1]].departureLocation=element.arrivalLocation))
+				 (sequence[minus[i,1]].arrivalLocation=element.departureLocation)and (sequence[plus[i,1]].departureLocation=element.arrivalLocation))
 		 )  )
+}
+
+// Into an event two proposed paths must not be identical
+fact noTravelsWithSameTravelComponents{
+	all e: Event, travel: e.feasiblePaths  | (no duplicate:(e.feasiblePaths-travel) | (travel.composed = duplicate.composed) )  
 }
 
 fact noTypeOfEventWithoutUser{
@@ -160,6 +168,10 @@ fact noEventWithoutUser{
 	no event: Event | (all u: User | !(event in u.plan))
 }
 
+fact noBreakEventWithoutUser{
+	no break: BreakEvent | (all u: User | !(break in u.breaks))
+}
+
 fact noTravelsWithoutEvent{
 	no t:Travel | ( all e:Event | !( t in (e.feasiblePaths)) )
 }
@@ -167,15 +179,23 @@ fact noTravelsWithoutEvent{
 fact noTravelsComponentWithoutTravel{
 	no c:TravelComponent | ( all t:Travel | !( c in univ.( t.composed)) )
 }
+fact noConstraintWithoutTypeOfEvent{
+	no c:Constraint | ( all t:TypeOfEvent | !( c in  t.isLimitedBy) )
+}
 
 //No two coinciding but distinct locations
 fact noLocationOverlapping {
 	no disj l, l1: Location | ( l.longitude = l1.longitude and l.latitude = l1.latitude )
 }
 
+//returns the maximum time at which the user must start travelling
+fun relativeStart[e:Event]: one Int{
+	minus[e.startingTime, e.travelTime]
+}
 //events and their travels times doesn't overlap (if they are scheduled) with other events.
 fact noScheduledEventsOverlapping{
-	all u:User |(all e1:u.plan | (no e2:u.plan|(e1.isScheduled=True and e2.isScheduled=True and((e1.startingTime>e2.startingTime and e1.startingTime<e2.endingTime)or(e1.endingTime>e2.startingTime and e1.endingTime<e2.endingTime)))))
+	all u:User |(all e1:u.plan | (no e2:(u.plan-e1)|(e1.isScheduled=True and e2.isScheduled=True and
+		((relativeStart[e1]>=relativeStart[e2] and relativeStart[e1]=<e2.endingTime)or(e1.endingTime>=relativeStart[e2] and e1.endingTime<=e2.endingTime)))))
 }
 
 //Forall scheduled breaks is always granted the minumum break time
@@ -190,34 +210,30 @@ fact breakEventAlwaysGranted{
 }
 
 fact allTravelsRespectDeactivateConstraints{
-	all event: Event | let travelComponent=event.feasiblePaths.composed |
-			 ( no i: travelComponent.inds | travelComponent[i].meanUsed in event.type.deactivate )
+	all event: Event | ( no travelComponent:event.feasiblePaths.composed.elems|( travelComponent.meanUsed in event.type.deactivate ) )
 }
 
 
 fact allTravelsRespectDistanceConstraints{
-	all event: Event | let travelComponent=event.feasiblePaths.composed |
-			 ( all i: travelComponent.inds | 
-				all constraint: event.type.isLimitedBy & DistanceConstraint | 
-					(constraint.concerns=travelComponent[i].meanUsed) implies
-			 			(travelComponent[i].travelDistance>constraint.minLenght and travelComponent[i].travelDistance<constraint.maxLenght)
-			)
+	all event: Event | all travelComponent:event.feasiblePaths.composed.elems |
+			 ( all constraint: (event.type.isLimitedBy & DistanceConstraint) | (
+					(constraint.concerns=travelComponent.meanUsed) implies
+			 			(travelComponent.travelDistance>=constraint.minLenght and travelComponent.travelDistance<=constraint.maxLenght)
+			))
 }
 
 fact allTravelsRespectPeriodConstraints{
-	all event: Event | let travelComponent=event.feasiblePaths.composed |
-			 ( no i: travelComponent.inds | 
-				all constraint: event.type.isLimitedBy & PeriodOfDayConstraint | 
-					(constraint.concerns=travelComponent[i].meanUsed) implies(
-						(travelComponent[i].endingTime>constraint.maxTime) or
-						(travelComponent[i].startingTime<constraint.minTime) )
+	all event: Event | all travelComponent:event.feasiblePaths.composed.elems |
+			 (all constraint: (event.type.isLimitedBy & PeriodOfDayConstraint) | (
+					(constraint.concerns=travelComponent.meanUsed) implies(
+						(travelComponent.endingTime<=constraint.maxTime) and
+						(travelComponent.startingTime>=constraint.minTime) ) )
 			)
 }
 
-/*******************ASSERTIONS*******************/
 
 
-/*******************PREDICATES*******************/
+/******************PREDICATES******************/
 
 pred addEvent[u:User, e:Event, u':User]{
 	//preCondition
@@ -259,10 +275,11 @@ run changeEventPreferences
 
 pred complexTravels{ 
 # Event=2
-# BreakEvent=2
-#Travel>4
-#TravelComponent>3
-#TravelMean>1
+#DistanceConstraint>0
+#TypeOfEvent=1
+all event:Event| #event.type.deactivate>0
+all a:GenericEvent| a.isScheduled=True
+all a:Event| a.travelTime>0
 }
 pred show{ }
 
