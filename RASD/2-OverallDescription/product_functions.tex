@@ -1,4 +1,4 @@
-In order to better define clear boundaries for developing the system, functions that  will or will not be offered by the system will be explained in this section.
+In order to better define clear boundaries for the development of the system, the main functions that  will or will not be offered by the system will be explained in this section.
 
 \subsection{Registration and login}
 The system will allow visitors to register and perform a login in order to utilize the system functionalities. 
@@ -7,6 +7,8 @@ The system will not allow visitors not yet signed in to utilize any functionalit
 
 \subsection{Event insertion}
 The system will allow the user to insert events, letting him define details (like, for example, type of event, locations, departure and ending time), and constraints on them.
+\newline
+If two events overlap with each other, the system will ask to the user which one does he want to give priority to.
 \newline
 The system will allow the user to create personal types of event.
 A type of event can indicate constraints and preferences specifically related to it.
@@ -17,6 +19,12 @@ The system will automatically manage the user's schedule respecting all his pref
 Events inserted by the user must always be visible, even those that do not show in the regular schedule because of overlaps, allowing the user to view and manage them.
 \newline
 If an event is added, modified or deleted, the system must update the schedule to assure that maximum efficiency is maintained.
+\newline
+The system will allow the user to reserve a time-slot in the schedule for lunches and breaks. 
+\newline
+The system will try to compose the schedule maintaining a space between inserted events to let the user have his predetermined breaks.
+\newline
+The system will notify the user if he's trying to add an event that will prevent the presence of the break event.
 
 \subsection{Trips arrangement}
 The system will let the user check his travel arrangements.
@@ -27,6 +35,8 @@ For each trip the system will show the tickets needed to travel the selected pat
 The system will allow the user to apply constraints on travel means.
 \newline
 Travel means not desired by the user can be ignored during the definitions of a type of event.
+\newline
+The system will allow to add tickets and passes for travel means already in possession of the user, in order to avoid sustaining unnecessary costs.
 
 \subsection{Sharing vehicle location}
 The system will help the user locating available sharing vehicles, such as bikes and cars.
