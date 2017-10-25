@@ -1,6 +1,6 @@
 \subsection{User Interfaces}
 \label{subsect:User Interfaces}
-	The following mockups are a representation of the look of the app in its first release.
+	The following mockups are an overall representation of the look of the app and the website in their first release.
 	\subsubsection{Login}
 	\begin{figure}[H]
 	\includegraphics[scale=0.35]{mockup/app/03-Login}
@@ -38,6 +38,7 @@
 	\includegraphics[scale=0.4]{mockup/web/02-Web_Home}
 	\centering 
 	\end{figure}
+\newpage
 \subsection{Hardware Interfaces}
 \label{subsect:Hardware Interfaces}
 	The mobile app is supported on:
@@ -58,6 +59,10 @@
 \label{subsect:Software Interfaces}
 	This system implements Google Maps APIs to calculate the optimal travel path to reach a destination. \\
 	Interaction with external websites of travel means providers is required in order to allow the user to buy tickets.
+	External weather APIs will be used to gather weather forecast data in order to propose travels taking into account the weather in the computation process.
+	The system implements Google Transit APIs in order to use GTFS and GTFS-realtime feeds to improve path computations when public travel means are involved.
+	
+	
 \subsection{Communication Interfaces}
 \label{subsect:Communication Interfaces}
 	During the registration phase, the system will automatically send an email to the email address inserted by the user. This email will contain a recap of the data inserted by the user during the registration, along with a link that needs to be clicked by the user in order to verify that the email is currently valid and active.
