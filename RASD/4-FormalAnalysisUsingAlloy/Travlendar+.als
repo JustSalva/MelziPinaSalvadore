@@ -58,6 +58,8 @@ sig Ticket{
 	cost: one Float, 
 	ticketUsed: set TravelComponent,
 	relatedTo: some PublicTravelMean,
+}{
+	all component: ticketUsed| (component.meanUsed in PublicTravelMean)
 }
 
 abstract sig TravelMean{
@@ -113,6 +115,7 @@ sig TravelComponent{
 }{
 	departureLocation != arrivalLocation
 	endingTime > startingTime
+	travelDistance > 0
 }
 
 sig Location{
@@ -269,19 +272,23 @@ pred changeEventPreferences[event:Event, type2:TypeOfEvent, event':Event ]{
 	event'.departureLocation = event.departureLocation
 	event'.eventLocation = event.eventLocation
 }
-run addEvent
-run changeTravel
-run changeEventPreferences
+
 
 pred complexTravels{ 
-# Event=2
-#DistanceConstraint>0
+# BreakEvent=1
+#Ticket <2
+all a:Event| (#a.feasiblePaths=1 and no e:(Event - a)| (a.feasiblePaths=e.feasiblePaths))
+#DistanceConstraint=1
+#PeriodOfDayConstraint<2
+all t: TypeOfEvent| # t.deactivate=1
 #TypeOfEvent=1
-all event:Event| #event.type.deactivate>0
 all a:GenericEvent| a.isScheduled=True
 all a:Event| a.travelTime>0
 }
 pred show{ }
 
-run complexTravels for 5 but 1 User
+run complexTravels for 3 but 1 User
+run addEvent
+run changeTravel
+run changeEventPreferences
 
