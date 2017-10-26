@@ -1,68 +1,68 @@
-\textit{Visitor} should be able to:
+A \textit{visitor} should be able to:
 \begin{description}
 \item[[G1]] sign up into the system:
 	\begin{description}
-	\item[[D1]] username must be unique;
+	\item[[D1]] every inserted e-mail must be unique;
 	\newline
-	\item[[R1]] the system checks if the email inserted is real;
-	\item[[R2]] user cannot sign up with the same mail twice.
+	\item[[R1]] the system checks if the e-mail inserted is real;
+	\item[[R2]] a user cannot sign up with the same e-mail twice.
 	\end{description}
 \end{description}
 
-\noindent\textit{User} should be able to:
+\noindent A \textit{user} should be able to:
 \begin{description}
 \item[[G2]] log into the system:
 	\begin{description}
-	\item[[D1]] username must be unique;
+	\item[[D1]] every inserted e-mail must be unique;
 	\newline
-	\item[[R3]] mail and password inserted must be correct;
-	\item[[R4]] incorrect credentials prevent the user to log in.
+	\item[[R3]] the e-mail and password inserted must be correct;
+	\item[[R4]] incorrect credentials prevent the user from logging in.
 	\end{description}
-\item[[G3]] create events specifying location, date, starting and ending time:
+\item[[G3]] create an event specifying its location, date, starting and ending time:
 	\begin{description}
 	\item[[D2]] every event is related to a location;
-	\item[[D3]] events must happen in an existing place;
-	\item[[D4]] events cannot be in the past;
-	\item[[D5]] starting time is always specified;
-	\item[[D6]] ending time is not mandatory;
+	\item[[D3]] an event must happen in an existing place;
+	\item[[D4]] an event cannot be in the past;
+	\item[[D5]] the starting time of an event is always specified;
+	\item[[D6]] the ending time of an event is not mandatory;
 	\newline
-	\item[[R5]] user must specify all mandatory fields to add the new event;
-	\item[[R6]] the system reserves the specified time for the event;
-	\item[[R7]] the system warns the user if the inserted event overlaps with an existing one;
-	\item[[R8]] if ending time is not specified, the systems considers as ending time the hour of departure for the next event;
-	\item[[R9]] when an event is inserted after an event without a specified ending time, its ending time is anticipated as stated in [[R8]].
+	\item[[R5]] a user must specify all mandatory fields to add the new event;
+	\item[[R6]] the system reserves the specified time-slot for the event;
+	\item[[R7]] the system warns the user if the inserted event overlaps with an already existing one;
+	\item[[R8]] if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;
+	\item[[R9]] when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8].
 	\end{description}
-\item[[G4]] obtain the best path according to his preferences and the list of eventual alternative paths to reach a location:
+\item[[G4]] obtain the best travel path (according to his preferences) and the list of eventual feasible alternatives to reach a location:
 	\begin{description}
 	\item[[D7]] a person can travel only on one travel mean at once; 
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;
 	\item[[D9]] every travel is programmed with a combination of one or more travel means;
 	\newline
-	\item[[R10]] every proposed path must be feasible in the available time (the interval between two consecutive events);
-	\item[[R11]] if the travel involves more than one travel mean, starting location of the first proposed path and ending location of the last proposed path must coincide with starting and ending location of the whole planned travel;
+	\item[[R10]] every travel path proposed must be feasible in the available time (the interval between two consecutive events);
+	\item[[R11]] if the travel involves two or more travel means, the starting location of the first proposed travel path and the ending location of the last proposed travel path must coincide respectively with the starting location and the ending location of the whole planned travel;
 	\item[[R12]] the system does not consider paths that violate constraints on travel means defined by the user;
-	\item[[R13]] the system checks user preferences to decide which is the best path;
-	\item[[R14]] the system warns the user if it isn’t possible arrive at the location before the event to attend starts;
+	\item[[R13]] the system checks user preferences to decide which feasible travel path is the best;
+	\item[[R14]] the system warns the user if it is not possible to arrive at an event location before its starting time;
 	\item[[R15]] appropriate travel means must be suggested according to the type of event that they are related to; 
-	\item[[R16]] if a strike occurs the system won’t consider involved travel means;
-	\item[[R17]] if it rains the system won’t consider paths involving the bicycle.
+	\item[[R16]] if a strike occurs, the system will not consider travel means involved in it;
+	\item[[R17]] if the weather forecasts rain or other adverse conditions, the system will not consider paths involving the bicycle.
 	\end{description}
-\item[[G5]] change the selected path with an alternative path:
+\item[[G5]] change the selected path with an alternative one:
 	\begin{description}
 	\item[[D7]] a person can travel only on one travel mean at once; 
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;
 	\item[[D9]] every travel is programmed with a combination of one or more travel means;
 	\newline
 	\item[[R18]] the system must show to the user all possibilities to reach a location in according with the requirements of [[G4]];
-	\item[[R19]] the system allows the user to change the path only if doesn’t generate overlapping with events added later to the involved one.
+	\item[[R19]] alternative feasible travel paths must not generate overlappings with other events of the schedule.
 	\end{description}
-\item[[G6]] obtain a daily schedule that allows to attend to every event in program:
+\item[[G6]] obtain a daily schedule that allows him to attend every event in program:
 	\begin{description}
 	\item[[D10]] a person can be only in one place at once;
 	\newline
-	\item[[R20]] the combination of the paths proposed for the day must be feasible in the allotted time;
+	\item[[R20]] the combination of the travel paths proposed for the day must be feasible in the allotted time;
 	\item[[R21]] if there are multiple events at the same time the system will propose in the schedule only the first event added.
-	\item[[R22]] if the user forces into the schedule an event that overlaps with events present in the schedule, these are removed from the schedule.
+	\item[[R22]] if the user forces into the schedule an event that overlaps with events already present in the schedule, these are removed from the schedule.
 	\end{description}
 \item[[G7]] apply constraints on travel means:
 	\begin{description}
@@ -70,9 +70,9 @@
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;	
 	\item[[D9]] every travel is programmed with a combination of one or more travel means;
 	\newline
-	\item[[R23]] the system requires min/max length allowed for a path to impose a constraint on a travel mean;
+	\item[[R23]] the system requires minimum and maximum length allowed for a path to impose a constraint on a travel mean;
 	\item[[R24]] the system requires an interval of time allowed to impose a constraint on a travel mean;
-	\item[[R25]] the system doesn’t consider solutions that violate constrains.
+	\item[[R25]] the system does not consider solutions that violate constraints.
 	\end{description}
 \item[[G8]] deactivate one or more travel means:
 	\begin{description}
@@ -80,38 +80,38 @@
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;	
 	\item[[D9]] every travel is programmed with a combination of one or more travel means;
 	\newline
-	\item[[R26]] the system allows the user to specify one or more travel means that can’t be used.
-	\item[[R27]] the system doesn’t consider solutions that include deactivated travel means.
+	\item[[R26]] the system allows the user to specify one or more travel means that cannot be used.
+	\item[[R27]] the system does not consider solutions that include deactivated travel means.
 	\end{description}
 \item[[G9]] select combinations of transportation means that minimize carbon footprint:
 	\begin{description}
-	\item[[D11]] all travel means are related to information about average carbon footprints; 
+	\item[[D11]] every travel mean is related to information about its average carbon footprints;
 	\newline
-	\item[[R28]] for each path, the system estimates carbon footprint produced.
+	\item[[R28]] for each travel path, the system estimates its carbon footprint produced.
 	\end{description}
 \item[[G10]] reserve time for lunch or break events:
 	\begin{description}
-	\item[[D12]] flexible timeslots can have a daily or periodical validity;
-	\item[[D13]] every flexible timeslot has a minimum amount of time that must be reserved;
+	\item[[D12]] a flexible time-slot can have a daily or periodical validity;
+	\item[[D13]] a flexible time-slot has a minimum amount of time that must be reserved;
 	\newline
 	\item[[R29]] the system allows the user to specify a flexible interval and a minimum amount of time to schedule a break;
 	\item[[R30]] if there is enough time for a break, the system reserves it within the specified flexible interval;
-	\item[[R31]] if there isn’t enough time into the flexible interval specified a warning is thrown.
+	\item[[R31]] if there is not enough time into the flexible interval specified, a warning is thrown.
 	\end{description}
-\item[[G11.1]] arrange trips/buy needed tickets:
+\item[[G11.1]] arrange trips (buy needed tickets):
 	\begin{description}
-	\item[[D14]] to use a public transport a ticket is required; 
-	\item[[D15]] a ticket may have a daily validity or a different periodicity; 
-	\item[[D16]] user can own day/week/season passes;
+	\item[[D14]] a ticket is required to use a public transport;
+	\item[[D15]] a ticket may have a daily validity or a different periodicity;
+	\item[[D16]] a user can own day/week/season passes;
 	\newline
-	\item[[R32]] the system allows the user to specify all the ticket he owns;
-	\item[[R33]] the system shows to the user if he holds a ticket for a proposed travel;
-	\item[[R34]] the system allows the user to buy public transportation tickets according to proposed travel;
+	\item[[R32]] the system allows the user to specify all the ticket he already owns;
+	\item[[R33]] the system shows to the user if he already holds a ticket for a proposed travel;
+	\item[[R34]] the system allows the user to buy public transportation tickets according to proposed travels;
 	\item[[R35]] the system provides information about time of departure and arrival of the proposed travels.
 	\end{description}
-\item[[G11.2]] arrange trips/find available sharing vehicle:
+\item[[G11.2]] arrange trips (find available sharing vehicles):
 	\begin{description}
-	\item[[D17]] to use a sharing vehicle a payment is required;
+	\item[[D17]] a payment is required to use a sharing vehicle;
 	\newline
 	\item[[R36]] the system shows to the user where sharing vehicles are located;
 	\item[[R37]] the system provides information about travel time with shared vehicles.
