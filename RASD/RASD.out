@@ -33,28 +33,29 @@
 \BOOKMARK [2][-]{subsection.3.2.1}{Detailed list}{section.3.2}% 33
 \BOOKMARK [2][-]{subsection.3.2.2}{Scenarios}{section.3.2}% 34
 \BOOKMARK [2][-]{subsection.3.2.3}{Use case descriptions}{section.3.2}% 35
-\BOOKMARK [2][-]{subsection.3.2.4}{Use case diagrams}{section.3.2}% 36
-\BOOKMARK [2][-]{subsection.3.2.5}{Sequence diagrams}{section.3.2}% 37
-\BOOKMARK [1][-]{section.3.3}{Performance Requirements}{chapter.3}% 38
-\BOOKMARK [1][-]{section.3.4}{Design Constraints}{chapter.3}% 39
-\BOOKMARK [2][-]{subsection.3.4.1}{Standards compliance}{section.3.4}% 40
-\BOOKMARK [2][-]{subsection.3.4.2}{Hardware limitations}{section.3.4}% 41
-\BOOKMARK [2][-]{subsection.3.4.3}{Any other constraint}{section.3.4}% 42
-\BOOKMARK [1][-]{section.3.5}{Software System Attributes}{chapter.3}% 43
-\BOOKMARK [2][-]{subsection.3.5.1}{Reliability}{section.3.5}% 44
-\BOOKMARK [2][-]{subsection.3.5.2}{Availability}{section.3.5}% 45
-\BOOKMARK [2][-]{subsection.3.5.3}{Security}{section.3.5}% 46
-\BOOKMARK [2][-]{subsection.3.5.4}{Maintainability}{section.3.5}% 47
-\BOOKMARK [2][-]{subsection.3.5.5}{Portability}{section.3.5}% 48
-\BOOKMARK [0][-]{chapter.4}{FORMAL ANALYSIS USING ALLOY}{}% 49
-\BOOKMARK [1][-]{section.4.1}{Model}{chapter.4}% 50
-\BOOKMARK [1][-]{section.4.2}{Proof of Consistency}{chapter.4}% 51
-\BOOKMARK [1][-]{section.4.3}{Worlds obtained}{chapter.4}% 52
-\BOOKMARK [2][-]{subsection.4.3.1}{World 1}{section.4.3}% 53
-\BOOKMARK [2][-]{subsection.4.3.2}{World 2}{section.4.3}% 54
-\BOOKMARK [2][-]{subsection.4.3.3}{World 3}{section.4.3}% 55
-\BOOKMARK [0][-]{chapter.5}{EFFORT SPENT}{}% 56
-\BOOKMARK [1][-]{section.5.1}{Alessandro Pina}{chapter.5}% 57
-\BOOKMARK [1][-]{section.5.2}{Pietro Melzi}{chapter.5}% 58
-\BOOKMARK [1][-]{section.5.3}{Matteo Salvadore}{chapter.5}% 59
-\BOOKMARK [0][-]{chapter.6}{REFERENCES}{}% 60
+\BOOKMARK [2][-]{subsection.3.2.4}{Traceability matrix}{section.3.2}% 36
+\BOOKMARK [2][-]{subsection.3.2.5}{Use case diagrams}{section.3.2}% 37
+\BOOKMARK [2][-]{subsection.3.2.6}{Sequence diagrams}{section.3.2}% 38
+\BOOKMARK [1][-]{section.3.3}{Performance Requirements}{chapter.3}% 39
+\BOOKMARK [1][-]{section.3.4}{Design Constraints}{chapter.3}% 40
+\BOOKMARK [2][-]{subsection.3.4.1}{Standards compliance}{section.3.4}% 41
+\BOOKMARK [2][-]{subsection.3.4.2}{Hardware limitations}{section.3.4}% 42
+\BOOKMARK [2][-]{subsection.3.4.3}{Any other constraint}{section.3.4}% 43
+\BOOKMARK [1][-]{section.3.5}{Software System Attributes}{chapter.3}% 44
+\BOOKMARK [2][-]{subsection.3.5.1}{Reliability}{section.3.5}% 45
+\BOOKMARK [2][-]{subsection.3.5.2}{Availability}{section.3.5}% 46
+\BOOKMARK [2][-]{subsection.3.5.3}{Security}{section.3.5}% 47
+\BOOKMARK [2][-]{subsection.3.5.4}{Maintainability}{section.3.5}% 48
+\BOOKMARK [2][-]{subsection.3.5.5}{Portability}{section.3.5}% 49
+\BOOKMARK [0][-]{chapter.4}{FORMAL ANALYSIS USING ALLOY}{}% 50
+\BOOKMARK [1][-]{section.4.1}{Model}{chapter.4}% 51
+\BOOKMARK [1][-]{section.4.2}{Proof of Consistency}{chapter.4}% 52
+\BOOKMARK [1][-]{section.4.3}{Worlds obtained}{chapter.4}% 53
+\BOOKMARK [2][-]{subsection.4.3.1}{World 1}{section.4.3}% 54
+\BOOKMARK [2][-]{subsection.4.3.2}{World 2}{section.4.3}% 55
+\BOOKMARK [2][-]{subsection.4.3.3}{World 3}{section.4.3}% 56
+\BOOKMARK [0][-]{chapter.5}{EFFORT SPENT}{}% 57
+\BOOKMARK [1][-]{section.5.1}{Alessandro Pina}{chapter.5}% 58
+\BOOKMARK [1][-]{section.5.2}{Pietro Melzi}{chapter.5}% 59
+\BOOKMARK [1][-]{section.5.3}{Matteo Salvadore}{chapter.5}% 60
+\BOOKMARK [0][-]{chapter.6}{REFERENCES}{}% 61
