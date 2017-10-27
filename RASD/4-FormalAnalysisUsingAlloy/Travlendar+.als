@@ -59,7 +59,7 @@ sig Ticket{
 	ticketUsed: set TravelComponent,
 	relatedTo: some PublicTravelMean,
 }{
-	all component: ticketUsed| (component.meanUsed in PublicTravelMean)
+	all component: ticketUsed| (component.meanUsed in relatedTo)
 }
 
 abstract sig TravelMean{
@@ -108,13 +108,10 @@ sig Travel{
 sig TravelComponent{
 	departureLocation: one Location,
 	arrivalLocation: one Location,
-	startingTime: one Int,
-	endingTime: one Int,
 	meanUsed: one TravelMean,
 	travelDistance: one Int, //Distances are modeled as integers (should be float)
 }{
 	departureLocation != arrivalLocation
-	endingTime > startingTime
 	travelDistance > 0
 }
 
@@ -225,12 +222,14 @@ fact allTravelsRespectDistanceConstraints{
 			))
 }
 
+/*travel slot times, if they involve travel means with a constraint relative to a specific period of time,
+ must be included into that period*/
 fact allTravelsRespectPeriodConstraints{
 	all event: Event | all travelComponent:event.feasiblePaths.composed.elems |
 			 (all constraint: (event.type.isLimitedBy & PeriodOfDayConstraint) | (
 					(constraint.concerns=travelComponent.meanUsed) implies(
-						(travelComponent.endingTime<=constraint.maxTime) and
-						(travelComponent.startingTime>=constraint.minTime) ) )
+						(event.startingTime<=constraint.maxTime) and
+						(relativeStart[event]>=constraint.minTime) ) )
 			)
 }
 
@@ -275,20 +274,15 @@ pred changeEventPreferences[event:Event, type2:TypeOfEvent, event':Event ]{
 
 
 pred complexTravels{ 
-# BreakEvent=1
-#Ticket <2
-all a:Event| (#a.feasiblePaths=1 and no e:(Event - a)| (a.feasiblePaths=e.feasiblePaths))
-#DistanceConstraint=1
-#PeriodOfDayConstraint<2
-all t: TypeOfEvent| # t.deactivate=1
-#TypeOfEvent=1
-all a:GenericEvent| a.isScheduled=True
-all a:Event| a.travelTime>0
+#Ticket >2
+#User =1 // different users, different events and no shared constraints => we'll observe instances for just one user
+all event: Event | (#event.feasiblePaths>1)
+#Constraint>2
+#BreakEvent=1 
 }
-pred show{ }
 
-run complexTravels for 3 but 1 User
-run addEvent
-run changeTravel
-run changeEventPreferences
+run complexTravels for 5 but 10 Location
+run addEvent for 5
+run changeTravel for 5
+run changeEventPreferences for 5
 
