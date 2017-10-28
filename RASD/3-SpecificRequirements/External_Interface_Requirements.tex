@@ -61,9 +61,11 @@
 	Interaction with external websites of travel means providers is required in order to allow the user to buy tickets. \\
 	External weather APIs will be used to gather weather forecast data in order to propose travels taking into account the weather in the computation process. \\
 	The system implements Google Transit APIs in order to use GTFS and GTFS-realtime feeds to improve path computations when public travel means are involved.
+	The system back-end (server side) will be implemented using Java EE 8 and we'll use MySQL 5.7 as DBMS.
 	
 	
 \subsection{Communication Interfaces}
 \label{subsect:Communication Interfaces}
 	During the registration phase, the system will automatically send an email to the email address inserted by the user. \\
 	This email will contain a recap of the data inserted by the user during the registration, along with a linked URL address that needs to be opened by the user in order to verify that that email is currently valid and active.
+	The client will communicate with HTTP protocol by using TCP (default port 443).

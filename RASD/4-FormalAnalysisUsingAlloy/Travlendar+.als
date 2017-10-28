@@ -135,7 +135,7 @@ fact email_Is_Unique{
 	no disjoint u, u' : User | u.email = u'.email
 }
 
-// There must not exists only a location corresponding to a latitude and a longitude
+// There must exists only a location corresponding to a latitude and a longitude
 fact location_Is_Unique{
 	no disjoint l, l' : Location | l.latitude=l'.latitude and l.longitude=l'.longitude and l.address=l'.address
 }
