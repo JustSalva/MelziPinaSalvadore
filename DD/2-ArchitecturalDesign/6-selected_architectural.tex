@@ -1,0 +1,28 @@
+The following architectural styles and patterns have been used in order to ensured a well-formed and efficient architecture:
+
+\subsection{Layered Architecture}
+\label{subsect:Layered Architecture}
+This architectural style allow to organize the system through abstraction levels and doing so separate presentation, application logic and data management operations. Furthermore, since each layer can be separately instantiated on a
+different machine, this architecture guarantee great flexibility in terms of hardware configurations and simplify the actual development of the system cause all components cam be implemented and tested separately.
+
+\subsection{Client/Server}
+\label{subsect:Client/Server}
+Our application is strongly based on the client server paradigm and it's used at various levels:
+\begin{itemize}
+	\item the mobile application(client) makes requests to the Application Server (server) and it reply to them;
+	\item the web browsers(client) communicates with the Web Server(server), which act also as a client of the Application Server.
+	\item the Application Server acts as client when it interrogate the database Server or when it interact with external APIs.
+\end{itemize}
+
+\subsection{Model-View-Controller}
+\label{subsect:Model-View-Controller}
+Our proposed Travlendar+ system follow this pattern. This allows to separate the application into three communicating and interconnected abstract parts which fulfill different goals. In particular our system implements the so-called Apple MVC version, which always keep the Controller between the model and the view interactions in order to guarantee security and  access control. 
+
+\subsection{Publish/Subscribe}
+\label{subsect:Publish/Subscribe}
+This architectural style is primarily used in the notification system. All the users mobile devices when log into the system are subscribed as listener and will receive notice of all possible problems involving the Travlendar+ user experience. This paradigm provides us great flexibility with respect to future expansions.
+
+\subsection{Thin client/Thick client}
+\label{subsect:Thin client/Thick client}
+\todo{TODO I'm not so sure of this }
+
