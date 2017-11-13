@@ -1,66 +1,66 @@
 \begin{center}
-	\begin{longtable}{ | p{0.5\textwidth} | p{0.5\textwidth} | }
+	\begin{longtable}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		\textbf{Application server component} & \textbf{Requirement}\\
+		\textbf{Component} & \textbf{Requirement}\\
 		\hline
-		Authentication Manager & R1\\
-		& R2\\
-		& R3\\
-		& R4\\
+		Authentication Manager & \textbf{[R1]} the system checks if the e-mail inserted is real;\\
+		& \textbf{[R2]} a user cannot sign up with the same e-mail twice;\\
+		& \textbf{[R3]} the e-mail and password inserted must be correct;\\
+		& \textbf{[R4]} incorrect credentials prevent the user from logging in.\\
 		\hline
-		Path Manager & R10\\
-		& R11\\
-		& R12\\
-		& R13\\
-		& R15\\
-		& R18\\
-		& R19\\
-		& R25\\
-		& R27\\
-		& R28\\
-		& R35\\
-		& R37\\
+		Path Manager & \textbf{[R10]} every travel path proposed must be feasible in the available time (the interval between two consecutive events);\\
+		& \textbf{[R11]} if the travel involves two or more travel means, the starting location of the first proposed travel path and the ending location of the last proposed travel path must coincide respectively with the starting location and the ending location of the whole planned travel;\\
+		& \textbf{[R12]} the system does not consider paths that violate constraints on travel means defined by the user;\\
+		& \textbf{[R13]} the system checks user preferences to decide which feasible travel path is the best;\\
+		& \textbf{[R15]} appropriate travel means must be suggested according to the type of event that they are related to; \\
+		& \textbf{[R18]} the system must show to the user all possibilities to reach a location in according with the requirements of [G4];\\
+		& \textbf{[R19]} alternative feasible travel paths must not generate overlappings with other events of the schedule;\\
+		& \textbf{[R25]} the system does not consider solutions that violate constraints;\\
+		& \textbf{[R27]} the system does not consider solutions that include deactivated travel means;\\
+		& \textbf{[R28]} for each travel path, the system estimates its carbon footprint produced;\\
+		& \textbf{[R35]} the system provides information about time of departure and arrival of the proposed travels;\\
+		& \textbf{[R37]} the system provides information about travel time with shared vehicles.\\
 		\hline
-		Event Manager & R5\\
-		& R6\\
-		& R7\\
-		& R8\\
-		& R9\\
-		& R29\\
+		Event Manager & \textbf{[R5]} a user must specify all mandatory fields to add the new event;\\
+		& \textbf{[R6]} the system reserves the specified time-slot for the event;\\
+		& \textbf{[R7]} the system warns the user if the inserted event overlaps with an already existing one;\\
+		& \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;\\
+		& \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8];\\
+		& \textbf{[R29]} the system allows the user to specify a flexible interval and a minimum amount of time to schedule a break;\\
 		\hline
-		Schedule Manager & R6\\
-		& R7\\
-		& R8\\
-		& R9\\
-		& R14\\
-		& R19\\
-		& R20\\
-		& R21\\
-		& R22\\
-		& R30\\
-		& R31\\
+		Schedule Manager & \textbf{[R6]} the system reserves the specified time-slot for the event;\\
+		& \textbf{[R7]} the system warns the user if the inserted event overlaps with an already existing one;\\
+		& \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;\\
+		& \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8];\\
+		& \textbf{[R14]} the system warns the user if it is not possible to arrive at an event location before its starting time;\\
+		& \textbf{[R19]} alternative feasible travel paths must not generate overlappings with other events of the schedule;\\
+		& \textbf{[R20]} the combination of the travel paths proposed for the day must be feasible in the allotted time;\\
+		& \textbf{[R21]} if there are multiple events at the same time the system will propose in the schedule only the first event added;\\
+		& \textbf{[R22]} if the user forces into the schedule an event that overlaps with events already present in the schedule, these are removed from the schedule;\\
+		& \textbf{[R30]} if there is enough time for a break, the system reserves it within the specified flexible interval;\\
+		& \textbf{[R31]} if there is not enough time into the flexible interval specified, a warning is thrown.\\
 		\hline
-		Preference Manager & R12\\
-		& R13\\
-		& R15\\
-		& R23\\
-		& R24\\
-		& R25\\
-		& R26\\
-		& R27\\
+		Preference Manager & \textbf{[R12]} the system does not consider paths that violate constraints on travel means defined by the user;\\
+		& \textbf{[R13]} the system checks user preferences to decide which feasible travel path is the best;\\
+		& \textbf{[R15]} appropriate travel means must be suggested according to the type of event that they are related to; \\
+		& \textbf{[R23]} the system requires minimum and maximum length allowed for a path to impose a constraint on a travel mean;\\
+		& \textbf{[R24]} the system requires an interval of time allowed to impose a constraint on a travel mean;\\
+		& \textbf{[R25]} the system does not consider solutions that violate constraints;\\
+		& \textbf{[R26]} the system allows the user to specify one or more travel means that cannot be used;\\
+		& \textbf{[R27]} the system does not consider solutions that include deactivated travel means.\\
 		\hline		
-		Trip Manager & R32\\
-		& R33\\
-		& R34\\
-		& R36\\
+		Trip Manager & \textbf{[R32]} the system allows the user to specify all the ticket he already owns;\\
+		& \textbf{[R33]} the system shows to the user if he already holds a ticket for a proposed travel;\\
+		& \textbf{[R34]} the system allows the user to buy public transportation tickets according to proposed travels;\\
+		& \textbf{[R36]} the system shows to the user where sharing vehicles are located.\\
 		\hline
-		Complication manager & R16\\
-		& R17\\
+		Complication manager & \textbf{[R16]} if a strike occurs, the system will not consider travel means involved in it;\\
+		& \textbf{[R17]} if the weather forecasts rain or other adverse conditions, the system will not consider paths involving the bicycle.\\
 		\hline
-		Notification Manager & R14\\
-		& R31\\
+		Notification Manager & \textbf{[R14]} the system warns the user if it is not possible to arrive at an event location before its starting time;\\
+		& \textbf{[R31]} if there is not enough time into the flexible interval specified, a warning is thrown.\\
 		\hline
 		
-		\caption{Traceability matrix}
+		\caption{Application server components}
 	\end{longtable}
 \end{center}
