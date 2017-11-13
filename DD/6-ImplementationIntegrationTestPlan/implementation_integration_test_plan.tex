@@ -1,0 +1,29 @@
+\section{Implementation Plan}
+In this section we explain the order i which we plan to implement the subcomponents of the Travlendar+ system.
+The main criteria we've adopted is to implement first a core of functionalities that we consider to be essential for engaging an initial user base, then we will proceed to insert new and nice-to-have features but that are not mandatory in a first release.
+These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on \textbf{server side}:
+\begin{enumerate}
+\item AuthenticationManager, PathManager, EventManager, ScheduleManager and PersistenceManager are the core of our system and so they are the first to be implemented. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
+\item PreferenceManager will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
+\item ComplicationManager will be added together with the NotificationManager in order to discover if a users travel is no more feasible and notify him.
+\item TripManager will be the last module to be implemented, allowing the user to arrange his trips.
+\end{enumerate}
+Of course at each phase some data structures are to be added in the database (through the PersistenceManager) to proper support the new functionalities.
+
+These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on \textbf{client side}:
+\begin{enumerate}
+\item Android App is to be developed first, proper updated will be performed when a new functionality is added on server-side, but the first application version is to be released together with the Application-server core functionality release.
+\item IOS App will be developed in a second phase: when the Android application is completed (first release)the workforce dedicated to his development will be moved on this task but Android App's support will be taken care of nonetheless;
+\item When both IOS and Android applications are released we will proceed to develop the web server that will allow the users to use Travlendar+ in any web browser.
+\end{enumerate}
+
+\section{Integration Entry Criteria}
+Before starting the integration testing phase there are a number of conditions that have to be met:
+
+\section{Elements to be integrated}
+
+\section{Integration Testing Strategy}
+
+\section{Sequence of Components integration}
+
+\todo{TODO}
