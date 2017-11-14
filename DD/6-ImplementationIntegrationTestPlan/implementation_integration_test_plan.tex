@@ -1,16 +1,20 @@
 \section{Implementation Plan}
 In this section we explain the order i which we plan to implement the subcomponents of the Travlendar+ system.
 The main criteria we've adopted is to implement first a core of functionalities that we consider to be essential for engaging an initial user base, then we will proceed to insert new and nice-to-have features but that are not mandatory in a first release.
-These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on \textbf{server side}:
+These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on\begin{large}
+\textbf{server side}:
+\end{large}
 \begin{enumerate}
 \item AuthenticationManager, PathManager, EventManager, ScheduleManager and PersistenceManager are the core of our system and so they are the first to be implemented. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
 \item PreferenceManager will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
 \item ComplicationManager will be added together with the NotificationManager in order to discover if a users travel is no more feasible and notify him.
 \item TripManager will be the last module to be implemented, allowing the user to arrange his trips.
 \end{enumerate}
-Of course at each phase some data structures are to be added in the database (through the PersistenceManager) to proper support the new functionalities.
+Of course at each implementation phase some data structures are to be added in the database (through the PersistenceManager) to proper support the new functionalities.
 
-These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on \textbf{client side}:
+These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on\begin{large}
+\textbf{client side}:
+\end{large}
 \begin{enumerate}
 \item Android App is to be developed first, proper updated will be performed when a new functionality is added on server-side, but the first application version is to be released together with the Application-server core functionality release.
 \item IOS App will be developed in a second phase: when the Android application is completed (first release)the workforce dedicated to his development will be moved on this task but Android App's support will be taken care of nonetheless;
@@ -19,11 +23,37 @@ These are the main steps of the implementations we want to follow to reach Travl
 
 \section{Integration Entry Criteria}
 Before starting the integration testing phase there are a number of conditions that have to be met:
-
+\begin{itemize}
+\item \textbf{Documents:} this document (DD) and RASD have to be completed;
+\item \textbf{Proper Documentation:} Every method and class, before being tested must be provided with proper documentation and/or comments in order to ease the testing process and also make easier the reuse of the classes and their methods.
+\item \textbf{Code Inspection and Analysis:} At least one method, either code inspection or automated or automated data flow analysis, have to be performed on the modules and classes before we proceed to the integration and test phase that involve them.
+\item \textbf{Starting Condition:} The integration process can start only if the component involved offers at least 75\% of their functionalities to-be-implemented, this means that this phase can start in parallel with the completion of that component, and not that the testing phase can end with some functionalities still to be implemented; 
+\item \textbf{Unit tests:} Before starting the integration of one component, it must be tested through proper unity tests, in order to guaranteed a correct behavior of his internal mechanisms.
+\end{itemize}
 \section{Elements to be integrated}
+Basically all the system components, specified in section \ref{sect:Component view} need to be integrated together; here we specify in detail all the integration that need to be performed.
+On Application Server side:
+\begin{itemize}
+	\item ScheduleManager, EventManager and PathManager needs to be integrated together;
+	\item PreferenceManager needs to be integrated with PathManager;
+	\item TripManager needs to be integrated with ComplicationManager;
+	\item ComplicationManager needs to be integrated with both NotificationManager and TripManager;
+	\item PersistenceManager needs to be integrated with our DBMS;
+	\item All the components that rely on RESTful APIs to implement the communication with the clients need to be integrated and tested;
+	\item basically all the application server components rely on PersistenceManager and therefore they need to be integrated with it, the same consideration is valid for the AuthenticationManager (except for the NotificationManager that does not interact with it).
+\end{itemize}
+On client side (App Mobile):
+\begin{itemize}
+	\item DBManager needs to be integrated with the localDatabase;
+	\item ApplicationController, GUIManager and DBManager needs to be integrated together;
+\end{itemize}
+On web server side WebController and JavaServerPages needs to be integrated together.
+All the interactions that single components have with external services APIs have to be tested and their correctness have to be guaranteed before integrate and test phase involving those components begins.
 
 \section{Integration Testing Strategy}
-
+The integration testing strategy we will adopt will be defined in two different phases, according to the  implementation plan:
+The first strategy we are going to use is based on a \textbf{bottom-up approach}. This choice will allow us to start from the less-dependent components and then climb the "uses" hierarchy, through the use of proper drivers. The bottom-up approach will enable us to follow the implementation plan, that follow the same approach. doing so we will improve the efficiency and the parallelism of the development process. \newline
+Once our system reach the first release milestone we will use a \textbf{thread approach} in order to integrate the the new functionalities with the already tested core thread of our system. We made this second choice because once we add new functionalities into the system they will provide additional user-visible program features that is the very definition of thread (in this context). 
 \section{Sequence of Components integration}
 
 \todo{TODO}
