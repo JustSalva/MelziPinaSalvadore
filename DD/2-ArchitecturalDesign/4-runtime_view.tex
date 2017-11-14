@@ -1,12 +1,12 @@
 \subsection{Login}
 			\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{sequence_diagrams/login.png}}
 			The login operation is performed only the first time that the application is used. 
-			The \textit{system} calculate a unicode that is returned to the client and stored in the \textit{local DB}. In this way the client can be recognized for future operations. 
+			The \textit{system} calculate a univocal code that is returned to the client and stored in the \textit{local DB}. In this way the client can be recognized for future operations. 
 			The encryption function will be specified below in the document.
 \subsection{Authentication functions for each operation}
 		\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{sequence_diagrams/for_each_operation.png}}
-		This is a model of how a generic request is taken into account by the system: the \textit{Client} sends the unicode with the other parameters and the \textit{Authentication Manager} performs the check. 
-		The \textit{Authentication Manager} forwards the request only if the unicode is correctly recognized.
+		This is a model of how a generic request is taken into account by the system: the \textit{Client} sends the univocal code with the other parameters and the \textit{Authentication Manager} performs the check. 
+		The \textit{Authentication Manager} forwards the request only if the univocal code is correctly recognized.
 \subsection{Create event}
 		\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{sequence_diagrams/create_event.png}}
 \subsection{Arrange trip}
