@@ -1,6 +1,6 @@
 A \textit{visitor} should be able to:
 \begin{description}
-\item[[G1]] sign up into the system:
+\item[[G1]] become a registered user:
 	\begin{description}
 	\item[[D1]] every inserted e-mail must be unique;
 	\newline
@@ -11,14 +11,16 @@ A \textit{visitor} should be able to:
 
 \noindent A \textit{user} should be able to:
 \begin{description}
-\item[[G2]] log into the system:
+\item[\sout{[G2]}] \sout{log into the system}:\\
+\item These domain assumption and requirements are shared by all the goals:
 	\begin{description}
 	\item[[D1]] every inserted e-mail must be unique;
 	\newline
+	\item[[R38]] a user must be logged;
 	\item[[R3]] the e-mail and password inserted must be correct;
 	\item[[R4]] incorrect credentials prevent the user from logging in.
 	\end{description}
-\item[[G3]] create an event specifying its location, date, starting and ending time:
+\item[[G3]] define an event specifying its location, date, starting and ending time:
 	\begin{description}
 	\item[[D2]] every event is related to a location;
 	\item[[D3]] an event must happen in an existing place;
@@ -47,7 +49,7 @@ A \textit{visitor} should be able to:
 	\item[[R16]] if a strike occurs, the system will not consider travel means involved in it;
 	\item[[R17]] if the weather forecasts rain or other adverse conditions, the system will not consider paths involving the bicycle.
 	\end{description}
-\item[[G5]] change the selected path with an alternative one:
+\item[[G5]] choose a path between the feasible ones:
 	\begin{description}
 	\item[[D7]] a person can travel only on one travel mean at once; 
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;
@@ -74,7 +76,7 @@ A \textit{visitor} should be able to:
 	\item[[R24]] the system requires an interval of time allowed to impose a constraint on a travel mean;
 	\item[[R25]] the system does not consider solutions that violate constraints.
 	\end{description}
-\item[[G8]] deactivate one or more travel means:
+\item[[G8]] ignore one or more travel means:
 	\begin{description}
 	\item[[D7]] a person can travel only on one travel mean at once; 
 	\item[[D8]] allowed travel means are cars, trains, metro, on foot, trams, bicycles, taxis, car sharing, bike sharing;	
