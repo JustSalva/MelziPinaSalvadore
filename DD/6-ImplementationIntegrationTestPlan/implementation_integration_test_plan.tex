@@ -5,7 +5,7 @@ These are the main steps of the implementations we want to follow to reach Travl
 \textbf{server side}:
 \end{large}
 \begin{enumerate}
-\item AuthenticationManager, PathManager, EventManager, ScheduleManager and PersistenceManager are the core of our system and so they are the first to be implemented. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
+\item CalendarManager (AuthenticationManager, PathManager, EventManager, ScheduleManager) and PersistenceManager are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
 \item PreferenceManager will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
 \item ComplicationManager will be added together with the NotificationManager in order to discover if a users travel is no more feasible and notify him.
 \item TripManager will be the last module to be implemented, allowing the user to arrange his trips.
@@ -35,7 +35,7 @@ Basically all the system components, specified in section \ref{sect:Component vi
 On Application Server side:
 \begin{itemize}
 	\item ScheduleManager, EventManager and PathManager needs to be integrated together;
-	\item PreferenceManager needs to be integrated with PathManager;
+	\item PreferenceManager needs to be integrated with PathManager (nb.doing do the entire CalendarManager subsystem will be integrated);
 	\item TripManager needs to be integrated with ComplicationManager;
 	\item ComplicationManager needs to be integrated with both NotificationManager and TripManager;
 	\item PersistenceManager needs to be integrated with our DBMS;
