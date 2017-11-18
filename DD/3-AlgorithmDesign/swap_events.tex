@@ -1,0 +1,20 @@
+The purpose of this algorithm is to check and manage the schedule when an overlapping event is forced into it, maintaining thus a feasible list of scheduled events. \\ \\
+To explain it we will use the following terms: 
+\begin{itemize}
+	\item \textit{ForcedEvent}: The event that is going ton be put into the schedule;
+	\item \textit{ScheduledEvent}: An event that will be removed from the schedule as a consequence of the ForcedEvent insertion;
+	\item \textit{ScheduleList}: A list containing all the scheduled events for a specific day;
+	\item \textit{OverlappingList}: A list containing all the overlapping events for a specific day.
+\end{itemize}
+
+\noindent The algorithm works in this way:
+\begin{enumerate}
+	\item Checks if there are ScheduledEvents with \\ \textit{startingTime(ScheduledEvent) < startingTime(ForcedEvent) < endingTime(ScheduledEvent)} \\ or \\ \textit{startingTime(ScheduledEvent) < endingTime(ForcedEvent) < endingTime(ScheduledEvent)}. \\
+	If positive, it removes them from the schedule and puts them in the overlapping list;
+	\item Computes the travel of ForcedEvent, depending on the previousLocation inserted or, if a previous starting location for the travel is not defined, on the location of the previous ScheduledEvent;
+	\item If the travel used to reach the ForcedEvent requires a departure time that is < then the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
+	\item Repeats 2 and 3 until a ScheduledEvent considered is still feasible after the insertion of the ForcedEvent;
+	\item Recomputes the travel of the ScheduledEvent that follows ForcedEvent. If that ScheduledEvent's location is not reachable in time for its starting time anymore, this ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
+	\item Repeats 5 until the ScheduledEvent following ForcedEvent in the ScheduleList is still a feasible one after the recomputation of its travel;
+	\item ForcedEvent has been successfully inserted in the schedule.
+\end{enumerate}
