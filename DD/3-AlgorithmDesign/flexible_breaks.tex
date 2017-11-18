@@ -1,0 +1,11 @@
+The purpose of this algorithm is to check if a flexible break inserted is respected by the events present in the schedule. \\ \\
+To explain it we will use the following terms: 
+\begin{itemize}
+	\item \textit{BreakList}: A list containing all the events that overlap, even partially, with the flexible break time slot;
+\end{itemize}
+The algorithm works in this way:
+\begin{enumerate}
+	\item Puts in BreakList all the scheduled events that take place during the allotted break time slot, even if partially;
+	\item Checks if at least one of the spare time slots between an event of BreakList and the following one (including travels) is larger enough to include the break event;
+\end{enumerate}	
+SPECIAL CASE: if only one event is present in BreakList, the algorithm must check that the remaining spare time in the slot is larger enough to allocate the break event.
