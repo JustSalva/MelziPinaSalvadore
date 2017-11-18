@@ -5,7 +5,7 @@ These are the main steps of the implementations we want to follow to reach Travl
 \textbf{server side}:
 \end{large}
 \begin{enumerate}
-\item CalendarManager (AuthenticationManager, PathManager, EventManager, ScheduleManager) and PersistenceManager are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
+\item CalendarManager (AuthenticationManager, PathManager, EventManager, ScheduleManager, but not PreferenceManager), PersistenceManager and AuthenticationManager are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
 \item PreferenceManager will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
 \item ComplicationManager will be added together with the NotificationManager in order to discover if a users travel is no more feasible and notify him.
 \item TripManager will be the last module to be implemented, allowing the user to arrange his trips.
@@ -44,16 +44,119 @@ On Application Server side:
 \end{itemize}
 On client side (App Mobile):
 \begin{itemize}
-	\item DBManager needs to be integrated with the localDatabase;
+	\item DBManager needs to be integrated with the LocalDatabase;
 	\item ApplicationController, GUIManager and DBManager needs to be integrated together;
 \end{itemize}
 On web server side WebController and JavaServerPages needs to be integrated together.
 All the interactions that single components have with external services APIs have to be tested and their correctness have to be guaranteed before integrate and test phase involving those components begins.
 
 \section{Integration Testing Strategy}
-The integration testing strategy we will adopt will be defined in two different phases, according to the  implementation plan:
+The integration testing strategy we will adopt will be defined by a mix of two strategies and according to the  implementation plan:
 The first strategy we are going to use is based on a \textbf{bottom-up approach}. This choice will allow us to start from the less-dependent components and then climb the "uses" hierarchy, through the use of proper drivers. The bottom-up approach will enable us to follow the implementation plan, that follow the same approach. doing so we will improve the efficiency and the parallelism of the development process. \newline
-Once our system reach the first release milestone we will use a \textbf{thread approach} in order to integrate the the new functionalities with the already tested core thread of our system. We made this second choice because once we add new functionalities into the system they will provide additional user-visible program features that is the very definition of thread (in this context). 
-\section{Sequence of Components integration}
+The bottom-up strategy will be mixed with a \textbf{critical-module-first approach}, in order to start the integration and testing of the most critical module of our system, CalendarManager. We've considered also this second strategy in order to avoid issues related to core components of our system and threats to the correct behavior of our system, especially to guarantee the absence of failures or bugs that could prevent the users to correctly take advantage of our platform and its functionalities.
 
-\todo{TODO}
+\section{Sequence of Components integration}
+The following subsections aim to describe the order in which Travlendar+ will have to be integrated and tested. We will use as notation an arrow going from component A to component B means that component A is necessary to component B and so it must have been already implemented before performing the integration.
+
+\subsection{Software integration Sequence}
+Since our system rely on some external systems and interact with theirs external interfaces (APIs) we will assume that those system are already proper tested.
+\subsubsection{PersistenceManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/persistence.png}
+	\end{center}
+	\caption{I\&T-PersistenceManager}
+\end{figure}
+with db
+
+\subsubsection{AuthenticationManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/authentication.png}
+	\end{center}
+	\caption{I\&T-AuthenticationManager}
+\end{figure}
+with PersistenceManager
+
+\subsubsection{CalendarManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/preference.png}
+	\end{center}
+	\caption{I\&T-PreferenceManager}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/schedule.png}
+	\end{center}
+	\caption{I\&T-ScheduleManager}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/path.png}
+	\end{center}
+	\caption{I\&T-PathManager}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/event.png}
+	\end{center}
+	\caption{I\&T-EventManager}
+\end{figure}
+all with PersistenceManager (man mano)
+path with google maps
+schedule-path-event-preference
+all with Authentication
+
+\subsubsection{TripManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/trip.png}
+	\end{center}
+	\caption{I\&T-TripManager}
+\end{figure}
+PersistenceManager/TSP api
+
+\subsubsection{NotificationManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/notification.png}
+	\end{center}
+	\caption{I\&T-NotificationManager}
+\end{figure}
+GCM
+
+\subsubsection{ComplicationManager}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/complication.png}
+	\end{center}
+	\caption{I\&T-ComplicationManager}
+\end{figure}
+google maps/TSP/Weather/NotificationManager
+
+\subsubsection{WebServer}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/web.png}
+	\end{center}
+	\caption{I\&T-WebServer}
+\end{figure}
+web with JSP +polylines
+
+\subsubsection{AppMobile}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{implementation_and_testing/app.png}
+	\end{center}
+	\caption{I\&T-AppMobile}
+\end{figure}
+local db/db manager
+db manager/gui with application controller
+GCM/Google polylines
+
+\subsection{Subsystems integration Sequence}
+google pol
