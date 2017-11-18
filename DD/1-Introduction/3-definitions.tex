@@ -7,6 +7,7 @@
 	\item \textit{Constraint}: it is a rule defined on travel means by the user. When the system calculates feasible paths, each constraint must be taken into account: travel options not respectful of existing constraints are ignored. A constraint can be associated to a type of event. 
 	\newline
 	There are different types of constraints: min/max distance allowed for a travel mean, interval of hours in which it is possible to take a travel mean and possibility to deactivate a travel mean. 
+	\item \textit{Current Unix Timestamp}: it is the number of seconds since Jan 01 1970. (UTC)
 	\item \textit{Customized type of event}: it is a set of rules related to a particular type of event that can be used several time by the user. The user can define a customized type of event in hs preferences, starting from the default type of event.	
 	\item \textit{Default type of event}: it is a general set of rules defined usually the first time that the user exploits the system, it can be modified. Default type of event is related to each event that doesn't need a particular type of event. New types of event are defined starting from the constraints enclosed in the default one.	
 	\item \textit{Feasible path}: a path that allows the user to reach a specified location before the starting time of the event to attend. It observes the constraints defined for that event.
