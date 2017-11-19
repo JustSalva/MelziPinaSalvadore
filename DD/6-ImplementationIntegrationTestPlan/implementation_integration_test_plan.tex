@@ -1,16 +1,16 @@
 \section{Implementation Plan}
-In this section we explain the order i which we plan to implement the subcomponents of the Travlendar+ system.
+In this section we explain the order in which we plan to implement the subcomponents of the Travlendar+ system.
 The main criteria we've adopted is to implement first a core of functionalities that we consider to be essential for engaging an initial user base, then we will proceed to insert new and nice-to-have features but that are not mandatory in a first release.
 These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on\begin{large}
 \textbf{server side}:
 \end{large}
 \begin{enumerate}
-\item CalendarManager (AuthenticationManager, PathManager, EventManager, ScheduleManager, but not PreferenceManager), PersistenceManager and AuthenticationManager are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
-\item PreferenceManager will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
-\item ComplicationManager will be added together with the NotificationManager in order to discover if a users travel is no more feasible and notify him.
-\item TripManager will be the last module to be implemented, allowing the user to arrange his trips.
+\item \textit{CalendarManager} (\textit{AuthenticationManager}, \textit{PathManager}, \textit{EventManager}, \textit{ScheduleManager}, but not \textit{PreferenceManager}), \textit{PersistenceManager} and \textit{AuthenticationManager} are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
+\item \textit{PreferenceManager} will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
+\item \textit{ComplicationManager} will be added together with the \textit{NotificationManager} in order to discover if a users travel is no more feasible and notify him.
+\item \textit{TripManager} will be the last module to be implemented, allowing the user to arrange his trips.
 \end{enumerate}
-Of course at each implementation phase some data structures are to be added in the database (through the PersistenceManager) to proper support the new functionalities.
+Of course at each implementation phase some data structures are to be added in the database (through the \textit{PersistenceManager}) to proper support the new functionalities.
 
 These are the main steps of the implementations we want to follow to reach Travlendar+ full operativity on\begin{large}
 \textbf{client side}:
@@ -34,26 +34,26 @@ Before starting the integration testing phase there are a number of conditions t
 Basically all the system components, specified in section \ref{sect:Component view} need to be integrated together; here we specify in detail all the integration that need to be performed.
 On Application Server side:
 \begin{itemize}
-	\item ScheduleManager, EventManager and PathManager needs to be integrated together;
-	\item PreferenceManager needs to be integrated with PathManager (nb.doing do the entire CalendarManager subsystem will be integrated);
-	\item TripManager needs to be integrated with ComplicationManager;
-	\item ComplicationManager needs to be integrated with both NotificationManager and TripManager;
+	\item \textit{ScheduleManager}, \textit{EventManager} and \textit{PathManager} needs to be integrated together;
+	\item \textit{PreferenceManager} needs to be integrated with \textit{PathManager} (nb.doing do the entire \textit{CalendarManager} subsystem will be integrated);
+	\item \textit{TripManager} needs to be integrated with \textit{ComplicationManager};
+	\item \textit{ComplicationManager} needs to be integrated with both \textit{NotificationManager} and \textit{TripManager};
 	\item PersistenceManager needs to be integrated with our DBMS;
-	\item All the components that rely on RESTful APIs to implement the communication with the clients need to be integrated and tested;
-	\item basically all the application server components rely on PersistenceManager and therefore they need to be integrated with it, the same consideration is valid for the AuthenticationManager (except for the NotificationManager that does not interact with it).
+	\item All the components that rely on \textit{RESTful APIs} to implement the communication with the clients need to be integrated and tested;
+	\item basically all the application server components rely on \textit{PersistenceManager} and therefore they need to be integrated with it, the same consideration is valid for the \textit{AuthenticationManager} (except for the \textit{NotificationManager} that does not interact with it).
 \end{itemize}
 On client side (App Mobile):
 \begin{itemize}
-	\item DBManager needs to be integrated with the LocalDatabase;
-	\item ApplicationController, GUIManager and DBManager needs to be integrated together;
+	\item \textit{DBManager} needs to be integrated with the \textit{LocalDatabase};
+	\item \textit{ApplicationController}, \textit{GUIManager} and \textit{DBManager} needs to be integrated together;
 \end{itemize}
-On web server side WebController and JavaServerPages needs to be integrated together.
+On web server side \textit{WebController} and \textit{JavaServerPages} needs to be integrated together.
 All the interactions that single components have with external services APIs have to be tested and their correctness have to be guaranteed before integrate and test phase involving those components begins.
 
 \section{Integration Testing Strategy}
 The integration testing strategy we will adopt will be defined by a mix of two strategies and according to the  implementation plan:
 The first strategy we are going to use is based on a \textbf{bottom-up approach}. This choice will allow us to start from the less-dependent components and then climb the "uses" hierarchy, through the use of proper drivers. The bottom-up approach will enable us to follow the implementation plan, that follow the same approach. doing so we will improve the efficiency and the parallelism of the development process. \newline
-The bottom-up strategy will be mixed with a \textbf{critical-module-first approach}, in order to start the integration and testing of the most critical module of our system, CalendarManager. We've considered also this second strategy in order to avoid issues related to core components of our system and threats to the correct behavior of our system, especially to guarantee the absence of failures or bugs that could prevent the users to correctly take advantage of our platform and its functionalities.
+The bottom-up strategy will be mixed with a \textbf{critical-module-first approach}, in order to start the integration and testing of the most critical module of our system, \textit{CalendarManager}. We've considered also this second strategy in order to avoid issues related to core components of our system and threats to the correct behavior of our system, especially to guarantee the absence of failures or bugs that could prevent the users to correctly take advantage of our platform and its functionalities.
 
 \section{Sequence of Components integration}
 The following subsections aim to describe the order in which Travlendar+ will have to be integrated and tested. We will use as notation an arrow going from component A to component B means that component A is necessary to component B and so it must have been already implemented before performing the integration.
@@ -61,107 +61,116 @@ The following subsections aim to describe the order in which Travlendar+ will ha
 \subsection{Software integration Sequence}
 Since our system rely on some external systems and interact with theirs external interfaces (APIs) we will assume that those system are already proper tested.
 \subsubsection{PersistenceManager}
+The first component to be integrated is the \textit{PersistenceManager}, since all other modules that need to access the data need this module in order to work properly. \textit{PersistenceManager} is to be integrated with the DBMS.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/persistence.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/persistence.png}
 	\end{center}
-	\caption{I\&T-PersistenceManager}
+	\caption{I\&T - PersistenceManager}
 \end{figure}
-with db
 
 \subsubsection{AuthenticationManager}
+Nearly every core-component require the \textit{AuthenticationManager} to work properly. It is to be integrated with the \textit{PersistenceManager}.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/authentication.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/authentication.png}
 	\end{center}
-	\caption{I\&T-AuthenticationManager}
+	\caption{I\&T - AuthenticationManager}
 \end{figure}
-with PersistenceManager
 
 \subsubsection{CalendarManager}
+The \textit{CalendarManager}'s components interact all with \textit{AuthenticationManager} and \textit{PersistenceManager}, and so each component will be integrated with them.
+The \textit{CalendarManager}'s components are strictly correlated and so, in order to minimize the number of drivers, their integration order will be the following:
+\textit{ScheduleManager} and \textit{PreferenceManager} are to be integrated with \textit{AuthenticationManager} and \textit{PersistenceManager}.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/preference.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/calendar_manager/schedule.png}
 	\end{center}
-	\caption{I\&T-PreferenceManager}
+	\caption{I\&T - ScheduleManager}
 \end{figure}
-
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/schedule.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/calendar_manager/preference.png}
 	\end{center}
-	\caption{I\&T-ScheduleManager}
+	\caption{I\&T - PreferenceManager}
 \end{figure}
-
+\noindent
+\textit{PathManager} is to be integrated with \textit{PersistenceManager}, \textit{AuthenticationManager}, \textit{GoogleMaps APIs}, \textit{PreferenceManager} and \textit{ScheduleManager}, following this order no drivers will be needed to perform the integration.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/path.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/calendar_manager/path.png}
 	\end{center}
-	\caption{I\&T-PathManager}
+	\caption{I\&T - PathManager}
 \end{figure}
-
+\noindent
+\textit{EventManager} is to be integrated with \textit{PersistenceManager}, \textit{AuthenticationManager}, \textit{ScheduleManager} and \textit{PathManager}, following this order a driver will be needed for the methods of \textit{PathManager} called by \textit{EventManager} (schedule-event managers interaction need also information about the travels duration).
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/calendar_manager/event.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/calendar_manager/event.png}
 	\end{center}
-	\caption{I\&T-EventManager}
+	\caption{I\&T - EventManager}
 \end{figure}
-all with PersistenceManager (man mano)
-path with google maps
-schedule-path-event-preference
-all with Authentication
 
 \subsubsection{TripManager}
+\textit{TripManager} is to be integrated with \textit{PersistenceManager}, \textit{AuthenticationManager} and then with TSP APIs, following this order a driver will be needed for the methods of \textit{TSP APIs} called by \textit{TripManager}.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/trip.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/trip.png}
 	\end{center}
-	\caption{I\&T-TripManager}
+	\caption{I\&T - TripManager}
 \end{figure}
-PersistenceManager/TSP api
 
 \subsubsection{NotificationManager}
+\textit{NotificationManager} interacts only with \textit{GCM APIs} and so it is to be integrated with.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/notification.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/notification.png}
 	\end{center}
-	\caption{I\&T-NotificationManager}
+	\caption{I\&T - NotificationManager}
 \end{figure}
-GCM
 
 \subsubsection{ComplicationManager}
+\textit{ComplicationManager} is to be integrated with \textit{PersistenceManager}, \textit{TSP APIs}, \textit{GoogleMaps APIs}, \textit{Weather API's} and \textit{NotificationManager}, following this order a driver will be needed for the methods of \textit{NotificationManager} called by \textit{ComplicationManager} ( basically when \textit{ComplicationManager} will have to notify the user's it will try to forward notification that will be received by the driver).
+The integration of the three external APIs can be integrated in any possible order, since the interactions are independent from one another.
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[scale=0.7]{implementation_and_testing/complication.png}
+		\includegraphics[scale=0.6]{implementation_and_testing/complication.png}
 	\end{center}
-	\caption{I\&T-ComplicationManager}
+	\caption{I\&T - ComplicationManager}
 \end{figure}
-google maps/TSP/Weather/NotificationManager
+
+\subsubsection{Overall integration of the Application Server}
+The following picture is just a recap of the integration and test plan of the \textit{Application Server}. The integration order starts from the top of the picture and end in the bottom.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{implementation_and_testing/app_server_I&T.png}
+	\end{center}
+	\caption{I\&T - Application Server}
+\end{figure}
 
 \subsubsection{WebServer}
+In the web server subsystem the \textit{WebController} component is to be integrated with \textit{JavaServerPages} and then with \textit{Google Polylines APIs}. 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.7]{implementation_and_testing/web.png}
 	\end{center}
-	\caption{I\&T-WebServer}
+	\caption{I\&T - WebServer}
 \end{figure}
-web with JSP +polylines
 
 \subsubsection{AppMobile}
+The order of integration and testing of the \textit{AppMobile}'s components is the following: first \textit{DBManager} with \textit{LocalDBMS} and tehn \textit{ApplicationController} with \textit{DBManager}, \textit{GUIManager}, \textit{GCM API's} and \textit{Google Polylines APIs}. 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.7]{implementation_and_testing/app.png}
 	\end{center}
-	\caption{I\&T-AppMobile}
+	\caption{I\&T - AppMobile}
 \end{figure}
-local db/db manager
-db manager/gui with application controller
-GCM/Google polylines
-
+\newpage
 \subsection{Subsystems integration Sequence}
+Once all subsystem will be fully integrated this is the order in which they are to be integrated together in order to deploy the full Travlendar+ infrastructure.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.7]{implementation_and_testing/subsystem_integration.png}
 	\end{center}
-	\caption{I\&T-AppMobile}
+	\caption{I\&T - AppMobile}
 \end{figure}
