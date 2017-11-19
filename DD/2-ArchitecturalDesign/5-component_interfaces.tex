@@ -1,0 +1,52 @@
+\subsection{IManageCalendar}
+\label{subsect: IManageCalendar}
+\textit{IManageCalendar} is the core of the system: it provides all the useful operations to assist the user in the organization of his commitments. The interface contains some functions accessible from outside and other functions that can be used only into the system. This interface is subdivided into four external interfaces and three internal interfaces.
+
+\subsubsection{IExternalScheduleManagenent}
+\begin{itemize}
+\item \textit{getUpdatedSchedule(unicode, timestampLocal)}: it updates the user schedule into local database (GET method);
+\item \textit{getDailySchedule(day, unicode)}: it allows to obtain the schedule of a specified day (GET method);
+\item \textit{addEventToSchedule(overlappingEvent, unicode)}: it is used when the user want to force into the schedule an overlapping event (PATCH method). 
+\end{itemize}
+\subsubsection{IExternalEventManagement}
+\begin{itemize}
+\item \textit{getEventUpdated(unicode, timestampLocal)}: it updates the user events into the local database. This function returns also the best path for each event (GET method);
+\item \textit{getEventInfo(event, unicode)}: it allows to obtain the info related to a specific event (GET method);
+\item \textit{addEvent(event, unicode)}: it begins the task of adding the event specified by the user. Internal methods will be used in order to add correctly the event into the database;
+\item \textit{modifyEvent(event, unicode)}: it allows the user to modify a previously inserted event (UPDATE method);
+\item \textit{deleteEvent(event, unicode)}: it allows the user to delete a previously inserted event (DELETE method);
+\item \textit{performAlternativeRequests (path, unicode)}: it is used when the user want to obtain alternative feasible paths of a selected path.
+\end{itemize}
+\subsection{IExternalPreferenceManagement}
+\begin{itemize}
+\item \textit{getPreferenceProfiles(unicode)}: it allows to obtain the profiles, containing user preferences, defined by a user. These profiles are named "type of events" (GET method);
+\item \textit{addPreference(typeOfEvent, unicode)} it allows the user to add a new type of event with a set of preferences and constraints (POST method);
+\item \textit{modifyPreference(typeOfEvent, unicode)} it allows the user to modify a previously inserted type of event (UPDATE method);
+\item \textit{deletePreference(typeOfEvent, unicode)}: it allows the user to delete a previously inserted type of event (DELETE method).
+\end{itemize}
+\subsubsection{IExternalPathManagement}
+\begin{itemize}
+\item \textit{getPathInfo(event, unicode)}: it is used to obtain info related to a specific path that is part of the schedule (GET method);
+\item \textit{getMap(unicode)}: it is used to obtain info that allow to track user travels on the map (GET method).
+\end{itemize}
+\subsubsection{IScheduleManager}
+\begin{itemize}
+\item \textit{checkOverlap(event, user)}: it is used during the creation of an event and indicate if it is already present an event in the period specified for the new one;
+\item \textit{addToNotScheduled(event, user)}: it adds the event into the database as a not scheduled event (POST method);
+\item \textit{addToScheduled(event, bestPath, user)}: it adds the event into the database as a scheduled event (POST method);
+\item \textit{checkFeasibility(event, paths, user)}: it allows to discard not feasible paths. This function is used during the calculation of the paths related to an event;
+\item \textit{isScheduleFeasible(user)}: it indicates if the schedule proposed to the user is free from overlapping;
+\item \textit{isBreakEventScheduled(breakEvent, user)}: it indicates if a specified break event is included into the proposed schedule.
+\end{itemize}
+\subsubsection{IPreferenceManager}
+\begin{itemize}
+\item \textit{checkConstraints(paths, typeOfEvent, user}): it allows to discard paths that not respect constraints defined by the user. This function is used during the calculation of the paths relted to an event;
+\item \textit{findBestPath(paths, typeOfEvent, user)}: it indicates, among different paths, which is the best one according to a parameter of the type of event defined by the user ;
+-\item \textit{isVehicleAllowed (event, vehicle)}: it indicates if a vehicle can be used for a given event, according to the type of that event and any constraint defined by the user on hour of travel or max length with a travel mean.
+\end{itemize}
+\subsubsection{IPathManager}
+\begin{itemize}
+\item \textit{calculatePaths(event, user)}: it manages the interaction with Google Maps APIs in order to obtain all the paths related to a certain event;
+\item \textit{addPathPathsWithSharingVehicle(vehicle, event)}: it is called by \textit{calculatePaths} and allows to consider, according to user preferences, the sharing vehicles in the calculation of paths. Google Maps APIs don't provide information about sharing vehicles. 
+
+\end{itemize}
