@@ -40,7 +40,9 @@ The main application server components are:
 	
 \subsection{Database}
 \label{subsect:Database}
-	\todo{TODO ER + description}
+	The Database Server must manage the insertion, deletion and modification on data inside his secondary memory. This layer must guarantee ACID distributed transactions.\\
+	Since we've already provided an exhaustive description of the model of the data (\textbf{see Section 2.2.1 of RASD document}) to be memorized into the database we will not insert here another diagram.\\
+	Nonetheless some small additions must be made to that diagram: in the tables it must be added a time-stamp field in order to handle the update of the mobile Application's Local Database with only the actual changes in the database (detailed explanation in section \ref{subsect:Local database update}), it must be also memorized an additional table that will store all the IDs of the devices connected to an account and the relative univocal code associated with them (detailed explanation in section \ref{subsect:Authentication}).	
 
 \subsection{Web Server}
 \label{subsect:Web Server}

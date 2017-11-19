@@ -48,5 +48,46 @@
 \begin{itemize}
 \item \textit{calculatePaths(event, user)}: it manages the interaction with Google Maps APIs in order to obtain all the paths related to a certain event;
 \item \textit{addPathPathsWithSharingVehicle(vehicle, event)}: it is called by \textit{calculatePaths} and allows to consider, according to user preferences, the sharing vehicles in the calculation of paths. Google Maps APIs don't provide information about sharing vehicles. 
+\end{itemize}
 
+\subsection{IPersistence}
+\label{subsect:IPersistence}
+\textit{IPersistence} provide all the data-related functionalities to the other internal components of Travlendar+ system. This interface exposes a set of methods used by the others server components to perform rear and write operations, in particular update, delete, insert and select queries are exposed for all the data types used, created and consumed.
+
+\subsection{INotificationManager}
+\label{subsect:INotificationManager}
+\textit{INotificationManager} provide methods to be used by the Application server components in order to send notifications to the user's mobile applications. At this stage we've identified these two methods:
+\begin{itemize}
+	\item \textit{sendNotification(IDdevice,message)}:
+	\item \textit{sendUpdateNotice(IDdevice)}:
+\end{itemize}
+
+\subsection{IAuthenticationControl}
+\label{subsect:IAuthenticationControl}
+
+\begin{itemize}
+	\item \textit{filter(containerRequestContext)}: https://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
+\end{itemize}
+
+\subsection{IAuthentication}
+\label{subsect:IAuthentication}
+
+\begin{itemize}
+	\item \textit{register(registrationForm)}:
+	\item\textit{submitLogin(mail, password)}:
+	\item\textit{editProfile(registrationForm)}:
+	\item\textit{requestPublicKey(IDdevice)}:
+	\todo{maybe deleteProfile + askNewCredentials ?}
+\end{itemize}
+
+\subsection{IManageTrip}
+\label{subsect:IManageTrip}
+
+\begin{itemize}
+	\item\textit{deleteTicket(ticket, unicode)}:
+	\item\textit{addTicket(ticket, unicode)}:
+	\item\textit{modifyTicket(ticket, unicode)}:
+	\item\textit{getPossibleTickets(path, unicode)}:
+	\item\textit{selectTicket(ticket, unicode)}:
+	\item\textit{getNearSharingVehicles(location, unicode)}:
 \end{itemize}
