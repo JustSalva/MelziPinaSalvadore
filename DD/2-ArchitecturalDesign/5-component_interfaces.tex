@@ -1,14 +1,18 @@
+We classify our interfaces in two types: the (internal) interfaces, used by the components of the application server in order to interact with each other, and the external interfaces, offered with as RESful web services, as specified in the previous sections. For the sake of accurateness and clarity we'll specify for each RESTful method the relative HTTP reference request method (nb. \textit{GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE, CONNECT } and \textit{PATCH}).
 \subsection{IManageCalendar}
 \label{subsect: IManageCalendar}
-\textit{IManageCalendar} is the core of the system: it provides all the useful operations to assist the user in the organization of his commitments. The interface contains some functions accessible from outside and other functions that can be used only into the system. This interface is subdivided into four external interfaces.
+\textit{IManageCalendar} is the core of the system: it provides all the useful operations to assist the user in the organization of his commitments. This interface is subdivided into four external interfaces:
 
 \subsubsection{IExternalScheduleManagenent}
+This external interface offers, to the user's devices, access to all the schedule-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getUpdatedSchedule(unicode, timestampLocal)}: it updates the user schedule into local database (GET method);
 \item \textit{getDailySchedule(day, unicode)}: it allows to obtain the schedule of a specified day (GET method);
 \item \textit{addEventToSchedule(overlappingEvent, unicode)}: it is used when the user want to force into the schedule an overlapping event (PATCH method). 
 \end{itemize}
+
 \subsubsection{IExternalEventManagement}
+This external interface offers, to the user's devices, access to all the event-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getEventUpdated(unicode, timestampLocal)}: it updates the user events into the local database. This function returns also the best path for each event (GET method);
 \item \textit{getEventInfo(event, unicode)}: it allows to obtain the info related to a specific event (GET method);
@@ -17,34 +21,73 @@
 \item \textit{deleteEvent(event, unicode)}: it allows the user to delete a previously inserted event (DELETE method);
 \item \textit{performAlternativeRequests (path, unicode)}: it is used when the user want to obtain alternative feasible paths of a selected path.
 \end{itemize}
+
 \subsubsection{IExternalPreferenceManagement}
+This external interface offers, to the user's devices, access to all the preference-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getPreferenceProfiles(unicode)}: it allows to obtain the profiles, containing user preferences, defined by a user. These profiles are named "type of events" (GET method);
-\item \textit{addPreference(typeOfEvent, unicode)} it allows the user to add a new type of event with a set of preferences and constraints (POST method);
-\item \textit{modifyPreference(typeOfEvent, unicode)} it allows the user to modify a previously inserted type of event (UPDATE method);
+\item \textit{addPreference(typeOfEvent, unicode)}: it allows the user to add a new type of event with a set of preferences and constraints (POST method);
+\item \textit{modifyPreference(typeOfEvent, unicode)}: it allows the user to modify a previously inserted type of event (UPDATE method);
 \item \textit{deletePreference(typeOfEvent, unicode)}: it allows the user to delete a previously inserted type of event (DELETE method).
+\item \textit{addPreferredLocation(location, name, unicode)}: it allows the user to add a new Preferred Location (POST method);
+\item \textit{modifyPreferredLocation(location, name, unicode)}: it allows the user to modify a new Preferred Location (UPDATE method);
+\item \textit{deletePreferredLocation(name, unicode)}: it allows the user to delete a new Preferred Location (DELETE method);
+\item \textit{getPreferredLocations(unicode)}: it allows the user to obtain the data relative to his preferred locations (GET method);
 \end{itemize}
 \subsubsection{IExternalPathManagement}
+This external interface offers, to the user's devices, access to all the travel paths-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getPathInfo(event, unicode)}: it is used to obtain info related to a specific path that is part of the schedule (GET method);
 \item \textit{getMap(unicode)}: it is used to obtain info that allow to track user travels on the map (GET method).
 \end{itemize}
+
+\subsection{IAuthentication}
+\label{subsect:IAuthentication}
+This external interface offers, to the user's devices, authentication, registration and profile-management functionalities. It exposes the following methods:
+\begin{itemize}
+	\item \textit{register(registrationForm, IdDevice)}: it is used when a user register himself into the system and doing so it sends to the Application Server the encrypted registration form (email, name, surname, password and captcha), it returns an univocal code related to the device(POST method);
+	\item \textit{submitLogin(mail, password, IdDevice)}: it is used when a user have to log in into the system, it returns an univocal code related to the device(POST method);
+	\item \textit{editProfile(registrationForm)}: it is used when a user wants to modify his profile, to do so it sends the same data contained in the registration form (UPDATE method);
+	\item \textit{requestPublicKey(IDdevice)}: it is used when an user is about to log into the system and so it must obtain a public key to encrypt his password (GET method);
+	\item \textit{deleteProfile(mail, password, IdDevice)}: it allows the user to remove his profile from Travlender+ (DELETE method);
+	\item \textit{askNewCredentials(mail)}: it allows the user to request a new password, that will be sent to his email (PATCH method).
+\end{itemize}
+
+\subsection{IManageTrip}
+\label{subsect:IManageTrip}
+This external interface offers, to the user's devices, the arrange trips functionalities of Travlendar+. It exposes the following methods:
+\begin{itemize}
+	\item \textit{addTicket(ticket, unicode)}: it adds a ticket into the user personal tickets (POST method);
+	\item \textit{deleteTicket(ticket, unicode)}: it delete a ticket from the user personal tickets (DELETE method);
+	\item \textit{modifyTicket(ticket, unicode)}: it modify a ticket contained in the user personal tickets list(UPDATE method);
+	\item \textit{buyTicket(path, unicode)}: it allows the user to obtain the specific URLs where he can buy the tickets needed for a travel (GET method);
+	\item \textit{getTickets(unicode)}: it allows the user to obtain the data relative to his saved tickets (GET method);
+	\item \textit{selectTicket(ticket, unicode, path)}: it allows the user to connect a ticket to a specific travel path (PATCH method);
+	\item \textit{deselectTicket(ticket, unicode, path)}: it allows the user to undo the ticket selection to a specific travel path (PATCH method);
+	\item \textit{getNearSharingVehicles(location, unicode)}: it allows the user to retrieve the location of the near (to him) sharing vehicles selected in his travel (GET method).
+\end{itemize}
+
 \subsection{IScheduleManager}
+This interface is used internally in the calendar manager subsystem to allow event and path managers to interact with \textit{ScheduleManager}, the methods used in these interactions are the following:
 \begin{itemize}
 \item \textit{checkOverlap(event, user)}: it is used during the creation of an event and indicate if it is already present an event in the period specified for the new one;
-\item \textit{addToNotScheduled(event, user)}: it adds the event into the database as a not scheduled event (POST method);
-\item \textit{addToScheduled(event, bestPath, user)}: it adds the event into the database as a scheduled event (POST method);
+\item \textit{addToNotScheduled(event, user)}: it adds the event into the database as a not scheduled event;
+\item \textit{addToScheduled(event, bestPath, user)}: it adds the event into the database as a scheduled event;
 \item \textit{checkFeasibility(event, paths, user)}: it allows to discard not feasible paths. This function is used during the calculation of the paths related to an event;
 \item \textit{isScheduleFeasible(user)}: it indicates if the schedule proposed to the user is free from overlapping;
 \item \textit{isBreakEventScheduled(breakEvent, user)}: it indicates if a specified break event is included into the proposed schedule.
 \end{itemize}
+
 \subsection{IPreferenceManager}
+This interface is used internally in the calendar manager subsystem to allow the \textit{PathManager} to interact with \textit{PreferenceManager}, the methods used in these interactions are the following:
 \begin{itemize}
 \item \textit{checkConstraints(paths, typeOfEvent, user}): it allows to discard paths that not respect constraints defined by the user. This function is used during the calculation of the paths relted to an event;
 \item \textit{findBestPath(paths, typeOfEvent, user)}: it indicates, among different paths, which is the best one according to a parameter of the type of event defined by the user ;
 \item \textit{isVehicleAllowed (event, vehicle)}: it indicates if a vehicle can be used for a given event, according to the type of that event and any constraint defined by the user on hour of travel or max length with a travel mean.
 \end{itemize}
+
 \subsection{IPathManager}
+This interface is used internally in the calendar manager subsystem to allow the \textit{EventManager} to interact with \textit{PathManager}, the methods used in these interactions are the following:
 \begin{itemize}
 \item \textit{calculatePaths(event, user)}: it manages the interaction with Google Maps APIs in order to obtain all the paths related to a certain event;
 \item \textit{addPathPathsWithSharingVehicle(vehicle, event)}: it is called by \textit{calculatePaths} and allows to consider, according to user preferences, the sharing vehicles in the calculation of paths. Google Maps APIs don't provide information about sharing vehicles. 
@@ -64,31 +107,9 @@
 \end{itemize}
 
 \subsection{IAuthenticationControl}
+\textit{AuthenticationManager} provide an internal (in the Application Server) interface that provide one method:
 \label{subsect:IAuthenticationControl}
-
 \begin{itemize}
-	\item \textit{filter(containerRequestContext)}: it allow all the application server components to verify the identity and the authorizations of a request, this method 
+	\item \textit{filter(containerRequestContext)}: it allows all the application server components to verify the identity and the authorizations of a request, this method practically checks the univocal code contained in every request payload.
 \end{itemize}
 
-\subsection{IAuthentication}
-\label{subsect:IAuthentication}
-
-\begin{itemize}
-	\item \textit{register(registrationForm)}:
-	\item\textit{submitLogin(mail, password)}:
-	\item\textit{editProfile(registrationForm)}:
-	\item\textit{requestPublicKey(IDdevice)}:
-	\todo{maybe deleteProfile + askNewCredentials ?}
-\end{itemize}
-
-\subsection{IManageTrip}
-\label{subsect:IManageTrip}
-
-\begin{itemize}
-	\item\textit{deleteTicket(ticket, unicode)}:
-	\item\textit{addTicket(ticket, unicode)}:
-	\item\textit{modifyTicket(ticket, unicode)}:
-	\item\textit{getPossibleTickets(path, unicode)}:
-	\item\textit{selectTicket(ticket, unicode)}:
-	\item\textit{getNearSharingVehicles(location, unicode)}:
-\end{itemize}
