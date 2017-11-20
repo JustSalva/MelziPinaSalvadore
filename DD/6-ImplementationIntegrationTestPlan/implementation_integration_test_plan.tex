@@ -5,7 +5,7 @@ These are the main steps of the implementations we want to follow to reach Travl
 \textbf{server side}:
 \end{large}
 \begin{enumerate}
-\item \textit{CalendarManager} (\textit{AuthenticationManager}, \textit{PathManager}, \textit{EventManager}, \textit{ScheduleManager}, but not \textit{PreferenceManager}), \textit{PersistenceManager} and \textit{AuthenticationManager} are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
+\item \textit{CalendarManager} (\textit{PathManager}, \textit{EventManager}, \textit{ScheduleManager}, but not \textit{PreferenceManager}), \textit{PersistenceManager} and \textit{AuthenticationManager} are the core of our system and so they are the first to be implemented among with their sub components. In particular in this phase the user will not be able to edit his travels but he can only visualize the proposed ones;
 \item \textit{PreferenceManager} will be inserted in a second release in order to filter the user paths and doing so will be added functionalities in order to allow the user to edit and choose the travels he prefer from the feasible ones proposed to him;
 \item \textit{ComplicationManager} will be added together with the \textit{NotificationManager} in order to discover if a users travel is no more feasible and notify him.
 \item \textit{TripManager} will be the last module to be implemented, allowing the user to arrange his trips.
@@ -17,7 +17,7 @@ These are the main steps of the implementations we want to follow to reach Travl
 \end{large}
 \begin{enumerate}
 \item Android App is to be developed first, proper updated will be performed when a new functionality is added on server-side, but the first application version is to be released together with the Application-server core functionality release.
-\item IOS App will be developed in a second phase: when the Android application is completed (first release)the workforce dedicated to his development will be moved on this task but Android App's support will be taken care of nonetheless;
+\item IOS App will be developed in a second phase: when the Android application is completed (first release). The workforce dedicated to his development will be moved on this task but Android App's support will be taken care of nonetheless;
 \item When both IOS and Android applications are released we will proceed to develop the web server that will allow the users to use Travlendar+ in any web browser.
 \end{enumerate}
 
@@ -26,7 +26,7 @@ Before starting the integration testing phase there are a number of conditions t
 \begin{itemize}
 \item \textbf{Documents:} this document (DD) and RASD have to be completed;
 \item \textbf{Proper Documentation:} Every method and class, before being tested must be provided with proper documentation and/or comments in order to ease the testing process and also make easier the reuse of the classes and their methods.
-\item \textbf{Code Inspection and Analysis:} At least one method, either code inspection or automated or automated data flow analysis, have to be performed on the modules and classes before we proceed to the integration and test phase that involve them.
+\item \textbf{Code Inspection and Analysis:} At least one method, either code inspection or automated or automated data flow analysis, have to be performed on the modules and classes before we proceed to the integration and test phase that involves them.
 \item \textbf{Starting Condition:} The integration process can start only if the component involved offers at least 75\% of their functionalities to-be-implemented, this means that this phase can start in parallel with the completion of that component, and not that the testing phase can end with some functionalities still to be implemented; 
 \item \textbf{Unit tests:} Before starting the integration of one component, it must be tested through proper unity tests, in order to guaranteed a correct behavior of his internal mechanisms.
 \end{itemize}
@@ -35,7 +35,7 @@ Basically all the system components, specified in section \ref{sect:Component vi
 On Application Server side:
 \begin{itemize}
 	\item \textit{ScheduleManager}, \textit{EventManager} and \textit{PathManager} needs to be integrated together;
-	\item \textit{PreferenceManager} needs to be integrated with \textit{PathManager} (nb.doing do the entire \textit{CalendarManager} subsystem will be integrated);
+	\item \textit{PreferenceManager} needs to be integrated with \textit{PathManager} (NB: doing that the entire \textit{CalendarManager} subsystem will be integrated);
 	\item \textit{TripManager} needs to be integrated with \textit{ComplicationManager};
 	\item \textit{ComplicationManager} needs to be integrated with both \textit{NotificationManager} and \textit{TripManager};
 	\item PersistenceManager needs to be integrated with our DBMS;
@@ -51,8 +51,8 @@ On web server side \textit{WebController} and \textit{JavaServerPages} needs to 
 All the interactions that single components have with external services APIs have to be tested and their correctness have to be guaranteed before integrate and test phase involving those components begins.
 
 \section{Integration Testing Strategy}
-The integration testing strategy we will adopt will be defined by a mix of two strategies and according to the  implementation plan:
-The first strategy we are going to use is based on a \textbf{bottom-up approach}. This choice will allow us to start from the less-dependent components and then climb the "uses" hierarchy, through the use of proper drivers. The bottom-up approach will enable us to follow the implementation plan, that follow the same approach. doing so we will improve the efficiency and the parallelism of the development process. \newline
+The integration testing strategy we will adopt will be defined by a mix of two strategies and according to the  implementation plan. \\
+The first strategy we are going to use is based on a \textbf{bottom-up approach}. This choice will allow us to start from the less-dependent components and then climb the "uses" hierarchy, through the use of proper drivers. The bottom-up approach will enable us to follow the implementation plan, that follow the same approach. Doing so we will improve the efficiency and the parallelism of the development process. \newline
 The bottom-up strategy will be mixed with a \textbf{critical-module-first approach}, in order to start the integration and testing of the most critical module of our system, \textit{CalendarManager}. We've considered also this second strategy in order to avoid issues related to core components of our system and threats to the correct behavior of our system, especially to guarantee the absence of failures or bugs that could prevent the users to correctly take advantage of our platform and its functionalities.
 
 \section{Sequence of Components integration}
