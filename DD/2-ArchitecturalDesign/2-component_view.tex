@@ -50,6 +50,14 @@ The main application server components are:
 	The main functions to be implemented in this layer are basically interfaces.
 	The only logic in this layer is used to embed a map into the relative web page and to draw the paths the user must travel to reach his events. To do so the web browser will interact with Google Polylines APIs.\newline
 	The presentation will be handled by the JavaServerPages component that will be implemented using JSP pages. The interaction with the Application server and with the maps API will be handled by the WebController module.
+	
+\begin{figure}[H]
+\begin{center}
+		\hspace*{-0pt}
+		\includegraphics[scale=0.5]{Client_and_web_server.png}
+\end{center}
+\caption{The components of the web server, of the client app and of the client browser}
+\end{figure}
 
 \subsection{App Mobile}
 \label{subsect:App Mobile}
@@ -61,13 +69,8 @@ The main application server components are:
 	\item the \textit{ApplicationController}: it handles the interaction with the server, using the inputs provided by the users through the GUIManager and also requesting data manipulation operations in the local app database with the information received from the server.
 	\end{itemize}
 	The application controller will also handle the notifications received and it will interact with Google Polylines APIs for mobile devices in order to to draw the paths the user must travel to reach his events and provide GPS path following functionalities.
-	\todo{TODO E-R of the mobile database}
-	
-	
-\begin{figure}[H]
-\begin{center}
-		\hspace*{-0pt}
-		\includegraphics[scale=0.5]{Client_and_web_server.png}
-\end{center}
-\caption{The components of the web server, of the client app and of the client browser}
+\begin{figure} [H]
+	\includegraphics[scale=0.5]{er_diagram.png}
+	\centering
+	\caption{ER diagram representing the mobile app internal DB.}
 \end{figure}
