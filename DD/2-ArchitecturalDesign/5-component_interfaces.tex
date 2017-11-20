@@ -1,6 +1,6 @@
 \subsection{IManageCalendar}
 \label{subsect: IManageCalendar}
-\textit{IManageCalendar} is the core of the system: it provides all the useful operations to assist the user in the organization of his commitments. The interface contains some functions accessible from outside and other functions that can be used only into the system. This interface is subdivided into four external interfaces and three internal interfaces.
+\textit{IManageCalendar} is the core of the system: it provides all the useful operations to assist the user in the organization of his commitments. The interface contains some functions accessible from outside and other functions that can be used only into the system. This interface is subdivided into four external interfaces.
 
 \subsubsection{IExternalScheduleManagenent}
 \begin{itemize}
@@ -29,7 +29,7 @@
 \item \textit{getPathInfo(event, unicode)}: it is used to obtain info related to a specific path that is part of the schedule (GET method);
 \item \textit{getMap(unicode)}: it is used to obtain info that allow to track user travels on the map (GET method).
 \end{itemize}
-\subsubsection{IScheduleManager}
+\subsection{IScheduleManager}
 \begin{itemize}
 \item \textit{checkOverlap(event, user)}: it is used during the creation of an event and indicate if it is already present an event in the period specified for the new one;
 \item \textit{addToNotScheduled(event, user)}: it adds the event into the database as a not scheduled event (POST method);
@@ -38,13 +38,13 @@
 \item \textit{isScheduleFeasible(user)}: it indicates if the schedule proposed to the user is free from overlapping;
 \item \textit{isBreakEventScheduled(breakEvent, user)}: it indicates if a specified break event is included into the proposed schedule.
 \end{itemize}
-\subsubsection{IPreferenceManager}
+\subsection{IPreferenceManager}
 \begin{itemize}
 \item \textit{checkConstraints(paths, typeOfEvent, user}): it allows to discard paths that not respect constraints defined by the user. This function is used during the calculation of the paths relted to an event;
 \item \textit{findBestPath(paths, typeOfEvent, user)}: it indicates, among different paths, which is the best one according to a parameter of the type of event defined by the user ;
--\item \textit{isVehicleAllowed (event, vehicle)}: it indicates if a vehicle can be used for a given event, according to the type of that event and any constraint defined by the user on hour of travel or max length with a travel mean.
+\item \textit{isVehicleAllowed (event, vehicle)}: it indicates if a vehicle can be used for a given event, according to the type of that event and any constraint defined by the user on hour of travel or max length with a travel mean.
 \end{itemize}
-\subsubsection{IPathManager}
+\subsection{IPathManager}
 \begin{itemize}
 \item \textit{calculatePaths(event, user)}: it manages the interaction with Google Maps APIs in order to obtain all the paths related to a certain event;
 \item \textit{addPathPathsWithSharingVehicle(vehicle, event)}: it is called by \textit{calculatePaths} and allows to consider, according to user preferences, the sharing vehicles in the calculation of paths. Google Maps APIs don't provide information about sharing vehicles. 
@@ -56,17 +56,18 @@
 
 \subsection{INotificationManager}
 \label{subsect:INotificationManager}
-\textit{INotificationManager} provide methods to be used by the Application server components in order to send notifications to the user's mobile applications. At this stage we've identified these two methods:
+\textit{INotificationManager} provide methods to be used by the Application server components in order to send notifications to the user's mobile applications. At this stage we've identified these three methods:
 \begin{itemize}
-	\item \textit{sendNotification(IDdevice,message)}:
-	\item \textit{sendUpdateNotice(IDdevice)}:
+	\item \textit{sendNotification(IdDevice, message)}: it allows to send to a text notification to a specific mobile device, the notification will be displayed on the device;
+	\item \textit{sendNoMoreFesibleNotice(IdDevice, event, message)}: it allows the system to notice a specific device that an event travel is no more feasible;
+	\item \textit{sendUpdateNotice(IdDevice)}: it is called to notice a device that his local database is no more up to date, and to order the device to update itself.
 \end{itemize}
 
 \subsection{IAuthenticationControl}
 \label{subsect:IAuthenticationControl}
 
 \begin{itemize}
-	\item \textit{filter(containerRequestContext)}: https://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
+	\item \textit{filter(containerRequestContext)}: it allow all the application server components to verify the identity and the authorizations of a request, this method 
 \end{itemize}
 
 \subsection{IAuthentication}
