@@ -20,4 +20,5 @@ When the application performs an operation that require a connection, both onlin
 When the online database is modified, the system sends a notification to all the mobile devices related to the user whose local database isn't updated yet. The notification mechanism works as specified in section \ref{subsect: Notifications}. Only changes made after the last writing operation on local database are sent from server to local DB, in order to update it.
 
 \subsection{Periodic events}
+\label{subsect:Periodic events}
 Once a day, an internal module is run to check that every periodical event inserted by a user is covered for a year, e.g. if an event like "Friday lunch with parents" with a weekly periodicity is created on 2018/01/05, on 2018/01/12 the module will create a new event on 2019/01/12.
