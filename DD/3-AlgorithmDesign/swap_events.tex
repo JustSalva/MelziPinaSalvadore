@@ -13,7 +13,7 @@ To explain it we will use the following terms:
 or \\ \textit{startingTime(ForcedEvent) \textless startingTime(ScheduledEvent) AND \\endingTime(ScheduledEvent) \textless endingTime(ForcedEvent)}. \\
 	If the condition results True for one or more scheduled events, it removes them from the schedule and puts them in the overlapping list;
 	\item Computes the travel of ForcedEvent, depending on the previousLocation inserted or, if a previous starting location for the travel is not defined, on the location of the previous ScheduledEvent;
-	\item If the travel used to reach the ForcedEvent requires a departure time that is lesser than the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
+	\item If the travel used to reach the ForcedEvent requires a departure time that is less than the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
 	\item Repeats 2 and 3 until a ScheduledEvent considered is still feasible after the insertion of the ForcedEvent;
 	\item Recomputes the travel of the ScheduledEvent that follows ForcedEvent. If that ScheduledEvent's location is not reachable in time for its starting time anymore, this ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
 	\item Repeats 5 until the ScheduledEvent following ForcedEvent in the ScheduleList is still a feasible one after the recomputation of its travel;
