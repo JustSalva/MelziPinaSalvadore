@@ -6,14 +6,14 @@ To explain it we will use the following terms:
 	\item \textit{ScheduleList}: A list containing all the scheduled events for a specific day;
 	\item \textit{OverlappingList}: A list containing all the overlapping events for a specific day.
 \end{itemize}
-
+\newpage
 \noindent The algorithm works in this way:
 \begin{enumerate}
-	\item Checks if there are ScheduledEvents with \\ \textit{startingTime(ScheduledEvent) < startingTime(ForcedEvent) < endingTime(ScheduledEvent)} \\ or \\ \textit{startingTime(ScheduledEvent) < endingTime(ForcedEvent) < endingTime(ScheduledEvent)} \\
-or \\ \textit{startingTime(ForcedEvent) < startingTime(ScheduledEvent) AND endingTime(ScheduledEvent) < endingTime(ForcedEvent)}. \\
-	If positive, it removes them from the schedule and puts them in the overlapping list;
+	\item Checks if there are ScheduledEvents with: \\ \textit{startingTime(ScheduledEvent) \textless startingTime(ForcedEvent) \textless endingTime(ScheduledEvent)} \\ or \\ \textit{startingTime(ScheduledEvent) \textless endingTime(ForcedEvent) \textless endingTime(ScheduledEvent)} \\
+or \\ \textit{startingTime(ForcedEvent) \textless startingTime(ScheduledEvent) AND \\endingTime(ScheduledEvent) \textless endingTime(ForcedEvent)}. \\
+	If the condition results True for one or more scheduled events, it removes them from the schedule and puts them in the overlapping list;
 	\item Computes the travel of ForcedEvent, depending on the previousLocation inserted or, if a previous starting location for the travel is not defined, on the location of the previous ScheduledEvent;
-	\item If the travel used to reach the ForcedEvent requires a departure time that is < then the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
+	\item If the travel used to reach the ForcedEvent requires a departure time that is lesser than the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
 	\item Repeats 2 and 3 until a ScheduledEvent considered is still feasible after the insertion of the ForcedEvent;
 	\item Recomputes the travel of the ScheduledEvent that follows ForcedEvent. If that ScheduledEvent's location is not reachable in time for its starting time anymore, this ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
 	\item Repeats 5 until the ScheduledEvent following ForcedEvent in the ScheduleList is still a feasible one after the recomputation of its travel;

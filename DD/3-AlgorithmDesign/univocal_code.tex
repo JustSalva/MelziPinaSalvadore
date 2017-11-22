@@ -1,17 +1,20 @@
-In the \textit{registration process} email and password (sent with the encryption algorithm specified above) are written in database.\\
-Log in operation is required in order to use the functionalities of the system.
+In the \textit{registration process} email and password (sent with the encryption algorithm specified in section \ref{subsect:Encryption}) are written in database.\\
+A log in operation is required in order to use the functionalities of the system.
 \\\\
-When login happens the user inserts email and password and they are sent to the system; the system also obtains the ID device exploiting a \textit{GCM's function}. In the DB several IDdevices can be associated to the same user, there is a field that marks the ID as mobile (related to phones and tablets) or browser (related to PCs). Browser IDs are deleted periodically. 
+When the user performs a login, email and password are sent to the system together with the ID device, obtained by the mobile app through the exploit of a \textit{GCM's function}. In the DB several IDdevices can be associated to the same user, there is a field that marks the ID as mobile (related to phones and tablets) or browser (related to PCs). Browser IDs are deleted periodically in order to improve the access-control mechanism (after an ID deletion the users will have to re-insert their credentials).
 \\\\
-The system behaves as specified in the flowchart according to one of the following situations:
+The system behaves as specified in the flowchart below (figure \ref{•})according to one of the following situations:
 \begin{itemize}
 \item \textit{first access}: device is not present in the database;
 \item \textit{login with a different device}: device is in the database, but it is associated to a different user;
 \item \textit{login with the same device} (not for the first time): a new univocal code is calculated and it will be updated on the database.
 \end{itemize}
-The univocal code is a randomly generated string concatenated to the email (unique), so that the univocal code generated will be different from all previous ones. The random string is calculated from the \textit{Current Unix Timestamp}.
+The univocal code is a randomly generated string concatenated to the email (unique), so that the univocal code generated will be different from all previous ones. The random string is calculated starting from the \textit{Current Unix Timestamp}.
 \\\\
-The univocal code is sent to device (a parameter that will be stored locally in the case of a mobile application, a cookie in the case of a browser) and will be used for every interaction with the system: in this way the identification of the client happens. For each request the system takes the univocal code received and the ID of the device and checks in the database if they are related to each other, before perform anything required. 
-\\
-\includegraphics[scale=0.6]{algorithms/unicode_fc.png}
-\\
+The univocal code is sent to device (a parameter that will be stored locally in the case of a mobile application, a cookie in the case of a browser) and will be used for every interaction with the system: in this way the identification of the client happens. For each request the system takes the univocal code received and the ID of the device and checks in the database if they are related to each other, before perform any required operation. 
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{algorithms/unicode_fc.png}
+	\caption{Flowchart - Univocal code}
+	\end{center}
+\end{figure}
