@@ -47,7 +47,7 @@ On client side (App Mobile):
 	\item \textit{DBManager} needs to be integrated with the \textit{LocalDatabase};
 	\item \textit{ApplicationController}, \textit{GUIManager} and \textit{DBManager} needs to be integrated together.
 \end{itemize}
-On web server side \textit{WebController} and \textit{JavaServerPages} needs to be integrated together.
+On web server side \textit{WebController} and \textit{DynamicWebPages} needs to be integrated together.
 All the interactions that single components have with external services APIs have to be tested and their correctness have to be guaranteed before integrate and test phase involving those components begins.
 
 \section{Integration Testing Strategy}
@@ -96,7 +96,7 @@ The \textit{CalendarManager}'s components are strictly correlated and so, in ord
 	\caption{I\&T - PreferenceManager}
 \end{figure}
 
-2. \textit{PathManager} is to be integrated with \textit{PersistenceManager}, \textit{AuthenticationManager}, \textit{GoogleMaps APIs}, \textit{PreferenceManager} and \textit{ScheduleManager}, following this order no stubs will be needed to perform the integration. It is required another driver, beside the one used to test the external interface, in order to simulate the calls performed by \textit{EventManager} to \textit{PathManager}.
+2. \textit{PathManager} is to be integrated with \textit{PersistenceManager}, \textit{AuthenticationManager}, \textit{GoogleMaps APIs}, \textit{PreferenceManager}, \textit{ScheduleManager} and \textit{TSP APIs}, following this order no stubs will be needed to perform the integration. It is required another driver, beside the one used to test the external interface, in order to simulate the calls performed by \textit{EventManager} to \textit{PathManager}.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.55]{implementation_and_testing/calendar_manager/path.png}
@@ -150,7 +150,7 @@ The following picture is just a recap of the integration and test plan of the \t
 \end{figure}
 \newpage
 \subsubsection{WebServer}
-In the web server subsystem the \textit{WebController} component is to be integrated with \textit{JavaServerPages} and then with \textit{Google Polylines APIs}. 
+In the web server subsystem the \textit{WebController} component is to be integrated with \textit{DynamicWebPages} and then with \textit{Google Polylines APIs}. 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.7]{implementation_and_testing/web.png}
