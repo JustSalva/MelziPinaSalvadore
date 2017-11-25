@@ -5,7 +5,7 @@ The main purpose of this section is to describe the dynamic behavior of Travlend
 				\includegraphics[scale=0.6]{sequence_diagrams/login.png}}
 				\caption{Sequence Diagram - Login}
 			\end{figure}
-			The login operation is performed only the first time that the application is used in a new device. 
+			The login operation is performed only the first time that the application is used in a new device or after a logout. 
 			The \textit{system} calculates a univocal code that is returned to the client and stored in the \textit{local DB}. In this way the client can identify himself during future requests. 
 			The encryption function, specified in this diagram, will be specified below in the document (see section \ref{subsect:Encryption}).
 \subsection{Authentication functions for each operation}
@@ -15,7 +15,7 @@ The main purpose of this section is to describe the dynamic behavior of Travlend
 	\caption{Sequence Diagram - Authentication}
 	\end{figure}
 		This is a sample of how a generic request is taken into account by the system: the \textit{Client} sends the univocal code with the other parameters of a request and the \textit{Authentication Manager} performs the check. 
-		The \textit{Authentication Manager} forwards the request toward his destination only if the univocal code is correctly recognized, otherwise it reject the request.
+		The \textit{Authentication Manager} forwards the request toward his destination only if the univocal code is correctly recognized, otherwise it rejects the request.
 \subsection{Create event}
 	\begin{figure}[H]
 		\noindent\makebox[\textwidth]{%
@@ -35,7 +35,7 @@ The main purpose of this section is to describe the dynamic behavior of Travlend
 		\caption{Sequence Diagram - Obtain feasible paths}
 	\end{figure}
 		Only the selected path is stored into \textit{local and server DBs}, so if a user wants to see alternative feasible paths, a new request of feasible paths is to be performed. 
-		The \textit{system} obtains the event related to the path and then calculates the feasible alternatives with its internal logic and also trough the invocations of \textit{GMaps} functions. The system also checks feasibility and constraints of the obtained paths. Obviously not only the best path is returned to the \textit{client}.
+		The \textit{system} obtains the event related to the path and then calculates the feasible alternatives with its internal logic and also through the invocations of \textit{GMaps} functions. The system also checks feasibility and constraints of the obtained paths. Obviously not only the best path is returned to the \textit{client}.
 \subsection{Choose between overlapping events}
 	\begin{figure}[H]
 		\noindent\makebox[\textwidth]{%

@@ -2,27 +2,27 @@ The following architectural styles and patterns have been used in order to ensur
 
 \subsection{Layered Architecture}
 \label{subsect:Layered Architecture}
-This architectural style allow to organize the system through abstraction levels and doing so it separate presentation, application logic and data management functionalities.\\ Furthermore, since each layer can be separately instantiated on a
-different machine, this architecture guarantee great flexibility in terms of hardware configurations and simplify the actual development of the system, cause all components can be implemented and tested separately.
+This architectural style allows to organize the system through abstraction levels and doing so it separates presentation, application logic and data management functionalities.\\ Furthermore, since each layer can be separately instantiated on a
+different machine, this architecture guarantees great flexibility in terms of hardware configurations and simplifies the actual development of the system, cause all components can be implemented and tested separately.
 
 \subsection{Client/Server}
 \label{subsect:Client/Server}
 Our application is strongly based on the client server paradigm and it's used at various levels:
 \begin{itemize}
-	\item the mobile application(client) makes requests to the Application Server (server) that reply to them;
-	\item the web browsers(client) communicates with the Web Server(server), which also act as a client with respect to the Application Server.
-	\item the Application Server acts as client when it interrogate the database Server or when it interact with external APIs.
+	\item the mobile application (client) makes requests to the Application Server (server) that replies to them;
+	\item the web browsers (clients) communicates with the Web Server (server), which also acts as a client with respect to the Application Server.
+	\item the Application Server acts as client when it interrogates the database Server or when it interacts with external APIs.
 \end{itemize}
 
 \subsection{Model-View-Controller}
 \label{subsect:Model-View-Controller}
-The proposed Travlendar+ system follow this pattern. This allows to separate the application into three communicating and interconnected abstract parts which fulfill different goals. In particular our system implements the so-called 'Apple MVC version', which always keep the Controller between the model and the view interactions in order to guarantee security and  access control. 
+The proposed Travlendar+ system follows this pattern. This allows to separate the application into three communicating and interconnected abstract parts which fulfills different goals. In particular our system implements the so-called 'Apple MVC version', which always keeps the Controller between the model and the view interactions in order to guarantee security and access control. 
 
 \subsection{Publish/Subscribe}
 \label{subsect:Publish/Subscribe}
-This architectural style is primarily used in the notification system. All the users mobile devices when log into the system are subscribed as listeners and will receive notice of all possible problems involving the Travlendar+ user experience. This paradigm provides us great flexibility with respect to future expansions.
+This architectural style is primarily used in the notification system. When a user mobile device logs into the system subscribes as listener and will receive notice of all possible problems involving the Travlendar+ user experience. This paradigm provides us great flexibility with respect to future expansions.
 
 \subsection{Five Tier Architecture}
 \label{subsect:Five Tier Architecture}
-This Architectural style allow us to deploy the various physical components of our system on different devices, in order to separate responsibilities and also to introduce redundancy in order to improve the availability and reliability. 
+This Architectural style allows us to deploy the various physical components of our system on different devices, in order to separate responsibilities and also to introduce redundancy in order to improve the availability and reliability. 
 \newpage

@@ -1,8 +1,8 @@
-In this section we will present a general overview of the system-to-be, with a specific focus on the main logical components and their interactions. \\ \\
+In this section we will present a general overview of Travlendar+, with a specific focus on the main logical components and their interactions. \\ \\
 The main high-level components of the system-to-be are:
 \subsubsection{Mobile App:}
 \label{subsubsect:Mobile App}
-The Mobile App is a presentation layer that lets the users access the functionalities offered by the Travlendar+ on their smartphones and tablets. The mobile application offers also an internal logic that handles:
+The Mobile App is a presentation layer that lets the users access the functionalities offered by the system-to-be on their smartphones and tablets. The mobile application offers also an internal logic that handles:
 \begin{itemize}
 	\item the notifications reception, through the services offered by Google Cloud Messaging APIs;
 	\item the map and path drawing functionalities offered through the interaction with Google Maps mobile APIs.
@@ -10,7 +10,7 @@ The Mobile App is a presentation layer that lets the users access the functional
 
 \subsubsection{Web Browser:}
 \label{subsubsect:Web Browser}
-The web browser is a second presentation layer that lets the users access the functionalities offered by the Travlendar+ on their browsers.
+The web browser is a second presentation layer that lets the users access the functionalities offered by Travlendar+ on their browsers.
 It relies on the connection with the web server in order to obtain dynamic web pages.
 
 \subsubsection{Web Server:}
@@ -23,7 +23,7 @@ This is the logic layer that implements all the core functionalities of the syst
 In particular, the application server will interact with these external systems:
 \begin{itemize}
 \item Google Maps APIs, in order to provide feasible paths according to the user preferences;
-\item Transport Service provider's systems to offer functionalities that allows the user to arrange his trips, such as ticket buying, location of sharing vehicles and strikes information;
+\item Transport Service provider's systems, in order to offer functionalities that allow the user to arrange his trips, such as ticket buying, location of sharing vehicles and strikes information;
 \item Weather APIs, in order to retrieve weather information and to apply possible travel constraints related to the weather;
 \item Google Cloud Messaging APIs, in order to send notifications to the user's mobile apps.
 \end{itemize} 
