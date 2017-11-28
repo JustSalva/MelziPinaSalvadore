@@ -18,13 +18,21 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="wrap_content"
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/today_string"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/today"
+            android:textSize="30dp"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

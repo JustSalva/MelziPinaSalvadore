@@ -19,6 +19,7 @@
     <string name="login">LOGIN</string>
     <string name="registration">REGISTRATION</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="today">Today</string>
 
     <!-- Strings related to login and registration -->
     <string name="prompt_email">Email</string>
@@ -36,4 +37,5 @@
         completions."
     </string>
     <string name="title_activity_registration">Registration</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>
