@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entity;
 import java.sql.Time;
 
 public class PeriodOfDayConstraint extends Constraint {
+    //TODO così è time non ore!
     private Time minHour;
     private Time maxHour;
 
