@@ -1,13 +1,24 @@
 package it.polimi.travlendarplus.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity(name="DISTANCE_CONSTRAINT")
 public class DistanceConstraint extends Constraint{
+
+    @Column(name = "MIN_LENGHT")
     private int minLenght;
+    @Column(name = "MAX_LENGHT")
     private int maxLenght;
 
-    public DistanceConstraint(TravelMean concerns, int minLenght, int maxLenght) {
+    public DistanceConstraint(TravelMeanEnum concerns, int minLenght, int maxLenght) {
         super(concerns);
         this.minLenght = minLenght;
         this.maxLenght = maxLenght;
+    }
+
+    public DistanceConstraint() {
     }
 
     public int getMinLenght() {
