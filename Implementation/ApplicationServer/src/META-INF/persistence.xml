@@ -5,7 +5,6 @@
     <persistence-unit name="TravlendarDB" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/DataSource</jta-data-source>
-        <class>it.polimi.travlendarplus.entity.Prova</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/datasource"/>
