@@ -1,31 +1,30 @@
 package it.polimi.travlendarplus.entity;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 public class PeriodOfDayConstraint extends Constraint {
-    //TODO così è time non ore!
-    private Time minHour;
-    private Time maxHour;
+    private LocalTime minHour;
+    private LocalTime maxHour;
 
-    public PeriodOfDayConstraint(TravelMean concerns, Time minHour, Time maxHour) {
+    public PeriodOfDayConstraint(TravelMean concerns, LocalTime minHour, LocalTime maxHour) {
         super(concerns);
         this.minHour = minHour;
         this.maxHour = maxHour;
     }
 
-    public Time getMinHour() {
+    public LocalTime getMinHour() {
         return minHour;
     }
 
-    public void setMinHour(Time minHour) {
+    public void setMinHour(LocalTime minHour) {
         this.minHour = minHour;
     }
 
-    public Time getMaxHour() {
+    public LocalTime getMaxHour() {
         return maxHour;
     }
 
-    public void setMaxHour(Time maxHour) {
+    public void setMaxHour(LocalTime maxHour) {
         this.maxHour = maxHour;
     }
 }

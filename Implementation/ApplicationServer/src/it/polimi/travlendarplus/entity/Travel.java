@@ -2,11 +2,13 @@ package it.polimi.travlendarplus.entity;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Travel {
     private boolean preferred;
     private Event relatedEvent;
-    private ArrayList<TravelComponent> miniTravels;
+    private List<TravelComponent> miniTravels;
 
     public Travel(boolean preferred, Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
         this.preferred = preferred;
@@ -28,6 +30,10 @@ public class Travel {
 
     public void setRelatedEvent(Event relatedEvent) {
         this.relatedEvent = relatedEvent;
+    }
+
+    public List<TravelComponent> getMiniTravels() {
+        return Collections.unmodifiableList(miniTravels);
     }
 
     public void setMiniTravels(ArrayList<TravelComponent> miniTravels) {

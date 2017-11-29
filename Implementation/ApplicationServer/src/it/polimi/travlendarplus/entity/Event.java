@@ -3,6 +3,8 @@ package it.polimi.travlendarplus.entity;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Event extends GenericEvent {
     private String description;
@@ -11,7 +13,7 @@ public class Event extends GenericEvent {
     private TypeOfEvent type;
     private Location eventLocation;
     private Location departure;
-    private ArrayList<Travel> feasiblePaths;
+    private List<Travel> feasiblePaths;
 
     public Event(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
         super(name, startingTime, endingTime, isScheduled, periodicity, date);
@@ -84,7 +86,15 @@ public class Event extends GenericEvent {
         this.departure = departure;
     }
 
+    public List<Travel> getFeasiblePaths() {
+        return Collections.unmodifiableList(feasiblePaths);
+    }
+
     public void setFeasiblePaths(ArrayList<Travel> feasiblePaths) {
         this.feasiblePaths = feasiblePaths;
+    }
+
+    public void addPath(Travel path) {
+        this.feasiblePaths.add(path);
     }
 }

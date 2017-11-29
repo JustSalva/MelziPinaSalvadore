@@ -1,11 +1,13 @@
 package it.polimi.travlendarplus.entity;
 
+import java.util.ArrayList;
+
 public class PathTicket extends GeneralTicket {
     private Location startingLocation;
     private Location endingLocation;
 
-    public PathTicket(float cost, String lineName, Location startingLocation, Location endingLocation) {
-        super(cost, lineName);
+    public PathTicket(float cost, ArrayList<PublicTravelMean> relatedTo, String lineName, Location startingLocation, Location endingLocation) {
+        super(cost, relatedTo, lineName);
         this.startingLocation = startingLocation;
         this.endingLocation = endingLocation;
     }
