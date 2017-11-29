@@ -43,4 +43,18 @@
     <string name="location_name">Location name</string>
     <string name="location_address">Location address</string>
     <string name="save">Save</string>
+    <string name="type_of_event">Type of event</string>
+    <string name="car">Car</string>
+    <string name="train">Train</string>
+    <string name="foot">Foot</string>
+    <string name="metro">Metro</string>
+    <string name="tram">Tram</string>
+    <string name="taxi">Taxi</string>
+    <string name="bicycle">Bicycle</string>
+    <string name="bike_sharing">Bike Sharing</string>
+    <string name="car_sharing">Car Sharing</string>
+    <string name="preferred_path">Preferred path</string>
+    <string name="constraints">Constraints</string>
+    <string name="minimum_distance">Minimum distance</string>
+    <string name="maximum_distance">Maximum distance</string>
 </resources>
