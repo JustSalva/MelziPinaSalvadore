@@ -38,4 +38,9 @@
     </string>
     <string name="title_activity_registration">Registration</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="locations">Locations</string>
+    <string name="add_location">Add location</string>
+    <string name="location_name">Location name</string>
+    <string name="location_address">Location address</string>
+    <string name="save">Save</string>
 </resources>
