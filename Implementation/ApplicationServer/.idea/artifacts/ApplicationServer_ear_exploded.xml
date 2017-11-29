@@ -6,6 +6,11 @@
       <element id="directory" name="ejb.jar">
         <element id="artifact" artifact-name="ApplicationServer:ejb exploded" />
       </element>
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="JPA 2.0-2.0" />
+        <element id="library" level="project" name="org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.0" />
+        <element id="library" level="project" name="mysql-connector-java-5.1.44-bin" />
+      </element>
     </root>
   </artifact>
 </component>
