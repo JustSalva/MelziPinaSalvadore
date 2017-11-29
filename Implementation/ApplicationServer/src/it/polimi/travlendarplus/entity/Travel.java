@@ -1,19 +1,44 @@
 package it.polimi.travlendarplus.entity;
 
+import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity(name = "TRAVEL")
 public class Travel {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
+
+    @Column(name = "PREFERRED")
     private boolean preferred;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="RELATED_EVENT")
     private Event relatedEvent;
+
+    @JoinTable(name = "TRAVEL_COMPONENTS")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TravelComponent> miniTravels;
+
+    public Travel() {
+    }
 
     public Travel(boolean preferred, Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
         this.preferred = preferred;
         this.relatedEvent = relatedEvent;
         this.miniTravels = miniTravels;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean isPreferred() {

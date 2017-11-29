@@ -1,15 +1,41 @@
 package it.polimi.travlendarplus.entity;
 
 
+import javax.persistence.*;
 import java.time.LocalTime;
 
+@Entity(name = "GENERIC_EVENT")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "EVENT_TYPE")
 public abstract class GenericEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
+
+    @Column(nullable = false, name = "NAME")
     private String name;
+
+    @Column(name = "STARTING_TIME")
     private LocalTime startingTime;
+
+    @Column(name = "ENDING_TIME")
     private LocalTime endingTime;
+
+    @Column(name = "IS_SCHEDULED")
     private boolean isScheduled;
+
+    @OneToOne
+    @JoinColumn(name="PERIODICITY_ID")
     private Period periodicity;
+
+    @ManyToOne
+    @JoinColumn(name="DATE_OF_CALENDAR_ID")
     private DateOfCalendar date;
+
+
+    public GenericEvent() {
+    }
 
     public GenericEvent(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date) {
         this.name = name;
@@ -28,6 +54,14 @@ public abstract class GenericEvent {
         this.isScheduled = isScheduled;
         this.periodicity = new Period(null,null, 0);
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -77,4 +111,5 @@ public abstract class GenericEvent {
     public void setDate(DateOfCalendar date) {
         this.date = date;
     }
+
 }

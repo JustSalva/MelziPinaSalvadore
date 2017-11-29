@@ -1,9 +1,23 @@
 package it.polimi.travlendarplus.entity;
 
-public class Location {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+@Entity(name = "LOCATION")
+public class Location implements Serializable{
+
+    @Id
     private float latitude;
+    @Id
     private float longitude;
+
+    @Column(name = "ADDRESS")
     private String address;
+
+    public Location() {
+    }
 
     public Location(float latitude, float longitude, String address) {
         this.latitude = latitude;

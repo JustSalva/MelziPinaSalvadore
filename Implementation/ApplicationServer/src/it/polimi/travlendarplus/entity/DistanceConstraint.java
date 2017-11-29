@@ -1,10 +1,12 @@
 package it.polimi.travlendarplus.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity(name="DISTANCE_CONSTRAINT")
+@DiscriminatorValue("DISTANCE")
 public class DistanceConstraint extends Constraint{
 
     @Column(name = "MIN_LENGHT")

@@ -1,9 +1,28 @@
 package it.polimi.travlendarplus.entity;
 
+
+import javax.persistence.*;
+
+@Entity(name = "ABSTRACT_TRAVEL_MEAN")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "TYPE")
 public abstract class TravelMean {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
+
+    @Column(name = "NAME")
     private String name;
+
+    @Column(name = "SPEED")
     private int speed; //TODO unità di misura?
+
+    @Column(name = "ECO")
     private float eco;
+
+    public TravelMean() {
+    }
 
     public TravelMean(String name, int speed, float eco) {
         this.name = name;

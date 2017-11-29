@@ -1,10 +1,12 @@
 package it.polimi.travlendarplus.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalTime;
 
 @Entity(name="PERIOD_OF_DAY_CONSTRAINT")
+@DiscriminatorValue("PERIOD_OF_DAY")
 public class PeriodOfDayConstraint extends Constraint {
 
     @Column(name = "MIN_HOUR")

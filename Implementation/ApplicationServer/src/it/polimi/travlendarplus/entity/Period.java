@@ -1,16 +1,39 @@
 package it.polimi.travlendarplus.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity(name = "PERIOD")
 public class Period {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String Id;
+
+    @Column(name = "STARTING_DAY")
     private LocalDate startingDay;
+
+    @Column(name = "ENDING_DAY")
     private LocalDate endingDay;
+
+    @Column(name = "DELTA_DAYS")
     private int deltaDays;
+
+    public Period() {
+    }
 
     public Period(LocalDate startingDay, LocalDate endingDay, int deltaDays) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 
     public LocalDate getStartingDay() {
