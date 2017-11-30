@@ -5,3 +5,7 @@ RASD/RASD.synctex.gz
 *.out
 *.pdf
 DD/DD.synctex.gz
+Implementation/ApplicationServer/.idea/
+Implementation/ApplicationServer/.idea/workspace.xml
+Implementation/ApplicationServer/bin
+Implementation/ApplicationServer/out/
