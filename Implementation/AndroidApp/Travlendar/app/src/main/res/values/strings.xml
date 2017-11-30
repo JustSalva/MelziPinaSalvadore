@@ -57,4 +57,27 @@
     <string name="constraints">Constraints</string>
     <string name="minimum_distance">Minimum distance</string>
     <string name="maximum_distance">Maximum distance</string>
+    <string name="travel_mean">Travel mean</string>
+    <string name="cost_euro">Cost (euro)</string>
+    <string name="ticket_type">Ticket type</string>
+    <string name="general_ticket">General ticket</string>
+    <string name="distance_ticket">Distance ticket</string>
+    <string name="period_ticket">Period ticket</string>
+    <string name="line_name">Line name</string>
+    <string name="starting_location">Starting location</string>
+    <string name="ending_location">Ending location</string>
+    <string name="distance_km">Distance (km)</string>
+    <string name="name">Name</string>
+    <string name="starting_date">Starting date</string>
+    <string name="ending_date">Ending date</string>
+    <string name="add_ticket">Add ticket</string>
+    <string name="confirm">Confirm</string>
+    <string name="date">Date</string>
+    <string name="normal_event">Normal Event</string>
+    <string name="break_event">Break event</string>
+    <string name="description">Description</string>
+    <string name="event_location">Event location</string>
+    <string name="start_from_previous_location">Start from previous location?</string>
+    <string name="previous_location">Previous location</string>
+    <string name="minimum_type">Minimum time</string>
 </resources>

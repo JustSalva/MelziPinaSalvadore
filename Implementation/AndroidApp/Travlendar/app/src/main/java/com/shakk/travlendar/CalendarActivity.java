@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class CalendarActivity extends MenuActivity {
 
@@ -60,5 +61,10 @@ public class CalendarActivity extends MenuActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToEventCreation(View view) {
+        Intent intent = new Intent(this, EventEditingActivity.class);
+        startActivity(intent);
     }
 }
