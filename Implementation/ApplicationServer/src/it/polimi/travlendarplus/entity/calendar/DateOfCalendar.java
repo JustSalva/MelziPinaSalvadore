@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +13,6 @@ public class DateOfCalendar {
     @Id
     private LocalDate date;
 
-    //private List<GenericEvent> listOfEvents; TODO WHY?
     //TODO private ArrayList<EnvironmentConditions> conditions;
 
     public DateOfCalendar() {
@@ -21,7 +20,6 @@ public class DateOfCalendar {
 
     public DateOfCalendar(LocalDate date) {
         this.date = date;
-        //this.listOfEvents = new ArrayList<GenericEvent>();
     }
 
     public LocalDate getDate() {
@@ -31,16 +29,5 @@ public class DateOfCalendar {
     public void setDate(LocalDate date) {
         this.date = date;
     }
-/*
-    public List<GenericEvent> getListOfEvents() {
-        return Collections.unmodifiableList(listOfEvents);
-    }
 
-    public void setListOfEvents(ArrayList<GenericEvent> listOfEvents) {
-        this.listOfEvents = listOfEvents;
-    }
-
-    public void addEvent(GenericEvent event) {
-        this.listOfEvents.add(event);
-    }*/
 }

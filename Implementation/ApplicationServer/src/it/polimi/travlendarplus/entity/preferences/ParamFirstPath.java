@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.preferences;
 
 public enum ParamFirstPath {
     MIN_COST,

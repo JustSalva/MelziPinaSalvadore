@@ -1,4 +1,6 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.tickets;
+
+import it.polimi.travlendarplus.entity.travelMeans.PublicTravelMean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

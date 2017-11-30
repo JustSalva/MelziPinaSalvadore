@@ -1,4 +1,7 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.travels;
+
+import it.polimi.travlendarplus.entity.Location;
+import it.polimi.travlendarplus.entity.travelMeans.TravelMean;
 
 import javax.persistence.*;
 import java.time.LocalTime;

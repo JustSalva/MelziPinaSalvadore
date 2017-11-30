@@ -1,5 +1,9 @@
 package it.polimi.travlendarplus.entity;
 
+import it.polimi.travlendarplus.entity.calendar.DateOfCalendar;
+import it.polimi.travlendarplus.entity.preferences.ParamFirstPath;
+import it.polimi.travlendarplus.entity.preferences.TypeOfEvent;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

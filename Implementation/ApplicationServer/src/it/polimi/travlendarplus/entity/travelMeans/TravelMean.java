@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.travelMeans;
 
 
 import javax.persistence.*;

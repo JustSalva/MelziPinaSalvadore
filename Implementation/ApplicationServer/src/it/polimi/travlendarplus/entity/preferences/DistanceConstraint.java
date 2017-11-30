@@ -1,9 +1,10 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.preferences;
+
+import it.polimi.travlendarplus.entity.travelMeans.TravelMeanEnum;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity(name="DISTANCE_CONSTRAINT")
 @DiscriminatorValue("DISTANCE")
@@ -11,6 +12,7 @@ public class DistanceConstraint extends Constraint{
 
     @Column(name = "MIN_LENGHT")
     private int minLenght;
+
     @Column(name = "MAX_LENGHT")
     private int maxLenght;
 

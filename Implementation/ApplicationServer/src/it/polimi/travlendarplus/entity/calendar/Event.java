@@ -1,4 +1,8 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.calendar;
+
+import it.polimi.travlendarplus.entity.*;
+import it.polimi.travlendarplus.entity.preferences.TypeOfEvent;
+import it.polimi.travlendarplus.entity.travels.Travel;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -14,8 +18,6 @@ public class Event extends GenericEvent {
 
     @Column(name = "PREV_LOCATION_CHOICE")
     private boolean prevLocChoice;
-
-    //private User user; TODO why?
 
     @ManyToOne
     @JoinColumn(name="TYPE_OF_EVENT")
@@ -80,14 +82,6 @@ public class Event extends GenericEvent {
     public void setPrevLocChoice(boolean prevLocChoice) {
         this.prevLocChoice = prevLocChoice;
     }
-
-    /*public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }*/
 
     public TypeOfEvent getType() {
         return type;

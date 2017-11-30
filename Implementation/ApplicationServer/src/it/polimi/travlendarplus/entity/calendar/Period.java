@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.calendar;
 
 import javax.persistence.*;
 import java.time.LocalDate;

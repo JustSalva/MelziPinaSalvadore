@@ -1,5 +1,10 @@
 package it.polimi.travlendarplus.entity;
 
+import it.polimi.travlendarplus.entity.calendar.BreakEvent;
+import it.polimi.travlendarplus.entity.calendar.Event;
+import it.polimi.travlendarplus.entity.preferences.TypeOfEvent;
+import it.polimi.travlendarplus.entity.tickets.Ticket;
+
 import java.util.*;
 
 public class User {

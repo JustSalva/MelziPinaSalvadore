@@ -1,4 +1,6 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.preferences;
+
+import it.polimi.travlendarplus.entity.travelMeans.TravelMeanEnum;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;

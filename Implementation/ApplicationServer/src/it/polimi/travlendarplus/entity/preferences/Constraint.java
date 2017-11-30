@@ -1,7 +1,8 @@
-package it.polimi.travlendarplus.entity;
+package it.polimi.travlendarplus.entity.preferences;
+
+import it.polimi.travlendarplus.entity.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity (name = "ABSTRACT_CONSTRAINT")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -12,12 +13,12 @@ public abstract class Constraint{
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int Id;
 
-    public Constraint() {
-    }
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TravelMeanEnum concerns;
+
+    public Constraint() {
+    }
 
     public Constraint(TravelMeanEnum concerns) {
         this.concerns = concerns;
