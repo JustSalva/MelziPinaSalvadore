@@ -80,4 +80,9 @@
     <string name="start_from_previous_location">Start from previous location?</string>
     <string name="previous_location">Previous location</string>
     <string name="minimum_type">Minimum time</string>
+    <string name="arrange">Arrange</string>
+    <string name="change">Change</string>
+    <string name="travel">Travel</string>
+    <string name="schedule">Schedule</string>
+    <string name="overlapping">Overlapping</string>
 </resources>

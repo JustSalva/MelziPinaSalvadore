@@ -55,8 +55,9 @@
         <activity android:name=".AccountActivity" />
         <activity android:name=".PreferencesActivity" />
         <activity android:name=".TicketsActivity" />
-
         <activity android:name=".EventEditingActivity" />
+        <activity android:name=".EventViewerActivity" />
+        <activity android:name=".ScheduleActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -70,7 +71,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".EventEditingActivity"></activity>
+        <activity android:name=".EventEditingActivity" />
+        <activity android:name=".EventViewerActivity" />
+        <activity android:name=".ScheduleActivity"></activity>
     </application>
 
 </manifest>
