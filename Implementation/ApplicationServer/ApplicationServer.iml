@@ -41,5 +41,7 @@
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - RESTful Web Service" level="application_server_libraries" />
     <orderEntry type="library" name="org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.0" level="project" />
     <orderEntry type="library" name="mysql-connector-java-5.1.44-bin" level="project" />
+    <orderEntry type="library" name="com.google.maps:google-maps-services:0.2.5" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-nop:1.6.2" level="project" />
   </component>
 </module>
