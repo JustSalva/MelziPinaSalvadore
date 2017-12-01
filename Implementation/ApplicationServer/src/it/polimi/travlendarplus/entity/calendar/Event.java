@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "EVENT")
+@DiscriminatorValue("EVENT")
 public class Event extends GenericEvent {
 
     @Column(name = "DESCRIPTION")

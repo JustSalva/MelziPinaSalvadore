@@ -3,10 +3,12 @@ package it.polimi.travlendarplus.entity.calendar;
 import it.polimi.travlendarplus.entity.User;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalTime;
 
 @Entity(name="BREAK_EVENT")
+@DiscriminatorValue("BREAK_EVENT")
 public class BreakEvent extends GenericEvent {
 
     @Column(name = "MINIMUM_TIME")

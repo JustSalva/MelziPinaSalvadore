@@ -1,17 +1,36 @@
 package it.polimi.travlendarplus.entity.tickets;
 
+import it.polimi.travlendarplus.entity.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entity.travelMeans.PublicTravelMean;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+@Entity(name="PERIOD_TICKET")
+@DiscriminatorValue("PERIOD")
 public class PeriodTicket extends Ticket {
+
+    @Column(name = "NAME")
     private String name;
-    private LocalDate startingDate;
-    private LocalDate endingDate;
+
+    @ManyToOne
+    @JoinColumn(name="STARTING_DATE_OF_CALENDAR")
+    private DateOfCalendar startingDate;
+
+    @ManyToOne
+    @JoinColumn(name="ENDING_DATE_OF_CALENDAR")
+    private DateOfCalendar endingDate;
+
+    @OneToOne
+    @JoinColumn(name="PERIODICAL_TICKET")
     private Ticket decorator;
 
-    public PeriodTicket(float cost, ArrayList<PublicTravelMean> relatedTo, String name, LocalDate startingDate, LocalDate endingDate, Ticket decorator) {
+    public PeriodTicket() {
+    }
+
+    public PeriodTicket(float cost, ArrayList<PublicTravelMean> relatedTo, String name,
+                        DateOfCalendar startingDate, DateOfCalendar endingDate, Ticket decorator) {
         super(cost, relatedTo);
         this.name = name;
         this.startingDate = startingDate;
@@ -27,19 +46,19 @@ public class PeriodTicket extends Ticket {
         this.name = name;
     }
 
-    public LocalDate getStartingDate() {
+    public DateOfCalendar getStartingDate() {
         return startingDate;
     }
 
-    public void setStartingDate(LocalDate startingDate) {
+    public void setStartingDate(DateOfCalendar startingDate) {
         this.startingDate = startingDate;
     }
 
-    public LocalDate getEndingDate() {
+    public DateOfCalendar getEndingDate() {
         return endingDate;
     }
 
-    public void setEndingDate(LocalDate endingDate) {
+    public void setEndingDate(DateOfCalendar endingDate) {
         this.endingDate = endingDate;
     }
 }

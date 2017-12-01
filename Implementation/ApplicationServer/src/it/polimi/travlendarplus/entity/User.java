@@ -5,19 +5,52 @@ import it.polimi.travlendarplus.entity.calendar.Event;
 import it.polimi.travlendarplus.entity.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entity.tickets.Ticket;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity(name = "USER")
 public class User {
+    @Id
     private String email;
-    private String name;
-    private String surname;
-    private List<BreakEvent> breaks;
-    private List<Event> events;
-    private List<Ticket> heldTickets;
-    private List<TypeOfEvent> preferences;
-    private Map<String, Location> preferredLocations;
 
-    public User(String email, String name, String surname, ArrayList<BreakEvent> breaks, ArrayList<Event> events, ArrayList<Ticket> heldTickets, ArrayList<TypeOfEvent> preferences, HashMap<String, Location> preferredLocations) {
+    @Column(name = "NAME")
+    private String name;
+
+    @Column(name = "SURNAME")
+    private String surname;
+
+    @JoinTable(name = "USER_BREAK_EVENTS")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<BreakEvent> breaks;
+
+    @JoinTable(name = "USER_EVENTS")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Event> events;
+
+    @JoinTable(name = "USER_TICKETS")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Ticket> heldTickets;
+
+    @JoinTable(name = "USER_PREFERENCES")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<TypeOfEvent> preferences;
+
+    @ElementCollection
+    @MapKeyColumn(name="PREFERRED_LOCATIONS")
+    @Column(name="NAME")
+    @CollectionTable(name = "USER_PREFERRED_LOCATIONS")
+    @JoinColumns({
+            @JoinColumn(name="EVENT_LATITUDE", referencedColumnName="latitude"),
+            @JoinColumn(name="EVENT_LONGITUDE", referencedColumnName="longitude")
+    })
+    private Map<Location, String> preferredLocations;
+
+    public User() {
+    }
+
+    public User(String email, String name, String surname, ArrayList<BreakEvent> breaks, ArrayList<Event> events,
+                ArrayList<Ticket> heldTickets, ArrayList<TypeOfEvent> preferences,
+                HashMap<Location, String> preferredLocations) {
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -37,7 +70,7 @@ public class User {
         this.events = new ArrayList<Event>();
         this.heldTickets = new ArrayList<Ticket>();
         this.preferences = new ArrayList<TypeOfEvent>();
-        this.preferredLocations = new HashMap<String, Location>();
+        this.preferredLocations = new HashMap<Location, String>();
     }
 
     public String getEmail() {
@@ -112,15 +145,15 @@ public class User {
         this.preferences.add(preference);
     }
 
-    public Map<String, Location> getPreferredLocations() {
+    public Map<Location, String> getPreferredLocations() {
         return Collections.unmodifiableMap(preferredLocations);
     }
 
-    public void setPreferredLocations(Map<String, Location> preferredLocations) {
+    public void setPreferredLocations(Map<Location, String> preferredLocations) {
         this.preferredLocations = preferredLocations;
     }
 
     public void addLocation(String name, Location location) {
-        this.preferredLocations.put(name, location);
+        this.preferredLocations.put(location, name);
     }
 }

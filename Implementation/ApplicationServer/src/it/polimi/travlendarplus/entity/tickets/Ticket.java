@@ -2,13 +2,29 @@ package it.polimi.travlendarplus.entity.tickets;
 
 import it.polimi.travlendarplus.entity.travelMeans.PublicTravelMean;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity(name = "ABSTRACT_TICKET")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "TICKET_TYPE")
 public abstract class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
+
+    @Column(name = "COST")
     private float cost;
+
+    @OneToMany
+    @JoinColumn(name="RELATED_TO")
     private List<PublicTravelMean> relatedTo;
+
+    public Ticket() {
+    }
 
     public Ticket(float cost, ArrayList<PublicTravelMean> relatedTo) {
         this.cost = cost;
