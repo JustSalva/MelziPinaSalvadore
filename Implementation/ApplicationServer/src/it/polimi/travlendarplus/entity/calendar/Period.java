@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entity.calendar;
 
+import it.polimi.travlendarplus.entity.Timestamp;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -18,6 +20,9 @@ public class Period {
 
     @Column(name = "DELTA_DAYS")
     private int deltaDays;
+
+    @Embedded
+    private Timestamp lastUpdate;
 
     public Period() {
     }

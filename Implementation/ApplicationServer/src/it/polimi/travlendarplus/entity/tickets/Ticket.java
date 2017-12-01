@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entity.tickets;
 
+import it.polimi.travlendarplus.entity.Timestamp;
 import it.polimi.travlendarplus.entity.travelMeans.PublicTravelMean;
 
 import javax.persistence.*;
@@ -22,6 +23,9 @@ public abstract class Ticket {
     @OneToMany
     @JoinColumn(name="RELATED_TO")
     private List<PublicTravelMean> relatedTo;
+
+    @Embedded
+    private Timestamp lastUpdate;
 
     public Ticket() {
     }

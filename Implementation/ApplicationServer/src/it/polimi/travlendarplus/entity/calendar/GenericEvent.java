@@ -1,6 +1,8 @@
 package it.polimi.travlendarplus.entity.calendar;
 
 
+import it.polimi.travlendarplus.entity.Timestamp;
+
 import javax.persistence.*;
 import java.time.LocalTime;
 
@@ -33,6 +35,8 @@ public abstract class GenericEvent {
     @JoinColumn(name="DATE_OF_CALENDAR_ID")
     private DateOfCalendar date;
 
+    @Embedded
+    private Timestamp lastUpdate;
 
     public GenericEvent() {
     }

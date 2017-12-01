@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entity.travels;
 
 import it.polimi.travlendarplus.entity.Location;
+import it.polimi.travlendarplus.entity.Timestamp;
 import it.polimi.travlendarplus.entity.calendar.Event;
 
 import javax.persistence.*;
@@ -26,6 +27,9 @@ public class Travel {
     @JoinTable(name = "TRAVEL_COMPONENTS")
     @OneToMany(cascade = CascadeType.ALL)
     private List<TravelComponent> miniTravels;
+
+    @Embedded
+    private Timestamp lastUpdate;
 
     public Travel() {
     }

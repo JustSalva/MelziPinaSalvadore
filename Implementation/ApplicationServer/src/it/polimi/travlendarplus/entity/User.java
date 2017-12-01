@@ -45,6 +45,9 @@ public class User {
     })
     private Map<Location, String> preferredLocations;
 
+    @Embedded
+    private Timestamp lastUpdate;
+
     public User() {
     }
 
