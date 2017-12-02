@@ -22,7 +22,7 @@ public class PathManager {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void calculatePath(Event event) {
-        LocalDateTime date = LocalDateTime.ofInstant(event.getDate().getDate(), ZoneOffset.UTC);
+        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.getDate().getDate()), ZoneOffset.UTC);
 
         //GMaps APIs require an object of Joda Time -> DateTime
         DateTime dateTime = new DateTime(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute());
@@ -58,7 +58,7 @@ public class PathManager {
     public static void main (String args[]) {
         Instant time = Instant.now();
         LocalDate day = LocalDate.of(2018,1,1);
-        DateOfCalendar date = new DateOfCalendar(time);
+        DateOfCalendar date = new DateOfCalendar(time.getEpochSecond());
         Location departure = new Location(30, 30, "Como, Italy");
         Location arrival = new Location(31,31,"Lecco, Italy");
         Event e = new Event("", time, time, true, date, "", true, null, null, arrival, departure, null);

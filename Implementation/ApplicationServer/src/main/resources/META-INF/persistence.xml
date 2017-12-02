@@ -4,7 +4,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="TravlendarDB" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>jdbc/DataSource</jta-data-source>
+        <!--jta-data-source>jdbc/DataSource</jta-data-source-->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <!-- THIS TAG SERVES ONLY WHEN THE DATABASE IS EXECUTED THE VERY FIRST TIME !!!-->

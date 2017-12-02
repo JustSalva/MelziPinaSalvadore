@@ -20,7 +20,7 @@ public class Test {
 
     private static void testDate(EntityManager em){
         DateOfCalendar t = new DateOfCalendar();
-        t.setDate(Instant.now());
+        t.setDate(Instant.now().getEpochSecond());
         em.persist(t);
     }
     public static void main ( String args[]){
@@ -28,7 +28,7 @@ public class Test {
         EntityManager em = emfactory.createEntityManager();
 
         em.getTransaction().begin();
-        testDate(em);
+        testTypeofEvent(em);
         em.getTransaction().commit();
 
         em.close();
