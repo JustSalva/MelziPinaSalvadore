@@ -12,12 +12,12 @@ import java.time.LocalTime;
 public class PeriodOfDayConstraint extends Constraint {
 
     @Column(name = "MIN_HOUR")
-    private LocalTime minHour;
+    private long minHour; //In seconds from 00.00 of the day
 
     @Column(name = "MAX_HOUR")
-    private LocalTime maxHour;
+    private long maxHour; //max value = 24 h
 
-    public PeriodOfDayConstraint(TravelMeanEnum concerns, LocalTime minHour, LocalTime maxHour) {
+    public PeriodOfDayConstraint(TravelMeanEnum concerns, long minHour, long maxHour) {
         super(concerns);
         this.minHour = minHour;
         this.maxHour = maxHour;
@@ -26,19 +26,19 @@ public class PeriodOfDayConstraint extends Constraint {
     public PeriodOfDayConstraint() {
     }
 
-    public LocalTime getMinHour() {
+    public long getMinHour() {
         return minHour;
     }
 
-    public void setMinHour(LocalTime minHour) {
+    public void setMinHour(long minHour) {
         this.minHour = minHour;
     }
 
-    public LocalTime getMaxHour() {
+    public long getMaxHour() {
         return maxHour;
     }
 
-    public void setMaxHour(LocalTime maxHour) {
+    public void setMaxHour(long maxHour) {
         this.maxHour = maxHour;
     }
 }

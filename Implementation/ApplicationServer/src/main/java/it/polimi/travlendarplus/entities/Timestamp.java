@@ -4,27 +4,23 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Embeddable
 public class Timestamp {
 
-    @Column(name = "TIMESTAMP_DATE")
-    private LocalDate date;
-
-    @Column(name = "TIMESTAMP_TIME")
-    private LocalTime time;
+    @Column(name = "UNIX_TIMESTAMP")
+    private Instant timestamp;
 
     protected Timestamp(){
-        date = LocalDate.now();
-        time = LocalTime.now();
+        this.timestamp = Instant.now();
     }
 
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
-        date = LocalDate.now();
-        time = LocalTime.now();
+        this.timestamp = Instant.now();
     }
 }

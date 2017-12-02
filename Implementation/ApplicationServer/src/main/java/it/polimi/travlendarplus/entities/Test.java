@@ -7,7 +7,7 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.time.LocalDate;
+import java.time.Instant;
 
 public class Test {
     private static void testTypeofEvent(EntityManager em){
@@ -20,7 +20,7 @@ public class Test {
 
     private static void testDate(EntityManager em){
         DateOfCalendar t = new DateOfCalendar();
-        t.setDate(LocalDate.now());
+        t.setDate(Instant.now());
         em.persist(t);
     }
     public static void main ( String args[]){

@@ -4,6 +4,7 @@ package it.polimi.travlendarplus.entities.calendar;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalTime;
 
 @Entity(name = "GENERIC_EVENT")
@@ -19,10 +20,10 @@ public abstract class GenericEvent {
     private String name;
 
     @Column(name = "STARTING_TIME")
-    private LocalTime startingTime;
+    private Instant startingTime;
 
     @Column(name = "ENDING_TIME")
-    private LocalTime endingTime;
+    private Instant endingTime;
 
     @Column(name = "IS_SCHEDULED")
     private boolean isScheduled;
@@ -41,7 +42,7 @@ public abstract class GenericEvent {
     public GenericEvent() {
     }
 
-    public GenericEvent(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date) {
+    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
@@ -51,7 +52,7 @@ public abstract class GenericEvent {
     }
 
     //constructor for generic event with no periodicity
-    public GenericEvent(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, DateOfCalendar date) {
+    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
@@ -76,19 +77,19 @@ public abstract class GenericEvent {
         this.name = name;
     }
 
-    public LocalTime getStartingTime() {
+    public Instant getStartingTime() {
         return startingTime;
     }
 
-    public void setStartingTime(LocalTime startingTime) {
+    public void setStartingTime(Instant startingTime) {
         this.startingTime = startingTime;
     }
 
-    public LocalTime getEndingTime() {
+    public Instant getEndingTime() {
         return endingTime;
     }
 
-    public void setEndingTime(LocalTime endingTime) {
+    public void setEndingTime(Instant endingTime) {
         this.endingTime = endingTime;
     }
 

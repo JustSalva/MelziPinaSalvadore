@@ -3,9 +3,11 @@ package it.polimi.travlendarplus.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.io.Serializable;
 
 @Entity(name = "LOCATION")
+@IdClass(LocationID.class)
 public class Location implements Serializable {
 
     @Id
@@ -48,4 +50,8 @@ public class Location implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+}
+class LocationID implements Serializable{
+    private double latitude;
+    private double longitude;
 }

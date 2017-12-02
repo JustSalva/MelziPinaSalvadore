@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,7 @@ public class Event extends GenericEvent {
     public Event() {
     }
 
-    public Event(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
+    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
         super(name, startingTime, endingTime, isScheduled, periodicity, date);
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -58,7 +59,7 @@ public class Event extends GenericEvent {
     }
 
     //constructor for generic event with no periodicity
-    public Event(String name, LocalTime startingTime, LocalTime endingTime, boolean isScheduled, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
+    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
         super(name, startingTime, endingTime, isScheduled, date);
         this.description = description;
         this.prevLocChoice = prevLocChoice;

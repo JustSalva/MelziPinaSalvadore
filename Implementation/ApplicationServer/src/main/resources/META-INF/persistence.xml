@@ -7,7 +7,9 @@
         <jta-data-source>jdbc/DataSource</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/datasource"/>
+            <!-- THIS TAG SERVES ONLY WHEN THE DATABASE IS EXECUTED THE VERY FIRST TIME !!!-->
+            <!--property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/datasource"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.user" value="root" />
         </properties>

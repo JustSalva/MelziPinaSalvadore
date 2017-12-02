@@ -12,8 +12,7 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 
 
 public class PathManager {
@@ -23,11 +22,10 @@ public class PathManager {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void calculatePath(Event event) {
-        LocalDate date = event.getDate().getDate();
-        LocalTime hour = event.getStartingTime();
+        LocalDateTime date = LocalDateTime.ofInstant(event.getDate().getDate(), ZoneOffset.UTC);
 
         //GMaps APIs require an object of Joda Time -> DateTime
-        DateTime dateTime = new DateTime(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), hour.getHour(), hour.getMinute());
+        DateTime dateTime = new DateTime(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute());
         LatLng lat1 = new LatLng(event.getDeparture().getLatitude(),event.getDeparture().getLongitude());
         LatLng lat2 = new LatLng(event.getEventLocation().getLatitude(), event.getDeparture().getLongitude());
         try {
@@ -58,9 +56,9 @@ public class PathManager {
 
 
     public static void main (String args[]) {
-        LocalTime time = LocalTime.of(12, 30);
+        Instant time = Instant.now();
         LocalDate day = LocalDate.of(2018,1,1);
-        DateOfCalendar date = new DateOfCalendar(day);
+        DateOfCalendar date = new DateOfCalendar(time);
         Location departure = new Location(30, 30, "Como, Italy");
         Location arrival = new Location(31,31,"Lecco, Italy");
         Event e = new Event("", time, time, true, date, "", true, null, null, arrival, departure, null);

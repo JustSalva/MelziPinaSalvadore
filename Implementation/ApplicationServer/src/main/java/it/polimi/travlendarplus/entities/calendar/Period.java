@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entities.calendar;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity(name = "PERIOD")
@@ -13,10 +14,10 @@ public class Period {
     private String Id;
 
     @Column(name = "STARTING_DAY")
-    private LocalDate startingDay;
+    private Instant startingDay;
 
     @Column(name = "ENDING_DAY")
-    private LocalDate endingDay;
+    private Instant endingDay;
 
     @Column(name = "DELTA_DAYS")
     private int deltaDays;
@@ -27,7 +28,7 @@ public class Period {
     public Period() {
     }
 
-    public Period(LocalDate startingDay, LocalDate endingDay, int deltaDays) {
+    public Period(Instant startingDay, Instant endingDay, int deltaDays) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
@@ -41,11 +42,11 @@ public class Period {
         Id = id;
     }
 
-    public LocalDate getStartingDay() {
+    public Instant getStartingDay() {
         return startingDay;
     }
 
-    public LocalDate getEndingDay() {
+    public Instant getEndingDay() {
         return endingDay;
     }
 
@@ -53,11 +54,11 @@ public class Period {
         return deltaDays;
     }
 
-    public void setStartingDay(LocalDate startingDay) {
+    public void setStartingDay(Instant startingDay) {
         this.startingDay = startingDay;
     }
 
-    public void setEndingDay(LocalDate endingDay) {
+    public void setEndingDay(Instant endingDay) {
         this.endingDay = endingDay;
     }
 
