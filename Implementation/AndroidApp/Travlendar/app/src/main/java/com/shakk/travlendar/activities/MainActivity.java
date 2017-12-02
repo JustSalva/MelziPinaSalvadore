@@ -1,9 +1,11 @@
-package com.shakk.travlendar;
+package com.shakk.travlendar.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.shakk.travlendar.R;
 
 public class MainActivity extends AppCompatActivity {
 

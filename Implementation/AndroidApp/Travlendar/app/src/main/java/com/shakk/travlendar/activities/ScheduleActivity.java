@@ -1,7 +1,8 @@
-package com.shakk.travlendar;
+package com.shakk.travlendar.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.shakk.travlendar.R;
 
 public class ScheduleActivity extends MenuActivity {
 
