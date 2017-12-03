@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import java.time.*;
 
 
-public class PathManager {
+public class PathManager extends UserManager{
     private static GeoApiContext context = new GeoApiContext.Builder()
             .apiKey("AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y")
             .build();

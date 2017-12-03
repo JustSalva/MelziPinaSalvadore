@@ -117,4 +117,8 @@ public abstract class GenericEvent extends GeneralEntity{
         this.date = date;
     }
 
+    public long calculateDate () {
+        return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % 24*60*60);
+    }
+
 }
