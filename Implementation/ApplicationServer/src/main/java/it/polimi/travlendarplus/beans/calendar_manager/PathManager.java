@@ -9,8 +9,6 @@ import it.polimi.travlendarplus.entities.*;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.time.*;
 

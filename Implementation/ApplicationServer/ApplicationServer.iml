@@ -23,8 +23,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: javax:javaee-api:7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.5.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.maps:google-maps-services:0.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.8.1" level="project" />
@@ -45,5 +44,9 @@
     <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.6.0" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - RESTful Web Service" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - JSON Processing (JSR 353)" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - EJB" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - Transaction API (JSR 907)" level="application_server_libraries" />
   </component>
 </module>
