@@ -1,4 +1,4 @@
-package com.shakk.travlendar.database.entities;
+package com.shakk.travlendar.database.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -15,6 +15,12 @@ public class User {
     @ColumnInfo(name = "univocal_code")
     private String univocalCode;
     private String timestamp;
+
+    public User(String email, String name, String surname) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+    }
 
     public int getId() {
         return id;

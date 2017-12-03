@@ -1,11 +1,9 @@
-package com.shakk.travlendar.database.entities;
+package com.shakk.travlendar.database.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-
-import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -13,16 +11,21 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         entity = GenericEvent.class,
         parentColumns = "id",
         childColumns = "event_id",
-        onDelete = CASCADE,
-        onUpdate = CASCADE
+        onUpdate = CASCADE,
+        onDelete = CASCADE
 ))
-public class Travel {
+public class Period {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String description;
     @ColumnInfo(name = "event_id")
     private int eventId;
+    @ColumnInfo(name = "start_date")
+    private long startDate;
+    @ColumnInfo(name = "end_date")
+    private long endDate;
+    @ColumnInfo(name = "delta_days")
+    private int deltaDays;
 
     public int getId() {
         return id;
@@ -32,19 +35,35 @@ public class Travel {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getEventId() {
         return eventId;
     }
 
     public void setEventId(int eventId) {
         this.eventId = eventId;
+    }
+
+    public long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getDeltaDays() {
+        return deltaDays;
+    }
+
+    public void setDeltaDays(int deltaDays) {
+        this.deltaDays = deltaDays;
     }
 }

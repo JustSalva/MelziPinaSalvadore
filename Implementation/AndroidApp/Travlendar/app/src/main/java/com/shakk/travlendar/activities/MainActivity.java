@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppDatabase.getAppDatabase(getApplicationContext()).userDao().insertUser(new User("ema", "nam", "sur"));
+        System.out.println(AppDatabase.getAppDatabase(getApplicationContext()).userDao().getUserByEmail("ema").getEmail());
     }
 
     public void goToLogin(View view) {

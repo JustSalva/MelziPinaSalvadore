@@ -1,4 +1,4 @@
-package com.shakk.travlendar.database.daos;
+package com.shakk.travlendar.database.dao;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Dao;
@@ -7,8 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.shakk.travlendar.database.entities.Ticket;
-import com.shakk.travlendar.database.entities.User;
+import com.shakk.travlendar.database.entity.User;
 
 import java.util.List;
 
