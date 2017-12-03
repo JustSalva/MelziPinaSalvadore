@@ -113,8 +113,7 @@ public class TravelComponent extends GeneralEntity{
         return (endingTime.getHour() - startingTime.getHour()) * 60 + endingTime.getMinute() - startingTime.getMinute();
     }
 
-    @Override
-    public TravelComponent load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(TravelComponent.class, key);
+    public static TravelComponent load(long key){
+        return GeneralEntity.load( TravelComponent.class, key );
     }
 }

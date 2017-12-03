@@ -41,8 +41,7 @@ public class PeriodOfDayConstraint extends Constraint {
         this.maxHour = maxHour;
     }
 
-    @Override
-    public PeriodOfDayConstraint load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(PeriodOfDayConstraint.class, key);
+    public static PeriodOfDayConstraint load(long key){
+        return GeneralEntity.load( PeriodOfDayConstraint.class, key );
     }
 }

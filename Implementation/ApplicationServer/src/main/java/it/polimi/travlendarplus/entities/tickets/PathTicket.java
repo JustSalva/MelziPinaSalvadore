@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
@@ -49,8 +50,7 @@ public class PathTicket extends GeneralTicket {
         this.endingLocation = endingLocation;
     }
 
-    @Override
-    public PathTicket load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(PathTicket.class, key);
+    public static PathTicket load(long key){
+        return GeneralEntity.load( PathTicket.class, key );
     }
 }

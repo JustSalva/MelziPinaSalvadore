@@ -29,8 +29,7 @@ public class GeneralTicket extends Ticket {
         this.lineName = lineName;
     }
 
-    @Override
-    public GeneralTicket load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(GeneralTicket.class, key);
+    public static GeneralTicket load(long key){
+        return GeneralEntity.load( GeneralTicket.class, key );
     }
 }

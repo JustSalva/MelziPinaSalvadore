@@ -29,8 +29,7 @@ public class DistanceTicket extends Ticket {
         this.distance = distance;
     }
 
-    @Override
-    public DistanceTicket load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(DistanceTicket.class, key);
+    public static DistanceTicket load(long key){
+        return GeneralEntity.load( DistanceTicket.class, key );
     }
 }

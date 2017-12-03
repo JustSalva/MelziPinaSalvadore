@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TYPE_OF_EVENT")
-public class TypeOfEvent extends GeneralEntity implements Serializable{
+public class TypeOfEvent extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -90,8 +90,7 @@ public class TypeOfEvent extends GeneralEntity implements Serializable{
         return deactivate.contains(constraint);
     }
 
-    @Override
-    public TypeOfEvent load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(TypeOfEvent.class, key);
+    public static TypeOfEvent load(long key){
+        return GeneralEntity.load( TypeOfEvent.class, key );
     }
 }

@@ -161,8 +161,7 @@ public class User extends GeneralEntity{
         this.preferredLocations.put(location, name);
     }
 
-    @Override
-    public User load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(User.class, key);
+    public static User load(long key){
+        return GeneralEntity.load( User.class, key );
     }
 }

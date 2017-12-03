@@ -67,8 +67,7 @@ public class Period extends GeneralEntity{
         this.deltaDays = deltaDays;
     }
 
-    @Override
-    public Period load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(Period.class, key);
+    public static Period load(long key){
+        return GeneralEntity.load( Period.class, key );
     }
 }

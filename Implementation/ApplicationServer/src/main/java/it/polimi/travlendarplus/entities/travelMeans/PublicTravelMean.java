@@ -18,8 +18,7 @@ public class PublicTravelMean extends TravelMean {
         super(name, speed, eco);
     }
 
-    @Override
-    public PublicTravelMean load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(PublicTravelMean.class, key);
+    public static PublicTravelMean load(long key){
+        return GeneralEntity.load( PublicTravelMean.class, key );
     }
 }

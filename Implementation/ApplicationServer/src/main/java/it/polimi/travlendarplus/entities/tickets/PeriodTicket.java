@@ -62,8 +62,7 @@ public class PeriodTicket extends Ticket {
         this.endingDate = endingDate;
     }
 
-    @Override
-    public PeriodTicket load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(PeriodTicket.class, key);
+    public static PeriodTicket load(long key){
+        return GeneralEntity.load( PeriodTicket.class, key );
     }
 }

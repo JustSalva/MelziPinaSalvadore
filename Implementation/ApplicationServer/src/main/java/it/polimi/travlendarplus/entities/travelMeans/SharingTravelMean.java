@@ -29,8 +29,7 @@ public class SharingTravelMean extends TravelMean{
         this.costOnTime = costOnTime;
     }
 
-    @Override
-    public SharingTravelMean load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(SharingTravelMean.class, key);
+    public static SharingTravelMean load(long key){
+        return GeneralEntity.load( SharingTravelMean.class, key );
     }
 }

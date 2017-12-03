@@ -37,8 +37,7 @@ public class BreakEvent extends GenericEvent {
         this.minimumTime = minimumTime;
     }
 
-    @Override
-    public BreakEvent load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(BreakEvent.class, key);
+    public static BreakEvent load(long key){
+        return GeneralEntity.load( BreakEvent.class, key );
     }
 }

@@ -18,8 +18,7 @@ public class PrivateTravelMean extends TravelMean{
     public PrivateTravelMean() {
     }
 
-    @Override
-    public PrivateTravelMean load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(PrivateTravelMean.class, key);
+    public static PrivateTravelMean load(long key){
+        return GeneralEntity.load( PrivateTravelMean.class, key );
     }
 }

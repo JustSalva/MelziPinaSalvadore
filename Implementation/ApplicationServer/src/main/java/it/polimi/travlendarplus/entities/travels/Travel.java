@@ -112,8 +112,7 @@ public class Travel extends GeneralEntity{
         return miniTravels.size() - 1;
     }
 
-    @Override
-    public Travel load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(Travel.class, key);
+    public static Travel load(long key){
+        return GeneralEntity.load( Travel.class, key );
     }
 }

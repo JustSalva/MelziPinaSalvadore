@@ -29,9 +29,7 @@ public class DateOfCalendar extends GeneralEntity{
         this.date = date;
     }
 
-    @Override
-    public DateOfCalendar load(long key) throws EntityNotFoundException, NoResultException {
-        return loadHelper(DateOfCalendar.class, key);
-
+    public static DateOfCalendar load(long key){
+        return GeneralEntity.load( DateOfCalendar.class, key );
     }
 }
