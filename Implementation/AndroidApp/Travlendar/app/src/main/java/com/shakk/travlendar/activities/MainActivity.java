@@ -16,8 +16,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppDatabase.getAppDatabase(getApplicationContext()).userDao().insertUser(new User("ema", "nam", "sur"));
-        System.out.println(AppDatabase.getAppDatabase(getApplicationContext()).userDao().getUserByEmail("ema").getEmail());
+        new Thread(() -> {
+            AppDatabase.getAppDatabase(getApplicationContext()).userDao().clearTable();
+            System.out.println(AppDatabase.getAppDatabase(getApplicationContext()).userDao().countUsers());
+        }).start();
     }
 
     public void goToLogin(View view) {

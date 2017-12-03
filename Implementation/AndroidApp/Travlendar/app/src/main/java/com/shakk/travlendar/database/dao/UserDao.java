@@ -41,6 +41,9 @@ public interface UserDao {
             "INNER JOIN user ON ticket.user_id = user.id " +
             "WHERE user.email LIKE :email")
     List<GenericTicketInfo> getUserTickets(String email);
+
+    @Query("DELETE FROM user")
+    void clearTable();
 }
 
 class FullName {
