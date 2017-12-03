@@ -48,7 +48,7 @@ public class PreferenceRESTful {
     }
 
 
-    @Path("{loc}")
+    @Path("location/{loc}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public boolean addPreferredLocation(@PathParam("loc")JSONObject loc) {
