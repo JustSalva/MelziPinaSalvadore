@@ -4,12 +4,13 @@ import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TYPE_OF_EVENT")
-public class TypeOfEvent extends GeneralEntity{
+public class TypeOfEvent extends GeneralEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

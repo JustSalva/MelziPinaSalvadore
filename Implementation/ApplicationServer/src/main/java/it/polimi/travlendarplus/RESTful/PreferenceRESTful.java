@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.RESTful;
 
+import it.polimi.travlendarplus.RESTful.security.Secured;
+import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,28 +13,28 @@ import javax.ws.rs.core.MediaType;
 
 // The Java class will be hosted at the URI path "/preference"
 @Path("/preference")
+@Secured
+
 public class PreferenceRESTful {
-    @Context
-    SecurityContext securityContext;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONArray getAllPreferences() {
+    public JSONArray getAllPreferences() {   //TODO
         return null;
     }
 
     @Path("{idToe}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getTypeOfEvent(@PathParam("idToe") int id) {
+    public JSONObject getTypeOfEvent(@PathParam("idToe") int id) {   //TODO
         return null;
     }
 
 
-    @Path("{toe}")
+    @Path("add")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public boolean createTypeOfEvent(@PathParam("toe")JSONObject toe) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean createTypeOfEvent(TypeOfEvent toe) {   //TODO
         return false;
     }
 
@@ -40,22 +43,22 @@ public class PreferenceRESTful {
     @Path("location")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONArray getAllPreferredLocations() {
+    public JSONArray getAllPreferredLocations() {   //TODO
         return null;
     }
 
     @Path("location/{idLoc}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getPreferredLocation(@PathParam("idLoc") int idLoc) {
+    public JSONObject getPreferredLocation(@PathParam("idLoc") int idLoc) {   //TODO
         return null;
     }
 
 
-    @Path("location/{loc}")
+    @Path("location/add")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public boolean addPreferredLocation(@PathParam("loc")JSONObject loc) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean addPreferredLocation(Location loc) {   //TODO
         return false;
     }
 }

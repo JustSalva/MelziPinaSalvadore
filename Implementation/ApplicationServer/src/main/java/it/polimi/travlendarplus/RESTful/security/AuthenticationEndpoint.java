@@ -9,12 +9,6 @@ import javax.ws.rs.core.Response;
 @Path("/authentication")
 public class AuthenticationEndpoint {
 
-    /*@GET
-    @Produces("text/plain")
-    public String prova () {
-        return "ciao";
-    }*/
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity(name = "LOCATION")
 @IdClass(LocationId.class)
-public class Location extends GeneralEntity{
+public class Location extends GeneralEntity implements Serializable{
 
     @Id
     private double latitude;

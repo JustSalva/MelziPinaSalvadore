@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.RESTful;
 
+import it.polimi.travlendarplus.RESTful.security.Secured;
+import it.polimi.travlendarplus.entities.calendar.Event;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,21 +12,21 @@ import javax.ws.rs.core.MediaType;
 
 // The Java class will be hosted at the URI path "/schedule"
 @Path("/event")
+@Secured
+
 public class EventRESTful {
-    @Context
-    SecurityContext securityContext;
 
     @Path("{idEvent}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getEventInformation(@PathParam("idEvent") int id) {
+    public JSONObject getEventInformation(@PathParam("idEvent") int id) {    //TODO
         return null;
     }
 
-    @Path("{event}")
+    @Path("add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean createEvent(@PathParam("event") JSONObject event) {
+    public boolean createEvent(Event event) {   //TODO
         //this function return the result of the creation.
         return false;
     }
@@ -32,7 +34,7 @@ public class EventRESTful {
     @Path("alternatives/{idEvent}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONArray getAlternatives(@PathParam("idEvent") int idEvent) {
+    public JSONArray getAlternatives(@PathParam("idEvent") int idEvent) {   //TODO
         return null;
     }
 

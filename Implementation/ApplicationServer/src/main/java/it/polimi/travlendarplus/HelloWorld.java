@@ -1,7 +1,11 @@
-package it.polimi.travlendarplus.RESTful.security;
+package it.polimi.travlendarplus;
 
+import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
+import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.User;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -15,12 +19,17 @@ import javax.ws.rs.core.MediaType;
 @Path("/prova")
 public class HelloWorld {
 
+    @Inject
+    @AuthenticatedUser
+    User authenticatedUser;
+
     @GET
     @Secured
     @Path("/a")
     @Produces("text/plain")
     public String prova () {
-        return "ciao";
+
+        return authenticatedUser.getEmail();
     }
 
     @Path("IdTest/{id}")

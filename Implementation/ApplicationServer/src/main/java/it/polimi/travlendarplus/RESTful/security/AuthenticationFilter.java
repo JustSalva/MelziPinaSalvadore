@@ -3,19 +3,17 @@ package it.polimi.travlendarplus.RESTful.security;
 import it.polimi.travlendarplus.entities.Location;
 
 import javax.annotation.Priority;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.ws.rs.NameBinding;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.security.Principal;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -26,21 +24,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-    private static final String REALM = "example";
+    private static final String REALM = "prova";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        Location ogg = new Location(44,44,"");
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TravlendarDB");
-        EntityManager em = emfactory.createEntityManager();
 
-        em.getTransaction().begin();
-        em.persist(ogg);
-        em.getTransaction().commit();
-
-
-/*
         final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
         requestContext.setSecurityContext(new SecurityContext() {
 
@@ -64,10 +53,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             public String getAuthenticationScheme() {
                 return AUTHENTICATION_SCHEME;
             }
-        });*/
+        });
 
         // Get the Authorization header from the request
-        /*String authorizationHeader =
+        String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         // Validate the Authorization header
@@ -79,10 +68,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // Extract the token from the Authorization header
         String token = authorizationHeader
                 .substring(AUTHENTICATION_SCHEME.length()).trim();
-*/
-        try {
 
-            String token = ""; //tO remove
+        try {
             // Validate the token
             validateToken(token);
 
@@ -114,6 +101,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private void validateToken(String token) throws Exception {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-        throw new Exception();
+        if(token.equals("abc"))
+            throw new Exception();
     }
 }
