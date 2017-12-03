@@ -28,7 +28,6 @@ public class HelloWorld {
     @Path("/a")
     @Produces("text/plain")
     public String prova () {
-
         return authenticatedUser.getEmail();
     }
 

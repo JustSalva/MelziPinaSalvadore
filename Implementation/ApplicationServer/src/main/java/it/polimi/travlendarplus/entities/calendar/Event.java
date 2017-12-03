@@ -123,6 +123,7 @@ public class Event extends GenericEvent {
         this.feasiblePaths.add(path);
     }
 
+
     @Override
     public Event load(long key) throws EntityNotFoundException, NoResultException {
         return loadHelper(Event.class, key);
