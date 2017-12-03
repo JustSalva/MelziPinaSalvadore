@@ -1,11 +1,11 @@
 package it.polimi.travlendarplus.RESTful;
 
-import it.polimi.travlendarplus.HelloWorld;
+import it.polimi.travlendarplus.RESTful.*;
+import it.polimi.travlendarplus.RESTful.security.AuthenticationEndpoint;
+import it.polimi.travlendarplus.RESTful.security.ExampleResource;
+import it.polimi.travlendarplus.RESTful.security.HelloWorld;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,12 +18,15 @@ public class TravlendarRESTful extends Application{
     @Override
     public Set<Class<?>> getClasses() {
         HashSet h = new HashSet<Class<?>>();
+        h.add(AuthenticationEndpoint.class);
         h.add(EventRESTful.class);
         h.add(ScheduleRESTful.class);
         h.add(PathRESTful.class);
         h.add(PreferenceRESTful.class);
-        h.add(AuthenticationRESTful.class);
+        h.add(UserRESTful.class);
         h.add(TripRESTful.class);
+        h.add(HelloWorld.class);
+        h.add(ExampleResource.class);
         return h;
     }
 }

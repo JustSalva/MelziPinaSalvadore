@@ -3,12 +3,16 @@ package it.polimi.travlendarplus.RESTful;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 // The Java class will be hosted at the URI path "/preference"
 @Path("/preference")
 public class PreferenceRESTful {
+    @Context
+    SecurityContext securityContext;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
