@@ -36,6 +36,8 @@ public class AuthenticationEndpoint {
     private void authenticate(String username, String password) throws Exception {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
+
+        //TODO
     }
 
     private String issueToken(String username) {
@@ -43,5 +45,7 @@ public class AuthenticationEndpoint {
         // The issued token must be associated to a user
         // Return the issued token
         return "token";
+
+        //TODO
     }
 }
