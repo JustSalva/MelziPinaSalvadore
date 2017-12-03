@@ -48,4 +48,9 @@ public class PathTicket extends GeneralTicket {
     public void setEndingLocation(Location endingLocation) {
         this.endingLocation = endingLocation;
     }
+
+    @Override
+    public PathTicket load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(PathTicket.class, key);
+    }
 }

@@ -1,10 +1,9 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.User;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalTime;
 
@@ -38,4 +37,8 @@ public class BreakEvent extends GenericEvent {
         this.minimumTime = minimumTime;
     }
 
+    @Override
+    public BreakEvent load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(BreakEvent.class, key);
+    }
 }

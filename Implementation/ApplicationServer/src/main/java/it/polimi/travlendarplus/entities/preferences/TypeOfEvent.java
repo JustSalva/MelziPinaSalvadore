@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.preferences;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
@@ -8,11 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TYPE_OF_EVENT")
-public class TypeOfEvent{
+public class TypeOfEvent extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private long id;
 
     @Column(nullable = false, name = "NAME")
     private String name;
@@ -44,7 +45,7 @@ public class TypeOfEvent{
         return paramFirstPath;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
@@ -60,7 +61,7 @@ public class TypeOfEvent{
         this.name = name;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -88,4 +89,8 @@ public class TypeOfEvent{
         return deactivate.contains(constraint);
     }
 
+    @Override
+    public TypeOfEvent load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(TypeOfEvent.class, key);
+    }
 }

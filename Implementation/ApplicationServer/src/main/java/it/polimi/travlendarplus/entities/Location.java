@@ -1,14 +1,11 @@
 package it.polimi.travlendarplus.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "LOCATION")
-@IdClass(LocationID.class)
-public class Location implements Serializable {
+@IdClass(LocationId.class)
+public class Location extends GeneralEntity{
 
     @Id
     private double latitude;
@@ -50,8 +47,10 @@ public class Location implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public Location load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(Location.class, key);
+    }
 }
-class LocationID implements Serializable{
-    private double latitude;
-    private double longitude;
-}
+

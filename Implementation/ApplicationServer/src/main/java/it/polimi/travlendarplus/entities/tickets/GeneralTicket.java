@@ -1,10 +1,9 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.ArrayList;
 
 @Entity(name="GENERAL_TICKET")
@@ -28,5 +27,10 @@ public class GeneralTicket extends Ticket {
 
     public void setLineName(String lineName) {
         this.lineName = lineName;
+    }
+
+    @Override
+    public GeneralTicket load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(GeneralTicket.class, key);
     }
 }

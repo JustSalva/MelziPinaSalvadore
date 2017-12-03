@@ -1,10 +1,9 @@
 package it.polimi.travlendarplus.entities.preferences;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity(name="PERIOD_OF_DAY_CONSTRAINT")
@@ -40,5 +39,10 @@ public class PeriodOfDayConstraint extends Constraint {
 
     public void setMaxHour(long maxHour) {
         this.maxHour = maxHour;
+    }
+
+    @Override
+    public PeriodOfDayConstraint load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(PeriodOfDayConstraint.class, key);
     }
 }

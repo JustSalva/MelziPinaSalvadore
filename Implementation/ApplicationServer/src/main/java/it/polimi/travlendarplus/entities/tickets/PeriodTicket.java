@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
@@ -21,7 +22,7 @@ public class PeriodTicket extends Ticket {
     @JoinColumn(name="ENDING_DATE_OF_CALENDAR")
     private DateOfCalendar endingDate;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="PERIODICAL_TICKET")
     private Ticket decorator;
 
@@ -59,5 +60,10 @@ public class PeriodTicket extends Ticket {
 
     public void setEndingDate(DateOfCalendar endingDate) {
         this.endingDate = endingDate;
+    }
+
+    @Override
+    public PeriodTicket load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(PeriodTicket.class, key);
     }
 }

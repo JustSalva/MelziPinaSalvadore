@@ -1,7 +1,11 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 
 @Entity(name="SHARING_TRAVEL_MEAN")
 @DiscriminatorValue("SHARING")
@@ -23,5 +27,10 @@ public class SharingTravelMean extends TravelMean{
 
     public void setCostOnTime(float costOnTime) {
         this.costOnTime = costOnTime;
+    }
+
+    @Override
+    public SharingTravelMean load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(SharingTravelMean.class, key);
     }
 }

@@ -1,7 +1,11 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 
 @Entity(name="PRIVATE_TRAVEL_MEAN")
 @DiscriminatorValue("PRIVATE")
@@ -12,5 +16,10 @@ public class PrivateTravelMean extends TravelMean{
     }
 
     public PrivateTravelMean() {
+    }
+
+    @Override
+    public PrivateTravelMean load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(PrivateTravelMean.class, key);
     }
 }

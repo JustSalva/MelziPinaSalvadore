@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
@@ -120,5 +121,10 @@ public class Event extends GenericEvent {
 
     public void addPath(Travel path) {
         this.feasiblePaths.add(path);
+    }
+
+    @Override
+    public Event load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(Event.class, key);
     }
 }

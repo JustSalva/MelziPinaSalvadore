@@ -10,28 +10,16 @@ import javax.persistence.Persistence;
 import java.time.Instant;
 
 public class Test {
-    private static void testTypeofEvent(EntityManager em){
+    private static void testTypeofEvent(){
         TypeOfEvent t = new TypeOfEvent();
-        t.setId(1);
-        t.setName("Adamo");
-        t.setParamFirstPath(ParamFirstPath.ECO_PATH);
-        em.persist(t);
+        t.save();
     }
 
-    private static void testDate(EntityManager em){
+    private static void testDate(){
         DateOfCalendar t = new DateOfCalendar();
-        t.setDate(Instant.now().getEpochSecond());
-        em.persist(t);
+        t.save();
     }
     public static void main ( String args[]){
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TravlendarDB");
-        EntityManager em = emfactory.createEntityManager();
-
-        em.getTransaction().begin();
-        testTypeofEvent(em);
-        em.getTransaction().commit();
-
-        em.close();
-        emfactory.close();
+        testDate();
     }
 }

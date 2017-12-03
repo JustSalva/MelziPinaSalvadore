@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.travels;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.Timestamp;
@@ -11,11 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TRAVEL")
-public class Travel {
+public class Travel extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private long id;
 
     @Column(name = "PREFERRED")
     private boolean preferred;
@@ -40,11 +41,11 @@ public class Travel {
         this.miniTravels = miniTravels;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -109,5 +110,10 @@ public class Travel {
 
     public int numberOfChanges() {
         return miniTravels.size() - 1;
+    }
+
+    @Override
+    public Travel load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(Travel.class, key);
     }
 }

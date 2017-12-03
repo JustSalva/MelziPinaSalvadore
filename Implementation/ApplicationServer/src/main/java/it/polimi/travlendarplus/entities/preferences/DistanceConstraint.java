@@ -2,9 +2,7 @@ package it.polimi.travlendarplus.entities.preferences;
 
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity(name="DISTANCE_CONSTRAINT")
 @DiscriminatorValue("DISTANCE")
@@ -39,5 +37,10 @@ public class DistanceConstraint extends Constraint{
 
     public void setMaxLenght(int maxLenght) {
         this.maxLenght = maxLenght;
+    }
+
+    @Override
+    public DistanceConstraint load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(DistanceConstraint.class, key);
     }
 }

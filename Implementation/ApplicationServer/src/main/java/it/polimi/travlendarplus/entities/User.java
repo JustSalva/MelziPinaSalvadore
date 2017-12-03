@@ -9,7 +9,8 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity(name = "USER")
-public class User {
+public class User extends GeneralEntity{
+
     @Id
     private String email;
 
@@ -158,5 +159,10 @@ public class User {
 
     public void addLocation(String name, Location location) {
         this.preferredLocations.put(location, name);
+    }
+
+    @Override
+    public User load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(User.class, key);
     }
 }

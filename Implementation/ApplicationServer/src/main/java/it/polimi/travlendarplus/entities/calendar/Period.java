@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
@@ -7,11 +8,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity(name = "PERIOD")
-public class Period {
+public class Period extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String Id;
+    private long Id;
 
     @Column(name = "STARTING_DAY")
     private Instant startingDay;
@@ -34,11 +35,11 @@ public class Period {
         this.deltaDays = deltaDays;
     }
 
-    public String getId() {
+    public long getId() {
         return Id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         Id = id;
     }
 
@@ -64,5 +65,10 @@ public class Period {
 
     public void setDeltaDays(int deltaDays) {
         this.deltaDays = deltaDays;
+    }
+
+    @Override
+    public Period load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(Period.class, key);
     }
 }

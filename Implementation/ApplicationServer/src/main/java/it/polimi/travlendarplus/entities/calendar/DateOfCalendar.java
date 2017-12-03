@@ -1,12 +1,13 @@
 package it.polimi.travlendarplus.entities.calendar;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import it.polimi.travlendarplus.entities.GeneralEntity;
+
+import javax.persistence.*;
 import java.time.Instant;
 
 
 @Entity(name = "DATE_OF_CALENDAR")
-public class DateOfCalendar {
+public class DateOfCalendar extends GeneralEntity{
 
     @Id
     private long date;
@@ -28,4 +29,9 @@ public class DateOfCalendar {
         this.date = date;
     }
 
+    @Override
+    public DateOfCalendar load(long key) throws EntityNotFoundException, NoResultException {
+        return loadHelper(DateOfCalendar.class, key);
+
+    }
 }

@@ -1,6 +1,8 @@
 package it.polimi.travlendarplus;
 
+import it.polimi.travlendarplus.entities.GeneralEntity;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 
 import javax.persistence.EntityManager;
@@ -23,16 +25,9 @@ public class HelloWorld {
     @Produces(MediaType.APPLICATION_JSON)
     public Location getClichedMessage(@PathParam("id") Integer id) {
         // Return some cliched textual content
-        Location ogg = new Location(id,id,"");
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TravlendarDB");
-        EntityManager em = emfactory.createEntityManager();
-
-        em.getTransaction().begin();
-        em.persist(ogg);
-        em.getTransaction().commit();
-
-        em.close();
-        emfactory.close();
+        /*Location ogg = new Location(id,id,"");
+        ogg.save();*/
+        Location ogg = GeneralEntity.loadHelper(Location.class, new LocationId((long)id));
         return ogg;
     }
    /* @POST
