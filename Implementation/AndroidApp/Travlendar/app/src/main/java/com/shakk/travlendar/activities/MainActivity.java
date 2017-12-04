@@ -1,25 +1,50 @@
 package com.shakk.travlendar.activities;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.UserViewModel;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    UserViewModel userViewModel;
+
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Thread(() -> {
-            AppDatabase.getAppDatabase(getApplicationContext()).userDao().clearTable();
-            System.out.println(AppDatabase.getAppDatabase(getApplicationContext()).userDao().countUsers());
-        }).start();
+        database = AppDatabase.getAppDatabase(getApplicationContext());
+
+        TextView textView = findViewById(R.id.test_view);
+        textView.setOnClickListener(view -> {
+            addUser();
+            //userViewModel.getCurrentName().setValue("John Doe");
+        });
+
+        // Create a ViewModel the first time the system calls an activity's onCreate() method.
+        // Re-created activities receive the same MyViewModel instance created by the first activity.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getUsers().observe(this, users -> {
+            textView.setText(Integer.toString(users.size()));
+        });
+
     }
 
     public void goToLogin(View view) {
@@ -40,5 +65,12 @@ public class MainActivity extends AppCompatActivity {
     public void goToSchedule(View view) {
         Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
         startActivity(intent);
+    }
+
+    public void addUser() {
+        new Thread(() -> {
+            database.userDao().insertUser(new User("e", "n", "s"));
+            Log.d("TAG", Integer.toString(database.userDao().countUsers()));
+        }).start();
     }
 }

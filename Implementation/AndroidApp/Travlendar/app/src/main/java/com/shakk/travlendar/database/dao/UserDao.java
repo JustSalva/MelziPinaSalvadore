@@ -1,5 +1,6 @@
 package com.shakk.travlendar.database.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -26,13 +27,13 @@ public interface UserDao {
     void delete(User user);
 
     @Query("SELECT * FROM user WHERE email LIKE :email")
-    User getUserByEmail(String email);
+    LiveData<User> getUserByEmail(String email);
 
     @Query("SELECT name, surname FROM user WHERE email LIKE :email")
-    FullName getUserFullNameByEmail(String email);
+    LiveData<FullName> getUserFullNameByEmail(String email);
 
     @Query("SELECT * FROM user")
-    List<User> getUsers();
+    LiveData<List<User>> getUsers();
 
     @Query("SELECT COUNT(*) FROM user")
     int countUsers();
@@ -40,7 +41,7 @@ public interface UserDao {
     @Query("SELECT * FROM ticket " +
             "INNER JOIN user ON ticket.user_id = user.id " +
             "WHERE user.email LIKE :email")
-    List<GenericTicketInfo> getUserTickets(String email);
+    LiveData<List<GenericTicketInfo>> getUserTickets(String email);
 
     @Query("DELETE FROM user")
     void clearTable();
