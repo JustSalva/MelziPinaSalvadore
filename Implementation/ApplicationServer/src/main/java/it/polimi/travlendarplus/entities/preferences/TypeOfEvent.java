@@ -93,4 +93,9 @@ public class TypeOfEvent extends GeneralEntity{
     public static TypeOfEvent load(long key){
         return GeneralEntity.load( TypeOfEvent.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

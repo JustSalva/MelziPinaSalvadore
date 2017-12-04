@@ -65,4 +65,9 @@ public class PeriodTicket extends Ticket {
     public static PeriodTicket load(long key){
         return GeneralEntity.load( PeriodTicket.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

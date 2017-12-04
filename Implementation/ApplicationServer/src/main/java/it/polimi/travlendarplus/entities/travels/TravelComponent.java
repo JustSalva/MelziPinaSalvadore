@@ -116,4 +116,9 @@ public class TravelComponent extends GeneralEntity{
     public static TravelComponent load(long key){
         return GeneralEntity.load( TravelComponent.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

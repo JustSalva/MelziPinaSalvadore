@@ -32,4 +32,9 @@ public class DateOfCalendar extends GeneralEntity{
     public static DateOfCalendar load(long key){
         return GeneralEntity.load( DateOfCalendar.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(date) != null;
+    }
 }

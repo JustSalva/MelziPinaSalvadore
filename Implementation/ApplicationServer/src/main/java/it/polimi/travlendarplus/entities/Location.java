@@ -18,7 +18,7 @@ public class Location extends GeneralEntity {
     public Location() {
     }
 
-    public Location(float latitude, float longitude, String address) {
+    public Location(double latitude, double longitude, String address) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
@@ -27,6 +27,7 @@ public class Location extends GeneralEntity {
     public double getLatitude() {
         return latitude;
     }
+
 
     public void setLatitude(float latitude) {
         this.latitude = latitude;
@@ -50,6 +51,11 @@ public class Location extends GeneralEntity {
 
     public static Location load(LocationId key){
         return GeneralEntity.load( Location.class, key );
+    }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(new LocationId(latitude,longitude)) != null;
     }
 }
 

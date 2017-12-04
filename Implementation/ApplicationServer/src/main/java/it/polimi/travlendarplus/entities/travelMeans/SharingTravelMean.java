@@ -32,4 +32,9 @@ public class SharingTravelMean extends TravelMean{
     public static SharingTravelMean load(long key){
         return GeneralEntity.load( SharingTravelMean.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

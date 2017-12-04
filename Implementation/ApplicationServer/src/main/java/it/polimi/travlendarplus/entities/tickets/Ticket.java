@@ -16,7 +16,7 @@ public abstract class Ticket extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    protected long id;
 
     @Column(name = "COST")
     private float cost;

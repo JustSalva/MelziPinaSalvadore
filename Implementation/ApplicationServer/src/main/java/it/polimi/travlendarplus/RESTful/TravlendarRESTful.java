@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.HelloWorld;
 import it.polimi.travlendarplus.RESTful.security.AuthenticatedUserProducer;
 import it.polimi.travlendarplus.RESTful.security.AuthenticationEndpoint;
 import it.polimi.travlendarplus.RESTful.security.AuthenticationFilter;
+import it.polimi.travlendarplus.entities.TransactionsInterceptor;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -28,6 +29,7 @@ public class TravlendarRESTful extends Application{
         h.add(UserRESTful.class);
         //h.add(TripRESTful.class); TODO
         h.add(HelloWorld.class);
+        h.add(TransactionsInterceptor.class);
         return h;
     }
 }

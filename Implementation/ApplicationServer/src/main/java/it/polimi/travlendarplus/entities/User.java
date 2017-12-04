@@ -161,7 +161,12 @@ public class User extends GeneralEntity{
         this.preferredLocations.put(location, name);
     }
 
-    public static User load(long key){
+    public static User load(String key){
         return GeneralEntity.load( User.class, key );
+    }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(email) != null;
     }
 }

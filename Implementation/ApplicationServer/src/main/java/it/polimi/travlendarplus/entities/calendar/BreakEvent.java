@@ -40,4 +40,9 @@ public class BreakEvent extends GenericEvent {
     public static BreakEvent load(long key){
         return GeneralEntity.load( BreakEvent.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

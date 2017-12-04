@@ -43,4 +43,9 @@ public class DistanceConstraint extends Constraint{
     public static DistanceConstraint load(long key){
         return GeneralEntity.load( DistanceConstraint.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

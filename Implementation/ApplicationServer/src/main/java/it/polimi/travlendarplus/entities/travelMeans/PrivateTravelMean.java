@@ -21,4 +21,9 @@ public class PrivateTravelMean extends TravelMean{
     public static PrivateTravelMean load(long key){
         return GeneralEntity.load( PrivateTravelMean.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

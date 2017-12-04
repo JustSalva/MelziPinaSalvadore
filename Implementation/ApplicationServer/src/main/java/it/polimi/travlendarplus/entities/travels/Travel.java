@@ -115,4 +115,9 @@ public class Travel extends GeneralEntity{
     public static Travel load(long key){
         return GeneralEntity.load( Travel.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

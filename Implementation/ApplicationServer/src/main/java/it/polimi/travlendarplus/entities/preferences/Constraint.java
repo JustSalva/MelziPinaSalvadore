@@ -12,7 +12,7 @@ public abstract class Constraint extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private long Id;
+    protected long id;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -34,10 +34,10 @@ public abstract class Constraint extends GeneralEntity{
     }
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        Id = id;
+        id = id;
     }
 }

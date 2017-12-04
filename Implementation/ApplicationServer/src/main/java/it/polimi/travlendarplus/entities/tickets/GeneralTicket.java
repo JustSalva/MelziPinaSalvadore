@@ -32,4 +32,10 @@ public class GeneralTicket extends Ticket {
     public static GeneralTicket load(long key){
         return GeneralEntity.load( GeneralTicket.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
+
 }

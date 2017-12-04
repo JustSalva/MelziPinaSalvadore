@@ -14,7 +14,7 @@ public abstract class GenericEvent extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    protected long id;
 
     @Column(nullable = false, name = "NAME")
     private String name;

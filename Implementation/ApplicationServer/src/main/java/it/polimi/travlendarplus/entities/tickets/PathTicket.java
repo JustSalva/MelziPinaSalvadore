@@ -53,4 +53,9 @@ public class PathTicket extends GeneralTicket {
     public static PathTicket load(long key){
         return GeneralEntity.load( PathTicket.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

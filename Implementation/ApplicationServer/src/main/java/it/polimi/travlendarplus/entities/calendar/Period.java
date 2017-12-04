@@ -12,7 +12,7 @@ public class Period extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long Id;
+    private long id;
 
     @Column(name = "STARTING_DAY")
     private Instant startingDay;
@@ -36,11 +36,11 @@ public class Period extends GeneralEntity{
     }
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        Id = id;
+        id = id;
     }
 
     public Instant getStartingDay() {
@@ -69,5 +69,10 @@ public class Period extends GeneralEntity{
 
     public static Period load(long key){
         return GeneralEntity.load( Period.class, key );
+    }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
     }
 }

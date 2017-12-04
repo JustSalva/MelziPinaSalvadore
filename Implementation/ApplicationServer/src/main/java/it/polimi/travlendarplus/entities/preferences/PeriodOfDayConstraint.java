@@ -44,4 +44,9 @@ public class PeriodOfDayConstraint extends Constraint {
     public static PeriodOfDayConstraint load(long key){
         return GeneralEntity.load( PeriodOfDayConstraint.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }

@@ -7,9 +7,9 @@ public class LocationId implements Serializable {
     private double latitude;
     private double longitude;
 
-    public LocationId( long key) {
-        this.latitude=key;
-        this.longitude=key;
+    public LocationId( double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public double getLatitude() {

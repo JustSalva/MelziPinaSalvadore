@@ -21,10 +21,15 @@ public abstract class GeneralEntity implements Serializable{
         entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(this);
+        if(!this.isAlreadyInDb())
+            entityManager.persist(this);
+        else
+            entityManager.merge(this);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
+
+    public abstract boolean isAlreadyInDb();
 
 
     /**

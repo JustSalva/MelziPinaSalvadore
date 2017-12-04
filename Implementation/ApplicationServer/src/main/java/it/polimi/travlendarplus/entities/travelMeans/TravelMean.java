@@ -12,7 +12,7 @@ public abstract class TravelMean extends GeneralEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    protected long id;
 
     @Column(name = "NAME")
     private String name;

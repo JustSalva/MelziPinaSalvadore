@@ -21,4 +21,9 @@ public class PublicTravelMean extends TravelMean {
     public static PublicTravelMean load(long key){
         return GeneralEntity.load( PublicTravelMean.class, key );
     }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        return load(id) != null;
+    }
 }
