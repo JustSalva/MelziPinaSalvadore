@@ -17,14 +17,8 @@ public interface UserDao {
     @Insert
     void insertUser(User user);
 
-    @Insert
-    void insertAll(User... users);
-
-    @Update
-    void updateUser(User user);
-
-    @Delete
-    void delete(User user);
+    @Query("DELETE FROM user")
+    void deleteUser();
 
     @Query("SELECT * FROM user WHERE email LIKE :email")
     LiveData<User> getUserByEmail(String email);
@@ -33,7 +27,7 @@ public interface UserDao {
     LiveData<FullName> getUserFullNameByEmail(String email);
 
     @Query("SELECT * FROM user")
-    LiveData<List<User>> getUsers();
+    LiveData<User> getUser();
 
     @Query("SELECT COUNT(*) FROM user")
     int countUsers();
@@ -42,9 +36,6 @@ public interface UserDao {
             "INNER JOIN user ON ticket.user_id = user.id " +
             "WHERE user.email LIKE :email")
     LiveData<List<GenericTicketInfo>> getUserTickets(String email);
-
-    @Query("DELETE FROM user")
-    void clearTable();
 }
 
 class FullName {

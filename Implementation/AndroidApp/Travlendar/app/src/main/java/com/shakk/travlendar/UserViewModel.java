@@ -4,35 +4,32 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 
-import java.util.List;
-
-
 public class UserViewModel extends AndroidViewModel {
 
-    private LiveData<List<User>> users;
     private AppDatabase database = AppDatabase
             .getAppDatabase(getApplication()
                     .getApplicationContext());
+
+    private LiveData<User> user;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public LiveData<List<User>> getUsers() {
-        if (users == null) {
-            users = new MutableLiveData<List<User>>();
-            loadUsers();
+    public LiveData<User> getUser() {
+        if (user == null) {
+            user = new MutableLiveData<User>();
+            loadUser();
         }
-        return users;
+        return user;
     }
 
-    private void loadUsers() {
-        users = database.userDao().getUsers();
+    private void loadUser() {
+        user = database.userDao().getUser();
     }
 }
