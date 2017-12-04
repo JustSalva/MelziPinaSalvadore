@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity(name = "USER")
-public class User extends GeneralEntity{
+public class User extends GenericEntity {
 
     @Id
     private String email;
@@ -162,7 +162,7 @@ public class User extends GeneralEntity{
     }
 
     public static User load(String key){
-        return GeneralEntity.load( User.class, key );
+        return GenericEntity.load( User.class, key );
     }
 
     @Override

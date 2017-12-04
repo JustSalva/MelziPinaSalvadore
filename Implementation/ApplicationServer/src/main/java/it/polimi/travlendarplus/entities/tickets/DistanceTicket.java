@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
 import javax.persistence.*;
@@ -30,11 +30,6 @@ public class DistanceTicket extends Ticket {
     }
 
     public static DistanceTicket load(long key){
-        return GeneralEntity.load( DistanceTicket.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( DistanceTicket.class, key );
     }
 }

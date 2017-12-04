@@ -1,20 +1,16 @@
 package it.polimi.travlendarplus.entities.preferences;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TYPE_OF_EVENT")
-public class TypeOfEvent extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class TypeOfEvent extends EntityWithLongKey {
 
     @Column(nullable = false, name = "NAME")
     private String name;
@@ -46,10 +42,6 @@ public class TypeOfEvent extends GeneralEntity{
         return paramFirstPath;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public void setParamFirstPath(ParamFirstPath paramFirstPath) {
         this.paramFirstPath = paramFirstPath;
     }
@@ -60,10 +52,6 @@ public class TypeOfEvent extends GeneralEntity{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public boolean isLimitedBy(TravelMeanEnum travelMean){
@@ -91,11 +79,6 @@ public class TypeOfEvent extends GeneralEntity{
     }
 
     public static TypeOfEvent load(long key){
-        return GeneralEntity.load( TypeOfEvent.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( TypeOfEvent.class, key );
     }
 }

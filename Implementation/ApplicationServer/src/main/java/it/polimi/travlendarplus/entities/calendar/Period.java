@@ -1,14 +1,14 @@
 package it.polimi.travlendarplus.entities.calendar;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalDate;
 
 @Entity(name = "PERIOD")
-public class Period extends GeneralEntity{
+public class Period extends EntityWithLongKey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,11 +68,6 @@ public class Period extends GeneralEntity{
     }
 
     public static Period load(long key){
-        return GeneralEntity.load( Period.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( Period.class, key );
     }
 }

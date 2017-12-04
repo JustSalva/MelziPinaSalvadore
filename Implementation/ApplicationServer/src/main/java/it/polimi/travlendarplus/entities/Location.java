@@ -1,11 +1,10 @@
 package it.polimi.travlendarplus.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity(name = "LOCATION")
 @IdClass(LocationId.class)
-public class Location extends GeneralEntity {
+public class Location extends GenericEntity {
 
     @Id
     private double latitude;
@@ -50,7 +49,7 @@ public class Location extends GeneralEntity {
     }
 
     public static Location load(LocationId key){
-        return GeneralEntity.load( Location.class, key );
+        return GenericEntity.load( Location.class, key );
     }
 
     @Override

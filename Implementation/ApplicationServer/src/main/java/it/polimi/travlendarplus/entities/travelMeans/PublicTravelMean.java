@@ -1,11 +1,9 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 
 @Entity(name="PUBLIC_TRAVEL_MEAN")
 @DiscriminatorValue("PUBLIC")
@@ -19,11 +17,6 @@ public class PublicTravelMean extends TravelMean {
     }
 
     public static PublicTravelMean load(long key){
-        return GeneralEntity.load( PublicTravelMean.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( PublicTravelMean.class, key );
     }
 }

@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.preferences;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
@@ -41,11 +41,6 @@ public class DistanceConstraint extends Constraint{
     }
 
     public static DistanceConstraint load(long key){
-        return GeneralEntity.load( DistanceConstraint.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( DistanceConstraint.class, key );
     }
 }

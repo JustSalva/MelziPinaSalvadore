@@ -1,10 +1,9 @@
 package it.polimi.travlendarplus.entities.preferences;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 
 @Entity(name="PERIOD_OF_DAY_CONSTRAINT")
 @DiscriminatorValue("PERIOD_OF_DAY")
@@ -42,11 +41,6 @@ public class PeriodOfDayConstraint extends Constraint {
     }
 
     public static PeriodOfDayConstraint load(long key){
-        return GeneralEntity.load( PeriodOfDayConstraint.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( PeriodOfDayConstraint.class, key );
     }
 }

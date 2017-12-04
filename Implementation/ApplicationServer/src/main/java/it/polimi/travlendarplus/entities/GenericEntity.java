@@ -7,7 +7,7 @@ import java.io.Serializable;
  * This is the main entity class, it is to be extended by all entity classes of Travlendar+
  * The class implements the Serializable interface, since is to be implemented by all entities classes
  */
-public abstract class GeneralEntity implements Serializable{
+public abstract class GenericEntity implements Serializable{
 
     //TODO
     //@PersistenceUnit(unitName="TravlendarDB")
@@ -42,7 +42,7 @@ public abstract class GeneralEntity implements Serializable{
 
     public void remove() {
         EntityManager entityManager = startTransaction();
-        GeneralEntity toBeRemoved = entityManager.merge(this);
+        GenericEntity toBeRemoved = entityManager.merge(this);
         entityManager.remove(toBeRemoved);
         commitTransaction(entityManager);
     }
@@ -56,7 +56,7 @@ public abstract class GeneralEntity implements Serializable{
      * @throws EntityNotFoundException if the entity does not exist in the database anymore
      * @throws NoResultException if the entity does not exist in the database
      */
-    public static <T extends GeneralEntity,S> T load( Class<T> entityClass, S key) throws EntityNotFoundException, NoResultException{
+    public static <T,S> T load( Class<T> entityClass, S key) throws EntityNotFoundException, NoResultException{
         entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         T result = entityManager.find(entityClass,key);

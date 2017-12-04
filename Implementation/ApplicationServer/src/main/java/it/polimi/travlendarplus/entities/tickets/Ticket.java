@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
@@ -12,11 +12,7 @@ import java.util.List;
 @Entity(name = "ABSTRACT_TICKET")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "TICKET_TYPE")
-public abstract class Ticket extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected long id;
+public abstract class Ticket extends EntityWithLongKey {
 
     @Column(name = "COST")
     private float cost;

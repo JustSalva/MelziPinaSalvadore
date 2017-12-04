@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 
 // The Java class will be hosted at the URI path "/prova"
 @Path("/prova")
@@ -37,14 +39,15 @@ public class HelloWorld {
     @GET
     // The Java method will produce content identified by the MIME Media type "text/plain"
     @Produces(MediaType.APPLICATION_JSON)
-    public Location getClichedMessage(@PathParam("id") Integer id) {
+    public DistanceTicket getClichedMessage(@PathParam("id") Integer id) {
         // Return some cliched textual content
-        Location ogg = new Location((double)id,(double)id,"");
+        DistanceTicket ogg = new DistanceTicket( id,new ArrayList<>(),10);
         ogg.save();
-        ogg = Location.load(new LocationId((float)id,(long)id));
+        long idTicket = ogg.getId();
+        ogg = DistanceTicket.load(idTicket);
         /*ogg.setAddress("prova");
         ogg.save();*/
-        ogg.remove();
+        //ogg.remove();
         return ogg;
     }
    /* @POST

@@ -1,11 +1,9 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 
 @Entity(name="SHARING_TRAVEL_MEAN")
 @DiscriminatorValue("SHARING")
@@ -30,11 +28,7 @@ public class SharingTravelMean extends TravelMean{
     }
 
     public static SharingTravelMean load(long key){
-        return GeneralEntity.load( SharingTravelMean.class, key );
+        return GenericEntity.load( SharingTravelMean.class, key );
     }
 
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
-    }
 }

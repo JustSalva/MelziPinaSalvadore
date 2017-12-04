@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.travels;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.Timestamp;
@@ -12,11 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "TRAVEL")
-public class Travel extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Travel extends EntityWithLongKey {
 
     @Column(name = "PREFERRED")
     private boolean preferred;
@@ -39,14 +36,6 @@ public class Travel extends GeneralEntity{
         this.preferred = preferred;
         this.relatedEvent = relatedEvent;
         this.miniTravels = miniTravels;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public boolean isPreferred() {
@@ -113,11 +102,7 @@ public class Travel extends GeneralEntity{
     }
 
     public static Travel load(long key){
-        return GeneralEntity.load( Travel.class, key );
+        return GenericEntity.load( Travel.class, key );
     }
 
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
-    }
 }

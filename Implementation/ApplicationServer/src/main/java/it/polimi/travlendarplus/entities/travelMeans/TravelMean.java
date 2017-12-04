@@ -1,18 +1,14 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
 
 import javax.persistence.*;
 
 @Entity(name = "ABSTRACT_TRAVEL_MEAN")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "TYPE")
-public abstract class TravelMean extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected long id;
+public abstract class TravelMean extends EntityWithLongKey {
 
     @Column(name = "NAME")
     private String name;

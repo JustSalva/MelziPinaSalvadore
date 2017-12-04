@@ -1,13 +1,12 @@
 package it.polimi.travlendarplus.entities.calendar;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 
 import javax.persistence.*;
-import java.time.Instant;
 
 
 @Entity(name = "DATE_OF_CALENDAR")
-public class DateOfCalendar extends GeneralEntity{
+public class DateOfCalendar extends GenericEntity {
 
     @Id
     private long date;
@@ -30,7 +29,7 @@ public class DateOfCalendar extends GeneralEntity{
     }
 
     public static DateOfCalendar load(long key){
-        return GeneralEntity.load( DateOfCalendar.class, key );
+        return GenericEntity.load( DateOfCalendar.class, key );
     }
 
     @Override

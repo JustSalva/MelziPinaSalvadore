@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
@@ -8,7 +8,6 @@ import it.polimi.travlendarplus.entities.travels.Travel;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,14 +40,16 @@ public class Event extends GenericEvent {
     })
     private Location departure;
 
-    @JoinTable(name = "LIMITED_BY")
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Travel> feasiblePaths;
+    @OneToOne
+    @JoinColumn(name = "LIMITED_BY")
+    private Travel feasiblePath;
 
     public Event() {
     }
 
-    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
+    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
+                 DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type,
+                 Location eventLocation, Location departure, Travel feasiblePath) {
         super(name, startingTime, endingTime, isScheduled, periodicity, date);
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -56,11 +57,13 @@ public class Event extends GenericEvent {
         this.type = type;
         this.eventLocation = eventLocation;
         this.departure = departure;
-        this.feasiblePaths = feasiblePaths;
+        this.feasiblePath = feasiblePath;
     }
 
     //constructor for generic event with no periodicity
-    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation, Location departure, ArrayList<Travel> feasiblePaths) {
+    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date,
+                 String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation,
+                 Location departure, Travel feasiblePath) {
         super(name, startingTime, endingTime, isScheduled, date);
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -68,7 +71,7 @@ public class Event extends GenericEvent {
         this.type = type;
         this.eventLocation = eventLocation;
         this.departure = departure;
-        this.feasiblePaths = feasiblePaths;
+        this.feasiblePath = feasiblePath;
     }
 
     public String getDescription() {
@@ -111,24 +114,15 @@ public class Event extends GenericEvent {
         this.departure = departure;
     }
 
-    public List<Travel> getFeasiblePaths() {
-        return Collections.unmodifiableList(feasiblePaths);
+    public Travel getFeasiblePath() {
+        return feasiblePath;
     }
 
-    public void setFeasiblePaths(ArrayList<Travel> feasiblePaths) {
-        this.feasiblePaths = feasiblePaths;
-    }
-
-    public void addPath(Travel path) {
-        this.feasiblePaths.add(path);
+    public void setFeasiblePath(Travel feasiblePath) {
+        this.feasiblePath = feasiblePath;
     }
 
     public static Event load(long key){
-        return GeneralEntity.load( Event.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( Event.class, key );
     }
 }

@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 @Entity(name="PATH_TICKET")
 @DiscriminatorValue("PATH")
-public class PathTicket extends GeneralTicket {
+public class PathTicket extends GenericTicket {
 
     @ManyToOne
     @JoinColumns({
@@ -51,11 +51,6 @@ public class PathTicket extends GeneralTicket {
     }
 
     public static PathTicket load(long key){
-        return GeneralEntity.load( PathTicket.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( PathTicket.class, key );
     }
 }

@@ -1,7 +1,7 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
@@ -10,11 +10,7 @@ import java.time.Instant;
 @Entity(name = "GENERIC_EVENT")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "EVENT_TYPE")
-public abstract class GenericEvent extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected long id;
+public abstract class GenericEvent extends EntityWithLongKey {
 
     @Column(nullable = false, name = "NAME")
     private String name;
@@ -59,14 +55,6 @@ public abstract class GenericEvent extends GeneralEntity{
         this.isScheduled = isScheduled;
         this.periodicity = new Period(null,null, 0);
         this.date = date;
-    }
-
-    public long  getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -1,11 +1,10 @@
 package it.polimi.travlendarplus.entities.calendar;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalTime;
 
 @Entity(name="BREAK_EVENT")
 @DiscriminatorValue("BREAK_EVENT")
@@ -38,11 +37,6 @@ public class BreakEvent extends GenericEvent {
     }
 
     public static BreakEvent load(long key){
-        return GeneralEntity.load( BreakEvent.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( BreakEvent.class, key );
     }
 }

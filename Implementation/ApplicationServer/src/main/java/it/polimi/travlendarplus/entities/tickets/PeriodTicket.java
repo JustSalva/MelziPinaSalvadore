@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities.tickets;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 
@@ -63,11 +63,6 @@ public class PeriodTicket extends Ticket {
     }
 
     public static PeriodTicket load(long key){
-        return GeneralEntity.load( PeriodTicket.class, key );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
+        return GenericEntity.load( PeriodTicket.class, key );
     }
 }

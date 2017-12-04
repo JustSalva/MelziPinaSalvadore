@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.travels;
 
-import it.polimi.travlendarplus.entities.GeneralEntity;
+import it.polimi.travlendarplus.entities.EntityWithLongKey;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
 
@@ -8,11 +9,7 @@ import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity(name = "TRAVEL_COMPONENT")
-public class TravelComponent extends GeneralEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class TravelComponent extends EntityWithLongKey{
 
     @Column(name = "STARTING_TIME")
     private LocalTime startingTime;
@@ -51,14 +48,6 @@ public class TravelComponent extends GeneralEntity{
         this.departure = departure;
         this.arrival = arrival;
         this.meanUsed = meanUsed;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalTime getStartingTime() {
@@ -114,11 +103,7 @@ public class TravelComponent extends GeneralEntity{
     }
 
     public static TravelComponent load(long key){
-        return GeneralEntity.load( TravelComponent.class, key );
+        return GenericEntity.load( TravelComponent.class, key );
     }
 
-    @Override
-    public boolean isAlreadyInDb() {
-        return load(id) != null;
-    }
 }
