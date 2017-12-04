@@ -84,16 +84,19 @@
 
                         <RadioButton
                             android:id="@+id/generalTicket_radioButton"
+                            android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/general_ticket"/>
                         <RadioButton
                             android:id="@+id/distanceTicket_radioButton"
+                            android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/distance_ticket"/>
                         <RadioButton
                             android:id="@+id/periodTicket_radioButton"
+                            android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/period_ticket"/>
@@ -103,7 +106,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/generalTicket_layout"
+                    android:id="@+id/generalTicket_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -157,7 +160,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/distanceTicket_layout"
+                    android:id="@+id/distanceTicket_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -181,7 +184,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/periodTicket_layout"
+                    android:id="@+id/periodTicket_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

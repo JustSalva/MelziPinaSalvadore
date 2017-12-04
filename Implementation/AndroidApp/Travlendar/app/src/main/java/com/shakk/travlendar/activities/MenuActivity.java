@@ -52,7 +52,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, PreferencesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_tickets) {
-            Intent intent = new Intent(this, TicketsActivity.class);
+            Intent intent = new Intent(this, TicketEditorActivity.class);
             startActivity(intent);
         }
 

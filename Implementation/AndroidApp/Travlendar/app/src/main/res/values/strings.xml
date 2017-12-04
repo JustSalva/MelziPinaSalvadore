@@ -85,4 +85,8 @@
     <string name="travel">Travel</string>
     <string name="schedule">Schedule</string>
     <string name="overlapping">Overlapping</string>
+    <string name="edit_event">Edit event</string>
+    <string name="view_event">View event</string>
+    <string name="arrange_trip">Arrange trip</string>
+    <string name="edit_ticket">Edit ticket</string>
 </resources>

@@ -52,7 +52,7 @@ public class CalendarActivity extends MenuActivity {
     }
 
     public void goToEventCreation(View view) {
-        Intent intent = new Intent(this, EventEditingActivity.class);
+        Intent intent = new Intent(this, EventEditorActivity.class);
         startActivity(intent);
     }
 

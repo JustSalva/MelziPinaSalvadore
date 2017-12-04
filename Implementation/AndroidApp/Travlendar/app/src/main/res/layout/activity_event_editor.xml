@@ -133,11 +133,13 @@
 
                         <RadioButton
                             android:id="@+id/normalEvent_radioButton"
+                            android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/normal_event"/>
                         <RadioButton
                             android:id="@+id/breakEvent_radioButton"
+                            android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/break_event"/>
@@ -147,10 +149,10 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/normalEvent_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -210,8 +212,9 @@
                             android:layout_weight="1"
                             android:text="@string/start_from_previous_location"/>
 
-                        <Spinner
-                            android:id="@+id/previousLocation_spinner"
+                        <Switch
+                            android:id="@+id/previousLocation_switch"
+                            android:onClick="onSwitchClicked"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -219,8 +222,10 @@
                     </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/previous_location_textInputLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <AutoCompleteTextView
                             android:id="@+id/previous_location"
@@ -236,8 +241,10 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/breakEvent_linearLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
