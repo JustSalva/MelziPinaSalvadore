@@ -1,0 +1,10 @@
+package it.polimi.travlendarplus.messages;
+
+import java.io.Serializable;
+
+/**
+ * This is the main message class to be sent and to be received through
+ * the network connectivity; it is to be extended by all messages classes.
+ */
+public abstract class GenericMessage implements Serializable{
+}

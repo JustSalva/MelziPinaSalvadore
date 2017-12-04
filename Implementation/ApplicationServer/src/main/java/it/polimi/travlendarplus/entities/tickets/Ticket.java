@@ -25,11 +25,13 @@ public abstract class Ticket extends EntityWithLongKey {
     private Timestamp lastUpdate;
 
     public Ticket() {
+        this.lastUpdate = new Timestamp();
     }
 
     public Ticket(float cost, ArrayList<PublicTravelMean> relatedTo) {
         this.cost = cost;
         this.relatedTo = relatedTo;
+        this.lastUpdate = new Timestamp();
     }
 
     public float getCost() {
@@ -50,5 +52,13 @@ public abstract class Ticket extends EntityWithLongKey {
 
     public void addTravelMean(PublicTravelMean travelMean) {
         this.relatedTo.add(travelMean);
+    }
+
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

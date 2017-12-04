@@ -21,6 +21,6 @@ public class AuthenticatedUserProducer {
     private User findUser(String username) {
         // Hit the the database or a service to find a user by its username and return it
         // Return the User instance
-        return new User("pippo","a","b"); //TODO
+        return new User("pippo","a","b", "pw"); //TODO
     }
 }

@@ -27,12 +27,14 @@ public class Period extends EntityWithLongKey {
     private Timestamp lastUpdate;
 
     public Period() {
+        this.lastUpdate = new Timestamp();
     }
 
     public Period(Instant startingDay, Instant endingDay, int deltaDays) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
+        this.lastUpdate = new Timestamp();
     }
 
     public long getId() {
@@ -65,6 +67,14 @@ public class Period extends EntityWithLongKey {
 
     public void setDeltaDays(int deltaDays) {
         this.deltaDays = deltaDays;
+    }
+
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public static Period load(long key){

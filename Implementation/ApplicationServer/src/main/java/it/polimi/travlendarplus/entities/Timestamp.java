@@ -14,7 +14,7 @@ public class Timestamp {
     @Column(name = "UNIX_TIMESTAMP")
     private Instant timestamp;
 
-    protected Timestamp(){
+    public Timestamp(){
         this.timestamp = Instant.now();
     }
 
@@ -22,5 +22,13 @@ public class Timestamp {
     @PrePersist
     public void updateTimeStamps() {
         this.timestamp = Instant.now();
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
     }
 }

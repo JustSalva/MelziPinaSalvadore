@@ -20,6 +20,13 @@ public class User extends GenericEntity {
     @Column(name = "SURNAME")
     private String surname;
 
+    @Column(name = "PASSWORD")
+    private String password;
+
+    @JoinTable(name = "USER_DEVICES")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserDevice> userDevices;
+
     @JoinTable(name = "USER_BREAK_EVENTS")
     @OneToMany(cascade = CascadeType.ALL)
     private List<BreakEvent> breaks;
@@ -50,31 +57,39 @@ public class User extends GenericEntity {
     private Timestamp lastUpdate;
 
     public User() {
+        this.lastUpdate = new Timestamp();
     }
 
-    public User(String email, String name, String surname, ArrayList<BreakEvent> breaks, ArrayList<Event> events,
-                ArrayList<Ticket> heldTickets, ArrayList<TypeOfEvent> preferences,
-                HashMap<Location, String> preferredLocations) {
+    public User(String email, String name, String surname, String password,
+                List<UserDevice> userDevices, List<BreakEvent> breaks, List<Event> events,
+                List<Ticket> heldTickets, List<TypeOfEvent> preferences,
+                Map<Location, String> preferredLocations) {
         this.email = email;
         this.name = name;
         this.surname = surname;
+        this.password = password;
+        this.userDevices = userDevices;
         this.breaks = breaks;
         this.events = events;
         this.heldTickets = heldTickets;
         this.preferences = preferences;
         this.preferredLocations = preferredLocations;
+        this.lastUpdate = new Timestamp();
     }
 
     //constructor for user with empty ArrayLists
-    public User(String email, String name, String surname) {
+    public User(String email, String name, String surname, String password) {
         this.email = email;
         this.name = name;
         this.surname = surname;
+        this.password = password;
+        this.userDevices = new ArrayList<UserDevice>();
         this.breaks = new ArrayList<BreakEvent>();
         this.events = new ArrayList<Event>();
         this.heldTickets = new ArrayList<Ticket>();
         this.preferences = new ArrayList<TypeOfEvent>();
         this.preferredLocations = new HashMap<Location, String>();
+        this.lastUpdate = new Timestamp();
     }
 
     public String getEmail() {
@@ -99,6 +114,26 @@ public class User extends GenericEntity {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<UserDevice> getUserDevices() {
+        return userDevices;
+    }
+
+    public void setUserDevices(List<UserDevice> userDevices) {
+        this.userDevices = userDevices;
+    }
+
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
     }
 
     public List<BreakEvent> getBreaks() {
@@ -159,6 +194,10 @@ public class User extends GenericEntity {
 
     public void addLocation(String name, Location location) {
         this.preferredLocations.put(location, name);
+    }
+
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public static User load(String key){
