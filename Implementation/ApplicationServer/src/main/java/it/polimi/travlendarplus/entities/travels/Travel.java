@@ -31,12 +31,14 @@ public class Travel extends EntityWithLongKey {
     private Timestamp lastUpdate;
 
     public Travel() {
+        this.lastUpdate = new Timestamp();
     }
 
     public Travel(boolean preferred, Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
         this.preferred = preferred;
         this.relatedEvent = relatedEvent;
         this.miniTravels = miniTravels;
+        this.lastUpdate = new Timestamp();
     }
 
     public boolean isPreferred() {
@@ -95,6 +97,18 @@ public class Travel extends EntityWithLongKey {
 
     private Location getEndingLocation() {
         return miniTravels.get(miniTravels.size()-1).getArrival();
+    }
+
+    public void setMiniTravels(List<TravelComponent> miniTravels) {
+        this.miniTravels = miniTravels;
+    }
+
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public int numberOfChanges() {

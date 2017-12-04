@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.RESTful.security;
 
-import org.json.JSONObject;
+import it.polimi.travlendarplus.messages.Credentials;
+import it.polimi.travlendarplus.travlendarPlusExceptions.InvalidCredentialsException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,27 +14,23 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticateUser(Credentials credentials) {
-
-        String username = credentials.getUsername();
-        String password = credentials.getPassword();
-
         try {
 
             // Authenticate the user using the credentials provided
-            authenticate(username, password);
+            authenticate( credentials.getUsername(), credentials.getPassword() );
 
             // Issue a token for the user
-            String token = issueToken(username);
+            String token = issueToken( credentials.getUsername() );
 
             // Return the token on the response
             return Response.ok(token).build();
 
-        } catch (Exception e) {
+        } catch (InvalidCredentialsException e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(String username, String password) throws InvalidCredentialsException {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
 

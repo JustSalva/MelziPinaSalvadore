@@ -39,23 +39,27 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public GenericEvent() {
     }
 
-    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date) {
+    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                        Period periodicity, DateOfCalendar date) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
         this.periodicity = periodicity;
         this.date = date;
+        this.lastUpdate = new Timestamp();
     }
 
     //constructor for generic event with no periodicity
-    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date) {
+    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                        DateOfCalendar date) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
         this.periodicity = new Period(null,null, 0);
         this.date = date;
+        this.lastUpdate = new Timestamp();
     }
 
     @Override
@@ -118,5 +122,11 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     public abstract Travel getFeasiblePath() ;
 
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
 
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }
