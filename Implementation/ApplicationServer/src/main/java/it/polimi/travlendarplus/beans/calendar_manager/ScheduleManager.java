@@ -102,7 +102,7 @@ public class ScheduleManager extends UserManager{
     }
 
     //it returns null if the event would be the first of that day
-    private GenericEvent getPossiblePreviousEvent (GenericEvent event) {
+    public GenericEvent getPossiblePreviousEvent (GenericEvent event) {
         for(int i=0; i<schedule.size(); i++)
             if (event.getStartingTime().isBefore(schedule.get(i).getStartingTime()))
                 return i==0 ? null : schedule.get(i-1);
@@ -110,7 +110,7 @@ public class ScheduleManager extends UserManager{
     }
 
     //it returns null if the event would be the last of that day
-    private GenericEvent getPossibleFollowingEvent (GenericEvent event) {
+    public GenericEvent getPossibleFollowingEvent (GenericEvent event) {
         for(int i=0; i<schedule.size(); i++)
             if(event.getStartingTime().isBefore(schedule.get(i).getEndingTime()))
                 return schedule.get(i);

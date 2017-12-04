@@ -11,6 +11,7 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,18 +20,58 @@ import java.time.*;
 @Stateless
 public class PathManager extends UserManager{
 
-    final String BASE_PATH = "https://maps.googleapis.com/maps/api/directions/json?";
+    @EJB
+    ScheduleManager scheduleManager;
 
     URL url;
     HttpURLConnection connection;
 
-    public void calculatePathWithGMaps (Event event) {
+    //TODO calculate path before and after
+    //attention to first and last event of the schedule (only one array of paths)
 
+    //the eventual path related to this event: origin is yet setted into the event object's field
+    private GMapsURL baseCallPreviousPath(Event event) {
+        return baseCall(event).addParam("origin", event.getDeparture().getAddress()).
+                addParam("destination", event.getEventLocation().getAddress()).
+                addParam("departure_time", ((Event)scheduleManager.getPossiblePreviousEvent(event)).getEndingTime().toString());
     }
 
-    //TODO define functions to concatenate strings to BASE_PATH in order to customize the request
+    //the eventual path will be lnked to following event
+    private GMapsURL baseCallFollowingPath(Event event) {
+        return baseCall(event).addParam("origin", event.getEventLocation().getAddress()).
+                addParam("destination", ((Event)scheduleManager.getPossibleFollowingEvent(event)).getEventLocation().getAddress()).
+                addParam("departure_time", event.getEndingTime().toString());
+    }
+
+    private GMapsURL baseCall(Event event) {
+        GMapsURL callURL = new GMapsURL();
+        return callURL.addParam("key", "AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y").
+                addParam("alternatives", "true").
+                addParam("units", "metric");
+    }
 
 
+    class GMapsURL {
+        private String callURL;
+
+        public GMapsURL() {
+            callURL = "https://maps.googleapis.com/maps/api/directions/json?";
+        }
+
+        public GMapsURL(String callURL) {
+            this.callURL = callURL;
+        }
+
+        public String getCallURL() {
+            return callURL;
+        }
+
+        GMapsURL addParam (String param, String address) {
+            return getCallURL().charAt(getCallURL().length()-1) == '?' ?
+                new GMapsURL (getCallURL() + param + "=" + address) :
+                    new GMapsURL (getCallURL() + "&" + param + "=" + address);
+        }
+    }
 
     /*private static GeoApiContext context = new GeoApiContext.Builder()
             .apiKey("AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y")
