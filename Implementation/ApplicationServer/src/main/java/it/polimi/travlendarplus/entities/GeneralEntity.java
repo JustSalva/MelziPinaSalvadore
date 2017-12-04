@@ -13,25 +13,39 @@ public abstract class GeneralEntity implements Serializable{
     //@PersistenceUnit(unitName="TravlendarDB")
     static private EntityManagerFactory entityManagerFactory;
 
+    private EntityManager startTransaction() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        return entityManager;
+    }
+
+    private void commitTransaction(EntityManager entityManager){
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
     /**
      * This method allows to save in the database any entity
      * @throws EntityExistsException if an entity with the same key already exist in the database
      */
     public void save() throws EntityExistsException{
-        entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = startTransaction();
         if(!this.isAlreadyInDb())
             entityManager.persist(this);
         else
             entityManager.merge(this);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        commitTransaction(entityManager);
     }
 
     public abstract boolean isAlreadyInDb();
 
-
+    public void remove() {
+        EntityManager entityManager = startTransaction();
+        GeneralEntity toBeRemoved = entityManager.merge(this);
+        entityManager.remove(toBeRemoved);
+        commitTransaction(entityManager);
+    }
     /**
      * This method allow to load any entity from the database
      * @param entityClass the class to be read

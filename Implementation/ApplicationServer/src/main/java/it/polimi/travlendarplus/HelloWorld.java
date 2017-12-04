@@ -42,8 +42,9 @@ public class HelloWorld {
         Location ogg = new Location((double)id,(double)id,"");
         ogg.save();
         ogg = Location.load(new LocationId((float)id,(long)id));
-        ogg.setAddress("prova");
-        ogg.save();
+        /*ogg.setAddress("prova");
+        ogg.save();*/
+        ogg.remove();
         return ogg;
     }
    /* @POST
