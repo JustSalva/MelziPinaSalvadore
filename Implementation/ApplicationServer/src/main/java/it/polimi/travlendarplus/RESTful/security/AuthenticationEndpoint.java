@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.RESTful.security;
 
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.messages.Credentials;
 import it.polimi.travlendarplus.exceptions.InvalidCredentialsException;
@@ -65,7 +66,16 @@ public class AuthenticationEndpoint {
         // Issue a token (can be a random String persisted to a database or a JWT token)
         // The issued token must be associated to a user
         // Return the issued token
+        //if a token already exists it replaces it
+        UserDevice userDevice = UserDevice.load( idDevice );
+        
+        if( userDevice != null){
+            userDevice.remove();
+        }
+
         user.addUserDevice( idDevice );
+        user.save();
         return user.getUserDevice( idDevice ).getUnivocalCode() ;
+
     }
 }

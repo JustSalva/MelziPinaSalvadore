@@ -138,6 +138,10 @@ public class User extends GenericEntity {
         this.userDevices.add( new UserDevice( idDevice, this ) );
     }
 
+    public void removeUserDevice( String idDevice ) {
+        userDevices.removeIf(userDevice -> userDevice.getIdDevice().equals( idDevice ));
+    }
+
     /**
      * Retrieve a UserDevice of the user
      * @param idDevice id of the requested UserDevice
