@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database = AppDatabase.getAppDatabase(getApplicationContext());
+        addUser();
 
         TextView textView = findViewById(R.id.test_view);
         textView.setOnClickListener(view -> {
@@ -32,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
             //userViewModel.getCurrentName().setValue("John Doe");
         });
 
-        // Create a ViewModel the first time the system calls an activity's onCreate() method.
+        /* Create a ViewModel the first time the system calls an activity's onCreate() method.
         // Re-created activities receive the same MyViewModel instance created by the first activity.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
             textView.setText(user.getEmail());
-        });
+        });*/
 
     }
 

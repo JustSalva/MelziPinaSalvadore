@@ -49,7 +49,8 @@
         <activity android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".activities.AccountActivity"
-            android:label="@string/my_account"/>
+            android:label="@string/my_account"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.PreferencesActivity"
             android:label="@string/preferences"
             android:windowSoftInputMode="stateHidden"/>
