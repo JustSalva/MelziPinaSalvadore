@@ -6,16 +6,17 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalTime;
 
 @Entity(name = "TRAVEL_COMPONENT")
 public class TravelComponent extends EntityWithLongKey{
 
     @Column(name = "STARTING_TIME")
-    private LocalTime startingTime;
+    private Instant startingTime;
 
     @Column(name = "ENDING_TIME")
-    private LocalTime endingTime;
+    private Instant endingTime;
 
     @Column(name = "LENGHT")
     private float length;
@@ -41,7 +42,7 @@ public class TravelComponent extends EntityWithLongKey{
     public TravelComponent() {
     }
 
-    public TravelComponent(LocalTime startingTime, LocalTime endingTime, float length, Location departure, Location arrival, TravelMean meanUsed) {
+    public TravelComponent(Instant startingTime, Instant endingTime, float length, Location departure, Location arrival, TravelMean meanUsed) {
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.length = length;
@@ -50,19 +51,19 @@ public class TravelComponent extends EntityWithLongKey{
         this.meanUsed = meanUsed;
     }
 
-    public LocalTime getStartingTime() {
+    public Instant getStartingTime() {
         return startingTime;
     }
 
-    public void setStartingTime(LocalTime startingTime) {
+    public void setStartingTime(Instant startingTime) {
         this.startingTime = startingTime;
     }
 
-    public LocalTime getEndingTime() {
+    public Instant getEndingTime() {
         return endingTime;
     }
 
-    public void setEndingTime(LocalTime endingTime) {
+    public void setEndingTime(Instant endingTime) {
         this.endingTime = endingTime;
     }
 
@@ -98,8 +99,8 @@ public class TravelComponent extends EntityWithLongKey{
         this.meanUsed = meanUsed;
     }
 
-    public int deltaTimeInMinutes() {
-        return (endingTime.getHour() - startingTime.getHour()) * 60 + endingTime.getMinute() - startingTime.getMinute();
+    public long deltaTimeInSeconds() {
+        return endingTime.getEpochSecond()-startingTime.getEpochSecond();
     }
 
     public static TravelComponent load(long key){

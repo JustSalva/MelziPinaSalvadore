@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.Timestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,14 +67,13 @@ public class Travel extends EntityWithLongKey {
     public int getTravelTime() {
         int totalMinutes = 0;
         for(TravelComponent component: miniTravels)
-            totalMinutes += component.deltaTimeInMinutes();
+            totalMinutes += component.deltaTimeInSeconds();
         return totalMinutes;
     }
 
-    //amount of time in minutes between departure and arrival time
-    public int getTotalTime() {
-        return (getEndingTime().getHour() - getStartingTime().getHour()) * 60 +
-                getEndingTime().getMinute() - getStartingTime().getMinute();
+    //amount of time in seconds between departure and arrival time
+    public long getTotalTime() {
+        return getEndingTime().getEpochSecond() - getStartingTime().getEpochSecond();
     }
 
     public int getTotalLength() {
@@ -81,11 +81,11 @@ public class Travel extends EntityWithLongKey {
         return 0;
     }
 
-    private LocalTime getStartingTime() {
+    private Instant getStartingTime() {
         return miniTravels.get(0).getStartingTime();
     }
 
-    private LocalTime getEndingTime() {
+    private Instant getEndingTime() {
         return miniTravels.get(miniTravels.size()-1).getEndingTime();
     }
 

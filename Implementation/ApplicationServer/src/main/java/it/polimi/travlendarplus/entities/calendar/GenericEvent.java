@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
+import it.polimi.travlendarplus.entities.travels.Travel;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -10,7 +11,7 @@ import java.time.Instant;
 @Entity(name = "GENERIC_EVENT")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "EVENT_TYPE")
-public abstract class GenericEvent extends EntityWithLongKey {
+public abstract class GenericEvent extends EntityWithLongKey implements Comparable<GenericEvent>{
 
     @Column(nullable = false, name = "NAME")
     private String name;
@@ -55,6 +56,12 @@ public abstract class GenericEvent extends EntityWithLongKey {
         this.isScheduled = isScheduled;
         this.periodicity = new Period(null,null, 0);
         this.date = date;
+    }
+
+    @Override
+    public int compareTo(GenericEvent gEvent) {
+        return startingTime.isAfter(gEvent.startingTime) ? 1 :
+                startingTime.isBefore(gEvent.startingTime) ? -1 : 0;
     }
 
     public String getName() {
@@ -105,8 +112,11 @@ public abstract class GenericEvent extends EntityWithLongKey {
         this.date = date;
     }
 
-    public long calculateDate () {
+    public long getDayAtMidnight () {
         return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % 24*60*60);
     }
+
+    public abstract Travel getFeasiblePath() ;
+
 
 }

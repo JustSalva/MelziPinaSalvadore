@@ -2,9 +2,13 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name="BREAK_EVENT")
 @DiscriminatorValue("BREAK_EVENT")
@@ -15,6 +19,14 @@ public class BreakEvent extends GenericEvent {
 
     public BreakEvent(){
 
+    }
+
+    @Override
+    public Travel getFeasiblePath() {
+        TravelComponent fakeTC = new TravelComponent(getStartingTime(), getEndingTime(), 0, null, null, null);
+        ArrayList<TravelComponent> fakeList = new ArrayList<TravelComponent>();
+        fakeList.add(fakeTC);
+        return new Travel(true, null, fakeList);
     }
 
     public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, long minimumTime, User user) {
