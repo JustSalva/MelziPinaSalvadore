@@ -5,25 +5,27 @@ package it.polimi.travlendarplus.messages;
  */
 public class Credentials extends GenericMessage {
 
-    private String username;
+    private static final long serialVersionUID = 4386269294697577939L;
+
+    private String email;
     private String password;
     private String idDevice;
 
     public Credentials() {
     }
 
-    public Credentials(String username, String password, String idDevice) {
-        this.username = username;
+    public Credentials(String email, String password, String idDevice) {
+        this.email = email;
         this.password = password;
         this.idDevice = idDevice;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -40,5 +42,14 @@ public class Credentials extends GenericMessage {
 
     public void setIdDevice(String idDevice) {
         this.idDevice = idDevice;
+    }
+
+    @Override
+    public String toString() {
+        return "Credentials{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", idDevice='" + idDevice + '\'' +
+                '}';
     }
 }

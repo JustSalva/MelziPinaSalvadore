@@ -7,4 +7,5 @@ import java.io.Serializable;
  * the network connectivity; it is to be extended by all messages classes.
  */
 public abstract class GenericMessage implements Serializable{
+    private static final long serialVersionUID = -2544036463356969106L;
 }

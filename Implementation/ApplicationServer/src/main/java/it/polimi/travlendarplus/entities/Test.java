@@ -17,6 +17,7 @@ public class Test {
 
     private static void testDate(){
         DateOfCalendar t = new DateOfCalendar();
+        t.setDate(11);
         t.save();
     }
     public static void main ( String args[]){

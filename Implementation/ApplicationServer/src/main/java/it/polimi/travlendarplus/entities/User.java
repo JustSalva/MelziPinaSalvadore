@@ -11,6 +11,8 @@ import java.util.*;
 @Entity(name = "USER")
 public class User extends GenericEntity {
 
+    private static final long serialVersionUID = 771264263714054170L;
+
     @Id
     private String email;
 
@@ -130,6 +132,24 @@ public class User extends GenericEntity {
 
     public void setUserDevices(List<UserDevice> userDevices) {
         this.userDevices = userDevices;
+    }
+
+    public void addUserDevice( String idDevice ) {
+        this.userDevices.add( new UserDevice( idDevice, this ) );
+    }
+
+    /**
+     * Retrieve a UserDevice of the user
+     * @param idDevice id of the requested UserDevice
+     * @return the requested UserDevice class instance or null if it doesn't exist
+     */
+    public UserDevice getUserDevice( String idDevice ) {
+        for( UserDevice userDevice:userDevices ){
+            if( userDevice.getIdDevice().equals( idDevice ) ){
+                return userDevice;
+            }
+        }
+        return null;
     }
 
     public Timestamp getLastUpdate() {
