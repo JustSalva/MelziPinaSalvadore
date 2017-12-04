@@ -8,9 +8,7 @@ import org.json.JSONArray;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 // The Java class will be hosted at the URI path "/schedule"
@@ -30,18 +28,17 @@ public class ScheduleRESTful {
     @Path("{day}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONArray getDailySchedule(@PathParam("day") long day) {   //TODO
+    public JSONArray getDailySchedule(@PathParam("day") long day) {
         scheduleManager.setCurrentUser(authenticatedUser);
-        scheduleManager.getScheduleByDay(day);
-        return null;
+        return new JSONArray(scheduleManager.getScheduleByDay(day));
     }
 
     @Path("{idEvent}")
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
     public JSONArray swapSchedule(@PathParam("idEvent") long id) {   //TODO
-        //return daily schedule of the day changed
-        return null;
+        scheduleManager.setCurrentUser(authenticatedUser);
+        return new JSONArray(scheduleManager.swapEvents(id));
     }
 
 

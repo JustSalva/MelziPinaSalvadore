@@ -9,12 +9,30 @@ import it.polimi.travlendarplus.entities.*;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 
+import javax.ejb.Stateless;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.*;
 
-
+@Stateless
 public class PathManager extends UserManager{
-    private static GeoApiContext context = new GeoApiContext.Builder()
+
+    final String BASE_PATH = "https://maps.googleapis.com/maps/api/directions/json?";
+
+    URL url;
+    HttpURLConnection connection;
+
+    public void calculatePathWithGMaps (Event event) {
+
+    }
+
+    //TODO define functions to concatenate strings to BASE_PATH in order to customize the request
+
+
+
+    /*private static GeoApiContext context = new GeoApiContext.Builder()
             .apiKey("AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y")
             .build();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -37,7 +55,7 @@ public class PathManager extends UserManager{
 
             String res = gson.toJson(result);
             System.out.println(res);
-
+*/
             /*JSONObject jsonObj = new JSONObject(res);
             JSONArray routes = jsonObj.getJSONArray("routes");
             JSONArray legs = routes.getJSONArray(0);
@@ -46,11 +64,11 @@ public class PathManager extends UserManager{
             System.out.println(gson.toJson(routes));
 */
 
-        } catch (Exception e) {
+        /*} catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
-    }
+/*    }
 
 
     public static void main (String args[]) {
@@ -62,4 +80,5 @@ public class PathManager extends UserManager{
         Event e = new Event("", time, time, true, date, "", true, null, null, arrival, departure, null);
         calculatePath(e);
     }
+    */
 }

@@ -17,6 +17,9 @@ public class ScheduleManager extends UserManager{
 
     List<GenericEvent> schedule = new ArrayList<GenericEvent>();
 
+    //TODO consider break events in the calculation
+    //TODO (in path manager?) ensure relation event-path when an event is added (particular cases: first/last event)
+
     public List<GenericEvent> getScheduleByDay(long day) {
         setSchedule(day);
         return schedule;
@@ -30,17 +33,36 @@ public class ScheduleManager extends UserManager{
 
     //before calculate possible paths for a given event. Check happens between starting/ending time of event
     //and starting/ending time of events and travels into the schedule
-    public boolean checkOverlapIntoSchedule(Event event) {
+    public boolean isEventOverlapFreeIntoSchedule(Event event) {
         setSchedule(event.getDayAtMidnight());
-        return false;
+        for(GenericEvent scheduledEvent: schedule)
+            if(!(areEventsOverlapFree(event, scheduledEvent)&&isEventOverlapFreeRespectTravel(event, scheduledEvent)))
+                return false;
+        return true;
     }
 
-    public List<Travel> checkFeasibility (Event event, ArrayList<Travel> possiblePaths) {
-        return null;
+    //this function is not called when the event would be the first of the day
+    public List<Travel> checkFeasibilityPathBefore (Event event, ArrayList<Travel> possiblePaths) {
+        GenericEvent previous = getPossiblePreviousEvent(event);
+        List<Travel> feasiblePaths = new ArrayList<Travel>();
+        for(Travel possiblePath: possiblePaths)
+            if(possiblePath.getMiniTravels().get(0).getStartingTime().isAfter(previous.getEndingTime()))
+                feasiblePaths.add(possiblePath);
+        return feasiblePaths;
+    }
+
+    //this function is not called when the event would be the last of the day
+    public List<Travel> checkFeasibilityPathAfter (Event event, ArrayList<Travel> possiblePaths) {
+        GenericEvent following = getPossibleFollowingEvent(event);
+        List<Travel> feasiblePaths = new ArrayList<Travel>();
+        for(Travel possiblePath: possiblePaths)
+            if(possiblePath.getMiniTravels().get(possiblePath.getMiniTravels().size()-1).getStartingTime().
+                    isBefore(following.getStartingTime()))
+                feasiblePaths.add(possiblePath);
+        return feasiblePaths;
     }
 
     public void addToScheduled(Event event /*with best path*/) {
-
     }
 
     public void addToNotScheduled(Event event) {
@@ -57,13 +79,7 @@ public class ScheduleManager extends UserManager{
         Collections.sort(schedule);
     }
 
-    /*public boolean isScheduleFeasible(long day) {
-        setDayByMidnight(day);
-        setSchedule();
-        return schedule.isFeasible();
-    }*/
-
-    //returns true if gEvent1 and gEvent2
+    //it returns true if gEvent1 and gEvent2 have not an overlap
     private boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
         return event.getStartingTime().isAfter(scheduledEvent.getEndingTime()) ||
                 event.getEndingTime().isBefore(scheduledEvent.getStartingTime());
@@ -83,6 +99,22 @@ public class ScheduleManager extends UserManager{
             if(gEvent.getId() == schedule.get(i).getId())
                 return i==0 ? schedule.get(i) : schedule.get(i-1);
         return null; //TODO exception
+    }
+
+    //it returns null if the event would be the first of that day
+    private GenericEvent getPossiblePreviousEvent (GenericEvent event) {
+        for(int i=0; i<schedule.size(); i++)
+            if (event.getStartingTime().isBefore(schedule.get(i).getStartingTime()))
+                return i==0 ? null : schedule.get(i-1);
+        return schedule.get(schedule.size()-1);
+    }
+
+    //it returns null if the event would be the last of that day
+    private GenericEvent getPossibleFollowingEvent (GenericEvent event) {
+        for(int i=0; i<schedule.size(); i++)
+            if(event.getStartingTime().isBefore(schedule.get(i).getEndingTime()))
+                return schedule.get(i);
+        return null;
     }
 
 }

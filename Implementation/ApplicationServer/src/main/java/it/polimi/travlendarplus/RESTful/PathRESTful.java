@@ -1,13 +1,11 @@
 package it.polimi.travlendarplus.RESTful;
 
 import it.polimi.travlendarplus.RESTful.security.Secured;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONObject;
 
 import javax.security.enterprise.SecurityContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -23,6 +21,13 @@ public class PathRESTful {
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject getBestPathInfo(@PathParam("idEvent") int idEvent) {   //TODO
         return null;
+    }
+
+    //the user select another best path for a certain event
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void changeBestPath(Travel newBestPath) {
+
     }
 
     //it returns the information in order to draw the path
