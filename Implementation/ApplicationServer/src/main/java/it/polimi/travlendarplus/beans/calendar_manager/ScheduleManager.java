@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
+import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
@@ -15,12 +16,14 @@ public class ScheduleManager extends UserManager{
 
     final long DAILY_SECONDS_MINUS_ONE = 24*60*60-1;
 
-    List<GenericEvent> schedule = new ArrayList<GenericEvent>();
+    List<Event> schedule = new ArrayList<Event>();
+    List<BreakEvent> breaks = new ArrayList<BreakEvent>();      //TODO: manage breaks
+
 
     //TODO consider break events in the calculation
     //TODO (in path manager?) ensure relation event-path when an event is added (particular cases: first/last event)
 
-    public List<GenericEvent> getScheduleByDay(long day) {
+    public List<Event> getScheduleByDay(long day) {
         setSchedule(day);
         return schedule;
     }

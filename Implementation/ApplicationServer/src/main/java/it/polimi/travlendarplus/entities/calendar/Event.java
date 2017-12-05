@@ -50,9 +50,9 @@ public class Event extends GenericEvent {
     }
 
     public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
-                 DateOfCalendar date, String description, boolean prevLocChoice, User user, TypeOfEvent type,
+                 String description, boolean prevLocChoice, User user, TypeOfEvent type,
                  Location eventLocation, Location departure, Travel feasiblePath) {
-        super(name, startingTime, endingTime, isScheduled, periodicity, date);
+        super(name, startingTime, endingTime, isScheduled, periodicity);
         this.description = description;
         this.prevLocChoice = prevLocChoice;
         //this.user = user;
@@ -63,10 +63,10 @@ public class Event extends GenericEvent {
     }
 
     //constructor for generic event with no periodicity
-    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date,
+    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
                  String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation,
                  Location departure, Travel feasiblePath) {
-        super(name, startingTime, endingTime, isScheduled, date);
+        super(name, startingTime, endingTime, isScheduled);
         this.description = description;
         this.prevLocChoice = prevLocChoice;
         //this.user = user;

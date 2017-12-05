@@ -31,10 +31,6 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     @JoinColumn(name="PERIODICITY_ID")
     private Period periodicity;
 
-    @ManyToOne
-    @JoinColumn(name="DATE_OF_CALENDAR_ID")
-    private DateOfCalendar date;
-
     @Embedded
     private Timestamp lastUpdate;
 
@@ -42,25 +38,22 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     }
 
     public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                        Period periodicity, DateOfCalendar date) {
+                        Period periodicity) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
         this.periodicity = periodicity;
-        this.date = date;
         this.lastUpdate = new Timestamp();
     }
 
     //constructor for generic event with no periodicity
-    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                        DateOfCalendar date) {
+    public GenericEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
         this.periodicity = new Period(null,null, 0);
-        this.date = date;
         this.lastUpdate = new Timestamp();
     }
 
@@ -108,14 +101,6 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     public void setPeriodicity(Period periodicity) {
         this.periodicity = periodicity;
-    }
-
-    public DateOfCalendar getDate() {
-        return date;
-    }
-
-    public void setDate(DateOfCalendar date) {
-        this.date = date;
     }
 
     public long getDayAtMidnight () {

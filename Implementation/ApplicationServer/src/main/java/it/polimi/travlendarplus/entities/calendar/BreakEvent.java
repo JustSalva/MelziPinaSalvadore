@@ -31,14 +31,14 @@ public class BreakEvent extends GenericEvent {
         return new Travel(true, null, fakeList);
     }
 
-    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, DateOfCalendar date, long minimumTime, User user) {
-        super(name, startingTime, endingTime, isScheduled, periodicity, date);
+    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, long minimumTime, User user) {
+        super(name, startingTime, endingTime, isScheduled, periodicity);
         this.minimumTime = minimumTime;
     }
 
     //constructor for generic event with no periodicity
-    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, DateOfCalendar date, long minimumTime, User user) {
-        super(name, startingTime, endingTime, isScheduled, date);
+    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, long minimumTime, User user) {
+        super(name, startingTime, endingTime, isScheduled);
         this.minimumTime = minimumTime;
     }
 
