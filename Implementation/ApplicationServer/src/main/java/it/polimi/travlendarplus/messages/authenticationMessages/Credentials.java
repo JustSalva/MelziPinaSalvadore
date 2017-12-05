@@ -1,7 +1,5 @@
 package it.polimi.travlendarplus.messages.authenticationMessages;
 
-import it.polimi.travlendarplus.messages.authenticationMessages.AuthenticationMessage;
-
 /**
  * Message to be sent by a client to perform a login
  */

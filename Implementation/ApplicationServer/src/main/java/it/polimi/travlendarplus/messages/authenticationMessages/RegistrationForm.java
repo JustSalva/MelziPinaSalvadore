@@ -1,9 +1,8 @@
 package it.polimi.travlendarplus.messages.authenticationMessages;
 
-import it.polimi.travlendarplus.messages.authenticationMessages.Credentials;
-
 /**
  * Message sent when an user want to register himself into the system
+ * or when he wants to modify his profile
  */
 public class RegistrationForm extends Credentials {
 

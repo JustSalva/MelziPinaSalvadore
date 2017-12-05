@@ -25,7 +25,7 @@ public class UserDevice extends GenericEntity {
     public UserDevice(String idDevice, User user) {
         this.idDevice = idDevice;
         this.user = user;
-        this.univocalCode = user.getEmail().concat(":"+generateToken());
+        this.univocalCode = user.getEmail().concat("@"+generateToken());
     }
 
     public User getUser() {
