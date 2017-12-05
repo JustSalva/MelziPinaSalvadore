@@ -1,5 +1,9 @@
 package it.polimi.travlendarplus.RESTful.security;
 
+import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.UserDevice;
+import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidTokenException;
+
 import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -16,7 +20,7 @@ import java.io.IOException;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-    private static final String REALM = "prova";
+    private static final String REALM = "travlendar-plus/ApplicationServer";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Inject
@@ -26,7 +30,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
-        userAuthenticatedEvent.fire("pippo"); //TODO: obtain name from Token
+        //userAuthenticatedEvent.fire("email"); //TODO: obtain name from Token
+        //TODO non posso ottenere direttamente l'user? perchè per ora è così
 
         // Get the Authorization header from the request
         String authorizationHeader =
@@ -41,20 +46,16 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // Extract the token from the Authorization header
         String token = authorizationHeader
                 .substring(AUTHENTICATION_SCHEME.length()).trim();
-
         try {
-            // Validate the token
             validateToken(token);
-
-        } catch (Exception e) {
+        } catch (InvalidTokenException e) {
             abortWithUnauthorized(requestContext);
         }
 
-        userAuthenticatedEvent.fire("pippo");   //TODO
+        userAuthenticatedEvent.fire("email");   //TODO
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
-
         // Check if the Authorization header is valid
         // It must not be null and must be prefixed with "Bearer" plus a whitespace
         // The authentication scheme comparison must be case-insensitive
@@ -63,7 +64,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
-
         // Abort the filter chain with a 401 status code response
         // The WWW-Authenticate header is sent along with the response
         requestContext.abortWith(
@@ -73,13 +73,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .build());
     }
 
-    private void validateToken(String token) throws Exception {
+    private void validateToken( String token ) throws InvalidTokenException {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-
-        //TODO
-
-        if(token.equals("abc"))
-            throw new Exception();
+        if( ! UserDevice.isTokenPresent( token ))
+            throw new InvalidTokenException();
     }
 }

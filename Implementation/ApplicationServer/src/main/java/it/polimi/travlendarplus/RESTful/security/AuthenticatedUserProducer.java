@@ -14,13 +14,11 @@ public class AuthenticatedUserProducer {
     @AuthenticatedUser
     private User authenticatedUser;
 
-    public void handleAuthenticationEvent(@Observes @AuthenticatedUser String username) {
-        this.authenticatedUser = findUser(username);
+    public void handleAuthenticationEvent(@Observes @AuthenticatedUser String email) {
+        this.authenticatedUser = findUser(email);
     }
 
-    private User findUser(String username) {
-        // Hit the the database or a service to find a user by its username and return it
-        // Return the User instance
-        return new User("pippo","a","b", "pw"); //TODO
+    private User findUser(String email) {
+        return User.load( email );
     }
 }

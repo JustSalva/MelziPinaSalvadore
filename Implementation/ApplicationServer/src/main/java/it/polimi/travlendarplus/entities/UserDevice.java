@@ -71,4 +71,23 @@ public class UserDevice extends GenericEntity {
     public boolean isAlreadyInDb() {
         return load(idDevice) != null;
     }
+
+
+    public static boolean isTokenPresent ( String token ){
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Query query = entityManager.createQuery( "" +
+                "SELECT userDevice " +
+                "FROM USER_DEVICES userDevice " +
+                "WHERE userDevice.univocalCode =: token" );
+        try{
+            query.getSingleResult();
+        }catch ( NoResultException e ){
+            return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
+        return true;
+    }
 }
