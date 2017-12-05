@@ -2,9 +2,9 @@ package it.polimi.travlendarplus.RESTful.security;
 
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.UserDevice;
-import it.polimi.travlendarplus.exceptions.UserNotRegisteredException;
-import it.polimi.travlendarplus.messages.Credentials;
-import it.polimi.travlendarplus.exceptions.InvalidCredentialsException;
+import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
+import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
+import it.polimi.travlendarplus.messages.authenticationMessages.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,33 +12,61 @@ import javax.ws.rs.core.Response;
 
 @Path("/authentication")
 public class AuthenticationEndpoint {
-
+    //TODO encryption of the messages!!!
+    /*
+    register(registrationForm, IdDevice): it is used when a user registers himself into the system.
+To do so the encrypted registration form (email, name, surname, password and captcha)
+is sent to the Application Server , which returns an univocal code related to the device
+(POST method);
+ submitLogin(mail, password, IdDevice): it is used when a user has to log into the system,
+it returns an univocal code related to the device (POST method);
+ editProle(registrationForm): it is used when a user wants to modify his prole, to do so it
+sends the same info contained in the registration form (UPDATE method);
+ requestPublicKey(IDdevice): it is used when an user is about to log into the system and so
+it must obtain a public key to encrypt his password (GET method);
+ deleteProle(mail, password, IdDevice): it allows the user to remove his prole from
+Travlender+ (DELETE method);
+ askNewCredentials(mail): it allows the user to request a new password, that will be sent to
+his email (PATCH method).
+     */
+    @Path("/register")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response authenticateUser(Credentials credentials) {
+    public Response register( RegistrationForm registrationForm){
+        User userToBeRegistered = User.load( registrationForm.getEmail() );
+        if ( userToBeRegistered != null ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+        //TODO checks on fields consistency?
+        userToBeRegistered = new User( registrationForm.getEmail(), registrationForm.getName(),
+                registrationForm.getSurname(), registrationForm.getPassword() );
+
+        String token = issueToken( userToBeRegistered, registrationForm.getIdDevice() );
+        // Return the token on the response
+        return buildResponseToken( token );
+    }
+
+    @Path("/login")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response submitLogin(Credentials credentials) {
 
         User user;
-
         try {
             // Authenticate the user using the credentials provided
             user = authenticate( credentials.getEmail(), credentials.getPassword() );
-
         } catch (InvalidCredentialsException e1) {
             //TODO to be tested
             return Response.status(Response.Status.FORBIDDEN).build();
-
         } catch (UserNotRegisteredException e2) {
-
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-
-
         // Issue a token for the user
         String token = issueToken( user, credentials.getIdDevice() );
-
         // Return the token on the response
-        return Response.ok(token).build();
+        return buildResponseToken( token );
     }
 
     /**
@@ -49,8 +77,7 @@ public class AuthenticationEndpoint {
      * @throws UserNotRegisteredException if the user credential specified are not registered in the system
      */
     private User authenticate(String email, String password) throws InvalidCredentialsException, UserNotRegisteredException {
-        // Authenticate against a database, LDAP, file or whatever
-        // Throw an Exception if the credentials are invalid or
+
         User userToBeAuthenticated = User.load(email);
 
         if ( userToBeAuthenticated == null ) {
@@ -58,7 +85,6 @@ public class AuthenticationEndpoint {
         }else if ( ! userToBeAuthenticated.getPassword().equals( password ) ){
             throw new InvalidCredentialsException();
         }
-
         return userToBeAuthenticated;
     }
 
@@ -77,5 +103,9 @@ public class AuthenticationEndpoint {
         user.save();
         return user.getUserDevice( idDevice ).getUnivocalCode() ;
 
+    }
+
+    private Response buildResponseToken(String token){
+        return Response.ok(new TokenResponse( token ) ).build();
     }
 }

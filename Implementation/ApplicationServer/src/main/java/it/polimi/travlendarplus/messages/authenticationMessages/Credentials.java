@@ -1,12 +1,15 @@
-package it.polimi.travlendarplus.messages;
+package it.polimi.travlendarplus.messages.authenticationMessages;
+
+import it.polimi.travlendarplus.messages.authenticationMessages.AuthenticationMessage;
 
 /**
  * Message to be sent by a client to perform a login
  */
-public class Credentials extends GenericMessage {
+public class Credentials extends AuthenticationMessage {
 
     private static final long serialVersionUID = 4386269294697577939L;
 
+    //TODO encryption!!!
     private String email;
     private String password;
     private String idDevice;
