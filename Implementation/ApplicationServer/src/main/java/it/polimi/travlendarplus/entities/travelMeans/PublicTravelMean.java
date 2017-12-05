@@ -14,8 +14,8 @@ public class PublicTravelMean extends TravelMean {
     public PublicTravelMean() {
     }
 
-    public PublicTravelMean(String name, int speed, float eco) {
-        super(name, speed, eco);
+    public PublicTravelMean(String name, TravelMeanEnum type, float eco) {
+        super(name, type, eco);
     }
 
     public static PublicTravelMean load(long key){

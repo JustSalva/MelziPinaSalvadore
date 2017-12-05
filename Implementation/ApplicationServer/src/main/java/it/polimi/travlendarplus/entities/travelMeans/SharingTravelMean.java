@@ -16,8 +16,8 @@ public class SharingTravelMean extends TravelMean{
     public SharingTravelMean() {
     }
 
-    public SharingTravelMean(String name, int speed, float eco, float costOnTime) {
-        super(name, speed, eco);
+    public SharingTravelMean(String name, TravelMeanEnum type, float eco, float costOnTime) {
+        super(name, type, eco);
         this.costOnTime = costOnTime;
     }
 

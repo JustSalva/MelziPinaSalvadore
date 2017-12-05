@@ -15,8 +15,9 @@ public abstract class TravelMean extends EntityWithLongKey {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "SPEED")
-    private int speed; //TODO unità di misura?
+    @Column(name = "TYPE")
+    @Enumerated(EnumType.STRING)
+    private TravelMeanEnum type;
 
     @Column(name = "ECO")
     private float eco;
@@ -24,9 +25,9 @@ public abstract class TravelMean extends EntityWithLongKey {
     public TravelMean() {
     }
 
-    public TravelMean(String name, int speed, float eco) {
+    public TravelMean(String name, TravelMeanEnum type, float eco) {
         this.name = name;
-        this.speed = speed;
+        this.type = type;
         this.eco = eco;
     }
 
@@ -38,12 +39,12 @@ public abstract class TravelMean extends EntityWithLongKey {
         this.name = name;
     }
 
-    public int getSpeed() {
-        return speed;
+    public TravelMeanEnum getType() {
+        return type;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setType(TravelMeanEnum type) {
+        this.type = type;
     }
 
     public float getEco() {

@@ -28,7 +28,7 @@ public class BreakEvent extends GenericEvent {
         TravelComponent fakeTC = new TravelComponent(getStartingTime(), getEndingTime(), 0, null, null, null);
         ArrayList<TravelComponent> fakeList = new ArrayList<TravelComponent>();
         fakeList.add(fakeTC);
-        return new Travel(true, null, fakeList);
+        return new Travel(null, fakeList);
     }
 
     public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, long minimumTime, User user) {

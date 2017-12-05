@@ -18,9 +18,6 @@ public class Travel extends EntityWithLongKey {
 
     private static final long serialVersionUID = 3515840069172744899L;
 
-    @Column(name = "PREFERRED")
-    private boolean preferred;
-
     @ManyToOne( fetch=FetchType.LAZY )
     @JoinColumn(name="RELATED_EVENT")
     private Event relatedEvent;
@@ -36,19 +33,10 @@ public class Travel extends EntityWithLongKey {
         this.lastUpdate = new Timestamp();
     }
 
-    public Travel(boolean preferred, Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
-        this.preferred = preferred;
+    public Travel(Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
         this.relatedEvent = relatedEvent;
         this.miniTravels = miniTravels;
         this.lastUpdate = new Timestamp();
-    }
-
-    public boolean isPreferred() {
-        return preferred;
-    }
-
-    public void setPreferred(boolean preferred) {
-        this.preferred = preferred;
     }
 
     public Event getRelatedEvent() {
