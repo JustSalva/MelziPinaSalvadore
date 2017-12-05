@@ -6,6 +6,8 @@ import javax.persistence.*;
 @IdClass(LocationId.class)
 public class Location extends GenericEntity {
 
+    private static final long serialVersionUID = -8275362646231911325L;
+
     @Id
     private double latitude;
     @Id

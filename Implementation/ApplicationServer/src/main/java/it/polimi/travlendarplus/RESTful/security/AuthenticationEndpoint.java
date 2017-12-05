@@ -14,12 +14,7 @@ import javax.ws.rs.core.Response;
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
     /*
-    register(registrationForm, IdDevice): it is used when a user registers himself into the system.
-To do so the encrypted registration form (email, name, surname, password and captcha)
-is sent to the Application Server , which returns an univocal code related to the device
-(POST method);
- submitLogin(mail, password, IdDevice): it is used when a user has to log into the system,
-it returns an univocal code related to the device (POST method);
+
  editProle(registrationForm): it is used when a user wants to modify his prole, to do so it
 sends the same info contained in the registration form (UPDATE method);
  requestPublicKey(IDdevice): it is used when an user is about to log into the system and so

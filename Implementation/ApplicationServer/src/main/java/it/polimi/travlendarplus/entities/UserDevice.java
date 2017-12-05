@@ -7,10 +7,12 @@ import java.util.Random;
 @Entity(name = "USER_DEVICES")
 public class UserDevice extends GenericEntity {
 
+    private static final long serialVersionUID = -3483428076400625921L;
+
     @Id
     private String idDevice;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn(name = "USER", nullable = false)
     private User user;
 

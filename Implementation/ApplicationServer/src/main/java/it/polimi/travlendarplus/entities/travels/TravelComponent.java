@@ -12,6 +12,8 @@ import java.time.LocalTime;
 @Entity(name = "TRAVEL_COMPONENT")
 public class TravelComponent extends EntityWithLongKey{
 
+    private static final long serialVersionUID = 436484875130667585L;
+
     @Column(name = "STARTING_TIME")
     private Instant startingTime;
 
@@ -21,21 +23,21 @@ public class TravelComponent extends EntityWithLongKey{
     @Column(name = "LENGHT")
     private float length;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="DEPARTURE_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="DEPARTURE_LONGITUDE", referencedColumnName="longitude")
     })
     private Location departure;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="ARRIVAL_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="ARRIVAL_LONGITUDE", referencedColumnName="longitude")
     })
     private Location arrival;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn(name="TRAVEL_MEAN_USED")
     private TravelMean meanUsed;
 

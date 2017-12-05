@@ -16,31 +16,33 @@ import java.util.List;
 @DiscriminatorValue("EVENT")
 public class Event extends GenericEvent {
 
+    private static final long serialVersionUID = 8421808089635462963L;
+
     @Column(name = "DESCRIPTION")
     private String description;
 
     @Column(name = "PREV_LOCATION_CHOICE")
     private boolean prevLocChoice;
 
-    @ManyToOne
-    @JoinColumn(name="TYPE_OF_EVENT")
+    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn(name="TYPE_OF_EVENT" )
     private TypeOfEvent type;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="EVENT_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="EVENT_LONGITUDE", referencedColumnName="longitude")
     })
     private Location eventLocation;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="DEPARTURE_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="DEPARTURE_LONGITUDE", referencedColumnName="longitude")
     })
     private Location departure;
 
-    @OneToOne
+    @OneToOne( fetch = FetchType.LAZY )
     @JoinColumn(name = "LIMITED_BY")
     private Travel feasiblePath;
 

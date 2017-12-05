@@ -13,6 +13,8 @@ import java.time.Instant;
 @DiscriminatorColumn(name = "EVENT_TYPE")
 public abstract class GenericEvent extends EntityWithLongKey implements Comparable<GenericEvent>{
 
+    private static final long serialVersionUID = -4348542805788613273L;
+
     @Column(nullable = false, name = "NAME")
     private String name;
 

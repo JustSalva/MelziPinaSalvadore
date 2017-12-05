@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue("SHARING")
 public class SharingTravelMean extends TravelMean{
 
+    private static final long serialVersionUID = 6590895544540213424L;
+
     private float costOnTime;
 
     public SharingTravelMean() {

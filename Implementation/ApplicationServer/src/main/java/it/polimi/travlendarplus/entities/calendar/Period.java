@@ -10,6 +10,8 @@ import java.time.Instant;
 @Entity(name = "PERIOD")
 public class Period extends EntityWithLongKey {
 
+    private static final long serialVersionUID = -7420043997157726131L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

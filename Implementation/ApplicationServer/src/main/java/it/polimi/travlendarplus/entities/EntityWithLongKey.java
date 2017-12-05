@@ -8,6 +8,8 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class EntityWithLongKey extends GenericEntity {
 
+    private static final long serialVersionUID = 973829971443943530L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

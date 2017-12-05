@@ -10,6 +10,8 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "CONSTRAINT_TYPE")
 public abstract class Constraint extends EntityWithLongKey {
 
+    private static final long serialVersionUID = -8843367479749790229L;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TravelMeanEnum concerns;

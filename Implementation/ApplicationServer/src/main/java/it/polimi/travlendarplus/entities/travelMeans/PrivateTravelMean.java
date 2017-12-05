@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 @DiscriminatorValue("PRIVATE")
 public class PrivateTravelMean extends TravelMean{
 
-    public PrivateTravelMean(String name, int speed, float eco) {
+    private static final long serialVersionUID = 2490349679121999838L;
+
+    public PrivateTravelMean( String name, int speed, float eco) {
         super(name, speed, eco);
     }
 

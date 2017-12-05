@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue("PUBLIC")
 public class PublicTravelMean extends TravelMean {
 
+    private static final long serialVersionUID = 4896066127608298475L;
+
     public PublicTravelMean() {
     }
 

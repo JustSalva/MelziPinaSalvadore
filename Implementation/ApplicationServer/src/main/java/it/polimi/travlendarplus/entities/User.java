@@ -16,42 +16,42 @@ public class User extends GenericEntity {
     @Id
     private String email;
 
-    @Column(name = "NAME")
+    @Column( name = "NAME" )
     private String name;
 
-    @Column(name = "SURNAME")
+    @Column( name = "SURNAME" )
     private String surname;
 
-    @Column(name = "PASSWORD")
+    @Column( name = "PASSWORD" )
     private String password;
 
-    @JoinTable(name = "USER_DEVICES")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JoinTable( name = "USER_DEVICES" )
+    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<UserDevice> userDevices;
 
-    @JoinTable(name = "USER_BREAK_EVENTS")
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "USER_BREAK_EVENTS" )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<BreakEvent> breaks;
 
-    @JoinTable(name = "USER_EVENTS")
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "USER_EVENTS" )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<Event> events;
 
-    @JoinTable(name = "USER_TICKETS")
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "USER_TICKETS" )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<Ticket> heldTickets;
 
-    @JoinTable(name = "USER_PREFERENCES")
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "USER_PREFERENCES" )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<TypeOfEvent> preferences;
 
-    @ElementCollection
-    @MapKeyColumn(name="PREFERRED_LOCATIONS")
-    @Column(name="NAME")
-    @CollectionTable(name = "USER_PREFERRED_LOCATIONS")
+    @ElementCollection( fetch = FetchType.LAZY )
+    @MapKeyColumn( name="PREFERRED_LOCATIONS" )
+    @Column( name="NAME" )
+    @CollectionTable( name = "USER_PREFERRED_LOCATIONS" )
     @JoinColumns({
-            @JoinColumn(name="EVENT_LATITUDE", referencedColumnName="latitude"),
-            @JoinColumn(name="EVENT_LONGITUDE", referencedColumnName="longitude")
+            @JoinColumn( name="EVENT_LATITUDE", referencedColumnName="latitude" ),
+            @JoinColumn( name="EVENT_LONGITUDE", referencedColumnName="longitude" )
     })
     private Map<Location, String> preferredLocations;
 

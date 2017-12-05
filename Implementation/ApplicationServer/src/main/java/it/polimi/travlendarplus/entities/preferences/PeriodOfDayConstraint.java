@@ -9,6 +9,8 @@ import javax.persistence.*;
 @DiscriminatorValue("PERIOD_OF_DAY")
 public class PeriodOfDayConstraint extends Constraint {
 
+    private static final long serialVersionUID = -4287946262554067696L;
+
     @Column(name = "MIN_HOUR")
     private long minHour; //In seconds from 00.00 of the day
 

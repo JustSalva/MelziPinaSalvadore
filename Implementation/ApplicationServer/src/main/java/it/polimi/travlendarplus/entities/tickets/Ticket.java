@@ -14,10 +14,12 @@ import java.util.List;
 @DiscriminatorColumn(name = "TICKET_TYPE")
 public abstract class Ticket extends EntityWithLongKey {
 
+    private static final long serialVersionUID = 8914735050811003828L;
+
     @Column(name = "COST")
     private float cost;
 
-    @OneToMany
+    @OneToMany (fetch = FetchType.LAZY)
     @JoinColumn(name="RELATED_TO")
     private List<PublicTravelMean> relatedTo;
 

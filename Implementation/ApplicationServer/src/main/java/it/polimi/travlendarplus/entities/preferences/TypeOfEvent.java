@@ -12,6 +12,8 @@ import java.util.List;
 @Entity(name = "TYPE_OF_EVENT")
 public class TypeOfEvent extends EntityWithLongKey {
 
+    private static final long serialVersionUID = 1979790161261960888L;
+
     @Column(nullable = false, name = "NAME")
     private String name;
 
@@ -20,10 +22,10 @@ public class TypeOfEvent extends EntityWithLongKey {
     private ParamFirstPath paramFirstPath;
 
     @JoinTable(name = "LIMITED_BY")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<Constraint> limitedBy;
 
-    @ElementCollection
+    @ElementCollection( fetch = FetchType.LAZY )
     @CollectionTable
     @Enumerated(EnumType.STRING)
     private List<TravelMeanEnum> deactivate;

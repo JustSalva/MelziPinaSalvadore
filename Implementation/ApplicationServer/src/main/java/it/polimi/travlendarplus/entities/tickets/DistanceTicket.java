@@ -10,6 +10,8 @@ import java.util.ArrayList;
 @DiscriminatorValue("DISTANCE")
 public class DistanceTicket extends Ticket {
 
+    private static final long serialVersionUID = 2628317705098639359L;
+
     @Column(name = "DISTANCE")
     private int distance;
 

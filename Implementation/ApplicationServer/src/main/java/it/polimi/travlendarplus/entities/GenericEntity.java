@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public abstract class GenericEntity implements Serializable{
 
+    private static final long serialVersionUID = -5052903462329369713L;
+
     //TODO
     //@PersistenceUnit(unitName="TravlendarDB")
     static private EntityManagerFactory entityManagerFactory;

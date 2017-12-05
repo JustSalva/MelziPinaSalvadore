@@ -10,6 +10,8 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "TYPE")
 public abstract class TravelMean extends EntityWithLongKey {
 
+    private static final long serialVersionUID = -2649047659064813632L;
+
     @Column(name = "NAME")
     private String name;
 

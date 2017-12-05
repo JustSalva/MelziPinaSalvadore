@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity(name = "DATE_OF_CALENDAR")
 public class DateOfCalendar extends GenericEntity {
+
     private static final long serialVersionUID = 4766678681363951004L;
 
     @Id

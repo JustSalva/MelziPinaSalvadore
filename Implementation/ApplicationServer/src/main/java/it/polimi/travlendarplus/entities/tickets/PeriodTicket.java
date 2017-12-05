@@ -11,18 +11,20 @@ import java.util.ArrayList;
 @DiscriminatorValue("PERIOD")
 public class PeriodTicket extends Ticket {
 
+    private static final long serialVersionUID = -7003608973530344312L;
+
     @Column(name = "NAME")
     private String name;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn(name="STARTING_DATE_OF_CALENDAR")
     private DateOfCalendar startingDate;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn(name="ENDING_DATE_OF_CALENDAR")
     private DateOfCalendar endingDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JoinColumn(name="PERIODICAL_TICKET")
     private Ticket decorator;
 

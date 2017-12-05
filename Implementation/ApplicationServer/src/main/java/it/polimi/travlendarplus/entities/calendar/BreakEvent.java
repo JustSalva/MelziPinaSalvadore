@@ -14,6 +14,8 @@ import java.util.List;
 @DiscriminatorValue("BREAK_EVENT")
 public class BreakEvent extends GenericEvent {
 
+    private static final long serialVersionUID = -38523370993953035L;
+
     @Column(name = "MINIMUM_TIME")
     private long minimumTime; // in seconds
 

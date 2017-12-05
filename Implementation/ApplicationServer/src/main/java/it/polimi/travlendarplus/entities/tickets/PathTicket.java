@@ -11,14 +11,16 @@ import java.util.ArrayList;
 @DiscriminatorValue("PATH")
 public class PathTicket extends GenericTicket {
 
-    @ManyToOne
+    private static final long serialVersionUID = 958692352206870450L;
+
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="DEPARTURE_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="DEPARTURE_LONGITUDE", referencedColumnName="longitude")
     })
     private Location startingLocation;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns({
             @JoinColumn(name="ARRIVAL_LATITUDE", referencedColumnName="latitude"),
             @JoinColumn(name="ARRIVAL_LONGITUDE", referencedColumnName="longitude")

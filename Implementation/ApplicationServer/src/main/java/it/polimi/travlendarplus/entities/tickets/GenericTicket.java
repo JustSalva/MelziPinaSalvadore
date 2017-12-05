@@ -10,6 +10,8 @@ import java.util.ArrayList;
 @DiscriminatorValue("GENERAL")
 public class GenericTicket extends Ticket {
 
+    private static final long serialVersionUID = -8507655590498704818L;
+
     @Column(name = "LINE_NAME")
     private String lineName;
 

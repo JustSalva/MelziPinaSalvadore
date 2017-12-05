@@ -16,15 +16,17 @@ import java.util.List;
 @Entity(name = "TRAVEL")
 public class Travel extends EntityWithLongKey {
 
+    private static final long serialVersionUID = 3515840069172744899L;
+
     @Column(name = "PREFERRED")
     private boolean preferred;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne( fetch=FetchType.LAZY )
     @JoinColumn(name="RELATED_EVENT")
     private Event relatedEvent;
 
     @JoinTable(name = "TRAVEL_COMPONENTS")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<TravelComponent> miniTravels;
 
     @Embedded
