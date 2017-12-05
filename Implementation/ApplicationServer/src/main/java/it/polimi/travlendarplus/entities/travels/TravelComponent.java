@@ -21,6 +21,7 @@ public class TravelComponent extends EntityWithLongKey{
     private Instant endingTime;
 
     @Column(name = "LENGHT")
+    //distance in Km
     private float length;
 
     @ManyToOne( fetch = FetchType.LAZY )

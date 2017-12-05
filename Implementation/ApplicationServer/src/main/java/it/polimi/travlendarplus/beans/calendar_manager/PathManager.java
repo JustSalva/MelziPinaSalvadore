@@ -5,15 +5,22 @@ import com.google.gson.GsonBuilder;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.*;
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsURL;
 import it.polimi.travlendarplus.entities.*;
 import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.*;
 
@@ -29,49 +36,39 @@ public class PathManager extends UserManager{
     //TODO calculate path before and after
     //attention to first and last event of the schedule (only one array of paths)
 
-    //the eventual path related to this event: origin is yet setted into the event object's field
-    private GMapsURL baseCallPreviousPath(Event event) {
-        return baseCall(event).addParam("origin", event.getDeparture().getAddress()).
-                addParam("destination", event.getEventLocation().getAddress()).
-                addParam("departure_time", ((Event)scheduleManager.getPossiblePreviousEvent(event)).getEndingTime().toString());
-    }
+    public static void main (String[] a) {
+        GMapsURL gMapsURL = new GMapsURL();
+        try {
+            URL maps = new URL(gMapsURL.getBaseCallPreviousPath(null, null));
+            HttpURLConnection connection = (HttpURLConnection) maps.openConnection();
+            BufferedReader read = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line = read.readLine();
+            String html = "";
+            while(line!=null) {
+                html += line + "\n";
+                line = read.readLine();
+            }
+            GMapsJSONReader response = new GMapsJSONReader();
 
-    //the eventual path will be lnked to following event
-    private GMapsURL baseCallFollowingPath(Event event) {
-        return baseCall(event).addParam("origin", event.getEventLocation().getAddress()).
-                addParam("destination", ((Event)scheduleManager.getPossibleFollowingEvent(event)).getEventLocation().getAddress()).
-                addParam("departure_time", event.getEndingTime().toString());
-    }
+            JSONObject resp = new JSONObject(html);
 
-    private GMapsURL baseCall(Event event) {
-        GMapsURL callURL = new GMapsURL();
-        return callURL.addParam("key", "AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y").
-                addParam("alternatives", "true").
-                addParam("units", "metric");
-    }
+            JSONArray routes = response.getRoutes(resp);
 
-
-    class GMapsURL {
-        private String callURL;
-
-        public GMapsURL() {
-            callURL = "https://maps.googleapis.com/maps/api/directions/json?";
-        }
-
-        public GMapsURL(String callURL) {
-            this.callURL = callURL;
-        }
-
-        public String getCallURL() {
-            return callURL;
-        }
-
-        GMapsURL addParam (String param, String address) {
-            return getCallURL().charAt(getCallURL().length()-1) == '?' ?
-                new GMapsURL (getCallURL() + param + "=" + address) :
-                    new GMapsURL (getCallURL() + "&" + param + "=" + address);
+            System.out.println(response.getTotDurationInSeconds((JSONObject) routes.get(0)));
+            /*JSONObject responseJSON = new JSONObject(html);
+            JSONArray routes = (JSONArray) responseJSON.get("routes");
+            for(int i=0; i<routes.length(); i++)
+                System.out.println(((JSONObject)((JSONObject)((JSONArray)((JSONObject)routes.get(i)).get("legs")).get(0)).get("distance")).get("text"));
+*/
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+    //((Event)scheduleManager.getPossibleFollowingEvent(event)) to use for second parameter in function: baseCallFollowingPath()
+
 
     /*private static GeoApiContext context = new GeoApiContext.Builder()
             .apiKey("AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y")
