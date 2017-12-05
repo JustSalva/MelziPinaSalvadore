@@ -89,4 +89,8 @@
     <string name="view_event">View event</string>
     <string name="arrange_trip">Arrange trip</string>
     <string name="edit_ticket">Edit ticket</string>
+    <string name="insert_date">Insert date</string>
+    <string name="insert_time">Insert time</string>
+    <string name="starting_time">Starting time</string>
+    <string name="ending_time">Ending time</string>
 </resources>

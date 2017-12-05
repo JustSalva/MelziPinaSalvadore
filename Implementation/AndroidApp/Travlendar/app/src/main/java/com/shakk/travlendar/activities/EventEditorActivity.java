@@ -56,4 +56,20 @@ public class EventEditorActivity extends MenuActivity {
             findViewById(R.id.previous_location_textInputLayout).setVisibility(View.GONE);
         }
     }
+
+    public void showDatePickerDialog(View view) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.setTextView(findViewById(R.id.date_textView));
+        newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    public void showTimePickerDialog(View view) {
+        TimePickerFragment newFragment = new TimePickerFragment();
+        if (view == findViewById(R.id.startingTime_button)) {
+            newFragment.setTextView(findViewById(R.id.startingTime_textView));
+        } else if (view== findViewById(R.id.endingTime_button)) {
+            newFragment.setTextView(findViewById(R.id.endingTime_textView));
+        }
+        newFragment.show(getFragmentManager(), "timePicker");
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -43,50 +44,103 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/date"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:hint="@string/date"
-                        android:inputType="text"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="@string/date"/>
 
-                </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/date_textView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
 
-                <android.support.design.widget.TextInputLayout
+                    <Button
+                        android:onClick="showDatePickerDialog"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/insert_date"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/starting_date"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:hint="@string/starting_date"
-                        android:inputType="time"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="@string/starting_time"/>
 
-                </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/startingTime_textView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
 
-                <android.support.design.widget.TextInputLayout
+                    <Button
+                        android:id="@+id/startingTime_button"
+                        android:onClick="showTimePickerDialog"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/insert_time"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/ending_date"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:hint="@string/ending_date"
-                        android:inputType="time"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="@string/ending_time"/>
 
-                </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/endingTime_textView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
+
+                    <Button
+                        android:id="@+id/endingTime_button"
+                        android:onClick="showTimePickerDialog"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/insert_time"/>
+
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
