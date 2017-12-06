@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities;
 
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 

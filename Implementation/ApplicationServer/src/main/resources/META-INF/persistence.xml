@@ -9,9 +9,10 @@
         <properties>
             <!-- THIS TAG SERVES ONLY WHEN THE DATABASE IS EXECUTED THE VERY FIRST TIME !!!-->
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mps_travlendar"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/mps_travlendar"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.user" value="mps"/>
+            <property name="javax.persistence.jdbc.password" value="pnDV6ii$"/>
         </properties>
     </persistence-unit>
 </persistence>
