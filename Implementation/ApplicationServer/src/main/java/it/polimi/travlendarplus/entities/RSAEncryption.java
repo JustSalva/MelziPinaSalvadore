@@ -11,33 +11,32 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.persistence.*;
 
-@Entity(name = "Encryption keys")
-public class RSAEncryption extends EntityWithLongKey {
+@Entity( name = "Encryption keys" )
+public class RSAEncryption extends GenericEntity {
 
     private static final long serialVersionUID = 8890765076763091319L;
 
-    @Column(name = "PUBLIC_KEY")
+    @Id
+    private String idDevice;
+
+    @Column( name = "PUBLIC_KEY" )
     private PublicKey publicKey;
 
-    @Column(name = "PRIVATE_KEY")
+    @Column( name = "PRIVATE_KEY" )
     private PrivateKey privateKey;
 
-    @OneToOne
-    @JoinColumn(name = "USER_DEVICE")
-    private UserDevice userDevice;
-
-    @Column(name = "UNIX_TIMESTAMP")
+    @Column( name = "UNIX_TIMESTAMP" )
     private Instant timestamp;
 
     public RSAEncryption() {
     }
 
-    public RSAEncryption( UserDevice userDevice) {
-        this.userDevice = userDevice;
+    public RSAEncryption( String idDevice ) {
+        this.idDevice = idDevice;
         KeyPairGenerator keyPairGenerator = null;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
+            keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
+            keyPairGenerator.initialize( 2048 );
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
             this.privateKey = keyPair.getPrivate();
             this.publicKey = keyPair.getPublic();
@@ -49,52 +48,52 @@ public class RSAEncryption extends EntityWithLongKey {
     }
 
     // Decrypt using RSA public key
-    private static String decryptPassword(String encryptedPassword, PublicKey publicKey) throws DecryprionFailedException{
+    private static String decryptPassword( String encryptedPassword, PublicKey publicKey ) throws DecryprionFailedException {
         try {
             Cipher cipher = setUpCypher( Cipher.DECRYPT_MODE, publicKey );
-            return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedPassword)));
-        }catch ( GeneralSecurityException e ){
+            return new String( cipher.doFinal( Base64.getDecoder().decode( encryptedPassword ) ) );
+        } catch ( GeneralSecurityException e ) {
             throw new DecryprionFailedException();
         }
     }
 
     // Encrypt using RSA private key
-    private static String encryptPassword(String plainPassword, PrivateKey privateKey) throws EncryprionFailedException{
+    private static String encryptPassword( String plainPassword, PrivateKey privateKey ) throws EncryprionFailedException {
         try {
             Cipher cipher = setUpCypher( Cipher.ENCRYPT_MODE, privateKey );
-            return Base64.getEncoder().encodeToString(cipher.doFinal(plainPassword.getBytes()));
-        }catch ( GeneralSecurityException e ){
+            return Base64.getEncoder().encodeToString( cipher.doFinal( plainPassword.getBytes() ) );
+        } catch ( GeneralSecurityException e ) {
             throw new EncryprionFailedException();
         }
     }
 
-    private static Cipher setUpCypher (int cipherMode, Key key) throws GeneralSecurityException{
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(cipherMode, key);
+    private static Cipher setUpCypher( int cipherMode, Key key ) throws GeneralSecurityException {
+        Cipher cipher = Cipher.getInstance( "RSA" );
+        cipher.init( cipherMode, key );
         return cipher;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main( String[] args ) throws Exception {
         String plainText = "Hello World!";
 
         // Generate public and private keys using RSA
-        RSAEncryption rsaEncryption = new RSAEncryption( new UserDevice( ) );
+        RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
 
-        String encryptedText = encryptPassword(plainText, rsaEncryption.privateKey);
-        String descryptedText = decryptPassword(encryptedText, rsaEncryption.publicKey);
+        String encryptedText = encryptPassword( plainText, rsaEncryption.privateKey );
+        String descryptedText = decryptPassword( encryptedText, rsaEncryption.publicKey );
 
-        System.out.println("input:" + plainText);
-        System.out.println("encrypted:" + encryptedText);
-        System.out.println("decrypted:" + descryptedText);
+        System.out.println( "input:" + plainText );
+        System.out.println( "encrypted:" + encryptedText );
+        System.out.println( "decrypted:" + descryptedText );
 
     }
 
-    public UserDevice getUserDevice() {
-        return userDevice;
+    public String getIdDevice() {
+        return idDevice;
     }
 
-    public void setUserDevice( UserDevice userDevice ) {
-        this.userDevice = userDevice;
+    public void setIdDevice( String idDevice ) {
+        this.idDevice = idDevice;
     }
 
     public PublicKey getPublicKey() {
@@ -113,7 +112,17 @@ public class RSAEncryption extends EntityWithLongKey {
         this.privateKey = privateKey;
     }
 
-    public static RSAEncryption load(UserDevice userDevice) throws EntityNotFoundException {
-        return GenericEntity.load( RSAEncryption.class, userDevice );
+    public static RSAEncryption load( String idDevice ) throws EntityNotFoundException {
+        return GenericEntity.load( RSAEncryption.class, idDevice );
+    }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        try {
+            load( idDevice );
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }

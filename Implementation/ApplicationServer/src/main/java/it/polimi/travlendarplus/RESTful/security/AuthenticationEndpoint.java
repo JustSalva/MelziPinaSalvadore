@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.RESTful.security;
 
 import it.polimi.travlendarplus.email.EmailSender;
+import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
@@ -11,6 +12,7 @@ import it.polimi.travlendarplus.messages.authenticationMessages.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.PublicKey;
 
 @Path("/")
 public class AuthenticationEndpoint {
@@ -106,8 +108,9 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response requestPublicKey( IdDeviceMessage idDeviceMessage ){
-        //TODO
-        String publicKey = "";
+        RSAEncryption encryption = new RSAEncryption( idDeviceMessage.getIdDevice() );
+        PublicKey publicKey = encryption.getPublicKey();
+        //TODO timer
         return Response.ok(new PublicKeyResponse( publicKey ) ).build();
     }
 

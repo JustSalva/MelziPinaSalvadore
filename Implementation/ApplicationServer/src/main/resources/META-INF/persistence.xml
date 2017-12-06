@@ -8,8 +8,8 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <!-- THIS TAG SERVES ONLY WHEN THE DATABASE IS EXECUTED THE VERY FIRST TIME !!!-->
-            <!--property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/datasource"/>
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mps_travlendar"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.user" value="root" />
         </properties>
