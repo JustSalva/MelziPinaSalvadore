@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities.preferences;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 
@@ -42,7 +43,7 @@ public class PeriodOfDayConstraint extends Constraint {
         this.maxHour = maxHour;
     }
 
-    public static PeriodOfDayConstraint load(long key){
+    public static PeriodOfDayConstraint load(long key) throws EntityNotFoundException {
         return GenericEntity.load( PeriodOfDayConstraint.class, key );
     }
 }

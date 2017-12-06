@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.authenticationMessages.*;
 
 import javax.ws.rs.*;
@@ -145,10 +146,13 @@ public class AuthenticationEndpoint {
         // The issued token must be associated to a user
         // Return the issued token
         //if a token already exists it replaces it
-        UserDevice userDevice = UserDevice.load( idDevice );
-        
-        if( userDevice != null){
+        UserDevice userDevice;
+        try {
+            userDevice = UserDevice.load( idDevice );
+            //the following instruction is executed only if an instance of that device already exist
             userDevice.remove();
+        } catch ( EntityNotFoundException e ) {
+            //nothing if it not exists is ok, we are creating it
         }
 
         user.addUserDevice( idDevice );
@@ -161,8 +165,10 @@ public class AuthenticationEndpoint {
     }
 
     private User loadUser( String email ) throws UserNotRegisteredException {
-        User user = User.load( email );
-        if ( user == null ) {
+        User user;
+        try {
+            user = User.load( email );
+        } catch ( EntityNotFoundException e ) {
             throw new UserNotRegisteredException();
         }
         return user;

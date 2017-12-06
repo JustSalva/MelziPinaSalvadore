@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -106,7 +107,7 @@ public class TravelComponent extends EntityWithLongKey{
         return endingTime.getEpochSecond()-startingTime.getEpochSecond();
     }
 
-    public static TravelComponent load(long key){
+    public static TravelComponent load(long key) throws EntityNotFoundException {
         return GenericEntity.load( TravelComponent.class, key );
     }
 

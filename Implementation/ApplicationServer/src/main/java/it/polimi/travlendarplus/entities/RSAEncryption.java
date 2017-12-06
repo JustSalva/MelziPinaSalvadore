@@ -2,8 +2,10 @@ package it.polimi.travlendarplus.entities;
 
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryprionFailedException;
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.EncryprionFailedException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import java.security.*;
+import java.time.Instant;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -24,6 +26,8 @@ public class RSAEncryption extends EntityWithLongKey {
     @JoinColumn(name = "USER_DEVICE")
     private UserDevice userDevice;
 
+    @Column(name = "UNIX_TIMESTAMP")
+    private Instant timestamp;
 
     public RSAEncryption() {
     }
@@ -37,6 +41,7 @@ public class RSAEncryption extends EntityWithLongKey {
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
             this.privateKey = keyPair.getPrivate();
             this.publicKey = keyPair.getPublic();
+            this.timestamp = Instant.now();
         } catch ( NoSuchAlgorithmException e ) {
             e.printStackTrace();//TODO
         }
@@ -108,12 +113,7 @@ public class RSAEncryption extends EntityWithLongKey {
         this.privateKey = privateKey;
     }
 
-    public static RSAEncryption load(UserDevice userDevice){
+    public static RSAEncryption load(UserDevice userDevice) throws EntityNotFoundException {
         return GenericEntity.load( RSAEncryption.class, userDevice );
-    }
-
-    @Override
-    public boolean isAlreadyInDb() {
-        return false;
     }
 }

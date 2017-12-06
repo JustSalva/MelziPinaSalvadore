@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -50,7 +51,7 @@ public class BreakEvent extends GenericEvent {
         this.minimumTime = minimumTime;
     }
 
-    public static BreakEvent load(long key){
+    public static BreakEvent load(long key) throws EntityNotFoundException {
         return GenericEntity.load( BreakEvent.class, key );
     }
 }

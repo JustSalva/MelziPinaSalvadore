@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -125,7 +126,7 @@ public class Event extends GenericEvent {
         this.feasiblePath = feasiblePath;
     }
 
-    public static Event load(long key){
+    public static Event load(long key) throws EntityNotFoundException {
         return GenericEntity.load( Event.class, key );
     }
 }

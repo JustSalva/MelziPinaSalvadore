@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.util.*;
@@ -224,12 +225,17 @@ public class User extends GenericEntity {
         this.lastUpdate = lastUpdate;
     }
 
-    public static User load(String key){
+    public static User load(String key) throws EntityNotFoundException {
         return GenericEntity.load( User.class, key );
     }
 
     @Override
     public boolean isAlreadyInDb() {
-        return load(email) != null;
+        try {
+            load(email);
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }

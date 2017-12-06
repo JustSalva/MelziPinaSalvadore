@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entities.calendar;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Timestamp;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -79,7 +80,7 @@ public class Period extends EntityWithLongKey {
         this.lastUpdate = lastUpdate;
     }
 
-    public static Period load(long key){
+    public static Period load(long key) throws EntityNotFoundException {
         return GenericEntity.load( Period.class, key );
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ public class PublicTravelMean extends TravelMean {
         super(name, type, eco);
     }
 
-    public static PublicTravelMean load(long key){
+    public static PublicTravelMean load(long key) throws EntityNotFoundException {
         return GenericEntity.load( PublicTravelMean.class, key );
     }
 }

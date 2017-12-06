@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -44,7 +45,11 @@ public class HelloWorld {
         DistanceTicket ogg = new DistanceTicket( id,new ArrayList<>(),10);
         ogg.save();
         long idTicket = ogg.getId();
-        ogg = DistanceTicket.load(idTicket);
+        try {
+            ogg = DistanceTicket.load(idTicket);
+        } catch ( EntityNotFoundException e ) {
+            e.printStackTrace();
+        }
         /*ogg.setAddress("prova");
         ogg.save();*/
         //ogg.remove();

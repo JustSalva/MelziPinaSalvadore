@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities;
 
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+
 import javax.persistence.*;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -63,13 +65,18 @@ public class UserDevice extends GenericEntity {
         return token;
     }
 
-    public static UserDevice load(String idDevice){
+    public static UserDevice load(String idDevice) throws EntityNotFoundException {
         return GenericEntity.load( UserDevice.class, idDevice );
     }
 
     @Override
     public boolean isAlreadyInDb() {
-        return load(idDevice) != null;
+        try {
+            load(idDevice);
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 
 

@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.Timestamp;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -105,7 +106,7 @@ public class Travel extends EntityWithLongKey {
         return miniTravels.size() - 1;
     }
 
-    public static Travel load(long key){
+    public static Travel load(long key) throws EntityNotFoundException {
         return GenericEntity.load( Travel.class, key );
     }
 

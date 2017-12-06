@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 
@@ -30,12 +31,17 @@ public class DateOfCalendar extends GenericEntity {
         this.date = date;
     }
 
-    public static DateOfCalendar load(long key){
+    public static DateOfCalendar load (long key) throws EntityNotFoundException {
         return GenericEntity.load( DateOfCalendar.class, key );
     }
 
     @Override
     public boolean isAlreadyInDb() {
-        return load(date) != null;
+        try {
+            load(date);
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }

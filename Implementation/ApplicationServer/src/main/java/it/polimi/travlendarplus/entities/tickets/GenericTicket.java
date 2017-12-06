@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities.tickets;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class GenericTicket extends Ticket {
         this.lineName = lineName;
     }
 
-    public static GenericTicket load(long key){
+    public static GenericTicket load(long key) throws EntityNotFoundException {
         return GenericEntity.load( GenericTicket.class, key );
     }
 }

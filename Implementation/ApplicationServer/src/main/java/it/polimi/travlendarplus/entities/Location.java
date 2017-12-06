@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities;
 
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+
 import javax.persistence.*;
 
 @Entity(name = "LOCATION")
@@ -50,13 +52,18 @@ public class Location extends GenericEntity {
         this.address = address;
     }
 
-    public static Location load(LocationId key){
+    public static Location load(LocationId key) throws EntityNotFoundException {
         return GenericEntity.load( Location.class, key );
     }
 
     @Override
     public boolean isAlreadyInDb() {
-        return load(new LocationId(latitude,longitude)) != null;
+        try {
+            load(new LocationId(latitude,longitude));
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }
 

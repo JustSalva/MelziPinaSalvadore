@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entities.tickets;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class PathTicket extends GenericTicket {
         this.endingLocation = endingLocation;
     }
 
-    public static PathTicket load(long key){
+    public static PathTicket load(long key) throws EntityNotFoundException {
         return GenericEntity.load( PathTicket.class, key );
     }
 }

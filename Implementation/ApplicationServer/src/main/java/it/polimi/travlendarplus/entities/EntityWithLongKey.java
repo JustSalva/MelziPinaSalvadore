@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities;
 
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +28,7 @@ public abstract class EntityWithLongKey extends GenericEntity {
     public boolean isAlreadyInDb() {
         try {
             return GenericEntity.load( Class.forName(this.getClass().getName()), id ) != null;
-        } catch (ClassNotFoundException e) {
+        } catch ( EntityNotFoundException | ClassNotFoundException e ) {
             //if class type is not found then surely it doesn't exist in DB
             //NB this catch clause should never be thrown
             return false;

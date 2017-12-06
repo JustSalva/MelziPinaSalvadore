@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 /**
  * This is the main entity class, it is to be extended by all entity classes of Travlendar+
@@ -56,14 +57,16 @@ public abstract class GenericEntity implements Serializable{
      * @param <T> The specific entity to be loaded
      * @param <S> the type of the entity key
      * @return the requested entity
-     * @throws EntityNotFoundException if the entity does not exist in the database anymore
-     * @throws NoResultException if the entity does not exist in the database
+     * @throws EntityNotFoundException if the entity does not exist in the database
      */
-    public static <T,S> T load( Class<T> entityClass, S key) throws EntityNotFoundException, NoResultException{
+    public static <T,S> T load( Class<T> entityClass, S key) throws EntityNotFoundException{
         entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         T result = entityManager.find(entityClass,key);
         entityManager.close();
+        if ( result == null){
+            throw new EntityNotFoundException();
+        }
         return result;
     }
 }
