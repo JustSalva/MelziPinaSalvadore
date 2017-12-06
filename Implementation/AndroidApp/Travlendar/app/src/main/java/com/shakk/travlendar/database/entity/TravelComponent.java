@@ -10,9 +10,9 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
 
 @Entity(foreignKeys = {
         @ForeignKey(
-                entity = Travel.class,
+                entity = GenericEvent.class,
                 parentColumns = "id",
-                childColumns = "travel_id",
+                childColumns = "event_id",
                 onUpdate = CASCADE,
                 onDelete = CASCADE
         ),
@@ -23,14 +23,14 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
                 onUpdate = CASCADE,
                 onDelete = SET_NULL
         )
-})
+}, tableName = "travel_component")
 public class TravelComponent {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     private float length;
-    @ColumnInfo(name = "travel_id")
-    private int travelId;
+    @ColumnInfo(name = "event_id")
+    private int eventId;
 
     @ColumnInfo(name = "ticket_id")
     private int ticketId;
@@ -64,12 +64,12 @@ public class TravelComponent {
         this.length = length;
     }
 
-    public int getTravelId() {
-        return travelId;
+    public int getEventId() {
+        return eventId;
     }
 
-    public void setTravelId(int travelId) {
-        this.travelId = travelId;
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public int getTicketId() {

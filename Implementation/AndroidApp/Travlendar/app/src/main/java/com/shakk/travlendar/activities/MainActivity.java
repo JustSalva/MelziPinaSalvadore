@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.database.UserViewModel;
+import com.shakk.travlendar.database.view_model.UserViewModel;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 
@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addUser() {
         new Thread(() -> {
-            database.userDao().deleteUser();
-            database.userDao().insertUser(new User("10486221@polimi.it", "Alessandro", "Pina"));
+            database.userDao().delete();
+            database.userDao().insert(new User("10486221@polimi.it", "Alessandro", "Pina"));
             Log.d("TAG", Integer.toString(database.userDao().countUsers()));
         }).start();
     }

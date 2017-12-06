@@ -14,7 +14,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         childColumns = "user_id",
         onDelete = CASCADE,
         onUpdate = CASCADE
-))
+), tableName = "generic_event")
 public class GenericEvent {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -38,6 +38,12 @@ public class GenericEvent {
     private Event event;
     @Embedded
     private BreakEvent breakEvent;
+
+    @ColumnInfo(name = "has_period")
+    private boolean hasPeriod;
+
+    @Embedded
+    private Period period;
 
     public int getId() {
         return id;
@@ -118,6 +124,22 @@ public class GenericEvent {
     public void setBreakEvent(BreakEvent breakEvent) {
         this.breakEvent = breakEvent;
     }
+
+    public boolean isHasPeriod() {
+        return hasPeriod;
+    }
+
+    public void setHasPeriod(boolean hasPeriod) {
+        this.hasPeriod = hasPeriod;
+    }
+
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
 }
 
 class Event {
@@ -181,5 +203,38 @@ class BreakEvent {
 
     public void setMinimumTime(long minimumTime) {
         this.minimumTime = minimumTime;
+    }
+}
+
+class Period {
+    @ColumnInfo(name = "start_date")
+    private long startDate;
+    @ColumnInfo(name = "end_date")
+    private long endDate;
+    @ColumnInfo(name = "delta_days")
+    private int deltaDays;
+
+    public long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getDeltaDays() {
+        return deltaDays;
+    }
+
+    public void setDeltaDays(int deltaDays) {
+        this.deltaDays = deltaDays;
     }
 }
