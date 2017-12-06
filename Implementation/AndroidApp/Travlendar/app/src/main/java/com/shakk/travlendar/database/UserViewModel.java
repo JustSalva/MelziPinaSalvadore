@@ -1,4 +1,4 @@
-package com.shakk.travlendar;
+package com.shakk.travlendar.database;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

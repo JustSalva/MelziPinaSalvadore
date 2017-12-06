@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.UserViewModel;
+import com.shakk.travlendar.database.UserViewModel;
 
 public class AccountActivity extends MenuActivity {
 

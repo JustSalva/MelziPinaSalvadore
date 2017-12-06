@@ -1,6 +1,5 @@
 package com.shakk.travlendar.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.UserViewModel;
+import com.shakk.travlendar.database.UserViewModel;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 

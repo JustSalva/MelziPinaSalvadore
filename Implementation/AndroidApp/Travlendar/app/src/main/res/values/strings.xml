@@ -55,8 +55,8 @@
     <string name="car_sharing">Car Sharing</string>
     <string name="preferred_path">Preferred path</string>
     <string name="constraints">Constraints</string>
-    <string name="minimum_distance">Minimum distance</string>
-    <string name="maximum_distance">Maximum distance</string>
+    <string name="minimum_distance">Minimum distance (m)</string>
+    <string name="maximum_distance">Maximum distance (m)</string>
     <string name="travel_mean">Travel mean</string>
     <string name="cost_euro">Cost (euro)</string>
     <string name="ticket_type">Ticket type</string>
@@ -93,4 +93,30 @@
     <string name="insert_time">Insert time</string>
     <string name="starting_time">Starting time</string>
     <string name="ending_time">Ending time</string>
+    <string name="travel_means_allowed">Travel means allowed</string>
+    <string name="_00_00">00:00</string>
+    <string name="_24_00">24:00</string>
+    <string name="min_time">Min time</string>
+    <string name="max_time">Max time</string>
+    <string name="constraints_on">Constraints on</string>
+    <string name="periodical_event">Periodical event</string>
+
+    <!-- SPINNER POPULATION -->
+    <string-array name="travelMeans_array">
+        <item>Bicycle</item>
+        <item>Car</item>
+        <item>Foot</item>
+        <item>Metro</item>
+        <item>Taxi</item>
+        <item>Train</item>
+        <item>Tram</item>
+        <item>Bike Sharing</item>
+        <item>Car Sharing</item>
+    </string-array>
+
+    <string-array name="preferredPath_array">
+        <item>Minimum cost</item>
+        <item>Minimum length</item>
+        <item>Eco-friendly</item>
+    </string-array>
 </resources>

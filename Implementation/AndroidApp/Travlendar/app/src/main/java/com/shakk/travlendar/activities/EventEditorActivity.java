@@ -21,9 +21,6 @@ public class EventEditorActivity extends MenuActivity {
 
         normalEvent_linearLayout = findViewById(R.id.normalEvent_linearLayout);
         breakEvent_linearLayout = findViewById(R.id.breakEvent_linearLayout);
-
-        ((RadioButton) findViewById(R.id.normalEvent_radioButton)).setChecked(true);
-        ((Switch) findViewById(R.id.previousLocation_switch)).setChecked(false);
     }
 
     public void onRadioButtonClicked(View view) {
