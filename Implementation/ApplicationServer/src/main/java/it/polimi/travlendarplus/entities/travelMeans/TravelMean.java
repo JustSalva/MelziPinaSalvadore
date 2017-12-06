@@ -54,4 +54,13 @@ public abstract class TravelMean extends EntityWithLongKey {
     public void setEco(float eco) {
         this.eco = eco;
     }
+
+    @Override
+    public String toString() {
+        return "TravelMean{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", eco=" + eco +
+                '}';
+    }
 }

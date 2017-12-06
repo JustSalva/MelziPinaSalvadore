@@ -7,15 +7,15 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import java.time.Instant;
 import java.util.ArrayList;
 
-public class GMapsURL {
+public class GMapsDirectionsHandler {
     private StringBuilder callURL;
 
-    public GMapsURL() {
+    public GMapsDirectionsHandler() {
         callURL = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         baseCall();
     }
 
-    public GMapsURL(String callURL) {
+    public GMapsDirectionsHandler(String callURL) {
         this.callURL = new StringBuilder(callURL);
     }
 
@@ -27,7 +27,7 @@ public class GMapsURL {
     // departure_time. They return a String that can be enriched with other params using the functions defined
     // in this class.
 
-    //the eventual path related to this event: origin is yet setted into the event object's field
+    //it calculates eventual paths related to this event: the function requires the previous event
     public String getBaseCallPreviousPath(Event event, Event previousEvent) {
         long secondi = (48*12*31*24*60*60);
         addParam("origin", "Lecco,Italy");
@@ -35,7 +35,7 @@ public class GMapsURL {
         //addParam("departure_time", secondi+"");
         //addParam("departure_time", Instant.now().getEpochSecond()+"");
         addParam("departure_time", 1517262180+"" );
-        //addParam("mode", "transit");
+        addParam("mode", "transit");
         //addParam("transit_mode", "train");
         //System.out.println(getCallURL());
         return callURL.toString();
@@ -46,20 +46,27 @@ public class GMapsURL {
         */
     }
 
-    //the eventual path will be linked to the following event
+    //it calculates eventual paths after this event: the function requires the following event
     public String getBaseCallFollowingPath(Event event, Event followingEvent) {
-        addParam("origin", event.getEventLocation().getAddress());
-        addParam("destination", followingEvent.getEventLocation().getAddress());
+        addParam("origin", event.getEventLocation().getLatitude()+""+
+                event.getEventLocation().getLongitude());
+        addParam("destination", followingEvent.getEventLocation().getLatitude()+""+
+                followingEvent.getEventLocation().getLongitude());
         addParam("departure_time", event.getEndingTime().toString());
         return callURL.toString();
     }
 
-    public String getCallWithBicycle(String tempCall) {
-        return tempCall + "&mode=" + TravelMeanEnum.BIKE.getParam();
+    //it calculates eventual paths given a departure location, an arrival location and a departure time;
+    //locations are specified with address
+    public String getBaseCallLocationTime(double depLat, double depLng, double arrLat, double arrlLng, long departureTime) {
+        addParam("origin", depLat+","+depLng);
+        addParam("destination", arrLat+","+arrlLng);
+        addParam("departure_time", departureTime+"");
+        return callURL.toString();
     }
 
-    public String getCallByWalk(String tempCall) {
-        return tempCall + "&mode=" + TravelMeanEnum.BY_FOOT.getParam();
+    public String getCallWithNoTransit(String tempCall, TravelMeanEnum type) {
+        return tempCall + "&mode=" + type.getParam();
     }
 
     public String getCallByTransit(String tempCall, ArrayList<TravelMeanEnum> transitMeans) {
@@ -72,6 +79,7 @@ public class GMapsURL {
         }
         return callWithTravel.toString();
     }
+
     private void addParam (String param, String address) {
         if (callURL.charAt(getCallURL().length() - 1) != '?')
             callURL.append("&");
@@ -86,7 +94,3 @@ public class GMapsURL {
     }
 
 }
-
-
-
-//https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y

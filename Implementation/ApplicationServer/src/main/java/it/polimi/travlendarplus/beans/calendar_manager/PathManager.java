@@ -1,16 +1,9 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.maps.DirectionsApi;
-import com.google.maps.GeoApiContext;
-import com.google.maps.model.*;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
-import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsURL;
-import it.polimi.travlendarplus.entities.*;
-import it.polimi.travlendarplus.entities.calendar.DateOfCalendar;
-import it.polimi.travlendarplus.entities.calendar.Event;
-import org.joda.time.DateTime;
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHandler;
+import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
+import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,7 +15,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.*;
 
 @Stateless
 public class PathManager extends UserManager{
@@ -37,34 +29,12 @@ public class PathManager extends UserManager{
     //attention to first and last event of the schedule (only one array of paths)
 
     public static void main (String[] a) {
-        GMapsURL gMapsURL = new GMapsURL();
-        try {
-            URL maps = new URL(gMapsURL.getBaseCallPreviousPath(null, null));
-            HttpURLConnection connection = (HttpURLConnection) maps.openConnection();
-            BufferedReader read = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = read.readLine();
-            String html = "";
-            while(line!=null) {
-                html += line + "\n";
-                line = read.readLine();
-            }
-            GMapsJSONReader response = new GMapsJSONReader();
-
-            JSONObject resp = new JSONObject(html);
-
-            JSONArray routes = response.getRoutes(resp);
-
-            System.out.println(response.getTotDurationInSeconds((JSONObject) routes.get(0)));
-            /*JSONObject responseJSON = new JSONObject(html);
-            JSONArray routes = (JSONArray) responseJSON.get("routes");
-            for(int i=0; i<routes.length(); i++)
-                System.out.println(((JSONObject)((JSONObject)((JSONArray)((JSONObject)routes.get(i)).get("legs")).get(0)).get("distance")).get("text"));
-*/
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        GMapsDirectionsHandler gMapsURL = new GMapsDirectionsHandler();
+        JSONObject response = HTMLCallAndResponse.performCall(gMapsURL.getBaseCallPreviousPath(null, null));
+        GMapsJSONReader responseReader = new GMapsJSONReader();
+        //System.out.println(responseReader.getTravelNoTransitMeans(response, TravelMeanEnum.CAR, 1512558191, null, null));
+        System.out.println(responseReader.getTravelWithTransitMeans(response));
+        //System.out.println(response);
     }
 
     //((Event)scheduleManager.getPossibleFollowingEvent(event)) to use for second parameter in function: baseCallFollowingPath()

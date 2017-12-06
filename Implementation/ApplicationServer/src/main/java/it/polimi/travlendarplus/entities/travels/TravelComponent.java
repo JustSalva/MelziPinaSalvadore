@@ -107,6 +107,18 @@ public class TravelComponent extends EntityWithLongKey{
         return endingTime.getEpochSecond()-startingTime.getEpochSecond();
     }
 
+    @Override
+    public String toString() {
+        return "TravelComponent{" +
+                "startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", length=" + length +
+                ", departure=" + departure +
+                ", arrival=" + arrival +
+                ", meanUsed=" + meanUsed +
+                '}';
+    }
+
     public static TravelComponent load(long key) throws EntityNotFoundException {
         return GenericEntity.load( TravelComponent.class, key );
     }

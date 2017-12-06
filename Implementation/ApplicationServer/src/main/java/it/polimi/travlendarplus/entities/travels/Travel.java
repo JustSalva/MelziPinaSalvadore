@@ -110,4 +110,12 @@ public class Travel extends EntityWithLongKey {
         return GenericEntity.load( Travel.class, key );
     }
 
+    @Override
+    public String toString() {
+        return "Travel{" +
+                "relatedEvent=" + relatedEvent +
+                ", miniTravels=" + miniTravels +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }
