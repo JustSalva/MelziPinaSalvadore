@@ -59,7 +59,7 @@
     <string name="maximum_distance">Maximum distance (m)</string>
     <string name="travel_mean">Travel mean</string>
     <string name="cost_euro">Cost (euro)</string>
-    <string name="ticket_type">Ticket type</string>
+    <string name="ticket_type">Ticket typeOfEvent</string>
     <string name="general_ticket">General ticket</string>
     <string name="distance_ticket">Distance ticket</string>
     <string name="period_ticket">Period ticket</string>

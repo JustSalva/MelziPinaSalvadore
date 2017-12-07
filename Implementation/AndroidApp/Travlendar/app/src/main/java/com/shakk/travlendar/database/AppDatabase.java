@@ -7,8 +7,8 @@ import android.content.Context;
 
 import com.shakk.travlendar.database.dao.CalendarDao;
 import com.shakk.travlendar.database.dao.TicketsDao;
-import com.shakk.travlendar.database.entity.GenericEvent;
-import com.shakk.travlendar.database.entity.Ticket;
+import com.shakk.travlendar.database.entity.event.GenericEvent;
+import com.shakk.travlendar.database.entity.ticket.Ticket;
 import com.shakk.travlendar.database.entity.TravelComponent;
 import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.database.dao.UserDao;
@@ -20,7 +20,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room
-                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, "user-database")
+                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, "travlendar-database")
                     .build();
         }
         return INSTANCE;
@@ -31,6 +31,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract UserDao userDao();
-    public abstract CalendarDao genericEventDao();
+    public abstract CalendarDao calendarDao();
     public abstract TicketsDao ticketsDao();
 }

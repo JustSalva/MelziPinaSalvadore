@@ -8,7 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.shakk.travlendar.database.entity.GenericEvent;
+import com.shakk.travlendar.database.entity.event.GenericEvent;
 import com.shakk.travlendar.database.entity.TravelComponent;
 
 import java.util.List;
@@ -27,10 +27,10 @@ public interface CalendarDao {
     @Delete
     void delete(GenericEvent genericEvent);
 
-    @Query("SELECT * FROM generic_event WHERE event_type LIKE event AND date LIKE :date")
+    @Query("SELECT * FROM generic_event WHERE type LIKE 'event' AND date LIKE :date")
     LiveData<List<GenericEvent>> getEvents(long date);
 
-    @Query("SELECT * FROM generic_event WHERE event_type LIKE break_event AND date LIKE :date")
+    @Query("SELECT * FROM generic_event WHERE type LIKE 'break' AND date LIKE :date")
     LiveData<List<GenericEvent>> getBreakEvents(long date);
 
     @Query("SELECT * FROM travel_component WHERE event_id LIKE :eventId")

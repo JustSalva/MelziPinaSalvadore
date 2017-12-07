@@ -7,7 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.shakk.travlendar.database.AppDatabase;
-import com.shakk.travlendar.database.entity.Ticket;
+import com.shakk.travlendar.database.entity.ticket.Ticket;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class TicketsViewModel extends AndroidViewModel {
     private LiveData<List<Ticket>> generalTickets;
     private LiveData<List<Ticket>> periodTickets;
     private LiveData<List<Ticket>> distanceTickets;
+    private LiveData<List<Ticket>> pathTickets;
 
     public TicketsViewModel(@NonNull Application application) {
         super(application);
@@ -37,7 +38,7 @@ public class TicketsViewModel extends AndroidViewModel {
     public LiveData<List<Ticket>> getPeriodTicket() {
         if (periodTickets == null) {
             periodTickets = new MutableLiveData<>();
-            loadPeriodTicket();
+            loadPeriodTickets();
         }
         return periodTickets;
     }
@@ -45,20 +46,32 @@ public class TicketsViewModel extends AndroidViewModel {
     public LiveData<List<Ticket>> getDistanceTicket() {
         if (distanceTickets == null) {
             distanceTickets = new MutableLiveData<>();
-            loadDistanceTicket();
+            loadDistanceTickets();
         }
         return distanceTickets;
+    }
+
+    public LiveData<List<Ticket>> getPathTicket() {
+        if (pathTickets == null) {
+            pathTickets = new MutableLiveData<>();
+            loadPathTickets();
+        }
+        return pathTickets;
     }
 
     private void loadGeneralTickets() {
         generalTickets = database.ticketsDao().getGeneralTickets();
     }
 
-    private void loadPeriodTicket() {
+    private void loadPeriodTickets() {
         periodTickets = database.ticketsDao().getPeriodTickets();
     }
 
-    private void loadDistanceTicket() {
+    private void loadDistanceTickets() {
         distanceTickets = database.ticketsDao().getDistanceTickets();
+    }
+
+    private void loadPathTickets() {
+        pathTickets = database.ticketsDao().getPathTickets();
     }
 }

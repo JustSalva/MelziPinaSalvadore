@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ba63c97f439ae8cdb849015aadcc2c03",
+    "identityHash": "eca10aabd363634ac5c0c4b2a14dd0de",
     "entities": [
       {
         "tableName": "User",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "Ticket",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cost` REAL NOT NULL, `user_id` INTEGER NOT NULL, `ticket_type` TEXT, `name` TEXT, `start_date` INTEGER, `end_date` INTEGER, `distance` REAL, `line_name` TEXT, `departure_location` TEXT, `arrival_location` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cost` REAL NOT NULL, `type` TEXT, `name` TEXT, `start_date` INTEGER, `end_date` INTEGER, `distance` REAL, `line_name` TEXT, `departure_location` TEXT, `arrival_location` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -71,14 +71,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "ticketType",
-            "columnName": "ticket_type",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -132,23 +126,11 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "User",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "user_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
-        "tableName": "GenericEvent",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `is_scheduled` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `event_type` TEXT, `description` TEXT, `type` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "tableName": "generic_event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `is_scheduled` INTEGER NOT NULL, `type` TEXT, `has_period` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -187,16 +169,16 @@
             "notNull": true
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "eventType",
-            "columnName": "event_type",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "hasPeriod",
+            "columnName": "has_period",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "event.description",
@@ -205,8 +187,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "event.type",
-            "columnName": "type",
+            "fieldPath": "event.typeOfEvent",
+            "columnName": "type_of_event",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -233,106 +215,24 @@
             "columnName": "minimum_time",
             "affinity": "INTEGER",
             "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "User",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "user_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "Period",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `event_id` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `delta_days` INTEGER NOT NULL, FOREIGN KEY(`event_id`) REFERENCES `GenericEvent`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
-            "fieldPath": "eventId",
-            "columnName": "event_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "startDate",
+            "fieldPath": "period.startDate",
             "columnName": "start_date",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "endDate",
-            "columnName": "end_date",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "deltaDays",
-            "columnName": "delta_days",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "GenericEvent",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "event_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "Travel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `event_id` INTEGER NOT NULL, FOREIGN KEY(`event_id`) REFERENCES `GenericEvent`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "description",
-            "columnName": "description",
-            "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "eventId",
-            "columnName": "event_id",
+            "fieldPath": "period.endDate",
+            "columnName": "end_date",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
+          },
+          {
+            "fieldPath": "period.deltaDays",
+            "columnName": "delta_days",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -342,23 +242,11 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "GenericEvent",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "event_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
-        "tableName": "TravelComponent",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `length` REAL NOT NULL, `travel_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `starting_time` TEXT, `ending_time` TEXT, FOREIGN KEY(`travel_id`) REFERENCES `Travel`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "tableName": "travel_component",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `starting_time` TEXT, `ending_time` TEXT, FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -373,8 +261,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "travelId",
-            "columnName": "travel_id",
+            "fieldPath": "eventId",
+            "columnName": "event_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -424,11 +312,11 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Travel",
+            "table": "generic_event",
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
             "columns": [
-              "travel_id"
+              "event_id"
             ],
             "referencedColumns": [
               "id"
@@ -450,7 +338,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ba63c97f439ae8cdb849015aadcc2c03\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eca10aabd363634ac5c0c4b2a14dd0de\")"
     ]
   }
 }

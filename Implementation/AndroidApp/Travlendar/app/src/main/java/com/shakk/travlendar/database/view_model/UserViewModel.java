@@ -7,10 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.shakk.travlendar.database.AppDatabase;
-import com.shakk.travlendar.database.entity.GenericEvent;
 import com.shakk.travlendar.database.entity.User;
-
-import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
 

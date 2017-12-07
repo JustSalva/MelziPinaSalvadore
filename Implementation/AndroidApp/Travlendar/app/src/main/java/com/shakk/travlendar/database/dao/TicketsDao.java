@@ -7,7 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.shakk.travlendar.database.entity.Ticket;
+import com.shakk.travlendar.database.entity.ticket.Ticket;
 
 import java.util.List;
 
@@ -22,12 +22,20 @@ public interface TicketsDao {
     @Delete
     void delete(Ticket ticket);
 
-    @Query("SELECT * from ticket WHERE ticket_type LIKE general_ticket")
+    @Query("DELETE FROM ticket")
+    void deleteAll();
+
+    @Query("SELECT * from ticket WHERE type LIKE 'General'")
     LiveData<List<Ticket>> getGeneralTickets();
 
-    @Query("SELECT * from ticket WHERE ticket_type LIKE period_ticket")
+    @Query("SELECT * from ticket WHERE type LIKE 'Period'")
     LiveData<List<Ticket>> getPeriodTickets();
 
-    @Query("SELECT * from ticket WHERE ticket_type LIKE distance_ticket")
+    @Query("SELECT * from ticket WHERE type LIKE 'Distance'")
     LiveData<List<Ticket>> getDistanceTickets();
+
+    @Query("SELECT * from ticket WHERE type LIKE 'Path'")
+    LiveData<List<Ticket>> getPathTickets();
+
+
 }

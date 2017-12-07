@@ -1,0 +1,26 @@
+package com.shakk.travlendar.database.entity.ticket;
+
+import android.arch.persistence.room.ColumnInfo;
+
+public class PathTicket {
+    @ColumnInfo(name = "departure_location")
+    private String departureLocation;
+    @ColumnInfo(name = "arrival_location")
+    private String arrivalLocation;
+
+    public String getDepartureLocation() {
+        return departureLocation;
+    }
+
+    public void setDepartureLocation(String departureLocation) {
+        this.departureLocation = departureLocation;
+    }
+
+    public String getArrivalLocation() {
+        return arrivalLocation;
+    }
+
+    public void setArrivalLocation(String arrivalLocation) {
+        this.arrivalLocation = arrivalLocation;
+    }
+}

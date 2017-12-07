@@ -7,7 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.shakk.travlendar.database.AppDatabase;
-import com.shakk.travlendar.database.entity.GenericEvent;
+import com.shakk.travlendar.database.entity.event.GenericEvent;
 
 import java.util.List;
 
@@ -41,10 +41,10 @@ public class CalendarViewModel extends AndroidViewModel {
     }
 
     private void loadEvents(long date) {
-        events = database.genericEventDao().getEvents(date);
+        events = database.calendarDao().getEvents(date);
     }
 
     private void loadBreakEvents(long date) {
-        events = database.genericEventDao().getBreakEvents(date);
+        events = database.calendarDao().getBreakEvents(date);
     }
 }
