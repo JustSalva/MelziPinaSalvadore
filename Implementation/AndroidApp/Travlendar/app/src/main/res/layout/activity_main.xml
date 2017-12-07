@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.shakk.travlendar.activities.MainActivity">
+    tools:context="com.shakk.travlendar.activity.MainActivity">
 
     <Button
         android:id="@+id/login_button"

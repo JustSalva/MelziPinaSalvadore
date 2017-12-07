@@ -1,18 +1,24 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.database.view_model.CalendarViewModel;
 
-public class PreferencesActivity extends MenuActivity {
+public class CalendarActivity extends MenuActivity {
+
+    private CalendarViewModel calendarViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        setContentView(R.layout.activity_calendar);
         super.setupMenuToolbar();
     }
 
@@ -46,5 +52,15 @@ public class PreferencesActivity extends MenuActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToEventCreation(View view) {
+        Intent intent = new Intent(this, EventEditorActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToEventViewer(View view) {
+        Intent intent = new Intent(this, EventViewerActivity.class);
+        startActivity(intent);
     }
 }

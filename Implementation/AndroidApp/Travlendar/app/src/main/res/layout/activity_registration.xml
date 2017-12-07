@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context="com.shakk.travlendar.activities.RegistrationActivity">
+    tools:context="com.shakk.travlendar.activity.RegistrationActivity">
 
     <ScrollView
         android:id="@+id/login_form"

@@ -1,4 +1,4 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

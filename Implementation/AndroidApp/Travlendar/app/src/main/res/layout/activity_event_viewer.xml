@@ -25,7 +25,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <GridLayout
@@ -37,78 +37,96 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/description" />
+                        android:layout_margin="5dp"
+                        android:text="@string/description"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/type_of_event" />
+                        android:layout_margin="5dp"
+                        android:text="@string/type_of_event"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/typeofEvent"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/location_name" />
+                        android:layout_margin="5dp"
+                        android:text="@string/location_name"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/location_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/date" />
+                        android:layout_margin="5dp"
+                        android:text="@string/date"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/date_textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/starting_date" />
+                        android:layout_margin="5dp"
+                        android:text="@string/starting_time"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/starting_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/ending_date" />
+                        android:layout_margin="5dp"
+                        android:text="@string/ending_time"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/ending_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
+                        android:layout_margin="5dp"
                         android:text="TextView" />
 
                 </GridLayout>
@@ -122,23 +140,26 @@
                     android:layout_height="wrap_content"
                     android:columnCount="4">
 
-                    <TextView
+                    <Button
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="@string/travel"/>
-
-                    <Space />
-
-                    <Button
                         android:onClick="goToArrangeTrip"
-                        android:layout_width="wrap_content"
+                        android:text="@string/arrange" />
+
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/arrange"/>
+                        android:layout_columnWeight="1.5"
+                        android:layout_columnSpan="2"
+                        android:textAlignment="center"
+                        android:text="@string/travel"
+                        android:textStyle="bold" />
 
                     <Button
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
                         android:text="@string/change"/>
 
                 </GridLayout>

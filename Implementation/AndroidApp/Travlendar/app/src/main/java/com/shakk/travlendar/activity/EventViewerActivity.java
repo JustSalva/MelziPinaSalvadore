@@ -1,12 +1,17 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.database.view_model.EventViewModel;
 
 public class EventViewerActivity extends MenuActivity {
+
+    private EventViewModel eventViewModel;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

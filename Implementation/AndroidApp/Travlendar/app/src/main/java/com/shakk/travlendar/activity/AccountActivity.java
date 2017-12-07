@@ -1,22 +1,42 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
-import android.content.Intent;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.database.view_model.UserViewModel;
 
-public class CalendarActivity extends MenuActivity {
+public class AccountActivity extends MenuActivity {
+
+    private TextView name_textView;
+    private TextView surname_textView;
+    private TextView email_textView;
+
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
+        setContentView(R.layout.activity_account);
         super.setupMenuToolbar();
+
+        name_textView = findViewById(R.id.name);
+        surname_textView = findViewById(R.id.surname);
+        email_textView = findViewById(R.id.email);
+
+        // Create a ViewModel the first time the system calls an activity's onCreate() method.
+        // Re-created activity receive the same MyViewModel instance created by the first activity.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getUser().observe(this, user -> {
+            name_textView.setText(user.getName());
+            surname_textView.setText(user.getSurname());
+            email_textView.setText(user.getEmail());
+        });
     }
 
     @Override
@@ -49,15 +69,5 @@ public class CalendarActivity extends MenuActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void goToEventCreation(View view) {
-        Intent intent = new Intent(this, EventEditorActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToEventViewer(View view) {
-        Intent intent = new Intent(this, EventViewerActivity.class);
-        startActivity(intent);
     }
 }

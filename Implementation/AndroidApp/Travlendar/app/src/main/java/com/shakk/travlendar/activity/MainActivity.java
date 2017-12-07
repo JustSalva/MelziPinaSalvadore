@@ -1,4 +1,4 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +9,10 @@ import android.widget.TextView;
 
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.database.entity.ticket.Ticket;
-import com.shakk.travlendar.database.view_model.UserViewModel;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 
 public class MainActivity extends AppCompatActivity {
-
-    UserViewModel userViewModel;
 
     private AppDatabase database;
 
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* Create a ViewModel the first time the system calls an activity's onCreate() method.
-        // Re-created activities receive the same MyViewModel instance created by the first activity.
+        // Re-created activity receive the same MyViewModel instance created by the first activity.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
             textView.setText(user.getEmail());

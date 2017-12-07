@@ -1,4 +1,4 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +30,7 @@ public class MapsActivity extends MenuActivity implements OnMapReadyCallback {
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
     }
 

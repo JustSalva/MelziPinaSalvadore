@@ -1,4 +1,4 @@
-package com.shakk.travlendar.activities;
+package com.shakk.travlendar.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.activity.fragment.DatePickerFragment;
+import com.shakk.travlendar.activity.fragment.TimePickerFragment;
 
 public class EventEditorActivity extends MenuActivity {
 
