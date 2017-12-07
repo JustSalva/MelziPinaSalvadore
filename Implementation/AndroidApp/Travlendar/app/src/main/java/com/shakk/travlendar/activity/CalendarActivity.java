@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.activity.fragment.DatePickerFragment;
 import com.shakk.travlendar.database.view_model.CalendarViewModel;
 
 public class CalendarActivity extends MenuActivity {
@@ -62,5 +63,11 @@ public class CalendarActivity extends MenuActivity {
     public void goToEventViewer(View view) {
         Intent intent = new Intent(this, EventViewerActivity.class);
         startActivity(intent);
+    }
+
+    public void showDatePickerDialog(View view) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.setTextView(findViewById(R.id.date_textView));
+        newFragment.show(getFragmentManager(), "datePicker");
     }
 }

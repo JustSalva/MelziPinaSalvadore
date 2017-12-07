@@ -100,6 +100,8 @@
     <string name="max_time">Max time</string>
     <string name="constraints_on">Constraints on</string>
     <string name="periodical_event">Periodical event</string>
+    <string name="change_date">Change date</string>
+    <string name="add_event">Add event</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
