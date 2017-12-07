@@ -3,6 +3,7 @@ package com.shakk.travlendar.database.entity.event;
 import android.arch.persistence.room.ColumnInfo;
 
 public class Event {
+
     private String description;
     @ColumnInfo(name = "type_of_event")
     private String typeOfEvent;
@@ -12,6 +13,14 @@ public class Event {
     private boolean previousLocationChoice;
     @ColumnInfo(name = "departure_location")
     private String departureLocation;
+
+    public Event(String description, String typeOfEvent, String eventLocation, boolean previousLocationChoice, String departureLocation) {
+        this.description = description;
+        this.typeOfEvent = typeOfEvent;
+        this.eventLocation = eventLocation;
+        this.previousLocationChoice = previousLocationChoice;
+        this.departureLocation = departureLocation;
+    }
 
     public String getDescription() {
         return description;

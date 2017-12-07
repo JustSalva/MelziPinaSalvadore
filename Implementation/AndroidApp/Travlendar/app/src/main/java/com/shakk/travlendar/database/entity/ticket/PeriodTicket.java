@@ -9,6 +9,12 @@ public class PeriodTicket {
     @ColumnInfo(name = "end_date")
     private long endDate;
 
+    public PeriodTicket(String name, long startDate, long endDate) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public String getName() {
         return name;
     }

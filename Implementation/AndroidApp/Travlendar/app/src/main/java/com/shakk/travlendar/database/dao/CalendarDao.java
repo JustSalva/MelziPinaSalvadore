@@ -27,6 +27,9 @@ public interface CalendarDao {
     @Delete
     void delete(GenericEvent genericEvent);
 
+    @Query("DELETE FROM generic_event")
+    void deleteAll();
+
     @Query("SELECT * FROM generic_event WHERE type LIKE 'event' AND date LIKE :date")
     LiveData<List<GenericEvent>> getEvents(long date);
 

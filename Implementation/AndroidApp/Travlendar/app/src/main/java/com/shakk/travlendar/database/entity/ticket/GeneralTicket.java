@@ -10,6 +10,11 @@ public class GeneralTicket {
     @Embedded
     private PathTicket pathTicket;
 
+    public GeneralTicket(String lineName, PathTicket pathTicket) {
+        this.lineName = lineName;
+        this.pathTicket = pathTicket;
+    }
+
     public String getLineName() {
         return lineName;
     }

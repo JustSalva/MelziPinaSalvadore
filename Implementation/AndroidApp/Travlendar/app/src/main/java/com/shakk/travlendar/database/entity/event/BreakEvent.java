@@ -3,8 +3,13 @@ package com.shakk.travlendar.database.entity.event;
 import android.arch.persistence.room.ColumnInfo;
 
 public class BreakEvent {
+
     @ColumnInfo(name = "minimum_time")
     private long minimumTime;
+
+    public BreakEvent(long minimumTime) {
+        this.minimumTime = minimumTime;
+    }
 
     public long getMinimumTime() {
         return minimumTime;

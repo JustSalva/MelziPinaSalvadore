@@ -28,6 +28,7 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
         )
 }, tableName = "travel_component")
 public class TravelComponent {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -46,10 +47,23 @@ public class TravelComponent {
     @ColumnInfo(name = "arrival_location")
     private String arrivalLocation;
 
-    @ColumnInfo(name = "starting_time")
-    private String startingTime;
-    @ColumnInfo(name = "ending_time")
-    private String endingTime;
+    @ColumnInfo(name = "start_time")
+    private String startTime;
+    @ColumnInfo(name = "end_time")
+    private String endTime;
+
+    public TravelComponent(float length, int eventId, int ticketId, String travelMean,
+                           String departureLocation, String arrivalLocation,
+                           String startTime, String endTime) {
+        this.length = length;
+        this.eventId = eventId;
+        this.ticketId = ticketId;
+        this.travelMean = travelMean;
+        this.departureLocation = departureLocation;
+        this.arrivalLocation = arrivalLocation;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     public int getId() {
         return id;
@@ -107,19 +121,19 @@ public class TravelComponent {
         this.arrivalLocation = arrivalLocation;
     }
 
-    public String getStartingTime() {
-        return startingTime;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStartingTime(String startingTime) {
-        this.startingTime = startingTime;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEndingTime() {
-        return endingTime;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEndingTime(String endingTime) {
-        this.endingTime = endingTime;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

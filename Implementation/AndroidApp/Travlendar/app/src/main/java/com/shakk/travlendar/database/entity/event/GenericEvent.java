@@ -19,8 +19,7 @@ public class GenericEvent {
     private long startTime;
     @ColumnInfo(name = "end_time")
     private long endTime;
-    @ColumnInfo(name = "is_scheduled")
-    private boolean isScheduled;
+    private boolean scheduled;
 
     @TypeConverters(EventTypeConverters.class)
     private EventType type;
@@ -30,11 +29,31 @@ public class GenericEvent {
     @Embedded
     private BreakEvent breakEvent;
 
-    @ColumnInfo(name = "has_period")
-    private boolean hasPeriod;
+    private boolean periodical;
 
     @Embedded
     private Period period;
+
+    public GenericEvent(String name, long date, long startTime, long endTime,
+                        boolean scheduled, Event event) {
+        this.name = name;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.scheduled = scheduled;
+        this.type = EventType.EVENT;
+        this.event = event;
+    }
+
+    public GenericEvent(String name, long date, long startTime, long endTime, boolean scheduled, BreakEvent breakEvent) {
+        this.name = name;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.scheduled = scheduled;
+        this.type = EventType.BREAK;
+        this.breakEvent = breakEvent;
+    }
 
     public int getId() {
         return id;
@@ -77,11 +96,11 @@ public class GenericEvent {
     }
 
     public boolean isScheduled() {
-        return isScheduled;
+        return scheduled;
     }
 
     public void setScheduled(boolean scheduled) {
-        isScheduled = scheduled;
+        this.scheduled = scheduled;
     }
 
     public EventType getType() {
@@ -108,12 +127,12 @@ public class GenericEvent {
         this.breakEvent = breakEvent;
     }
 
-    public boolean isHasPeriod() {
-        return hasPeriod;
+    public boolean isPeriodical() {
+        return periodical;
     }
 
-    public void setHasPeriod(boolean hasPeriod) {
-        this.hasPeriod = hasPeriod;
+    public void setPeriodical(boolean periodical) {
+        this.periodical = periodical;
     }
 
     public Period getPeriod() {

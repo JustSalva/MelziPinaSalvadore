@@ -8,9 +8,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shakk.travlendar.R;
+import com.shakk.travlendar.database.entity.TravelComponent;
+import com.shakk.travlendar.database.entity.event.Event;
+import com.shakk.travlendar.database.entity.event.GenericEvent;
+import com.shakk.travlendar.database.entity.ticket.DistanceTicket;
+import com.shakk.travlendar.database.entity.ticket.PeriodTicket;
 import com.shakk.travlendar.database.entity.ticket.Ticket;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,11 +69,33 @@ public class MainActivity extends AppCompatActivity {
 
     public void addUser() {
         new Thread(() -> {
+
             database.userDao().delete();
             database.ticketsDao().deleteAll();
+            database.calendarDao().deleteAll();
+            database.calendarDao().deleteTravelComponents();
+
             database.userDao().insert(new User("10486221@polimi.it", "Alessandro", "Pina"));
-            Ticket ticket = new Ticket(30, Ticket.TicketType.DISTANCE);
+
+            Ticket ticket;
+            ticket = new Ticket(30, new PeriodTicket("JAN", 20170101, 20170131));
             database.ticketsDao().insert(ticket);
+            ticket = new Ticket(30, new DistanceTicket(30));
+            database.ticketsDao().insert(ticket);
+
+            GenericEvent genericEvent = new GenericEvent("name",
+                    20171207, 1100, 1200, false,
+                    new Event("de", "meeting", "qua",
+                            false, null));
+            database.calendarDao().insert(genericEvent);
+
+            List<TravelComponent> list = new ArrayList<>();
+            list.add(new TravelComponent(21, 1, 2, "tram",
+                    "here", "there", "0800", "0900"));
+            list.add(new TravelComponent(12, 1, 1, "foot",
+                    "here", "there", "0800", "0900"));
+            database.calendarDao().insert(list);
+
             Log.d("TAG", Integer.toString(database.userDao().countUsers()));
         }).start();
     }

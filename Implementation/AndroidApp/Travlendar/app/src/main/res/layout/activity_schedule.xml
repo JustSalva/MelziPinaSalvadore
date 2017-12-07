@@ -52,7 +52,8 @@
                     android:layout_height="50dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="10dp"
-                    android:background="@drawable/rectangle"/>
+                    android:background="@drawable/rectangle"
+                    android:backgroundTint="#88cf92"/>
 
             </GridLayout>
 
