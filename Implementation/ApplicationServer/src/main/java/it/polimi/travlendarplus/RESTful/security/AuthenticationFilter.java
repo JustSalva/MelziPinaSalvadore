@@ -25,15 +25,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     @AuthenticatedUser
-    Event<String> userAuthenticatedEvent;
+    Event<User> userAuthenticatedEvent;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
-        //userAuthenticatedEvent.fire("email"); //TODO: obtain name from Token
-        //TODO non posso ottenere direttamente l'user? perchè per ora è così
-
-        // Get the Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
@@ -46,13 +42,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // Extract the token from the Authorization header
         String token = authorizationHeader
                 .substring(AUTHENTICATION_SCHEME.length()).trim();
+        User user;
         try {
-            validateToken(token);
+            user = validateToken(token);
+            userAuthenticatedEvent.fire(user);
         } catch (InvalidTokenException e) {
             abortWithUnauthorized(requestContext);
         }
-
-        userAuthenticatedEvent.fire("email");   //TODO
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
@@ -73,10 +69,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .build());
     }
 
-    private void validateToken( String token ) throws InvalidTokenException {
+    private User validateToken( String token ) throws InvalidTokenException {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-        if( ! UserDevice.isTokenPresent( token ))
-            throw new InvalidTokenException();
+        return UserDevice.findUserRelativeToToken( token );
     }
 }

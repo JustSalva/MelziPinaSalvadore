@@ -15,19 +15,7 @@ public class AuthenticatedUserProducer {
     @AuthenticatedUser
     private User authenticatedUser;
 
-    public void handleAuthenticationEvent(@Observes @AuthenticatedUser String email) {
-        this.authenticatedUser = findUser(email);
-    }
-
-    private User findUser(String email) {
-        try {
-            return User.load( email );
-        } catch ( EntityNotFoundException e ) {
-            /*NB at this point the entity existance has already been proved,
-            * so this branch should never be executed
-            * TODO
-            */
-            return null;
-        }
+    public void handleAuthenticationEvent( @Observes @AuthenticatedUser User user ) {
+        this.authenticatedUser = user;
     }
 }

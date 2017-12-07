@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities;
 
+import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidTokenException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
@@ -80,21 +81,24 @@ public class UserDevice extends GenericEntity {
     }
 
 
-    public static boolean isTokenPresent ( String token ){
+    public static User findUserRelativeToToken ( String token ) throws InvalidTokenException {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createQuery( "" +
+        UserDevice userDevice;
+        TypedQuery<UserDevice> query = entityManager.createQuery( "" +
                 "SELECT userDevice " +
                 "FROM USER_DEVICES userDevice " +
-                "WHERE userDevice.univocalCode =: token" );
+                "WHERE userDevice.univocalCode = :token",
+                UserDevice.class);
+        query.setParameter( "token", token );
         try{
-            query.getSingleResult();
+            userDevice = query.getSingleResult();
         }catch ( NoResultException e ){
-            return false;
+            throw new InvalidTokenException();
         }finally {
             entityManager.close();
             entityManagerFactory.close();
         }
-        return true;
+        return userDevice.getUser();
     }
 }
