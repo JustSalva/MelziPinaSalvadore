@@ -74,12 +74,37 @@ public class Travel extends EntityWithLongKey {
         return 0;
     }
 
-    private Instant getStartingTime() {
-        return miniTravels.get(0).getStartingTime();
+    public Instant getStartingTime() {
+        return (miniTravels.get(0).getStartingTime().getEpochSecond() > 0) ? miniTravels.get(0).getStartingTime() :
+                correctStartingTime();
     }
 
-    private Instant getEndingTime() {
-        return miniTravels.get(miniTravels.size()-1).getEndingTime();
+    private Instant correctStartingTime() {
+        int i=0;
+        long timeToSub = 0;
+        while(miniTravels.get(i).getStartingTime().getEpochSecond() == 0) {
+            timeToSub += miniTravels.get(i).getEndingTime().getEpochSecond();
+            i++;
+        }
+        long startingTime = miniTravels.get(i).getStartingTime().getEpochSecond() - timeToSub;
+        return Instant.ofEpochSecond(startingTime);
+
+    }
+
+    public Instant getEndingTime() {
+        return (miniTravels.get(miniTravels.size()-1).getStartingTime().getEpochSecond() > 0) ?
+                miniTravels.get(miniTravels.size()-1).getEndingTime() : correctEndingTime();
+    }
+
+    private Instant correctEndingTime() {
+        int i = miniTravels.size()-1;
+        long timeToAdd = 0;
+        while(miniTravels.get(i).getStartingTime().getEpochSecond() == 0) {
+            timeToAdd += miniTravels.get(i).getEndingTime().getEpochSecond();
+            i--;
+        }
+        long endingTime = miniTravels.get(i).getEndingTime().getEpochSecond() + timeToAdd;
+        return Instant.ofEpochSecond(endingTime);
     }
 
     private Location getStartingLocation() {

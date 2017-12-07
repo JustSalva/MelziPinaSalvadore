@@ -23,9 +23,6 @@ public class PathManager extends UserManager{
     @EJB
     ScheduleManager scheduleManager;
 
-    URL url;
-    HttpURLConnection connection;
-
     //TODO calculate path before and after
     //attention to first and last event of the schedule (only one array of paths)
 
