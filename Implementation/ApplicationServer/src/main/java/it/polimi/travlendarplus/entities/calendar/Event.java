@@ -115,7 +115,6 @@ public class Event extends GenericEvent {
         this.departure = departure;
     }
 
-    @Override
     public Travel getFeasiblePath() {
         return feasiblePath;
     }
