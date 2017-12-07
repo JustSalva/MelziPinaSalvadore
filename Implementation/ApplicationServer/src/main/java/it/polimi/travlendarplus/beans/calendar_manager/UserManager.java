@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class UserManager {
 
-    private User currentUser;
+    protected User currentUser;
 
     public User getCurrentUser() {
         return currentUser;
