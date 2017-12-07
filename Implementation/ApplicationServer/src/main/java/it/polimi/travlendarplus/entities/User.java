@@ -221,6 +221,9 @@ public class User extends GenericEntity {
         this.preferredLocations.put(location, name);
     }
 
+    public void removeLocation( Location location ){
+        this.preferredLocations.remove( location );
+    }
     public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }

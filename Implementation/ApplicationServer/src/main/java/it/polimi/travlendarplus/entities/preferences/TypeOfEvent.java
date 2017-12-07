@@ -41,6 +41,7 @@ public class TypeOfEvent extends EntityWithLongKey {
         this.deactivate = new ArrayList<>();
     }
 
+
     public ParamFirstPath getParamFirstPath() {
         return paramFirstPath;
     }
@@ -79,6 +80,22 @@ public class TypeOfEvent extends EntityWithLongKey {
 
     public boolean isDeactivated(Constraint constraint){
         return deactivate.contains(constraint);
+    }
+
+    public void addDeactivated( TravelMeanEnum travelMean){
+        deactivate.add( travelMean );
+    }
+
+    public void removeDeactivated( TravelMeanEnum travelMean){
+        deactivate.removeIf(travelMeanEnum -> travelMean.equals( travelMean ));
+    }
+
+    public void addConstraint( Constraint constraint ){
+        limitedBy.add( constraint );
+    }
+
+    public void removeConstraint( long id ){
+        limitedBy.removeIf( constraint -> constraint.getId() == id );
     }
 
     public static TypeOfEvent load(long key) throws EntityNotFoundException {

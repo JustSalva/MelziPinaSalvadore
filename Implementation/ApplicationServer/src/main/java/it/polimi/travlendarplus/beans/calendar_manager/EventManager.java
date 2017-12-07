@@ -56,6 +56,7 @@ public class EventManager extends UserManager{
         //TODO handle periodic events
         //TODO ask and set the feasible path
         //TODO add into either scheduled or not scheduled array and save!
+        currentUser.save();
         return event.getId();
     }
 
