@@ -2,14 +2,14 @@ package it.polimi.travlendarplus.messages.calendarMessages;
 
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 
-public class BreakEventDescriptionMessage extends CalendarMessage {
+public class BreakEventDescriptionResponse extends CalendarResponse {
 
     private static final long serialVersionUID = 4492030287195832061L;
 
-    public BreakEventDescriptionMessage() {
+    public BreakEventDescriptionResponse() {
     }
 
-    public BreakEventDescriptionMessage( BreakEvent breakEvent) {
+    public BreakEventDescriptionResponse( BreakEvent breakEvent) {
         //TODO
     }
 }

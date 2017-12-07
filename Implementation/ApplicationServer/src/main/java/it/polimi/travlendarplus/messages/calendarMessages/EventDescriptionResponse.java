@@ -2,18 +2,16 @@ package it.polimi.travlendarplus.messages.calendarMessages;
 
 import it.polimi.travlendarplus.entities.calendar.Event;
 
-public class EventDescriptionMessage extends CalendarMessage{
+public class EventDescriptionResponse extends CalendarResponse {
 
     private static final long serialVersionUID = 10526724171365942L;
 
-    public EventDescriptionMessage() {
+    public EventDescriptionResponse() {
     }
 
-    public EventDescriptionMessage( Event event) {
+    public EventDescriptionResponse( Event event) {
         //TODO
     }
-
-
 
     //TODO
 }

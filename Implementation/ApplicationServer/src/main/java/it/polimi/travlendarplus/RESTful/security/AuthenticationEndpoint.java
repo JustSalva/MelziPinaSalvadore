@@ -37,7 +37,7 @@ public class AuthenticationEndpoint {
             return buildResponseToken( token );
         }
         //if UserNotRegisteredException is not thrown the user already exist and so he cannot register himself again
-        return HttpResponseBuilder.unhautorized();
+        return HttpResponseBuilder.unauthorized();
     }
 
     @Path("/login")
@@ -54,7 +54,7 @@ public class AuthenticationEndpoint {
             //TODO to be tested
             return HttpResponseBuilder.forbidden();
         } catch (UserNotRegisteredException e2) {
-            return HttpResponseBuilder.unhautorized();
+            return HttpResponseBuilder.unauthorized();
         }
         // Issue a token for the user
         String token = issueToken( user, credentials.getIdDevice() );
@@ -76,7 +76,7 @@ public class AuthenticationEndpoint {
         }
 
         if ( ! user.getPassword().equals( updatedUserInfo.getPassword() ) ){
-            return HttpResponseBuilder.unhautorized();
+            return HttpResponseBuilder.unauthorized();
         }
         user.setName( updatedUserInfo.getName() );
         user.setSurname( updatedUserInfo.getSurname() );
@@ -98,7 +98,7 @@ public class AuthenticationEndpoint {
         try {
             authenticate( user, password );
         } catch ( InvalidCredentialsException e ) {
-            return HttpResponseBuilder.unhautorized();
+            return HttpResponseBuilder.unauthorized();
         }
         user.remove();
         return HttpResponseBuilder.ok();

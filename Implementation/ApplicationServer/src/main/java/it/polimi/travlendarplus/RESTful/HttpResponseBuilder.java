@@ -1,13 +1,15 @@
 package it.polimi.travlendarplus.RESTful;
 
 
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.messages.GenericMessage;
+import it.polimi.travlendarplus.messages.GenericResponseMessage;
 
 import javax.ws.rs.core.Response;
 
 public class HttpResponseBuilder {
 
-    public static Response unhautorized(){
+    public static Response unauthorized(){
         return Response.status( Response.Status.UNAUTHORIZED ).build();
     }
 
@@ -19,8 +21,12 @@ public class HttpResponseBuilder {
         return Response.status( Response.Status.BAD_REQUEST ).build();
     }
 
-    public static Response buildOkResponse( GenericMessage genericMessage){
-        return Response.ok( genericMessage ).build();
+    public static Response buildOkResponse( GenericResponseMessage responseMessage){
+        return Response.ok( responseMessage ).build();
+    }
+
+    public static Response buildInvalidFieldResponse( InvalidFieldException e){
+        return Response.status( Response.Status.BAD_REQUEST).entity( e.getMessage() ).build();
     }
 
     public static Response ok(){

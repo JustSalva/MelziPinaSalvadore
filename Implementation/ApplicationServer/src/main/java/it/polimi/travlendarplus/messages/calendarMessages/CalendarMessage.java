@@ -3,11 +3,10 @@ package it.polimi.travlendarplus.messages.calendarMessages;
 import it.polimi.travlendarplus.messages.GenericMessage;
 
 /**
- * This is the main message class related to calendar functionalities;
- * it is to be extended by all calendar messages classes .
+ * This is the main message class used to perform calendar functionalities requests;
+ * It has to be extended by all messages used to request to such functionalities.
  */
-public class CalendarMessage extends GenericMessage {
+public abstract class CalendarMessage extends GenericMessage {
 
-    private static final long serialVersionUID = -1113545392291139781L;
-
+    private static final long serialVersionUID = -4284302445297855152L;
 }
