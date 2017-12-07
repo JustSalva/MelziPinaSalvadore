@@ -10,7 +10,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 // The Java class will be hosted at the URI path "/schedule"
-@Path("/user")
+/*@Path("/user")
 
 public class UserRESTful {
 
@@ -23,4 +23,4 @@ public class UserRESTful {
     }
 
     //TODO
-}
+}*/

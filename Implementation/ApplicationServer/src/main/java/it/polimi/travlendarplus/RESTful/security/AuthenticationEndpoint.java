@@ -104,12 +104,12 @@ public class AuthenticationEndpoint {
         return HttpResponseBuilder.ok();
     }
 
-    @Path( "/security" )
+    @Path( "/security/{ idDevice }" )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response requestPublicKey( IdDeviceMessage idDeviceMessage ){
-        RSAEncryption encryption = new RSAEncryption( idDeviceMessage.getIdDevice() );
+    public Response requestPublicKey( @PathParam("idDevice") String idDevice ){
+        RSAEncryption encryption = new RSAEncryption( idDevice );
         PublicKey publicKey = encryption.getPublicKey();
         //TODO timer
         return HttpResponseBuilder.buildOkResponse( new PublicKeyResponse( publicKey ) );

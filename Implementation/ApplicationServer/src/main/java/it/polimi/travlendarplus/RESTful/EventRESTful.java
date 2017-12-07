@@ -3,12 +3,11 @@ package it.polimi.travlendarplus.RESTful;
 import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
+import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.messages.calendarMessages.*;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Time;
 import java.time.Instant;
 
 // The Java class will be hosted at the URI path "/event"
@@ -61,13 +61,14 @@ public class EventRESTful {
 
     /**
      * It provide the user events to be updated into the local database.
-     * @param timestampLocal last update of the local database
+     * @param timestamp last update of the local database
      * @return a list of updated GenericEvents
      */
-    @Path( "/updateLocalDB" )
+    @Path( "/updateLocalDB/{timestampLocal}" )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getEventUpdated( Instant timestampLocal){
+    public Response getEventUpdated( @PathParam("timestampLocal") long timestamp){
+        Instant timestampLocal = Instant.ofEpochSecond( timestamp );
         return HttpResponseBuilder.buildOkResponse(
                 new UpdatedEventsResponse(
                         eventManager.getEventUpdated( timestampLocal ) ) );
