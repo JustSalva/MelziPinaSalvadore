@@ -58,10 +58,19 @@ public class Location extends GenericEntity {
     }
 
     @Override
+    public String toString() {
+        return "Location{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean isAlreadyInDb() {
         try {
-            load(new LocationId(latitude,longitude));
-        } catch ( EntityNotFoundException e ) {
+            load(new LocationId(latitude, longitude));
+        } catch (EntityNotFoundException e) {
             return false;
         }
         return true;

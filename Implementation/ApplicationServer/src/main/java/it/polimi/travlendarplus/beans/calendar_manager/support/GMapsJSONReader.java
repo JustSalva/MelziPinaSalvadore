@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.beans.calendar_manager.support;
 
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsException.BadRequestException;
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsException.GMapsGeneralException;
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsException.LocationNotFoundException;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PrivateTravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
@@ -12,58 +15,79 @@ import org.json.JSONObject;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GMapsJSONReader {
 
-    //it creates a Travel with only one TravelComponent, related to the NO_TRANSIT and NO_SHARING TravelMean used
+    //it creates a Travel with only one TravelComponent, related to NO_TRANSIT and NO_SHARING TravelMean
     public ArrayList<Travel> getTravelNoTransitMeans(JSONObject response, TravelMeanEnum type, long departureTime,
-                                         Location depLoc, Location arrLoc) {
+                                         Location depLoc, Location arrLoc) throws GMapsGeneralException{
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
-        JSONArray routes = getRoutes(response);
 
-        for(int i=0; i<routes.length(); i++) {
-            Instant startingTime = Instant.ofEpochSecond(departureTime);
-            Instant endingTime = Instant.ofEpochSecond(departureTime + getTotDurationInSeconds(routes.getJSONObject(i)));
-            float lengthInKm = ((float) getTotDistanceInMeters(routes.getJSONObject(i))) / 1000;
-            PrivateTravelMean mean = new PrivateTravelMean(type.toString(), type, 0);
+        if(getStatus(response).equals("OK") || getStatus(response).equals("ZERO_RESULTS")) {
+            JSONArray routes = getRoutes(response);
 
-            TravelComponent component = new TravelComponent(startingTime, endingTime, lengthInKm, depLoc, arrLoc, mean);
-            ArrayList<TravelComponent> listTC = new ArrayList<TravelComponent>();
-            listTC.add(component);
+            for (int i = 0; i < routes.length(); i++) {
+                Instant startingTime = Instant.ofEpochSecond(departureTime);
+                Instant endingTime = Instant.ofEpochSecond(departureTime + getTotDurationInSeconds(routes.getJSONObject(i)));
+                float lengthInKm = ((float) getTotDistanceInMeters(routes.getJSONObject(i))) / 1000;
+                PrivateTravelMean mean = new PrivateTravelMean(type.toString(), type, 0);
 
-            Travel travel = new Travel(null, listTC);
-            possiblePaths.add(travel);
+                TravelComponent component = new TravelComponent(startingTime, endingTime, lengthInKm, depLoc, arrLoc, mean);
+                ArrayList<TravelComponent> listTC = new ArrayList<TravelComponent>();
+                listTC.add(component);
+
+                Travel travel = new Travel(null, listTC);
+                possiblePaths.add(travel);
+            }
+            return possiblePaths;
         }
 
-        return possiblePaths;
+        else if (getStatus(response).equals("NOT_FOUND"))
+            throw new LocationNotFoundException();
+
+        else
+            throw new BadRequestException();
+
     }
 
-    public ArrayList<Travel> getTravelWithTransitMeans(JSONObject response) {
+    //it creates a Travel composed by one or more components, related to TRANSIT TravelMeans
+    public ArrayList<Travel> getTravelWithTransitMeans(JSONObject response) throws GMapsGeneralException{
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
-        JSONArray routes = getRoutes(response);
 
-        for(int i=0; i<routes.length(); i++) {
-            JSONArray steps = getSteps(routes.getJSONObject(i));
-            ArrayList<TravelComponent> travelSteps = new ArrayList<TravelComponent>();
+        if(getStatus(response).equals("OK") || getStatus(response).equals("ZERO_RESULTS")) {
+            JSONArray routes = getRoutes(response);
 
-            for(int j=0; j<steps.length(); j++) {
-                Instant startingTime = Instant.ofEpochSecond(getSingleDepartureTimeInUnix(steps.getJSONObject(j)));
-                Instant endingTime = Instant.ofEpochSecond(getSingleArrivalTimeInUnix(steps.getJSONObject(j)));
-                float lengthInKm = ((float)getSingleDistanceInMeters(steps.getJSONObject(j))) / 1000;
-                Location departureLoc;
-                Location arrivalLoc;
-                PublicTravelMean mean;
+            for (int i = 0; i < routes.length(); i++) {
+                JSONArray steps = getSteps(routes.getJSONObject(i));
+                ArrayList<TravelComponent> travelSteps = new ArrayList<TravelComponent>();
 
-                //starting time, ending time, length, departure location, arrival location, travel mean
+                for (int j = 0; j < steps.length(); j++) {
+                    Instant startingTime = Instant.ofEpochSecond(getSingleDepartureTimeInUnix(steps.getJSONObject(j)));
+                    Instant endingTime = Instant.ofEpochSecond(getSingleArrivalTimeInUnix(steps.getJSONObject(j)));
+                    float lengthInKm = ((float) getSingleDistanceInMeters(steps.getJSONObject(j))) / 1000;
+                    Location departureLoc = getSingleDepartureStop(steps.getJSONObject(j));
+                    Location arrivalLoc = getSingleArrivalStop(steps.getJSONObject(j));
+                    TravelMeanEnum meanEnum = getProperTravelMeanEnum(getSingleVehicleType(steps.getJSONObject(j)));
+                    PublicTravelMean mean = new PublicTravelMean(getSingleLineName(steps.getJSONObject(j)), meanEnum, 0);
 
-                TravelComponent step = null;
-                travelSteps.add(step);
+                    TravelComponent step = new TravelComponent(startingTime, endingTime, lengthInKm, departureLoc,
+                            arrivalLoc, mean);
+                    travelSteps.add(step);
+                }
+                Travel travelOption = new Travel(null, travelSteps);
+                possiblePaths.add(travelOption);
             }
-            Travel travelOption = null;
-            possiblePaths.add(travelOption);
+
+            return possiblePaths;
         }
 
-        return possiblePaths;
+        else if (getStatus(response).equals("NOT_FOUND"))
+            throw new LocationNotFoundException();
+
+        else
+            throw new BadRequestException();
+
     }
 
     public static String getStatus(JSONObject response) {
@@ -107,37 +131,107 @@ public class GMapsJSONReader {
         return singleStep.getJSONObject("distance").getInt("value");
     }
 
+    //getTransitDetails() is called in case of TRANSIT call.
+    //The only case in which no "transit_details" are given is when there is a WALKING step
+    //in this case a JSONException is thrown.
     private static JSONObject getTransitDetails(JSONObject singleStep) {
-        JSONObject prova = null;
-        try {
-            prova = singleStep.getJSONObject("transit_details");
-        } catch (JSONException e) {
-
-        }
-        return prova;
+        return singleStep.getJSONObject("transit_details");
     }
 
+    // In all the functions below that take parameters for create TravelComponent, when JSONException happens
+    // due to getTransitDetails() function, the parameters are taken from a different position in JSONObject.
+    // The only difference is that departure time is setted to 0 and arrival time contains the duration in time!!!
+
     private static Location getSingleArrivalStop(JSONObject singleStep) {
-        JSONObject loc = getTransitDetails(singleStep).getJSONObject("arrival_stop").getJSONObject("location");
-        return GMapsGeocoder.getLocationObject(loc.getDouble("lat"), loc.getDouble("lng"));
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            JSONObject arrLoc = singleStep.getJSONObject("end_location");
+            return GMapsGeocoder.getLocationObject(arrLoc.getDouble("lat"),
+                    arrLoc.getDouble("lng"));
+        }
+        JSONObject forName = transitDetails.getJSONObject("arrival_stop");
+        JSONObject loc = forName.getJSONObject("location");
+        return new Location(loc.getDouble("lat"), loc.getDouble("lng"), forName.getString("name"));
     }
 
     private static Location getSingleDepartureStop(JSONObject singleStep) {
-        JSONObject loc = getTransitDetails(singleStep).getJSONObject("departure_stop").getJSONObject("location");
-        return GMapsGeocoder.getLocationObject(loc.getDouble("lat"), loc.getDouble("lng"));
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            JSONObject arrLoc = singleStep.getJSONObject("start_location");
+            return GMapsGeocoder.getLocationObject(arrLoc.getDouble("lat"),
+                    arrLoc.getDouble("lng"));
+        }
+        JSONObject forName = transitDetails.getJSONObject("departure_stop");
+        JSONObject loc = forName.getJSONObject("location");
+        return new Location(loc.getDouble("lat"), loc.getDouble("lng"), forName.getString("name"));
     }
 
     private static long getSingleArrivalTimeInUnix(JSONObject singleStep){
-        return getTransitDetails(singleStep).getJSONObject("arrival_time").getLong("value");
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            return singleStep.getJSONObject("duration").getLong("value");
+        }
+        return transitDetails.getJSONObject("arrival_time").getLong("value");
     }
 
     private static long getSingleDepartureTimeInUnix(JSONObject singleStep){
-        return getTransitDetails(singleStep).getJSONObject("departure_time").getLong("value");
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            return 0;
+        }
+        return transitDetails.getJSONObject("departure_time").getLong("value");
     }
 
-    public static String getSingleLineName(JSONObject singleStep) {
-        return getTransitDetails(singleStep).getJSONObject("line").getString("name");
+    private static String getSingleLineName(JSONObject singleStep) {
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            return singleStep.getString("html_instructions");
+        }
+        return transitDetails.getJSONObject("line").getString("name");
     }
 
+    private static String getSingleVehicleType(JSONObject singleStep) {
+        JSONObject transitDetails;
+        try {
+            transitDetails = getTransitDetails(singleStep);
+        } catch (JSONException e) {
+            return "WALKING";
+        }
+        return transitDetails.getJSONObject("line").getJSONObject("vehicle").getString("type");
+    }
+
+    private static TravelMeanEnum getProperTravelMeanEnum(String vehicleType) {
+        switch(vehicleType) {
+            case "RAIL":
+            case "MONORAIL":
+            case "HEAVY_RAIL":
+            case "COMMUTER_TRAIN":
+            case "HIGH_SPEED_TRAIN":
+                return TravelMeanEnum.TRAIN;
+            case "BUS":
+            case "INTERCITY_BUS":
+            case "TROLLEYBUS":
+                return TravelMeanEnum.BUS;
+            case "METRO_RAIL":
+            case "SUBWAY":
+                return TravelMeanEnum.SUBWAY;
+            case "TRAM":
+                return TravelMeanEnum.TRAM;
+            case "WALKING":
+                return TravelMeanEnum.BY_FOOT;
+            default:
+                return TravelMeanEnum.OTHER;
+        }
+    }
 
 }

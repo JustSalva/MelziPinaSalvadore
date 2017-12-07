@@ -15,6 +15,8 @@ public class GMapsDirectionsHandler {
         baseCall();
     }
 
+    //TODO handle the case in which the first of travel components is by feet (departure time set to 0)
+
     public GMapsDirectionsHandler(String callURL) {
         this.callURL = new StringBuilder(callURL);
     }
@@ -39,11 +41,10 @@ public class GMapsDirectionsHandler {
         //addParam("transit_mode", "train");
         //System.out.println(getCallURL());
         return callURL.toString();
-        /*      addParam("origin", event.getDeparture().getAddress());
-                addParam("destination", event.getEventLocation().getAddress());
-                addParam("departure_time", previousEvent.getEndingTime().toString());
-                return callURL.toString();
-        */
+        /*addParam("origin", event.getDeparture().getAddress());
+        addParam("destination", event.getEventLocation().getAddress());
+        addParam("departure_time", previousEvent.getEndingTime().toString());
+        return callURL.toString();*/
     }
 
     //it calculates eventual paths after this event: the function requires the following event

@@ -9,7 +9,8 @@ public enum TravelMeanEnum {
     TRAM ("tram"),
     BY_FOOT ("walking"),
     SHARING_CAR ("driving"),
-    SHARING_BIKE ("bicycling");
+    SHARING_BIKE ("bicycling"),
+    OTHER("other");
     //TODO others?
 
     private final String gMapsParam;

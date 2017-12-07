@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
+import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsException.GMapsGeneralException;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHandler;
 import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
@@ -33,7 +34,11 @@ public class PathManager extends UserManager{
         JSONObject response = HTMLCallAndResponse.performCall(gMapsURL.getBaseCallPreviousPath(null, null));
         GMapsJSONReader responseReader = new GMapsJSONReader();
         //System.out.println(responseReader.getTravelNoTransitMeans(response, TravelMeanEnum.CAR, 1512558191, null, null));
-        System.out.println(responseReader.getTravelWithTransitMeans(response));
+        try {
+            System.out.println(responseReader.getTravelWithTransitMeans(response));
+        } catch (GMapsGeneralException e) {
+            e.printStackTrace();
+        }
         //System.out.println(response);
     }
 

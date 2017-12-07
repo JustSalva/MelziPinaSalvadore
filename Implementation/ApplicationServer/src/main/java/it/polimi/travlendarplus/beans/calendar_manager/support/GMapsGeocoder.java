@@ -10,6 +10,7 @@ public class GMapsGeocoder {
         return new Location (lat, lng, getLatLngAddress(lat, lng));
     }
 
+    //TODO check if it is the best option
     public static String getLatLngAddress(double lat, double lng) {
         String call = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+
                 "&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y";
