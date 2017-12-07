@@ -107,8 +107,6 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % 24*60*60);
     }
 
-    public abstract Travel getFeasiblePath() ;
-
     public Timestamp getLastUpdate() {
         return lastUpdate;
     }
