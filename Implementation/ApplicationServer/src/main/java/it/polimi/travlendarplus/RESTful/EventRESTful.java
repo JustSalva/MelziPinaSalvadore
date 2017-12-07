@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.authenticationMessages.TokenResponse;
+import it.polimi.travlendarplus.messages.calendarMessages.BreakEventDescriptionMessage;
 import it.polimi.travlendarplus.messages.calendarMessages.EventDescriptionMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,14 +27,13 @@ public class EventRESTful {
     public Response getEventInformation( @PathParam("idEvent") long id) {    //TODO
         try {
             Event event = Event.load( id );
-            return Response.ok( new EventDescriptionMessage( event ) ).build();
+            return HttpResponseBuilder.buildOkResponse( new EventDescriptionMessage( event ) );
         } catch ( EntityNotFoundException e ) {
             try {
                 BreakEvent breakEvent = BreakEvent.load( id );
-                //TODO
-                return Response.ok( new EventDescriptionMessage( ) ).build();
+                return HttpResponseBuilder.buildOkResponse( new BreakEventDescriptionMessage( breakEvent ) );
             } catch ( EntityNotFoundException e1 ) {
-                return Response.status( Response.Status.PRECONDITION_FAILED ).build();
+                return HttpResponseBuilder.badRequest();
             }
         }
     }

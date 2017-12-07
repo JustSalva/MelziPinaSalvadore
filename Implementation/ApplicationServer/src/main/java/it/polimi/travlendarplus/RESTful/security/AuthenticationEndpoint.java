@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.RESTful.security;
 
+import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
 import it.polimi.travlendarplus.email.EmailSender;
 import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.entities.User;
@@ -36,7 +37,7 @@ public class AuthenticationEndpoint {
             return buildResponseToken( token );
         }
         //if UserNotRegisteredException is not thrown the user already exist and so he cannot register himself again
-        return Response.status( Response.Status.UNAUTHORIZED ).build();
+        return HttpResponseBuilder.unhautorized();
     }
 
     @Path("/login")
@@ -51,9 +52,9 @@ public class AuthenticationEndpoint {
             user = authenticate( credentials.getEmail(), credentials.getPassword() );
         } catch (InvalidCredentialsException e1) {
             //TODO to be tested
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return HttpResponseBuilder.forbidden();
         } catch (UserNotRegisteredException e2) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return HttpResponseBuilder.unhautorized();
         }
         // Issue a token for the user
         String token = issueToken( user, credentials.getIdDevice() );
@@ -71,11 +72,11 @@ public class AuthenticationEndpoint {
         try {
             user = loadUser( updatedUserInfo.getEmail() );
         } catch ( UserNotRegisteredException e ) {
-            return Response.status( Response.Status.BAD_REQUEST ).build();
+            return HttpResponseBuilder.badRequest();
         }
 
         if ( ! user.getPassword().equals( updatedUserInfo.getPassword() ) ){
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return HttpResponseBuilder.unhautorized();
         }
         user.setName( updatedUserInfo.getName() );
         user.setSurname( updatedUserInfo.getSurname() );
@@ -92,15 +93,15 @@ public class AuthenticationEndpoint {
         try {
             user = loadUser( email );
         } catch ( UserNotRegisteredException e ) {
-            return Response.status( Response.Status.BAD_REQUEST ).build();
+            return HttpResponseBuilder.badRequest();
         }
         try {
             authenticate( user, password );
         } catch ( InvalidCredentialsException e ) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return HttpResponseBuilder.unhautorized();
         }
         user.remove();
-        return Response.ok().build();
+        return HttpResponseBuilder.ok();
     }
 
     @Path( "/security" )
@@ -111,7 +112,7 @@ public class AuthenticationEndpoint {
         RSAEncryption encryption = new RSAEncryption( idDeviceMessage.getIdDevice() );
         PublicKey publicKey = encryption.getPublicKey();
         //TODO timer
-        return Response.ok(new PublicKeyResponse( publicKey ) ).build();
+        return HttpResponseBuilder.buildOkResponse( new PublicKeyResponse( publicKey ) );
     }
 
     @Path( "/security" )
@@ -124,11 +125,11 @@ public class AuthenticationEndpoint {
         try {
             user = loadUser( emailMessage.getEmail() );
         } catch ( UserNotRegisteredException e ) {
-            return Response.status( Response.Status.BAD_REQUEST ).build();
+            return HttpResponseBuilder.badRequest();
         }
 
         EmailSender.sendNewCredentials( user );
-        return Response.ok().build();
+        return HttpResponseBuilder.ok();
     }
 
     /**
@@ -164,7 +165,7 @@ public class AuthenticationEndpoint {
     }
 
     private Response buildResponseToken(String token){
-        return Response.ok(new TokenResponse( token ) ).build();
+        return HttpResponseBuilder.buildOkResponse( new TokenResponse( token ) );
     }
 
     private User loadUser( String email ) throws UserNotRegisteredException {

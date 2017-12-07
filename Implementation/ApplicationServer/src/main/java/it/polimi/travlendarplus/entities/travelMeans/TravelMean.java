@@ -15,7 +15,7 @@ public abstract class TravelMean extends EntityWithLongKey {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "TYPE")
+    @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private TravelMeanEnum type;
 
