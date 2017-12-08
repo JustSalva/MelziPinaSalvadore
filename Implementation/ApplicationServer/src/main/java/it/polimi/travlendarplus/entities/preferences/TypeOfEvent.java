@@ -58,10 +58,6 @@ public class TypeOfEvent extends EntityWithLongKey {
         this.name = name;
     }
 
-    public boolean isLimitedBy(TravelMeanEnum travelMean){
-        return limitedBy.contains(travelMean);
-    }
-
     public List<Constraint> getLimitedBy() {
         return Collections.unmodifiableList(limitedBy);
     }
@@ -78,16 +74,16 @@ public class TypeOfEvent extends EntityWithLongKey {
         this.deactivate = deactivate;
     }
 
-    public boolean isDeactivated(Constraint constraint){
-        return deactivate.contains(constraint);
+    public boolean isDeactivated(TravelMeanEnum vehicle){
+        return deactivate.contains(vehicle);
     }
 
     public void addDeactivated( TravelMeanEnum travelMean){
         deactivate.add( travelMean );
     }
 
-    public void removeDeactivated( TravelMeanEnum travelMean){
-        deactivate.removeIf(travelMeanEnum -> travelMean.equals( travelMean ));
+    public void removeDeactivated( TravelMeanEnum vehicle){
+        deactivate.removeIf(travelMean -> travelMean.equals( vehicle ));
     }
 
     public void addConstraint( Constraint constraint ){

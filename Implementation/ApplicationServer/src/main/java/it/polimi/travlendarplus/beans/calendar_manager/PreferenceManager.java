@@ -1,11 +1,14 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.Constraint;
 import it.polimi.travlendarplus.entities.preferences.DistanceConstraint;
 import it.polimi.travlendarplus.entities.preferences.PeriodOfDayConstraint;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.calendarMessages.preferenceMessages.*;
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Stateless
 public class PreferenceManager extends UserManager{
@@ -44,7 +46,9 @@ public class PreferenceManager extends UserManager{
         return typeOfEvent;
     }
 
-    public TypeOfEvent modifyTypeOfEvent( ModifyTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException, EntityNotFoundException{
+    public TypeOfEvent modifyTypeOfEvent( ModifyTypeOfEventMessage typeOfEventMessage )
+            throws InvalidFieldException, EntityNotFoundException{
+
         deleteTypeOfEvent( typeOfEventMessage.getId() );
         return addTypeOfEvent( typeOfEventMessage );
     }
@@ -106,7 +110,9 @@ public class PreferenceManager extends UserManager{
         //TODO write also in error which fields are wrong
     }
 
-    public void modifyPreferredLocation( PreferredLocationMessage locationMessage ) throws InvalidFieldException, EntityNotFoundException{
+    public void modifyPreferredLocation( PreferredLocationMessage locationMessage )
+            throws InvalidFieldException, EntityNotFoundException{
+
         checkLocationConsistency( locationMessage );
         Map<Location, String> preferredLocations = currentUser.getPreferredLocations();
         Location location = null;
@@ -127,6 +133,22 @@ public class PreferenceManager extends UserManager{
 
     public void deletePreferredLocation( String name ) throws EntityNotFoundException{
         getPreferredLocation( name ).remove();
+    }
+
+    protected boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent, User user){
+        //user is initialized before or it's better this way?
+        //TODO
+        return false;
+    }
+
+    protected Travel findBestpath ( ArrayList< Travel > travels, TypeOfEvent typeOfEvent, User user){
+        //user is initialized before or it's better this way?
+        //TODO
+        return null;
+    }
+
+    protected boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle){
+        return event.getType().isDeactivated( vehicle );
     }
 
 
