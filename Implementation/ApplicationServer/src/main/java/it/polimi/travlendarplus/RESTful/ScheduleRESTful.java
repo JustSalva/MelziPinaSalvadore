@@ -45,13 +45,14 @@ public class ScheduleRESTful {
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
     public JSONArray swapSchedule(@PathParam("idEvent") long id) {   //TODO
-        scheduleManager.setCurrentUser(authenticatedUser);
+        /*scheduleManager.setCurrentUser(authenticatedUser);
         try {
             return new JSONArray(scheduleManager.swapEvents(Event.load(id)));
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return new JSONArray(scheduleManager.getScheduleByDay(Instant.now().getEpochSecond()));
-        }
+        }*/
+        return null;
     }
 
 

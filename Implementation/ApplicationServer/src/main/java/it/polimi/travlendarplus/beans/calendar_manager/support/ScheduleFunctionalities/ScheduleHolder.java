@@ -36,8 +36,13 @@ public class ScheduleHolder {
     }
 
     //the event is really removed from the schedule
-    public void removeSpecEvent(GenericEvent eventToRemove) {
+    public void removeSpecEvent(Event eventToRemove) {
         events.remove(eventToRemove);
+    }
+
+    //the event is really removed from the schedule
+    public void removeSpecBreak(BreakEvent breakToRemove) {
+        breaks.remove(breakToRemove);
     }
 
     private ArrayList<Event> copyEventList() {

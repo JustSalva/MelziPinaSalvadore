@@ -5,7 +5,10 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHandler;
 import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
+import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.ScheduleHolder;
+import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONObject;
@@ -13,6 +16,7 @@ import org.json.JSONObject;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class PathManager extends UserManager{
@@ -24,9 +28,10 @@ public class PathManager extends UserManager{
     //attention to first and last event of the schedule (only one array of paths)
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
-                                         ArrayList<TravelMeanEnum> publicMeans) {
+                                         ArrayList<TravelMeanEnum> publicMeans, boolean forSwap) {
 
-        scheduleManager.setSchedule(event.getDayAtMidnight());
+        if(!forSwap)
+            scheduleManager.setSchedule(event.getDayAtMidnight());
         ArrayList<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
         ArrayList<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
 
@@ -115,8 +120,53 @@ public class PathManager extends UserManager{
         //System.out.println(response);
     }
 
-    //((Event)scheduleManager.getPossibleFollowingEvent(event)) to use for second parameter in function: baseCallFollowingPath()
+    public ScheduleHolder swapEvents(Event forcedEvent) {
+        scheduleManager.setSchedule(forcedEvent.getDayAtMidnight());
+        List<Event> swapOutEvents = new ArrayList<Event>();
+        List<BreakEvent> swapOutBreaks = new ArrayList<BreakEvent>();
+        //removing events that overlap with forcedEvent
+        for (Event event : scheduleManager.getSchedule().getEvents())
+            if (!scheduleManager.areEventsOverlapFree(event, forcedEvent))
+                swapOutEvents.add(event);
+        for (Event event : swapOutEvents)
+            scheduleManager.getSchedule().removeSpecEvent(event);
+        //calculating prev/foll path for the forcedEvent
+        //TODO get user preferences or specify ALL travel means (some solutions will be removed after whith preferences check)
+        PathCombination comb = calculatePath(forcedEvent, null, null, true);
+        boolean first = scheduleManager.getPossiblePreviousEvent(forcedEvent) == null;
+        boolean last = scheduleManager.getPossibleFollowingEvent(forcedEvent) == null;
+        while(!accettablePathCombination(first, last, comb)) {
+            //removing a break that can overlap or prev/foll overlapping events
+            //TODO check if there is a break overlapping
+            for(BreakEvent breakScheduled: scheduleManager.getSchedule().getBreaks())
+                if(!scheduleManager.areEventsOverlapFree(forcedEvent, breakScheduled))
+                    swapOutBreaks.add(breakScheduled);
 
+            if(swapOutBreaks.size()>0)
+                scheduleManager.getSchedule().removeSpecBreak(swapOutBreaks.get(0));
+            else {
+                if(!scheduleManager.areEventsOverlapFree(forcedEvent, scheduleManager.getPossiblePreviousEvent(forcedEvent)))
+                    scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossiblePreviousEvent(forcedEvent));
+                if(!scheduleManager.areEventsOverlapFree(forcedEvent, scheduleManager.getPossibleFollowingEvent(forcedEvent)))
+                    scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossibleFollowingEvent(forcedEvent));
+            }
+            //TODO get user preferences or specify ALL travel means (some solutions will be removed after whith preferences check)
+            comb = calculatePath(forcedEvent, null, null, true);
+            first = scheduleManager.getPossiblePreviousEvent(forcedEvent) == null;
+            last = scheduleManager.getPossibleFollowingEvent(forcedEvent) == null;
+        }
+        //TODO update DB with swapOUT events, swapOUT breaks and swapIN
+        return scheduleManager.getSchedule();
+    }
 
+    private boolean accettablePathCombination(boolean first, boolean last, PathCombination comb) {
+        if(first && last)
+            return true;
+        if(first)
+            return comb.getFollPath() != null;
+        if(last)
+            return comb.getPrevPath() != null;
+        return comb.getPrevPath() != null && comb.getFollPath() != null;
+    }
 
 }

@@ -17,13 +17,14 @@ import java.util.List;
 @Stateless
 public class ScheduleManager extends UserManager{
 
-    @EJB
-    PathManager pathManager;
-
     final long DAILY_SECONDS_MINUS_ONE = 24*60*60-1;
 
-    ScheduleHolder schedule;
+    private ScheduleHolder schedule;
     //TODO (in path manager?) ensure relation event-path when an event is added (particular cases: first/last event)
+
+    public ScheduleHolder getSchedule() {
+        return schedule;
+    }
 
     public ScheduleHolder getScheduleByDay(long day) {
         setSchedule(day);
@@ -32,8 +33,9 @@ public class ScheduleManager extends UserManager{
 
     // This function is called before the calculation of possible paths for an added event.
     // Paths are not considered because the add of an event will cause the recalculation of involved paths.
-    public boolean isEventOverlapFreeIntoSchedule(Event event) {
-        setSchedule(event.getDayAtMidnight());
+    public boolean isEventOverlapFreeIntoSchedule(Event event, boolean forSwap) {
+        if(!forSwap)
+            setSchedule(event.getDayAtMidnight());
         //checking free overlapping with other events
         for(Event scheduledEvent: schedule.getEvents())
             if(!(areEventsOverlapFree(event, scheduledEvent)))
@@ -46,8 +48,9 @@ public class ScheduleManager extends UserManager{
         return true;
     }
 
-    public boolean isBreakOverlapFreeIntoSchedule(BreakEvent breakEvent) {
-        setSchedule(breakEvent.getDayAtMidnight());
+    public boolean isBreakOverlapFreeIntoSchedule(BreakEvent breakEvent, boolean forSwap) {
+        if(!forSwap)
+            setSchedule(breakEvent.getDayAtMidnight());
         //new break cannot overlap with a previous break event
         for(BreakEvent scheduledBreak: schedule.getBreaks())
             if(!areEventsOverlapFree(breakEvent, scheduledBreak))
@@ -104,7 +107,7 @@ public class ScheduleManager extends UserManager{
     }
 
     //it returns true if gEvent1 and gEvent2 have not an overlap
-    private boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
+    public boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
         return event.getStartingTime().isAfter(scheduledEvent.getEndingTime()) ||
                 event.getEndingTime().isBefore(scheduledEvent.getStartingTime());
     }
@@ -165,7 +168,6 @@ public class ScheduleManager extends UserManager{
 
         for(Travel foll: following) {
             boolean ok = true;
-            //analize the case of each combination of prev/foll path
             for (BreakEvent breakEvent : schedule.getBreaks()) {
                 ArrayList<Event> simul = schedule.getListWithNewEventPaths(null, foll, event);
                 ArrayList<Event> involvSimul = getEventsIntoIntervalWithPathRegard(simul, breakEvent);
@@ -184,7 +186,6 @@ public class ScheduleManager extends UserManager{
 
         for(Travel prev: previous) {
             boolean ok = true;
-            //analize the case of each combination of prev/foll path
             for (BreakEvent breakEvent : schedule.getBreaks()) {
                 ArrayList<Event> simul = schedule.getListWithNewEventPaths(prev, null, event);
                 ArrayList<Event> involvSimul = getEventsIntoIntervalWithPathRegard(simul, breakEvent);
