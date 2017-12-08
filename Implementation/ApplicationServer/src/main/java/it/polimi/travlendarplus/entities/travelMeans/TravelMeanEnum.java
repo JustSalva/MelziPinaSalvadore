@@ -10,7 +10,7 @@ public enum TravelMeanEnum {
     BY_FOOT ("walking"),
     SHARING_CAR ("driving"),
     SHARING_BIKE ("bicycling"),
-    OTHER("other");
+    OTHER("other");//TODO what does it mean?
     //TODO others?
 
     private final String gMapsParam;
@@ -21,5 +21,18 @@ public enum TravelMeanEnum {
 
     public String getParam() {
         return gMapsParam;
+    }
+
+    public static boolean isValid( TravelMeanEnum travelMean){
+        return ( travelMean == TravelMeanEnum.CAR ||
+                travelMean == TravelMeanEnum.BIKE ||
+                travelMean == TravelMeanEnum.SUBWAY ||
+                travelMean == TravelMeanEnum.BUS ||
+                travelMean == TravelMeanEnum.TRAIN ||
+                travelMean == TravelMeanEnum.TRAM ||
+                travelMean == TravelMeanEnum.BY_FOOT ||
+                travelMean == TravelMeanEnum.SHARING_CAR ||
+                travelMean == TravelMeanEnum.SHARING_BIKE ||
+                travelMean == TravelMeanEnum.OTHER );
     }
 }

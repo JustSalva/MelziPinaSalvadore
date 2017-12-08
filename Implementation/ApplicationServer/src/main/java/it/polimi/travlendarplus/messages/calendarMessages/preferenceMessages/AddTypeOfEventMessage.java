@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.messages.calendarMessages.CalendarMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddTypeOfEventMessage extends CalendarMessage {
@@ -17,6 +18,9 @@ public class AddTypeOfEventMessage extends CalendarMessage {
     private List<TravelMeanEnum > deactivate;
 
     public AddTypeOfEventMessage() {
+        this.limitedByPeriod = new ArrayList<>();
+        this.limitedByDistance = new ArrayList<>();
+        this.deactivate= new ArrayList<>();
     }
 
     public AddTypeOfEventMessage( String name, ParamFirstPath paramFirstPath,

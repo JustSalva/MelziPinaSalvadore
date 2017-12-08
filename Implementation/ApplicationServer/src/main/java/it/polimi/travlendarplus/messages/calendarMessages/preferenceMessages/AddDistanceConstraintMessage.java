@@ -6,31 +6,31 @@ public class AddDistanceConstraintMessage extends AddConstraintMessage {
 
     private static final long serialVersionUID = 3192731780629920451L;
 
-    private int minLenght;
-    private int maxLenght;
+    private int minLength;
+    private int maxLength;
 
     public AddDistanceConstraintMessage() {
     }
 
-    public AddDistanceConstraintMessage( TravelMeanEnum concerns, int minLenght, int maxLenght ) {
+    public AddDistanceConstraintMessage( TravelMeanEnum concerns, int minLength, int maxLength ) {
         super( concerns );
-        this.minLenght = minLenght;
-        this.maxLenght = maxLenght;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
     }
 
-    public int getMinLenght() {
-        return minLenght;
+    public int getMinLength() {
+        return minLength;
     }
 
-    public void setMinLenght( int minLenght ) {
-        this.minLenght = minLenght;
+    public void setMinLength( int minLength ) {
+        this.minLength = minLength;
     }
 
-    public int getMaxLenght() {
-        return maxLenght;
+    public int getMaxLength() {
+        return maxLength;
     }
 
-    public void setMaxLenght( int maxLenght ) {
-        this.maxLenght = maxLenght;
+    public void setMaxLength( int maxLength ) {
+        this.maxLength = maxLength;
     }
 }

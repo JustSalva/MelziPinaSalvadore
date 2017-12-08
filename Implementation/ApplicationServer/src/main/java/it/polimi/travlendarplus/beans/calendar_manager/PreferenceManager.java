@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.Constraint;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 public class PreferenceManager extends UserManager{
@@ -57,7 +61,7 @@ public class PreferenceManager extends UserManager{
     }
 
     public void deleteTypeOfEvent( long id ) throws EntityNotFoundException{
-        //TODO what about event dependencies?
+        //TODO what about event dependencies? remain relation only with events?
         TypeOfEvent typeOfEvent = getPreferencesProfile( id );
         currentUser.removePreference( id );
         currentUser.save();
@@ -65,7 +69,80 @@ public class PreferenceManager extends UserManager{
     }
 
     private void checkTypeOfEventConsistency( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
-        //TODO write also in error which fields are wrong
+        List< String > errors = new ArrayList<>( );
+        if(  typeOfEventMessage.getName() == null){
+            errors.add( "name" );
+        }
+        if ( typeOfEventMessage.getParamFirstPath() == null ){
+            errors.add( "paramFirstPath" );
+        }
+
+        errors.addAll( checkPeriodConstraints( typeOfEventMessage.getLimitedByPeriod() ) );
+        errors.addAll( checkDistanceConstraints( typeOfEventMessage.getLimitedByDistance() ) );
+
+        if( errors.size() > 0 ){
+            throw new InvalidFieldException( errors );
+        }
+    }
+
+    private List< String > checkPeriodConstraints( List<AddPeriodConstraintMessage> periodConstraints){
+        List<String> periodErrors = new ArrayList<>( );
+        //checks that min < max hour
+        periodErrors.addAll( periodConstraints.stream()
+                .filter( periodConstraint -> periodConstraint.getMinHour() > periodConstraint.getMaxHour())
+                .map( periodConstraint -> " periodConstraint " +
+                        periodConstraints.indexOf( periodConstraint ) +
+                        " min hour must be less than max hour"  )
+                .collect( Collectors.toList() ) );
+        //checks that minHour >= 0
+        periodErrors.addAll( periodConstraints.stream()
+                .filter( periodConstraint -> periodConstraint.getMinHour() < 0)
+                .map( periodConstraint -> " periodConstraint " +
+                        periodConstraints.indexOf( periodConstraint ) +
+                        " min hour must be greater than zero"  )
+                .collect( Collectors.toList() ) );
+        //checks that maxHour < 24 h
+        periodErrors.addAll( periodConstraints.stream()
+                .filter( periodConstraint -> periodConstraint.getMaxHour() >= 24*60*60)
+                .map( periodConstraint -> " periodConstraint " +
+                        periodConstraints.indexOf( periodConstraint ) +
+                        " max hour must be less than 24 h"  )
+                .collect( Collectors.toList() ) );
+        periodErrors.addAll( checkTravelMeanEnum( new ArrayList<>( periodConstraints ) ) );
+
+        return periodErrors;
+    }
+
+    private List< String > checkDistanceConstraints( List<AddDistanceConstraintMessage> distanceConstraints){
+        List<String> distanceErrors = new ArrayList<>( );
+        //checks that min length >= 0
+        distanceErrors.addAll( distanceConstraints.stream()
+                .filter( distanceConstraint -> distanceConstraint.getMinLength() < 0 )
+                .map( distanceConstraint -> " distanceConstraint " +
+                        distanceConstraints.indexOf( distanceConstraint ) +
+                        " min length must be greater than zero"  )
+                .collect( Collectors.toList() ) );
+        //checks that min length < max length
+        distanceErrors.addAll( distanceConstraints.stream()
+                .filter( distanceConstraint -> distanceConstraint.getMinLength() > distanceConstraint.getMaxLength() )
+                .map( distanceConstraint -> " distanceConstraint " +
+                        distanceConstraints.indexOf( distanceConstraint ) +
+                        " min length must be less than max length"  )
+                .collect( Collectors.toList() ) );
+        distanceErrors.addAll( checkTravelMeanEnum( new ArrayList<>( distanceConstraints ) ) );
+
+        return distanceErrors;
+    }
+
+    private List< String > checkTravelMeanEnum( List<AddConstraintMessage> constraintMessages){
+        List<String> errors = new ArrayList<>( );
+        errors.addAll( constraintMessages.stream()
+                .filter( constraint -> ! TravelMeanEnum.isValid( constraint.getConcerns() ) )
+                .map( constraint -> constraint.getClass().getSimpleName() + " "+
+                        constraintMessages.indexOf( constraint ) +
+                        " travel mean value not allowed"  )
+                .collect( Collectors.toList() ) );
+        return errors;
     }
 
     private TypeOfEvent createTypeOfEvent( AddTypeOfEventMessage message ){
@@ -75,7 +152,7 @@ public class PreferenceManager extends UserManager{
 
         for(AddDistanceConstraintMessage distanceLimit : message.getLimitedByDistance() ){
             constraints.add( new DistanceConstraint( distanceLimit.getConcerns(),
-                    distanceLimit.getMinLenght(), distanceLimit.getMaxLenght() ) );
+                    distanceLimit.getMinLength(), distanceLimit.getMaxLength() ) );
         }
         for(AddPeriodConstraintMessage periodLimit : message.getLimitedByPeriod() ){
             constraints.add( new PeriodOfDayConstraint( periodLimit.getConcerns(),
@@ -113,7 +190,18 @@ public class PreferenceManager extends UserManager{
     }
 
     private void checkLocationConsistency( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
-        //TODO write also in error which fields are wrong
+        List< String > errors = new ArrayList<>( );
+        if(  locationMessage.getName() == null){
+            errors.add( "name" );
+        }
+        if ( locationMessage.getAddress() == null ){
+            errors.add( "address" );
+        }
+        //TODO ask to external service if address is correct?
+
+        if( errors.size() > 0 ){
+            throw new InvalidFieldException( errors );
+        }
     }
 
     public void modifyPreferredLocation( PreferredLocationMessage locationMessage )
@@ -124,6 +212,7 @@ public class PreferenceManager extends UserManager{
         Location location = null;
         for (Map.Entry<Location, String> entry : preferredLocations.entrySet()) {
             if(entry.getValue().equals( locationMessage.getName() )){
+                location =entry.getKey();
                 currentUser.removeLocation( locationMessage.getName() );
                 currentUser.save();
                 break;

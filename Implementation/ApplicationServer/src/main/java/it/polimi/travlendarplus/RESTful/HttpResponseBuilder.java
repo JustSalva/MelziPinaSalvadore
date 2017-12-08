@@ -35,7 +35,7 @@ public class HttpResponseBuilder {
 
 
     public static Response buildInvalidFieldResponse( InvalidFieldException e){
-        return Response.status( Response.Status.BAD_REQUEST).entity( e.getMessage() ).build();
+        return Response.status( Response.Status.BAD_REQUEST).entity( e.getInvalidFields() ).build();
     }
 
     public static Response ok(){
