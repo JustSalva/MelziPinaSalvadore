@@ -35,24 +35,12 @@ public class GenericEvent {
     private Period period;
 
     public GenericEvent(String name, long date, long startTime, long endTime,
-                        boolean scheduled, Event event) {
+                        boolean scheduled) {
         this.name = name;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.scheduled = scheduled;
-        this.type = EventType.EVENT;
-        this.event = event;
-    }
-
-    public GenericEvent(String name, long date, long startTime, long endTime, boolean scheduled, BreakEvent breakEvent) {
-        this.name = name;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.scheduled = scheduled;
-        this.type = EventType.BREAK;
-        this.breakEvent = breakEvent;
     }
 
     public int getId() {

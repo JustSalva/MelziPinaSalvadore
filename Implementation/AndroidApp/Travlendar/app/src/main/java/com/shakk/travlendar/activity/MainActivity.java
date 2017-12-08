@@ -73,15 +73,23 @@ public class MainActivity extends AppCompatActivity {
             database.userDao().insert(new User("10486221@polimi.it", "Alessandro", "Pina"));
 
             Ticket ticket;
-            ticket = new Ticket(30, new PeriodTicket("JAN", 20170101, 20170131));
+            ticket = new Ticket(30);
+            PeriodTicket periodTicket = new PeriodTicket("JAN", 20170101, 20170131);
+            ticket.setType(Ticket.TicketType.PERIOD);
+            ticket.setPeriodTicket(periodTicket);
             database.ticketsDao().insert(ticket);
-            ticket = new Ticket(30, new DistanceTicket(30));
+            ticket = new Ticket(30);
+            DistanceTicket distanceTicket = new DistanceTicket(30);
+            ticket.setType(Ticket.TicketType.DISTANCE);
+            ticket.setDistanceTicket(distanceTicket);
             database.ticketsDao().insert(ticket);
 
             GenericEvent genericEvent = new GenericEvent("name",
-                    20171207, 1100, 1200, false,
-                    new Event("de", "meeting", "qua",
-                            false, null));
+                    20171207, 1100, 1200, false);
+            Event event = new Event("de", "meeting", "qua",
+                            false, null);
+            genericEvent.setType(GenericEvent.EventType.EVENT);
+            genericEvent.setEvent(event);
             database.calendarDao().insert(genericEvent);
 
             List<TravelComponent> list = new ArrayList<>();

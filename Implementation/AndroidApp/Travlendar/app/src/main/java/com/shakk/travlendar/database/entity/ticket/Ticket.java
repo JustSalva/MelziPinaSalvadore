@@ -23,22 +23,8 @@ public class Ticket {
     @Embedded
     private GeneralTicket generalTicket;
 
-    public Ticket(float cost, PeriodTicket periodTicket) {
+    public Ticket(float cost) {
         this.cost = cost;
-        this.type = TicketType.PERIOD;
-        this.periodTicket = periodTicket;
-    }
-
-    public Ticket(float cost, DistanceTicket distanceTicket) {
-        this.cost = cost;
-        this.type = TicketType.DISTANCE;
-        this.distanceTicket = distanceTicket;
-    }
-
-    public Ticket(float cost, GeneralTicket generalTicket) {
-        this.cost = cost;
-        this.type = TicketType.GENERAL;
-        this.generalTicket = generalTicket;
     }
 
     public int getId() {
