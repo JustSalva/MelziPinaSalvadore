@@ -17,11 +17,20 @@ public class CalendarViewModel extends AndroidViewModel {
             .getAppDatabase(getApplication()
                     .getApplicationContext());
 
+    private LiveData<List<GenericEvent>> genericEvents;
     private LiveData<List<GenericEvent>> events;
     private LiveData<List<GenericEvent>> breakEvents;
 
     public CalendarViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    public LiveData<List<GenericEvent>> getGenericEvents(long date) {
+        if (genericEvents == null) {
+            genericEvents = new MutableLiveData<>();
+            loadGenericEvents(date);
+        }
+        return genericEvents;
     }
 
     public LiveData<List<GenericEvent>> getEvents(long date) {
@@ -38,6 +47,10 @@ public class CalendarViewModel extends AndroidViewModel {
             loadBreakEvents(date);
         }
         return breakEvents;
+    }
+
+    private void loadGenericEvents(long date) {
+        genericEvents = database.calendarDao().getGenericEvents(date);
     }
 
     private void loadEvents(long date) {

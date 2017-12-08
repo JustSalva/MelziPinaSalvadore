@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                 .build());
-
-        addUser();
 /*
         TextView textView = findViewById(R.id.test_view);
         textView.setOnClickListener(view -> {
@@ -66,15 +64,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToCalendar(View view) {
+        addUser();
         Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
         startActivity(intent);
     }
 
     public void addUser() {
         new Thread(() -> {
-
+/*
+            database.userDao().delete();
             database.userDao().insert(new User("10486221@polimi.it", "Alessandro", "Pina"));
 
+            database.ticketsDao().deleteAll();
             Ticket ticket;
             ticket = new Ticket(30);
             PeriodTicket periodTicket = new PeriodTicket("JAN", 20170101, 20170131);
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             ticket.setDistanceTicket(distanceTicket);
             database.ticketsDao().insert(ticket);
 
+            database.calendarDao().deleteAll();
             GenericEvent genericEvent = new GenericEvent("name",
                     20171207, 1100, 1200, false);
             Event event = new Event("de", "meeting", "qua",
@@ -95,13 +97,14 @@ public class MainActivity extends AppCompatActivity {
             genericEvent.setEvent(event);
             database.calendarDao().insert(genericEvent);
 
+            database.calendarDao().deleteTravelComponents();
             List<TravelComponent> list = new ArrayList<>();
-            list.add(new TravelComponent(21, 0, 0, "tram",
+            list.add(new TravelComponent(21, 15, 27, "tram",
                     "here", "there", "0800", "0900"));
-            list.add(new TravelComponent(12, 0, 0, "foot",
+            list.add(new TravelComponent(12, 15, 27, "foot",
                     "here", "there", "0800", "0900"));
-            //database.calendarDao().insert(list);
-
+            database.calendarDao().insert(list);
+*/
             Log.d("TAG", Integer.toString(database.userDao().countUsers()));
         }).start();
     }
