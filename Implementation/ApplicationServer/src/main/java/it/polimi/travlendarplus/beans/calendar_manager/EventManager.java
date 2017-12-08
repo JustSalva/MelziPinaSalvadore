@@ -7,8 +7,8 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import it.polimi.travlendarplus.messages.calendarMessages.AddEventMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.ModifyEventMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddEventMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.ModifyEventMessage;
 
 import javax.ejb.Stateless;
 import java.time.Instant;
@@ -61,18 +61,18 @@ public class EventManager extends UserManager{
     }
 
     private Location findLocation( String address ){
-        //TODO
+        //TODO create if not present
         return new Location( );
     }
 
-    private TypeOfEvent findTypeOfEvent( String name){
+    private TypeOfEvent findTypeOfEvent( long name){
         return currentUser.getPreferences().stream()
-                .filter( typeOfEvent -> typeOfEvent.getName().equals( name ) )
+                .filter( typeOfEvent -> typeOfEvent.getId() == name )
                 .findFirst().get(); //NB his presence has to be already checked
     }
 
     private Event createEvent(AddEventMessage eventMessage){
-        TypeOfEvent type = findTypeOfEvent( eventMessage.getTypeOfEvent() );
+        TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
         Location departure = findLocation( eventMessage.getDeparture() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),

@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.messages.calendarMessages;
+package it.polimi.travlendarplus.messages.calendarMessages.eventMessages;
 
 import java.time.Instant;
 
@@ -13,11 +13,11 @@ public class ModifyEventMessage extends AddEventMessage {
     }
 
     public ModifyEventMessage( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
-                               String description, boolean prevLocChoice, String typeOfEvent, String eventLocation,
+                               String description, boolean prevLocChoice, long idTypeOfEvent, String eventLocation,
                                String departure, long eventId ) {
 
         super( name, startingTime, endingTime, periodicity, description, prevLocChoice,
-                typeOfEvent, eventLocation, departure );
+                idTypeOfEvent, eventLocation, departure );
         this.eventId = eventId;
     }
 

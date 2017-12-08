@@ -1,9 +1,12 @@
 package it.polimi.travlendarplus.RESTful;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.messages.GenericMessage;
 import it.polimi.travlendarplus.messages.GenericResponseMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.JsonBodyResponse;
 
 import javax.ws.rs.core.Response;
 
@@ -22,8 +25,14 @@ public class HttpResponseBuilder {
     }
 
     public static Response buildOkResponse( GenericResponseMessage responseMessage){
-        return Response.ok( responseMessage ).build();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonOutput = gson.toJson( responseMessage );
+        return Response.ok( jsonOutput ).build();
     }
+    public static Response buildOkResponse( Object responseMessage){
+        return buildOkResponse(  new JsonBodyResponse( responseMessage ) );
+    }
+
 
     public static Response buildInvalidFieldResponse( InvalidFieldException e){
         return Response.status( Response.Status.BAD_REQUEST).entity( e.getMessage() ).build();

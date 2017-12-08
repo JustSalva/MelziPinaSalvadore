@@ -1,6 +1,7 @@
-package it.polimi.travlendarplus.messages.calendarMessages;
+package it.polimi.travlendarplus.messages.calendarMessages.eventMessages;
 
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
+import it.polimi.travlendarplus.messages.calendarMessages.CalendarResponse;
 
 public class BreakEventDescriptionResponse extends CalendarResponse {
 

@@ -3,11 +3,10 @@ package it.polimi.travlendarplus.RESTful;
 import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
-import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
-import it.polimi.travlendarplus.messages.calendarMessages.*;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -15,21 +14,33 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Time;
 import java.time.Instant;
 
-// The Java class will be hosted at the URI path "/event"
+/**
+ *  This class provide all RESTful methods related to handle the users events
+ *  This RESTful resource will be hosted at the relative URI path "/event"
+ */
 @Path("/event")
 @Secured
 public class EventRESTful {
 
+    /**
+     * Enterprise Java beans that offers the logic related to events-related functionalities
+     */
     @EJB
-    EventManager eventManager;
+    private EventManager eventManager;
 
+    /**
+     * User that performs a request, automatically injected after his authentication
+     */
     @Inject
     @AuthenticatedUser
-    User authenticatedUser;
+    private User authenticatedUser;
 
+    /**
+     * This method initialize the injected event manager with the user to be handled
+     * It will be executed before any request is actually performed
+     */
     @PostConstruct
     public void postConstruct() {
         eventManager.setCurrentUser( authenticatedUser );
@@ -39,9 +50,8 @@ public class EventRESTful {
      * It allows to obtain the info related to a specific event
      * @param id identifier of the requested event
      * @return an HTTP response containing the GenericEvent requested, either Event or BreakEvent,
-     *         or an HTTP that communicate that the requested event does't exist
+     *         or an HTTP 400 Bad Request response status code that communicate that the requested event does't exist
      */
-
     @Path("{idEvent}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +80,7 @@ public class EventRESTful {
     public Response getEventUpdated( @PathParam("timestampLocal") long timestamp){
         Instant timestampLocal = Instant.ofEpochSecond( timestamp );
         return HttpResponseBuilder.buildOkResponse(
-                new UpdatedEventsResponse(
+                new EventsListResponse(
                         eventManager.getEventUpdated( timestampLocal ) ) );
     }
 
@@ -82,7 +92,7 @@ public class EventRESTful {
     /**
      * It adds an event into the user profile
      * @param eventMessage eventMessage that describe the event to be added
-     * @return the event info, visualized by the client
+     * @return the event info, visualized by the client or
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

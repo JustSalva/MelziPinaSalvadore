@@ -1,4 +1,6 @@
-package it.polimi.travlendarplus.messages.calendarMessages;
+package it.polimi.travlendarplus.messages.calendarMessages.eventMessages;
+
+import it.polimi.travlendarplus.messages.calendarMessages.CalendarMessage;
 
 import java.time.Instant;
 

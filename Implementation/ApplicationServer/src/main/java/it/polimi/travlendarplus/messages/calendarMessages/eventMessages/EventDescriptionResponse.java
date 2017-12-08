@@ -1,6 +1,7 @@
-package it.polimi.travlendarplus.messages.calendarMessages;
+package it.polimi.travlendarplus.messages.calendarMessages.eventMessages;
 
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.messages.calendarMessages.CalendarResponse;
 
 public class EventDescriptionResponse extends CalendarResponse {
 

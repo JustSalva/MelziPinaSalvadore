@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.messages.calendarMessages;
+package it.polimi.travlendarplus.messages.calendarMessages.eventMessages;
 
 
 import java.time.Instant;
@@ -9,7 +9,7 @@ public class AddEventMessage extends AddGenericEventMessage {
 
     private String description;
     private boolean prevLocChoice;
-    private String typeOfEvent;
+    private long idTypeOfEvent;
     private String eventLocation;
     private String departure;
 
@@ -18,12 +18,12 @@ public class AddEventMessage extends AddGenericEventMessage {
 
     public AddEventMessage( String name, Instant startingTime, Instant endingTime,
                             PeriodMessage periodicity, String description, boolean prevLocChoice,
-                            String typeOfEvent, String eventLocation, String departure ) {
+                            long idTypeOfEvent, String eventLocation, String departure ) {
 
         super( name, startingTime, endingTime, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
-        this.typeOfEvent = typeOfEvent;
+        this.idTypeOfEvent = idTypeOfEvent;
         this.eventLocation = eventLocation;
         this.departure = departure;
     }
@@ -44,12 +44,12 @@ public class AddEventMessage extends AddGenericEventMessage {
         this.prevLocChoice = prevLocChoice;
     }
 
-    public String getTypeOfEvent() {
-        return typeOfEvent;
+    public long getIdTypeOfEvent() {
+        return idTypeOfEvent;
     }
 
-    public void setTypeOfEvent( String typeOfEvent ) {
-        this.typeOfEvent = typeOfEvent;
+    public void setIdTypeOfEvent( long idTypeOfEvent ) {
+        this.idTypeOfEvent = idTypeOfEvent;
     }
 
     public String getEventLocation() {
