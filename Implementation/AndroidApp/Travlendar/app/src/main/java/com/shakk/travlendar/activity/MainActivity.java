@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.stetho.Stetho;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.database.entity.TravelComponent;
 import com.shakk.travlendar.database.entity.event.Event;
@@ -29,7 +30,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AppDatabase.destroyInstance();
         database = AppDatabase.getAppDatabase(getApplicationContext());
+
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build());
+
         addUser();
 /*
         TextView textView = findViewById(R.id.test_view);
@@ -65,11 +73,6 @@ public class MainActivity extends AppCompatActivity {
     public void addUser() {
         new Thread(() -> {
 
-            database.userDao().delete();
-            database.ticketsDao().deleteAll();
-            database.calendarDao().deleteAll();
-            database.calendarDao().deleteTravelComponents();
-
             database.userDao().insert(new User("10486221@polimi.it", "Alessandro", "Pina"));
 
             Ticket ticket;
@@ -93,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
             database.calendarDao().insert(genericEvent);
 
             List<TravelComponent> list = new ArrayList<>();
-            list.add(new TravelComponent(21, 1, 2, "tram",
+            list.add(new TravelComponent(21, 0, 0, "tram",
                     "here", "there", "0800", "0900"));
-            list.add(new TravelComponent(12, 1, 1, "foot",
+            list.add(new TravelComponent(12, 0, 0, "foot",
                     "here", "there", "0800", "0900"));
-            database.calendarDao().insert(list);
+            //database.calendarDao().insert(list);
 
             Log.d("TAG", Integer.toString(database.userDao().countUsers()));
         }).start();

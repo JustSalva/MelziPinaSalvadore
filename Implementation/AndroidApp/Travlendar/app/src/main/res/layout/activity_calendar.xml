@@ -60,6 +60,7 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:columnCount="2">
 
                 <TextView
@@ -81,13 +82,20 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/myRectangleView"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="10dp"
                     android:background="@drawable/rectangle"
                     android:backgroundTint="#88cf92"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rectangle"
+                    android:backgroundTint="#d24c38"/>
 
             </GridLayout>
 

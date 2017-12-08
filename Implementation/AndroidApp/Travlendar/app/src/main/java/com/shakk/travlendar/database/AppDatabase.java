@@ -15,6 +15,7 @@ import com.shakk.travlendar.database.dao.UserDao;
 
 @Database(entities = {User.class, Ticket.class, GenericEvent.class, TravelComponent.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
+
     private static AppDatabase INSTANCE;
 
     public static AppDatabase getAppDatabase(Context context) {
