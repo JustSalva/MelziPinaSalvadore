@@ -50,6 +50,8 @@ public class BreakEvent extends GenericEvent {
 
     //Every Event in events ArrayList has an overlap with the interval of BreakEvent
     public boolean isMinimumEnsuredNoPathRegard(ArrayList<Event> events) {
+        if (events.size()==0)
+            return true;
         //checking if there is enough time before the first event
         if(minimumTime <= Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
             return true;
@@ -64,6 +66,8 @@ public class BreakEvent extends GenericEvent {
     }
 
     public boolean isMinimumEnsuredWithPathRegard(ArrayList<Event> events) {
+        if (events.size()==0)
+            return true;
         //if the first event has no previous events
         if(events.get(0).getFeasiblePath() == null) {
             if (minimumTime <= Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
