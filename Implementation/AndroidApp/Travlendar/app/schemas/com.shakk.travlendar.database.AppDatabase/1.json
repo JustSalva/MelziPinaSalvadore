@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "eca10aabd363634ac5c0c4b2a14dd0de",
+    "identityHash": "f4a45c9d88ca3fa16e33d9a71da14372",
     "entities": [
       {
         "tableName": "User",
@@ -130,7 +130,7 @@
       },
       {
         "tableName": "generic_event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `is_scheduled` INTEGER NOT NULL, `type` TEXT, `has_period` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `scheduled` INTEGER NOT NULL, `type` TEXT, `periodical` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -163,8 +163,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "isScheduled",
-            "columnName": "is_scheduled",
+            "fieldPath": "scheduled",
+            "columnName": "scheduled",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -175,8 +175,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "hasPeriod",
-            "columnName": "has_period",
+            "fieldPath": "periodical",
+            "columnName": "periodical",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -246,7 +246,7 @@
       },
       {
         "tableName": "travel_component",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `starting_time` TEXT, `ending_time` TEXT, FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `start_time` TEXT, `end_time` TEXT, FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -291,14 +291,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "startingTime",
-            "columnName": "starting_time",
+            "fieldPath": "startTime",
+            "columnName": "start_time",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "endingTime",
-            "columnName": "ending_time",
+            "fieldPath": "endTime",
+            "columnName": "end_time",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -338,7 +338,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eca10aabd363634ac5c0c4b2a14dd0de\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f4a45c9d88ca3fa16e33d9a71da14372\")"
     ]
   }
 }

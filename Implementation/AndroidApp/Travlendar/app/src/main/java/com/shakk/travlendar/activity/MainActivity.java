@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         database = AppDatabase.getAppDatabase(getApplicationContext());
         addUser();
-
+/*
         TextView textView = findViewById(R.id.test_view);
         textView.setOnClickListener(view -> {
             addUser();
@@ -59,11 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToCalendar(View view) {
         Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToSchedule(View view) {
-        Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
         startActivity(intent);
     }
 

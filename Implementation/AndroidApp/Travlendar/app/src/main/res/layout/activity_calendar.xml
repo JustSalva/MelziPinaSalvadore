@@ -57,18 +57,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:columnCount="2">
 
-                <fragment
-                    android:id="@+id/schedule_fragment"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    tools:context=".activity.fragment.ScheduleFragment"/>
+                    android:layout_columnWeight="1"
+                    android:text="@string/schedule"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
-            </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="@string/overlapping"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/myRectangleView"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rectangle"
+                    android:backgroundTint="#88cf92"/>
+
+            </GridLayout>
 
         </ScrollView>
 

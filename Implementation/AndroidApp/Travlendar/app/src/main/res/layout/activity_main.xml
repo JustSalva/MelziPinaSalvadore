@@ -30,17 +30,4 @@
         android:layout_height="wrap_content"
         android:onClick="goToCalendar"
         android:text="Calendar" />
-
-    <Button
-        android:id="@+id/schedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="goToSchedule"
-        android:text="Schedule" />
-
-    <TextView
-        android:id="@+id/test_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test" />
 </LinearLayout>

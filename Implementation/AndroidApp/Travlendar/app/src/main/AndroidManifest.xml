@@ -62,8 +62,6 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.EventViewerActivity"
             android:label="@string/view_event"/>
-        <activity android:name=".activity.ScheduleActivity"
-            android:label="@string/schedule"/>
         <activity android:name=".activity.ArrangeTripActivity"
             android:label="@string/arrange_trip"/>
 
