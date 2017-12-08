@@ -1,15 +1,21 @@
 package com.shakk.travlendar.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shakk.travlendar.DateUtility;
@@ -24,7 +30,8 @@ public class CalendarActivity extends MenuActivity {
     private CalendarViewModel calendarViewModel;
 
     private TextView date_textView;
-    private GridLayout calendar_gridLayout;
+    private LinearLayout calendar_linearLayout;
+    private GridLayout overlapping_gridLayout;
 
     private long dateOfCalendar;
 
@@ -35,7 +42,12 @@ public class CalendarActivity extends MenuActivity {
         super.setupMenuToolbar();
 
         date_textView = findViewById(R.id.date_textView);
-        calendar_gridLayout = findViewById(R.id.calendar_gridLayout);
+        calendar_linearLayout = findViewById(R.id.calendar_linearLayout);
+        overlapping_gridLayout = findViewById(R.id.overlapping_gridLayout);
+
+        overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
+        findViewById(R.id.calendar_linearLayout).setOnDragListener(new MyDragListener());
+
 
         dateOfCalendar = DateUtility.getDateFromString(date_textView.toString());
 
@@ -126,5 +138,55 @@ public class CalendarActivity extends MenuActivity {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setTextView(findViewById(R.id.date_textView));
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    private final class MyTouchListener implements View.OnTouchListener {
+        public boolean onTouch(View viewDragged, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(viewDragged);
+                viewDragged.startDrag(data, shadowBuilder, viewDragged, 0);
+                viewDragged.setVisibility(View.INVISIBLE);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Listens if a View if been dragged by the user.
+     */
+    private final class MyDragListener implements View.OnDragListener {
+
+        @Override
+        public boolean onDrag(View viewReceiving, DragEvent event) {
+            int action = event.getAction();
+            View viewDragged = (View) event.getLocalState();
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    viewReceiving.setBackgroundColor(Color.parseColor("#000000"));
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    viewReceiving.setBackgroundColor(Color.parseColor("#00FF00"));
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    viewReceiving.setBackgroundColor(Color.parseColor("#0000FF"));
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    ViewGroup owner = (ViewGroup) viewDragged.getParent();
+                    owner.removeView(viewDragged);
+                    LinearLayout container = (LinearLayout) viewReceiving;
+                    container.addView(viewDragged, 0);
+                    viewDragged.setVisibility(View.VISIBLE);
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    viewDragged.setVisibility(View.VISIBLE);
+                default:
+                    break;
+            }
+            return true;
+        }
     }
 }
