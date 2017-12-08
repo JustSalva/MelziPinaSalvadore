@@ -4,18 +4,15 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsException.GM
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHandler;
 import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
+import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
+import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
-import org.json.JSONArray;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 
 @Stateless
 public class PathManager extends UserManager{
@@ -25,6 +22,85 @@ public class PathManager extends UserManager{
 
     //TODO calculate path before and after
     //attention to first and last event of the schedule (only one array of paths)
+
+    public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
+                                         ArrayList<TravelMeanEnum> publicMeans) {
+
+        scheduleManager.setSchedule(event.getDayAtMidnight());
+        ArrayList<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
+        ArrayList<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
+
+        ArrayList<PathCombination> possibleCombinations = scheduleManager.getFeasiblePathCombinations(event,
+                previousPaths, followingPaths);
+
+        //TODO preferences on this ArrayList
+        //TODO best path among which that remain (return it)
+
+        return null;
+    }
+
+    private ArrayList<Travel> getPreviousTravels (Event event, ArrayList<TravelMeanEnum> privateMeans,
+                                                  ArrayList<TravelMeanEnum> publicMeans) {
+        ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
+        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
+        Event previous = scheduleManager.getPossiblePreviousEvent(event);
+        if(previous == null)
+            return possiblePaths;
+
+        try {
+            String baseCall = directionsHandler.getBaseCallPreviousPath(event, previous);
+            possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, previous, event);
+        } catch (GMapsGeneralException e) {
+            e.printStackTrace();
+        }
+
+        return possiblePaths;
+    }
+
+    private ArrayList<Travel> getFollowingTravels (Event event, ArrayList<TravelMeanEnum> privateMeans,
+                                                  ArrayList<TravelMeanEnum> publicMeans) {
+        ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
+        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
+        Event following = scheduleManager.getPossibleFollowingEvent(event);
+        if(following == null)
+            return possiblePaths;
+
+        try {
+            String baseCall = directionsHandler.getBaseCallFollowingPath(event, following);
+            possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, event, following);
+        } catch (GMapsGeneralException e) {
+            e.printStackTrace();
+        }
+
+        return possiblePaths;
+    }
+
+    private ArrayList<Travel> possiblePathsAdder(String baseCall, ArrayList<TravelMeanEnum> privateMeans,
+                    ArrayList<TravelMeanEnum> publicMeans, Event eventA, Event eventB) throws GMapsGeneralException{
+        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
+        GMapsJSONReader reader = new GMapsJSONReader();
+        ArrayList<Travel> possiblePaths = new ArrayList<>();
+
+        //adding private travels
+        ArrayList<JSONObject> privatePathsJSON = new ArrayList<JSONObject>();
+        for(TravelMeanEnum mean: privateMeans) {
+            JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
+            ArrayList<Travel> privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
+                    eventA.getEndingTime().getEpochSecond(), eventA.getEventLocation(), eventB.getEventLocation());
+            for(Travel travel: privatePaths)
+                if(travel.getEndingTime().isBefore(eventB.getStartingTime()))
+                    possiblePaths.add(travel);
+        }
+        //adding public travels
+        JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
+        ArrayList<Travel> publicPaths = reader.getTravelWithTransitMeans(publicPathsJSON);
+        for(Travel travel: publicPaths)
+            if(travel.getEndingTime().isBefore(eventB.getStartingTime()))
+                possiblePaths.add(travel);
+
+        return possiblePaths;
+    }
+
 
     public static void main (String[] a) {
         GMapsDirectionsHandler gMapsURL = new GMapsDirectionsHandler();
@@ -42,53 +118,5 @@ public class PathManager extends UserManager{
     //((Event)scheduleManager.getPossibleFollowingEvent(event)) to use for second parameter in function: baseCallFollowingPath()
 
 
-    /*private static GeoApiContext context = new GeoApiContext.Builder()
-            .apiKey("AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y")
-            .build();
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void calculatePath(Event event) {
-        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.getDate().getDate()), ZoneOffset.UTC);
-
-        //GMaps APIs require an object of Joda Time -> DateTime
-        DateTime dateTime = new DateTime(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute());
-        LatLng lat1 = new LatLng(event.getDeparture().getLatitude(),event.getDeparture().getLongitude());
-        LatLng lat2 = new LatLng(event.getEventLocation().getLatitude(), event.getDeparture().getLongitude());
-        try {
-            DirectionsResult result = DirectionsApi.newRequest(context)
-                .origin(event.getDeparture().getAddress())
-                .destination(event.getEventLocation().getAddress())
-                .arrivalTime(dateTime)
-                .mode(TravelMode.TRANSIT)
-                .alternatives(true)
-                .await();
-
-            String res = gson.toJson(result);
-            System.out.println(res);
-*/
-            /*JSONObject jsonObj = new JSONObject(res);
-            JSONArray routes = jsonObj.getJSONArray("routes");
-            JSONArray legs = routes.getJSONArray(0);
-
-            System.out.println(routes.length());
-            System.out.println(gson.toJson(routes));
-*/
-
-        /*} catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-/*    }
-
-
-    public static void main (String args[]) {
-        Instant time = Instant.now();
-        LocalDate day = LocalDate.of(2018,1,1);
-        DateOfCalendar date = new DateOfCalendar(time.getEpochSecond());
-        Location departure = new Location(30, 30, "Como, Italy");
-        Location arrival = new Location(31,31,"Lecco, Italy");
-        Event e = new Event("", time, time, true, date, "", true, null, null, arrival, departure, null);
-        calculatePath(e);
-    }
-    */
 }

@@ -114,4 +114,10 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+
+    //used to remove correctly an event into function of ScheduleHolder class
+    @Override
+    public boolean equals (Object event) {
+        return getId() == ((GenericEvent)event).getId();
+    }
 }
