@@ -25,12 +25,12 @@ public class HttpResponseBuilder {
     }
 
     public static Response buildOkResponse( GenericResponseMessage responseMessage){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().create();
         String jsonOutput = gson.toJson( responseMessage );
         return Response.ok( jsonOutput ).build();
     }
     public static Response buildOkResponse( Object responseMessage){
-        return buildOkResponse(  new JsonBodyResponse( responseMessage ) );
+        return Response.ok(  new JsonBodyResponse( responseMessage ) ).build();
     }
 
 

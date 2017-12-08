@@ -48,13 +48,19 @@ public class PreferenceManager extends UserManager{
 
     public TypeOfEvent modifyTypeOfEvent( ModifyTypeOfEventMessage typeOfEventMessage )
             throws InvalidFieldException, EntityNotFoundException{
-
-        deleteTypeOfEvent( typeOfEventMessage.getId() );
-        return addTypeOfEvent( typeOfEventMessage );
+        //TODO call check on events that depends from it?
+        checkTypeOfEventConsistency( typeOfEventMessage );
+        TypeOfEvent typeOfEvent = createTypeOfEvent( typeOfEventMessage );
+        typeOfEvent.setId( typeOfEventMessage.getId() );
+        typeOfEvent.save();
+        return typeOfEvent;
     }
 
     public void deleteTypeOfEvent( long id ) throws EntityNotFoundException{
+        //TODO what about event dependencies?
         TypeOfEvent typeOfEvent = getPreferencesProfile( id );
+        currentUser.removePreference( id );
+        currentUser.save();
         typeOfEvent.remove();
     }
 
@@ -118,8 +124,7 @@ public class PreferenceManager extends UserManager{
         Location location = null;
         for (Map.Entry<Location, String> entry : preferredLocations.entrySet()) {
             if(entry.getValue().equals( locationMessage.getName() )){
-                location= entry.getKey();
-                currentUser.removeLocation( location );
+                currentUser.removeLocation( locationMessage.getName() );
                 currentUser.save();
                 break;
             }
@@ -132,7 +137,9 @@ public class PreferenceManager extends UserManager{
     }
 
     public void deletePreferredLocation( String name ) throws EntityNotFoundException{
-        getPreferredLocation( name ).remove();
+        getPreferredLocation( name ); //checks the location existence
+        currentUser.removeLocation( name  );
+        currentUser.save();
     }
 
     protected boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent, User user){

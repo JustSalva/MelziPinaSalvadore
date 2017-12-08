@@ -49,7 +49,7 @@ public class User extends GenericEntity {
     @ElementCollection( fetch = FetchType.LAZY )
     @MapKeyColumn( name="PREFERRED_LOCATIONS" )
     @Column( name="NAME" )
-    @CollectionTable( name = "USER_PREFERRED_LOCATIONS" )
+    @CollectionTable( name = "USER_PREFERRED_LOCATIONS")
     @JoinColumns({
             @JoinColumn( name="EVENT_LATITUDE", referencedColumnName="latitude" ),
             @JoinColumn( name="EVENT_LONGITUDE", referencedColumnName="longitude" )
@@ -209,6 +209,10 @@ public class User extends GenericEntity {
         this.preferences.add(preference);
     }
 
+    public void removePreference( long id){
+        preferences.removeIf( typeOfEvent -> typeOfEvent.getId() == id );
+    }
+
     public Map<Location, String> getPreferredLocations() {
         return Collections.unmodifiableMap(preferredLocations);
     }
@@ -221,8 +225,12 @@ public class User extends GenericEntity {
         this.preferredLocations.put(location, name);
     }
 
-    public void removeLocation( Location location ){
-        this.preferredLocations.remove( location );
+    public void removeLocation( String name ){
+        for (Map.Entry<Location, String> entry : preferredLocations.entrySet()) {
+            if(entry.getValue().equals( name )) {
+                preferredLocations.remove( entry.getKey() );
+            }
+        }
     }
     public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;

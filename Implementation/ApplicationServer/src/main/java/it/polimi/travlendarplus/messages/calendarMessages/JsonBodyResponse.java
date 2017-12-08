@@ -8,21 +8,21 @@ public class JsonBodyResponse extends GenericResponseMessage {
 
     private static final long serialVersionUID = 2515057482016649610L;
 
-    private String responseCodifiedInJson;
+    private String jsonResponse;
 
     public JsonBodyResponse() {
     }
 
     public JsonBodyResponse( Object response ) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        this.responseCodifiedInJson = gson.toJson( response );
+        Gson gson = new GsonBuilder().create();
+        this.jsonResponse = gson.toJson( response );
     }
 
     public String getResponseCodifiedInJson() {
-        return responseCodifiedInJson;
+        return jsonResponse;
     }
 
     public void setResponseCodifiedInJson( String responseCodifiedInJson ) {
-        this.responseCodifiedInJson = responseCodifiedInJson;
+        this.jsonResponse = responseCodifiedInJson;
     }
 }

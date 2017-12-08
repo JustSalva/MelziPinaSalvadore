@@ -25,13 +25,14 @@ public class BreakEvent extends GenericEvent {
 
     }
 
-    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity, long minimumTime, User user) {
+    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                      Period periodicity, long minimumTime) {
         super(name, startingTime, endingTime, isScheduled, periodicity);
         this.minimumTime = minimumTime;
     }
 
     //constructor for generic event with no periodicity
-    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, long minimumTime, User user) {
+    public BreakEvent(String name, Instant startingTime, Instant endingTime, boolean isScheduled, long minimumTime) {
         super(name, startingTime, endingTime, isScheduled);
         this.minimumTime = minimumTime;
     }
