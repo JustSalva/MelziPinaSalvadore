@@ -7,19 +7,31 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddBreakEventMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddEventMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.ModifyBreakEventMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.ModifyEventMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
 public class EventManager extends UserManager{
+
+    @EJB
+    PreferenceManager preferenceManager;
+
+    @PostConstruct
+    public void postConstruct() {
+        preferenceManager.setCurrentUser( currentUser );
+    }
+
+
 
     public Event getEventInformation( long id ) throws EntityNotFoundException{
         List<GenericEvent> eventList = new ArrayList<>( currentUser.getEvents() );
@@ -31,7 +43,7 @@ public class EventManager extends UserManager{
         return (BreakEvent) findEvent( eventList, id );
     }
 
-    private GenericEvent findEvent( List<GenericEvent> eventList, long id) throws EntityNotFoundException{
+    private GenericEvent findEvent( List<GenericEvent> eventList, long id ) throws EntityNotFoundException{
         GenericEvent requestedEvent = eventList.stream()
                 .filter( event -> event.getId() == id ).findFirst().orElse( null );
         if ( requestedEvent == null )
@@ -39,7 +51,7 @@ public class EventManager extends UserManager{
         return requestedEvent;
     }
 
-    public List< GenericEvent > getEventsUpdated( Instant timestampLocal){
+    public List< GenericEvent > getEventsUpdated( Instant timestampLocal ){
         List< GenericEvent > updatedEvents = getEvents();
 
         updatedEvents = updatedEvents.stream()
@@ -54,7 +66,7 @@ public class EventManager extends UserManager{
         return events;
     }
 
-    public Event addEvent( AddEventMessage eventMessage) throws InvalidFieldException{
+    public Event addEvent( AddEventMessage eventMessage ) throws InvalidFieldException{
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
@@ -72,13 +84,13 @@ public class EventManager extends UserManager{
         return new Location( );
     }
 
-    private TypeOfEvent findTypeOfEvent( long name){
+    private TypeOfEvent findTypeOfEvent( long name ){
         return currentUser.getPreferences().stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == name )
                 .findFirst().get(); //NB his presence has to be already checked
     }
 
-    private Event createEvent(AddEventMessage eventMessage){
+    private Event createEvent( AddEventMessage eventMessage ){
         //TODO periodicity
         TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
         Location departure = findLocation( eventMessage.getDeparture() );
@@ -88,8 +100,55 @@ public class EventManager extends UserManager{
                 arrival, departure);
     }
 
-    private void checkEventFields ( AddEventMessage eventMessage) throws InvalidFieldException {
-        //TODO check the message consistency, write in the error which field/fields are invalid
+    private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
+        List<String> errors = new ArrayList<>( );
+
+        errors.addAll( checkGenericEventFields( eventMessage ) );
+
+        try {
+            preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
+        } catch ( EntityNotFoundException e ) {
+            errors.add( "TypeOfEvent not found" );
+        }
+        /*private String eventLocation;
+        private String departure;*/
+        //TODO how to check that location String is correct?
+        if( errors.size() > 0 ){
+            throw new InvalidFieldException( errors );
+        }
+    }
+
+    private List< String > checkGenericEventFields ( AddGenericEventMessage eventMessage ){
+        List<String> genericEventErrors = new ArrayList<>( );
+        if (eventMessage.getName() == null ){
+            genericEventErrors.add( " name" );
+        }
+        if ( ! eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ){
+            genericEventErrors.add( " starting time must be less than ending time" );
+        }
+        genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );
+
+        return genericEventErrors;
+    }
+
+    private List< String > checkPeriodicity ( PeriodMessage periodMessage ){
+        List<String> periodicityErrors = new ArrayList<>( );
+
+        if ( ! periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ){
+            periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
+        }
+        if ( periodMessage.getDeltaDays() < 0 ){
+            periodicityErrors.add( "deltaDays must be greater than zero" );
+        }
+
+        long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
+                .until( periodMessage.getEndingDay(), ChronoUnit.DAYS  );
+
+        if ( deltaBetweenStartAndEndingTime > periodMessage.getDeltaDays() ){
+            periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
+        }
+
+        return periodicityErrors;
     }
 
     public Event modifyEvent( ModifyEventMessage eventMessage) throws InvalidFieldException, EntityNotFoundException{
@@ -116,7 +175,7 @@ public class EventManager extends UserManager{
     }
 
     public BreakEvent addBreakEvent( AddBreakEventMessage eventMessage) throws InvalidFieldException{
-        checkEventFields( eventMessage );
+        checkBreakEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         //TODO it can be inserted in the schedule?
@@ -127,8 +186,18 @@ public class EventManager extends UserManager{
         return breakEvent;
     }
 
-    private void checkEventFields ( AddBreakEventMessage eventMessage) throws InvalidFieldException {
-        //TODO check the message consistency, write in the error which field/fields are invalid
+    private void checkBreakEventFields ( AddBreakEventMessage eventMessage) throws InvalidFieldException {
+        List<String> errors = new ArrayList<>( );
+
+        errors.addAll( checkGenericEventFields( eventMessage ) );
+
+        if ( eventMessage.getMinimumTime() > eventMessage.getStartingTime()
+                .until( eventMessage.getEndingTime(), ChronoUnit.SECONDS  )){
+            errors.add( " minimum time must be less than the slack between start and ending time" );
+        }
+        if( errors.size() > 0 ){
+            throw new InvalidFieldException( errors );
+        }
     }
     private BreakEvent createBreakEvent(AddBreakEventMessage eventMessage){
        //TODO periodicity
@@ -137,7 +206,7 @@ public class EventManager extends UserManager{
     }
 
     public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage) throws InvalidFieldException, EntityNotFoundException{
-        checkEventFields( eventMessage );
+        checkBreakEventFields( eventMessage );
         BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
         //TODO it can be inserted in the schedule?

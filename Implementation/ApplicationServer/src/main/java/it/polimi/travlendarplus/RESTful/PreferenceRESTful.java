@@ -3,22 +3,15 @@ package it.polimi.travlendarplus.RESTful;
 import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.beans.calendar_manager.PreferenceManager;
-import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import it.polimi.travlendarplus.messages.calendarMessages.JsonBodyResponse;
 import it.polimi.travlendarplus.messages.calendarMessages.preferenceMessages.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

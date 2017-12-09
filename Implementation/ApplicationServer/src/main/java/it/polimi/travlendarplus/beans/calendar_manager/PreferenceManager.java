@@ -247,5 +247,4 @@ public class PreferenceManager extends UserManager{
         return event.getType().isDeactivated( vehicle );
     }
 
-
 }
