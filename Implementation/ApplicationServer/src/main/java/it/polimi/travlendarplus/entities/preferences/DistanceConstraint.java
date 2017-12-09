@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities.preferences;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
@@ -41,7 +42,12 @@ public class DistanceConstraint extends Constraint{
         this.maxLenght = maxLenght;
     }
 
-    public static DistanceConstraint load(long key) throws EntityNotFoundException {
+    @Override
+    public boolean respectConstraint( TravelComponent travelComponent ) {
+        return travelComponent.getLength() >= minLenght && travelComponent.getLength() <= maxLenght;
+    }
+
+    public static DistanceConstraint load( long key) throws EntityNotFoundException {
         return GenericEntity.load( DistanceConstraint.class, key );
     }
 }

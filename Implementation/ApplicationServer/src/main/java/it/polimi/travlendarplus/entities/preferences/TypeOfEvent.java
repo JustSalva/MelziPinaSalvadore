@@ -61,6 +61,15 @@ public class TypeOfEvent extends EntityWithLongKey {
     public List<Constraint> getLimitedBy() {
         return Collections.unmodifiableList(limitedBy);
     }
+    public Constraint getLimitedBy( TravelMeanEnum travelMeanEnum ) {
+        for ( Constraint constraint: limitedBy){
+            if (constraint.getConcerns().equals( travelMeanEnum )){
+                return constraint;
+            }
+        }
+        return null;
+    }
+
 
     public void setLimitedBy(List<Constraint> limitedBy) {
         this.limitedBy = limitedBy;

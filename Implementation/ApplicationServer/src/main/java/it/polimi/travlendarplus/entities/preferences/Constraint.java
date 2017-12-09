@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities.preferences;
 
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 
 import javax.persistence.*;
 
@@ -30,4 +31,6 @@ public abstract class Constraint extends EntityWithLongKey {
     public void setConcerns(TravelMeanEnum concerns) {
         this.concerns = concerns;
     }
+
+    public abstract boolean respectConstraint( TravelComponent travelComponent );
 }

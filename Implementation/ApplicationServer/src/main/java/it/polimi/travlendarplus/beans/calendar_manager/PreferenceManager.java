@@ -12,6 +12,7 @@ import it.polimi.travlendarplus.entities.preferences.PeriodOfDayConstraint;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.calendarMessages.preferenceMessages.*;
@@ -231,10 +232,18 @@ public class PreferenceManager extends UserManager{
         currentUser.save();
     }
 
-    protected boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent, User user){
-        //user is initialized before or it's better this way?
-        //TODO
-        return false;
+    protected boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent){
+        for ( TravelComponent travelComponent : travel.getMiniTravels()){
+            TravelMeanEnum travelMean = travelComponent.getMeanUsed().getType();
+            if( typeOfEvent.isDeactivated( travelMean ) ){
+                return false;
+            }
+            Constraint constraint = typeOfEvent.getLimitedBy( travelMean );
+            if( constraint != null && ! constraint.respectConstraint( travelComponent )){
+                return false;
+            }
+        }
+        return true;
     }
 
     protected Travel findBestpath ( ArrayList< Travel > travels, TypeOfEvent typeOfEvent, User user){
