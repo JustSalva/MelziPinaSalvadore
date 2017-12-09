@@ -4,7 +4,7 @@ import com.loopj.android.http.*;
 
 public class TravlendarRestClient {
 
-    private static final String BASE_URL = "https://api.twitter.com/1/";
+    private static final String BASE_URL = "http://151.236.60.56:8080/ApplicationServerArchive/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 

@@ -30,14 +30,19 @@
     <string name="action_registration">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_name">This name must be at least 2 character long</string>
+    <string name="error_invalid_surname">This surname must be at least 2 character long</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_different_passwords">You inserted two different passwords</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_registration">Registration</string>
     <string name="confirm_password">Confirm Password</string>
+
+    <!---->
     <string name="locations">Locations</string>
     <string name="add_location">Add location</string>
     <string name="location_name">Location name</string>
