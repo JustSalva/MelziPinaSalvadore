@@ -6,6 +6,8 @@ import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.Stateless;
 import java.time.Instant;
@@ -200,6 +202,15 @@ public class ScheduleManager extends UserManager{
         }
 
         return feasibleComb;
+    }
+
+    public ScheduleHolder swapEvents( long  idForcedEvent ) throws EntityNotFoundException, AlreadyScheduledException{
+        Event forced = Event.load( idForcedEvent ); //TODO forse qui è meglio chiamare la funzione di EventManager
+        if ( forced.isScheduled()  ){
+            throw new AlreadyScheduledException( );
+        }
+        //TODO da DD non è da mettere qui?
+        return null;
     }
 
 }
