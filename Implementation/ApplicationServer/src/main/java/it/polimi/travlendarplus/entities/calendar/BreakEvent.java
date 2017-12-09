@@ -1,16 +1,14 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
-import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
-import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import org.junit.jupiter.api.Test;
 
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name="BREAK_EVENT")
 @DiscriminatorValue("BREAK_EVENT")
@@ -69,16 +67,15 @@ public class BreakEvent extends GenericEvent {
     public boolean isMinimumEnsuredWithPathRegard(ArrayList<Event> events) {
         if (events.size()==0)
             return true;
-        //if the first event has no previous events
-        if(events.get(0).getFeasiblePath() == null) {
-            if (minimumTime <= Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
+        if(events.size() == 1) {
+            //if the first event has no previous events
+            if (events.get(0).getFeasiblePath() == null && minimumTime <=
+                    Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
+                return true;
+            //checking before the first event if it has a previous event (checking also of the path)
+            else if (enoughTimeBeforeFirstEvent(events.get(0)))
                 return true;
         }
-        else { //checking before the first event if it has a previous event (checking also of the path)
-            if(enoughTimeBeforeFirstEvent(events.get(0)))
-                return true;
-        }
-
         if(events.size()>1){
             //checking between first event and following path
             if(minimumTime <= Duration.between(events.get(0).getEndingTime(),
@@ -92,29 +89,22 @@ public class BreakEvent extends GenericEvent {
                     return true;
             }
         }
-
         //checking if there is enough time with the last event
         return enoughTimeWithLastEvent(events.get(events.size()-1));
     }
 
     private boolean enoughTimeBeforeFirstEvent(Event event) {
         Travel path = event.getFeasiblePath();
-        if(path.getStartingTime().isAfter(getStartingTime()))
-            return (minimumTime <= Duration.between(getStartingTime(), path.getStartingTime()).getSeconds()) ||
-                    minimumTime <= Duration.between(path.getEndingTime(), event.getStartingTime()).getSeconds();
-        if(path.getEndingTime().isAfter(getStartingTime()))
-            return minimumTime <= Duration.between(path.getEndingTime(), event.getStartingTime()).getSeconds();
-        return false;
+        return minimumTime <= Duration.between(getStartingTime(), path.getStartingTime()).getSeconds() ||
+                minimumTime <= Math.min(getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond()) -
+                        Math.max(path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond());
     }
 
     private boolean enoughTimeWithLastEvent(Event event) {
         Travel path = event.getFeasiblePath();
-        if(getEndingTime().isAfter(event.getEndingTime()))
-            return (minimumTime <= Duration.between(path.getEndingTime(), event.getStartingTime()).getSeconds() ||
-                    minimumTime <= Duration.between(event.getEndingTime(), getEndingTime()).getSeconds());
-        if(getEndingTime().isAfter(event.getStartingTime()))
-            return minimumTime <= Duration.between(path.getEndingTime(), event.getStartingTime()).getSeconds();
-        return false;
+        return  minimumTime <= Math.min(getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond()) -
+                Math.max(path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond()) ||
+                minimumTime <= Duration.between(event.getEndingTime(), getEndingTime()).getSeconds();
     }
 
 }

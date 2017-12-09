@@ -126,14 +126,18 @@ public class ScheduleManager extends UserManager{
     //It considers also the event-related paths. The List must be ordered.
     private ArrayList<Event> getEventsIntoIntervalWithPathRegard(List<Event> events, GenericEvent intervalEvent) {
         ArrayList<Event> involvedEvents = new ArrayList<Event>();
-        if(events.size()>0 && !areEventsOverlapFree(events.get(0), intervalEvent)) {
+        int i = 0;
+        if(events.size()>0 && events.get(0).getFeasiblePath() == null &&
+                !areEventsOverlapFree(events.get(0), intervalEvent)) {
             involvedEvents.add(events.get(0));
-            events.remove(0);
+            i++;
         }
-        for(Event event: events)
-            if(event.getEndingTime().isAfter(intervalEvent.getStartingTime()) &&
-                    event.getFeasiblePath().getStartingTime().isBefore(intervalEvent.getEndingTime()))
-                involvedEvents.add(event);
+        while(i<events.size()) {
+            if (events.get(i).getEndingTime().isAfter(intervalEvent.getStartingTime()) &&
+                    events.get(i).getFeasiblePath().getStartingTime().isBefore(intervalEvent.getEndingTime()))
+                involvedEvents.add(events.get(i));
+            i++;
+        }
         return involvedEvents;
     }
 

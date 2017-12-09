@@ -61,6 +61,11 @@ public class User extends GenericEntity {
 
     public User() {
         this.lastUpdate = new Timestamp();
+        this.breaks = new ArrayList<BreakEvent>();
+        this.events = new ArrayList<Event>();
+        this.heldTickets = new ArrayList<Ticket>();
+        this.preferences = new ArrayList<TypeOfEvent>();
+        this.preferredLocations = new HashMap<Location, String>();
     }
 
     public User(String email, String name, String surname, String password,
