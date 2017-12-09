@@ -7,7 +7,6 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -77,13 +76,13 @@ public class ScheduleManager extends UserManager{
 
         //obtaining events into the schedule of the specified day
         for(Event event: getCurrentUser().getEvents())
-            if(event.isScheduled() && event.getStartingTime().isAfter(startingTime) && event.getEndingTime().isBefore(endingTime))
+            if(event.isScheduled() && !event.getStartingTime().isBefore(startingTime) && !event.getEndingTime().isAfter(endingTime))
                 events.add(event);
         Collections.sort(events);
         //obtaining breaks into the schedule of the specified day
         for(BreakEvent breakEvent: getCurrentUser().getBreaks())
-            if(breakEvent.isScheduled() && breakEvent.getStartingTime().isAfter(startingTime) &&
-                    breakEvent.getEndingTime().isBefore(endingTime))
+            if(breakEvent.isScheduled() && !breakEvent.getStartingTime().isBefore(startingTime) &&
+                    !breakEvent.getEndingTime().isAfter(endingTime))
                 breaks.add(breakEvent);
         Collections.sort(breaks);
 
@@ -108,8 +107,8 @@ public class ScheduleManager extends UserManager{
 
     //it returns true if gEvent1 and gEvent2 have not an overlap
     public boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
-        return event.getStartingTime().isAfter(scheduledEvent.getEndingTime()) ||
-                event.getEndingTime().isBefore(scheduledEvent.getStartingTime());
+        return !event.getStartingTime().isBefore(scheduledEvent.getEndingTime()) ||
+                !event.getEndingTime().isAfter(scheduledEvent.getStartingTime());
     }
 
     //it returns a List of the events into "events" that overlap in the interval of "intervalEvent" .

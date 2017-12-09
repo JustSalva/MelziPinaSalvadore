@@ -56,11 +56,11 @@ public class BreakEvent extends GenericEvent {
             return true;
         //checking if there is enough time between two events
         for(int i=0; i<events.size()-1; i++)
-            if(minimumTime <= Duration.between(events.get(i).getStartingTime(),
+            if(minimumTime <= Duration.between(events.get(i).getEndingTime(),
                     events.get(i+1).getStartingTime()).getSeconds())
                 return true;
         //checking if there is enough time after the last event
-        return minimumTime <= Duration.between(events.get(events.size()).getEndingTime(),
+        return minimumTime <= Duration.between(events.get(events.size()-1).getEndingTime(),
                 getEndingTime()).getSeconds();
     }
 
@@ -93,6 +93,7 @@ public class BreakEvent extends GenericEvent {
         return enoughTimeWithLastEvent(events.get(events.size()-1));
     }
 
+    //use dwhen event.getFeasiblePath() is different from NULL
     private boolean enoughTimeBeforeFirstEvent(Event event) {
         Travel path = event.getFeasiblePath();
         return minimumTime <= Duration.between(getStartingTime(), path.getStartingTime()).getSeconds() ||
@@ -100,6 +101,7 @@ public class BreakEvent extends GenericEvent {
                         Math.max(path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond());
     }
 
+    //use dwhen event.getFeasiblePath() is different from NULL
     private boolean enoughTimeWithLastEvent(Event event) {
         Travel path = event.getFeasiblePath();
         return  minimumTime <= Math.min(getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond()) -

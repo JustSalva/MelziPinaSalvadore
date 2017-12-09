@@ -8,7 +8,6 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctiona
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.ScheduleHolder;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONObject;
@@ -24,7 +23,6 @@ public class PathManager extends UserManager{
     @EJB
     ScheduleManager scheduleManager;
 
-    //TODO calculate path before and after
     //attention to first and last event of the schedule (only one array of paths)
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
@@ -51,14 +49,12 @@ public class PathManager extends UserManager{
         Event previous = scheduleManager.getPossiblePreviousEvent(event);
         if(previous == null)
             return possiblePaths;
-
         try {
             String baseCall = directionsHandler.getBaseCallPreviousPath(event, previous);
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, previous, event);
         } catch (GMapsGeneralException e) {
             e.printStackTrace();
         }
-
         return possiblePaths;
     }
 
@@ -69,14 +65,12 @@ public class PathManager extends UserManager{
         Event following = scheduleManager.getPossibleFollowingEvent(event);
         if(following == null)
             return possiblePaths;
-
         try {
             String baseCall = directionsHandler.getBaseCallFollowingPath(event, following);
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, event, following);
         } catch (GMapsGeneralException e) {
             e.printStackTrace();
         }
-
         return possiblePaths;
     }
 
@@ -85,7 +79,6 @@ public class PathManager extends UserManager{
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         GMapsJSONReader reader = new GMapsJSONReader();
         ArrayList<Travel> possiblePaths = new ArrayList<>();
-
         //adding private travels
         ArrayList<JSONObject> privatePathsJSON = new ArrayList<JSONObject>();
         for(TravelMeanEnum mean: privateMeans) {

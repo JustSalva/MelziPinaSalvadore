@@ -2,7 +2,6 @@ package it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunction
 
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 
 import java.util.ArrayList;
@@ -62,4 +61,5 @@ public class ScheduleHolder {
             newList.get(i+1).setFeasiblePath(foll);
         return newList;
     }
+
 }

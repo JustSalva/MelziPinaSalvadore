@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,10 +44,18 @@ public class ScheduleManagerTest {
 
     @Test
     public void isEventOverlapFreeIntoSchedule() {
+        Event shortEvent = new Event();
+        shortEvent.setStartingTime(Instant.ofEpochSecond(11));
+        shortEvent.setEndingTime(Instant.ofEpochSecond(12));
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event1,false));
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event3, false));
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event5, false));
+        assertEquals(true, tester.isEventOverlapFreeIntoSchedule(shortEvent, false));
+        setter.settingOnlySetBreaks(this);
+        assertEquals(false, tester.isEventOverlapFreeIntoSchedule(shortEvent, false));
+
     }
+
 
     @Test
     public void getSchedule() {
@@ -86,6 +95,13 @@ public class ScheduleManagerTest {
         assertEquals(null, tester.getPossibleFollowingEvent(ev3));
     }
 
-
+    @Test
+    public void getListWithNewEvent() {
+        Event event = new Event();
+        event.setStartingTime(Instant.ofEpochSecond(5));
+        ArrayList<Event> updList = tester.getSchedule().getListWithNewEvent(event);
+        assertEquals(3, updList.size());
+        assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
+    }
 
 }

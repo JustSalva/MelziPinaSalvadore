@@ -29,6 +29,14 @@ public class ScheduleManagerSettingOperations {
         test.tester.setSchedule(0);
     }
 
+    public void settingOnlySetBreaks(ScheduleManagerTest test) {
+        ArrayList<BreakEvent> breaks = new ArrayList<>();
+        breaks.add(setBreakEvent(test.break1, 9, 15, 3, true));
+        breaks.add(setBreakEvent(test.break2, 20, 23, 2, false));
+        test.tester.getCurrentUser().setBreaks(breaks);
+        test.tester.setSchedule(0);
+    }
+
     private Event setEvent(Event e, long stTime, long endTime, boolean scheduled) {
         e.setStartingTime(Instant.ofEpochSecond(stTime));
         e.setEndingTime(Instant.ofEpochSecond(endTime));
