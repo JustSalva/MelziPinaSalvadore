@@ -46,7 +46,7 @@ public class User extends GenericEntity {
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<TypeOfEvent> preferences;
 
-    @ElementCollection( fetch = FetchType.LAZY )
+    @ElementCollection
     @MapKeyColumn( name="PREFERRED_LOCATIONS" )
     @Column( name="NAME" )
     @CollectionTable( name = "USER_PREFERRED_LOCATIONS")

@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.authenticationMessages.*;
 
@@ -25,6 +26,11 @@ public class AuthenticationEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register( RegistrationForm registrationForm){
         User userToBeRegistered;
+        try {
+            checkRegistrationForm( registrationForm );
+        } catch ( InvalidFieldException e ) {
+            return HttpResponseBuilder.buildInvalidFieldResponse( e );
+        }
         try {
             userToBeRegistered = loadUser( registrationForm.getEmail() );
         } catch ( UserNotRegisteredException e ) {
@@ -45,8 +51,12 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response submitLogin(Credentials credentials) {
-
         User user;
+        try {
+            checkCredentials( credentials );
+        } catch ( InvalidFieldException e ) {
+            return HttpResponseBuilder.buildInvalidFieldResponse( e );
+        }
         try {
             // Authenticate the user using the credentials provided
             user = authenticate( credentials.getEmail(), credentials.getPassword() );
@@ -67,7 +77,11 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editProfile( RegistrationForm updatedUserInfo ){
-
+        try {
+            checkRegistrationForm( updatedUserInfo );
+        } catch ( InvalidFieldException e ) {
+            return HttpResponseBuilder.buildInvalidFieldResponse( e );
+        }
         User user;
         try {
             user = loadUser( updatedUserInfo.getEmail() );
@@ -182,5 +196,14 @@ public class AuthenticationEndpoint {
         if ( ! userToBeAuthenticated.getPassword().equals( password ) ){
             throw new InvalidCredentialsException();
         }
+    }
+
+    private void checkRegistrationForm( RegistrationForm registrationForm) throws InvalidFieldException{
+        //TODO
+        checkCredentials( registrationForm );
+    }
+
+    private void checkCredentials( Credentials credentials) throws InvalidFieldException{
+        //TODO
     }
 }
