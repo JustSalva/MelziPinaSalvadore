@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addUser() {
         new Thread(() -> {
-
+/*
             database.userDao().delete();
             database.userDao().insert(new User(1, "10486221@polimi.it", "Alessandro", "Pina"));
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             list.add(new TravelComponent(2, 12, 1, 1, "foot",
                     "here", "there", "0800", "0900"));
             database.calendarDao().insert(list);
-
+*/
             Log.d("TAG", Integer.toString(database.userDao().countUsers()));
         }).start();
     }

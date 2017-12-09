@@ -7,6 +7,14 @@
     android:padding="10dp"
     tools:context="com.shakk.travlendar.activity.LoginActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -61,5 +69,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>
