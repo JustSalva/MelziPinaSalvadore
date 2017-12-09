@@ -21,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room
-                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, "travlendar-database")
+                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, "travlendarplus-database")
                     .build();
         }
         return INSTANCE;

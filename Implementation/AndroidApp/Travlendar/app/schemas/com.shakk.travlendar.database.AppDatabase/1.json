@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f4a45c9d88ca3fa16e33d9a71da14372",
+    "identityHash": "f591c1dc23f0303842b4f5c41d9bf3b4",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT, `name` TEXT, `surname` TEXT, `univocal_code` TEXT, `timestamp` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `email` TEXT, `name` TEXT, `surname` TEXT, `univocal_code` TEXT, `timestamp` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -49,14 +49,14 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "Ticket",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cost` REAL NOT NULL, `type` TEXT, `name` TEXT, `start_date` INTEGER, `end_date` INTEGER, `distance` REAL, `line_name` TEXT, `departure_location` TEXT, `arrival_location` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `cost` REAL NOT NULL, `type` TEXT, `name` TEXT, `start_date` INTEGER, `end_date` INTEGER, `distance` REAL, `line_name` TEXT, `departure_location` TEXT, `arrival_location` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -123,14 +123,14 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "generic_event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `scheduled` INTEGER NOT NULL, `type` TEXT, `periodical` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `scheduled` INTEGER NOT NULL, `type` TEXT, `periodical` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -239,14 +239,14 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "travel_component",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `start_time` TEXT, `end_time` TEXT, FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `start_time` TEXT, `end_time` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -307,7 +307,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": [
@@ -338,7 +338,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f4a45c9d88ca3fa16e33d9a71da14372\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f591c1dc23f0303842b4f5c41d9bf3b4\")"
     ]
   }
 }

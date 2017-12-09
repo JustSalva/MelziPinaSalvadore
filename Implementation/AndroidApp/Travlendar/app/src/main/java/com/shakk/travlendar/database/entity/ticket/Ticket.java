@@ -9,7 +9,7 @@ import com.shakk.travlendar.database.converters.TicketTypeConverters;
 
 @Entity
 public class Ticket {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
 
     private float cost;
@@ -23,7 +23,8 @@ public class Ticket {
     @Embedded
     private GeneralTicket generalTicket;
 
-    public Ticket(float cost) {
+    public Ticket(int id, float cost) {
+        this.id = id;
         this.cost = cost;
     }
 
