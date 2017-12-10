@@ -84,14 +84,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     /**
-     * Attempts to register the account specified by the login form.
+     * Attempts to register the account specified by the registration form.
      * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * errors are presented and no actual registration attempt is made.
      */
     private void signUp() {
         Log.d("TAG", "SignUp");
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the registration attempt.
         email = email_editText.getText().toString();
         name = name_editText.getText().toString();
         surname = surname_editText.getText().toString();
