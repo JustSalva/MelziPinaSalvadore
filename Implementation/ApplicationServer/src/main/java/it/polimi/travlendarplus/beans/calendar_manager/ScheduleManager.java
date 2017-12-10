@@ -142,8 +142,6 @@ public class ScheduleManager extends UserManager{
     // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
     public ArrayList<PathCombination> getFeasiblePathCombinations(Event event, ArrayList<Travel> previous, ArrayList<Travel> following) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
-        /*if(getPossiblePreviousEvent(event) == null)
-            return getFeasiblePathCombinationsFirstEventCase(event, following);*/
         if(getPossibleFollowingEvent(event) == null)
             return getFeasiblePathCombinationsLastEventCase(event, previous);
         for(Travel prev: previous)

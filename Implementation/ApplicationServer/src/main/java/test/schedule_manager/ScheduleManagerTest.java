@@ -1,9 +1,11 @@
 package test.schedule_manager;
 
 import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
+import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -102,6 +104,21 @@ public class ScheduleManagerTest {
         ArrayList<Event> updList = tester.getSchedule().getListWithNewEvent(event);
         assertEquals(3, updList.size());
         assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
+    }
+
+    @Test
+    public void getFeasiblePathCombinations() {
+        setter.settingOnlySetBreaks(this);
+        ArrayList<Travel> prev = setter.setPrevTravel();
+        ArrayList<Travel> foll = setter.setFollTravel();
+        Event event = new Event();
+        event.setId(6);
+        event.setStartingTime(Instant.ofEpochSecond(12));
+        event.setEndingTime(Instant.ofEpochSecond(13));
+        ArrayList<PathCombination> combs = tester.getFeasiblePathCombinations(event, prev, foll);
+        assertEquals(1, combs.size());
+        assertEquals(11, combs.get(0).getPrevPath().getStartingTime().getEpochSecond());
+
     }
 
 }
