@@ -31,20 +31,14 @@ public class RSAEncryption extends GenericEntity {
     public RSAEncryption() {
     }
 
-    public RSAEncryption( String idDevice ) {
+    public RSAEncryption( String idDevice ) throws NoSuchAlgorithmException{
         this.idDevice = idDevice;
-        KeyPairGenerator keyPairGenerator = null;
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
-            keyPairGenerator.initialize( 2048 );
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            this.privateKey = keyPair.getPrivate();
-            this.publicKey = keyPair.getPublic();
-            this.timestamp = Instant.now();
-        } catch ( NoSuchAlgorithmException e ) {
-            e.printStackTrace();//TODO
-        }
-
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
+        keyPairGenerator.initialize( 2048 );
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        this.privateKey = keyPair.getPrivate();
+        this.publicKey = keyPair.getPublic();
+        this.timestamp = Instant.now();
     }
 
     // Decrypt using RSA public key

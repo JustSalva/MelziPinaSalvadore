@@ -25,6 +25,10 @@ public class HttpResponseBuilder {
     public static Response conflict(){
         return Response.status( Response.Status.CONFLICT ).build();
     }
+
+    public static Response notAvaiable() {
+        return Response.status( Response.Status.SERVICE_UNAVAILABLE  ).build();
+    }
     public static Response buildOkResponse( Object responseMessage){
         Gson gson = new GsonBuilder().create();
         String jsonOutput = gson.toJson( responseMessage );

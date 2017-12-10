@@ -20,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class AuthenticationEndpoint {
 
     @Inject
     EmailInterface emailSender;
+
+    @EJB
+    PublicKeyTimerInterface publicKeyTimerInterface;
 
     @Path("/register")
     @POST
@@ -134,9 +138,15 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response requestPublicKey( @PathParam("idDevice") String idDevice ){
-        RSAEncryption encryption = new RSAEncryption( idDevice );
+        RSAEncryption encryption = null;
+        try {
+            encryption = new RSAEncryption( idDevice );
+        } catch ( NoSuchAlgorithmException e ) {
+            return HttpResponseBuilder.notAvaiable();
+        }
+        encryption.save();
         PublicKey publicKey = encryption.getPublicKey();
-        //TODO timer
+        publicKeyTimerInterface.scheduleSingleTimer( encryption );
         return HttpResponseBuilder.buildOkResponse( new PublicKeyResponse( publicKey ) );
     }
 

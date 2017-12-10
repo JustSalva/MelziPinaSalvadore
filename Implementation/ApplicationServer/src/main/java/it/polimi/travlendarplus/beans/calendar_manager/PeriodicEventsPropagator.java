@@ -5,14 +5,15 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+@Startup
 @Singleton
 public class PeriodicEventsPropagator {
 
