@@ -2,6 +2,7 @@ package com.shakk.travlendar.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -56,6 +58,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        TextView register_textView = findViewById(R.id.linkToRegister_textView);
+        register_textView.setPaintFlags(register_textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        register_textView.setOnClickListener((event) -> {
+            startActivity(new Intent(this, RegistrationActivity.class));
+        });
 
         // Set up the registration form.
         email_editText = findViewById(R.id.email_editText);
@@ -226,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Performs an User input operation in the DB on a separated thread.
      */
-    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
+    private class InsertUserTask extends AsyncTask<User, Void, Void> {
 
         private AppDatabase database;
 

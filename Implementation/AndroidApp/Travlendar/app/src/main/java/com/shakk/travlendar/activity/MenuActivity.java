@@ -71,7 +71,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.action_logout) {
             new RemoveUserTask(getApplicationContext()).execute();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
         return true;

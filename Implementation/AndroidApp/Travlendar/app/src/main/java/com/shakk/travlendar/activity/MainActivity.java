@@ -1,6 +1,9 @@
 package com.shakk.travlendar.activity;
 
+import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,37 +12,31 @@ import android.view.View;
 import com.facebook.stetho.Stetho;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.User;
+import com.shakk.travlendar.database.view_model.UserViewModel;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppDatabase database;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppDatabase.destroyInstance();
-        database = AppDatabase.getInstance(getApplicationContext());
-
         Stetho.initialize(Stetho.newInitializerBuilder(this)
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                 .build());
-/*
-        TextView textView = findViewById(R.id.test_view);
-        textView.setOnClickListener(view -> {
-            addUser();
-            //userViewModel.getCurrentName().setValue("John Doe");
-        });
 
-        /* Create a ViewModel the first time the system calls an activity's onCreate() method.
-        // Re-created activity receive the same MyViewModel instance created by the first activity.
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        userViewModel.getUser().observe(this, user -> {
-            textView.setText(user.getEmail());
-        });*/
-
+        userViewModel = new UserViewModel(getApplication());
+        if (userViewModel.getUser().getValue() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), CalendarActivity.class));
+        }
     }
 
     public void goToLogin(View view) {
@@ -53,13 +50,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToCalendar(View view) {
-        addUser();
         Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
         startActivity(intent);
     }
-
-    public void addUser() {
-        new Thread(() -> {
 /*
             database.userDao().delete();
             database.userDao().insert(new User(1, "10486221@polimi.it", "Alessandro", "Pina"));
@@ -94,7 +87,32 @@ public class MainActivity extends AppCompatActivity {
                     "here", "there", "0800", "0900"));
             database.calendarDao().insert(list);
 */
-            Log.d("TAG", Integer.toString(database.userDao().countUsers()));
-        }).start();
+
+    /**
+     * Performs an User search operation in the DB on a separated thread.
+     */
+    private static class SearchUserTask extends AsyncTask<Void, Void, User> {
+
+        private AppDatabase database;
+
+        private WeakReference<Context> weakContext;
+
+        SearchUserTask(Context context) {
+            this.database = AppDatabase.getInstance(context);
+            this.weakContext = new WeakReference<>(context);
+        }
+
+        protected User doInBackground(Void... voids) {
+            LiveData<User> user = database.userDao().getUser();
+            return user.getValue();
+        }
+
+        protected void onPostExecute(User user) {
+            Context context = weakContext.get();
+            if (user == null) {
+                context.startActivity(new Intent(context, LoginActivity.class));
+            }
+            context.startActivity(new Intent(context, CalendarActivity.class));
+        }
     }
 }

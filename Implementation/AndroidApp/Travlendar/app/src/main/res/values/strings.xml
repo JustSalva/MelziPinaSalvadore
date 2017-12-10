@@ -109,6 +109,7 @@
     <string name="add_event">Add event</string>
     <string name="tickets_viewer">Tickets viewer</string>
     <string name="logout">Logout</string>
+    <string name="goToRegistration">No account yet? Register right now!</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
