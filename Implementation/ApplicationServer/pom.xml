@@ -18,6 +18,10 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -83,6 +87,7 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -90,55 +95,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
+            <groupId>org.apiguardian</groupId>
+            <artifactId>apiguardian-api</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>arquillian-glassfish-embedded</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-                    <version>1.0.0.CR4</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.main.extras</groupId>
-                    <artifactId>glassfish-embedded-all</artifactId>
-                    <version>5.0</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>arquillian-glassfish-remote</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.spec</groupId>
-                    <artifactId>jboss-javaee-6.0</artifactId>
-                    <version>3.0.3.Final</version>
-                    <type>pom</type>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-api</artifactId>
-                    <version>3.0.Final</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-remote-3.1</artifactId>
-                    <version>1.0.0.CR3</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>
