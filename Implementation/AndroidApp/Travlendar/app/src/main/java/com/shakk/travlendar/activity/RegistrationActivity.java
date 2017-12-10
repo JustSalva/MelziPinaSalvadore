@@ -1,5 +1,6 @@
 package com.shakk.travlendar.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -39,7 +39,6 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class RegistrationActivity extends AppCompatActivity {
 
     //Database reference and idDevice token.
-    private AppDatabase database;
     private String token;
 
     // UI references.
@@ -62,8 +61,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-        database = AppDatabase.getInstance(getApplicationContext());
 
         // Set up the registration form.
         email_editText = findViewById(R.id.email_editText);
@@ -147,7 +144,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 //Insert new User into the local DB.
                 User user = new User(email, name, surname, univocalCode);
                 Log.d("INSERT USER", user.toString());
-                new InsertUserTask().execute(user);
+                new InsertUserTask(getApplicationContext()).execute(user);
 
                 //Go to calendar activity.
                 goToCalendarActivity();
@@ -262,7 +259,17 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class InsertUserTask extends AsyncTask<User, Void, Void> {
+    /**
+     * Performs an User input operation in the DB on a separated thread.
+     */
+    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
+
+        private AppDatabase database;
+
+        InsertUserTask(Context context) {
+            this.database = AppDatabase.getInstance(context);
+        }
+
         protected Void doInBackground(User... users) {
             for (User user : users) {
                 database.userDao().delete();
