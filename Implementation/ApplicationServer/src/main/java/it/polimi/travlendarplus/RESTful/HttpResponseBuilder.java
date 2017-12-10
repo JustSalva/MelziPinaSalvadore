@@ -31,6 +31,10 @@ public class HttpResponseBuilder {
         return Response.ok( jsonOutput ).build();
     }
 
+    public static Response buildBadRequest( String message){
+        return Response.status( Response.Status.BAD_REQUEST).entity( message ).build();
+    }
+
     public static Response buildInvalidFieldResponse( InvalidFieldException e){
         return Response.status( Response.Status.BAD_REQUEST).entity( e.getInvalidFields() ).build();
     }

@@ -5,20 +5,29 @@ import it.polimi.travlendarplus.email.EmailSender;
 import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.UserDevice;
+import it.polimi.travlendarplus.exceptions.authenticationExceptions.MailPasswordForwardingFailedException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.authenticationMessages.*;
 
+import javax.ejb.EJB;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/")
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
+
+    //EJB
+    EmailSender emailSender;
 
     @Path("/register")
     @POST
@@ -69,7 +78,7 @@ public class AuthenticationEndpoint {
         // Issue a token for the user
         String token = issueToken( user, credentials.getIdDevice() );
         // Return the token on the response
-        return buildResponseToken( token );
+        return buildLoginTokenResponse( token, user );
     }
 
     @Path("/manage-user")
@@ -142,7 +151,11 @@ public class AuthenticationEndpoint {
             return HttpResponseBuilder.badRequest();
         }
 
-        EmailSender.sendNewCredentials( user );
+        try {
+            emailSender.sendNewCredentials( user );
+        } catch ( MailPasswordForwardingFailedException e ) {
+            return HttpResponseBuilder.buildBadRequest( "unable to send the email" );
+        }
         return HttpResponseBuilder.ok();
     }
 
@@ -182,6 +195,10 @@ public class AuthenticationEndpoint {
         return HttpResponseBuilder.buildOkResponse( new TokenResponse( token ) );
     }
 
+    private Response buildLoginTokenResponse( String token, User user ){
+        return HttpResponseBuilder.buildOkResponse( new LoginResponse( token , user.getName(), user.getSurname()) );
+    }
+
     private User loadUser( String email ) throws UserNotRegisteredException {
         User user;
         try {
@@ -198,12 +215,43 @@ public class AuthenticationEndpoint {
         }
     }
 
-    private void checkRegistrationForm( RegistrationForm registrationForm) throws InvalidFieldException{
-        //TODO
-        checkCredentials( registrationForm );
+    private void checkRegistrationForm( RegistrationForm registrationForm ) throws InvalidFieldException{
+        List<String> registrationErrors = new ArrayList<>( );
+        if( registrationForm.getName() == null){
+            registrationErrors.add( "name" );
+        }
+        if( registrationForm.getSurname() ==null){
+            registrationErrors.add( "surname" );
+        }
+        try {
+            checkCredentials( registrationForm );
+        } catch ( InvalidFieldException e ) {
+            registrationErrors.addAll( e.getInvalidFields() );
+        }
+
+        if( registrationErrors.size() > 0 ){
+            throw new InvalidFieldException( registrationErrors );
+        }
     }
 
-    private void checkCredentials( Credentials credentials) throws InvalidFieldException{
-        //TODO
+    private void checkCredentials( Credentials credentials ) throws InvalidFieldException{
+        List<String> credentialErrors = new ArrayList<>( );
+        try {
+            // Create InternetAddress object and validated the supplied
+            // address which is this case is an email address.
+            InternetAddress internetAddress = new InternetAddress( credentials.getEmail() );
+            internetAddress.validate();
+        } catch ( AddressException e ) {
+            credentialErrors.add( "email" );
+        }
+        if( credentials.getPassword() == null ){
+            credentialErrors.add( "password" );
+        }
+        if( credentials.getIdDevice() == null ){ //TODO ask to GMS
+            credentialErrors.add( "idDevice" );
+        }
+        if( credentialErrors.size() > 0 ){
+            throw new InvalidFieldException( credentialErrors );
+        }
     }
 }
