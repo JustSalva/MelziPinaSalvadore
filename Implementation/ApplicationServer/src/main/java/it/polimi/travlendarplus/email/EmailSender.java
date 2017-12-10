@@ -19,7 +19,7 @@ import java.security.SecureRandom;
 
 @Startup
 @Singleton
-public class EmailSender {
+public class EmailSender implements EmailInterface{
 
     private static String SMTP = "smtp";
     private static String HOST = "smtp.gmail.com";

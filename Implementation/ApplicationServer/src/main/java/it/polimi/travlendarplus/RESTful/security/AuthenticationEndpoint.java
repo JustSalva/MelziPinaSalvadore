@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.RESTful.security;
 
 import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
+import it.polimi.travlendarplus.email.EmailInterface;
 import it.polimi.travlendarplus.email.EmailSender;
 import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.entities.User;
@@ -13,6 +14,7 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import it.polimi.travlendarplus.messages.authenticationMessages.*;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.ws.rs.*;
@@ -26,8 +28,8 @@ import java.util.List;
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
 
-    //EJB
-    EmailSender emailSender;
+    @Inject
+    EmailInterface emailSender;
 
     @Path("/register")
     @POST
