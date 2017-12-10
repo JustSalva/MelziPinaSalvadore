@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.database.entity.TravelComponent;
 import com.shakk.travlendar.database.entity.event.Event;

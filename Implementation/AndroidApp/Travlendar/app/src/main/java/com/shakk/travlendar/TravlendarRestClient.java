@@ -1,6 +1,10 @@
 package com.shakk.travlendar;
 
+import android.content.Context;
+
 import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class TravlendarRestClient {
 
@@ -12,8 +16,13 @@ public class TravlendarRestClient {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getAbsoluteUrl(url), params, responseHandler);
+    public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
+        client.addHeader("Postman-Token", "e1c8684d-fab0-c724-12a9-e2909789b174");
+        //client.addHeader("Content-Type", "application/json");
+        //client.addHeader("Host", "151.236.60.56:8080");
+        client.addHeader("Cache-Control", "no-cache");
+        client.setTimeout(10000);
+        client.post(null, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {

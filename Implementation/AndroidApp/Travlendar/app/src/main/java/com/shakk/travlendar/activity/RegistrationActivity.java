@@ -2,8 +2,6 @@ package com.shakk.travlendar.activity;
 
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,14 +14,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.shakk.travlendar.MyFirebaseInstanceIdService;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
 
 import org.json.*;
 import com.loopj.android.http.*;
 
+import java.io.UnsupportedEncodingException;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
  * A registration screen that offers registration to the server.
@@ -82,10 +85,6 @@ public class RegistrationActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void signUp() {
-
-        /*if (mAuthTask != null) {
-            return;
-        }*/
         Log.d("TAG", "SignUp");
 
         // Store values at the time of the login attempt.
@@ -99,16 +98,28 @@ public class RegistrationActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
-        /*
 
-        String token = new MyFirebaseInstanceIdService().getRefreshedToken();
-        RequestParams params = new RequestParams();
-        params.put("email", email);
-        params.put("password", password1);
-        params.put("idDevice", token);
-        params.put("name", name);
-        params.put("surname", surname);
-        TravlendarRestClient.post("register", params, new JsonHttpResponseHandler() {
+        //Retrieve token representing device.
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        //Build JSON to be sent to server.
+        JSONObject jsonParams = new JSONObject();
+        StringEntity entity = null;
+        try {
+            jsonParams.put("email", email);
+            jsonParams.put("password", password1);
+            jsonParams.put("idDevice", token);
+            jsonParams.put("name", name);
+            jsonParams.put("surname", surname);
+            Log.d("JSON", jsonParams.toString());
+            entity = new StringEntity(jsonParams.toString());
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        //Send JSON to server.
+        TravlendarRestClient.post("register", entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 waitForServerResponse();
@@ -116,24 +127,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // If the response is JSONObject instead of expected JSONArray
+                resumeNormalMode();
+                Log.d("JSON REPLY", response.toString());
+                try {
+                    Log.d("RESPONSE", response.getString("token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray timeline) {
-                // Pull out the first event on the public timeline
-                JSONObject firstEvent = timeline.get(0);
-                String tweetText = firstEvent.getString("text");
-
-                // Do something with the response
-                System.out.println(tweetText);
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                resumeNormalMode();
+                Log.d("ERRORE", responseString);
             }
         });
-        */
     }
 
     /*
-     * Checks the fields to assure the all the user's input are valid.
+     * Checks the fields to assure the all the user's inputs are valid.
      * If not, user gets notified by a toast and errors are shown.
      */
     private boolean validate() {
@@ -160,14 +172,14 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         // Check for a valid name.
-        if (isNameValid(name)) {
+        if (!isNameValid(name)) {
             name_editText.setError(getString(R.string.error_invalid_name));
             focusView = name_editText;
             valid = false;
         }
 
         // Check for a valid surname.
-        if (isNameValid(surname)) {
+        if (!isNameValid(surname)) {
             surname_editText.setError(getString(R.string.error_invalid_surname));
             focusView = surname_editText;
             valid = false;
@@ -208,11 +220,13 @@ public class RegistrationActivity extends AppCompatActivity {
         registration_button.setEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void resumeNormalMode() {
         registration_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.GONE);
     }
 }
 
