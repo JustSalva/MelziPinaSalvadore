@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @Entity(name="BREAK_EVENT")
@@ -103,4 +105,18 @@ public class BreakEvent extends GenericEvent {
                 minimumTime <= Duration.between(event.getEndingTime(), getEndingTime()).getSeconds();
     }
 
+    @Override
+    public BreakEvent nextPeriodicEvent() {
+        Instant startingTime = this.getStartingTime()
+                .plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        Instant endingTime = this.getEndingTime()
+                .plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        return new BreakEvent(this.getName(), startingTime, endingTime, false,
+                this.getPeriodicity(), this.minimumTime);
+    }
+
+    @Override
+    public void addInUserList( User user ) {
+        user.addBreak( this );
+    }
 }

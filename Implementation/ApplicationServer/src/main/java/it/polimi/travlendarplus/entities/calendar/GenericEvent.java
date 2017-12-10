@@ -3,10 +3,12 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity(name = "GENERIC_EVENT")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -30,6 +32,10 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="PERIODICITY_ID")
     private Period periodicity;
+
+    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn(name = "USER", nullable = false)
+    private User user;
 
     @Embedded
     private Timestamp lastUpdate;
@@ -115,9 +121,21 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         this.lastUpdate = lastUpdate;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser( User user ) {
+        this.user = user;
+    }
+
     //used to remove correctly an event into function of ScheduleHolder class
     @Override
     public boolean equals (Object event) {
         return getId() == ((GenericEvent)event).getId();
     }
+
+    public abstract GenericEvent nextPeriodicEvent();
+
+    public abstract void addInUserList( User user);
 }

@@ -9,6 +9,7 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,5 +126,17 @@ public class Event extends GenericEvent {
 
     public static Event load(long key) throws EntityNotFoundException {
         return GenericEntity.load( Event.class, key );
+    }
+
+    public Event nextPeriodicEvent() {
+        Instant startingTime = this.getStartingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
+                this.description, this.prevLocChoice, this.type, this.eventLocation, this.departure);
+    }
+
+    @Override
+    public void addInUserList( User user ) {
+        user.addEvent( this );
     }
 }

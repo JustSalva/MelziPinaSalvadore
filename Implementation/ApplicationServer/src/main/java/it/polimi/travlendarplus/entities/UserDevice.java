@@ -82,7 +82,8 @@ public class UserDevice extends GenericEntity {
 
 
     public static User findUserRelativeToToken ( String token ) throws InvalidTokenException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
+        EntityManagerFactory entityManagerFactory =
+                Persistence.createEntityManagerFactory("TravlendarDB");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         UserDevice userDevice;
         TypedQuery<UserDevice> query = entityManager.createQuery( "" +
