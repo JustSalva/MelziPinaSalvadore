@@ -108,6 +108,7 @@
     <string name="change_date">Change date</string>
     <string name="add_event">Add event</string>
     <string name="tickets_viewer">Tickets viewer</string>
+    <string name="logout">Logout</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
