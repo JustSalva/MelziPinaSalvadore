@@ -44,21 +44,28 @@ public class ScheduleHolder {
         breaks.remove(breakToRemove);
     }
 
+    // It returns a list of events composed by the scheduled events, the new event and the new event-related paths.
+    public ArrayList<Event> getListWithNewEventPaths(Travel prev, Travel foll, Event event) {
+        int i = 0;
+        // The new event, with its related path, is added into the list of scheduled events.
+        event.setFeasiblePath(prev);
+        ArrayList<Event> newList = getListWithNewEvent(event);
+        while(newList.get(i).getId() != event.getId() && i < newList.size())
+            i++;
+        // The following event is identified and the related path is setted.
+        if(i < newList.size()-1)
+            newList.get(i+1).setFeasiblePath(foll);
+        return newList;
+    }
+
+    public boolean isLastScheduledEvent(Event event) {
+        return event.getId() == events.get(events.size()-1).getId();
+    }
+
     private ArrayList<Event> copyEventList() {
         ArrayList<Event> newList = new ArrayList<Event> ();
         for(Event event: events)
             newList.add(event);
-        return newList;
-    }
-
-    public ArrayList<Event> getListWithNewEventPaths(Travel prev, Travel foll, Event event) {
-        event.setFeasiblePath(prev);
-        ArrayList<Event> newList = getListWithNewEvent(event);
-        int i = 0;
-        while(newList.get(i).getId() != event.getId())
-            i++;
-        if(i < newList.size()-1)
-            newList.get(i+1).setFeasiblePath(foll);
         return newList;
     }
 

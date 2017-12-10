@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.entities;
+/*package it.polimi.travlendarplus.entities;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -41,3 +41,4 @@ public class GenericEntityTest {
     }
 
 }
+*/

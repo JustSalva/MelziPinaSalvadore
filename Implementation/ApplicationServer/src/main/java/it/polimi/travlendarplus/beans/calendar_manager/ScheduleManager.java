@@ -32,16 +32,16 @@ public class ScheduleManager extends UserManager{
         return schedule;
     }
 
-    // This function is called before the calculation of possible paths for an added event.
-    // Paths are not considered because the add of an event will cause the recalculation of involved paths.
+    // This function is called before the calculation of possible paths for an event that could be added.
+    // Paths are not considered in this function because the addition of an event will cause the recalculation of involved paths.
     public boolean isEventOverlapFreeIntoSchedule(Event event, boolean forSwap) {
         if(!forSwap)
             setSchedule(event.getDayAtMidnight());
-        //checking free overlapping with other events
+        // Checking free overlapping with scheduled events.
         for(Event scheduledEvent: schedule.getEvents())
             if(!(areEventsOverlapFree(event, scheduledEvent)))
                 return false;
-        //checking feasibility of existing breaks
+        // Checking if existing breaks will be still feasible with the addition of the new event.
         for(BreakEvent scheduledBreak: schedule.getBreaks())
             if(!scheduledBreak.isMinimumEnsuredNoPathRegard(getEventsIntoInterval(schedule.getListWithNewEvent(event),
                     scheduledBreak)))
@@ -49,14 +49,15 @@ public class ScheduleManager extends UserManager{
         return true;
     }
 
+    // This function is called when a breakEvent could be added into the schedule.
     public boolean isBreakOverlapFreeIntoSchedule(BreakEvent breakEvent, boolean forSwap) {
         if(!forSwap)
             setSchedule(breakEvent.getDayAtMidnight());
-        //new break cannot overlap with a previous break event
+        // In the system is not allowed the overlapping of two break events.
         for(BreakEvent scheduledBreak: schedule.getBreaks())
             if(!areEventsOverlapFree(breakEvent, scheduledBreak))
                 return false;
-        // Path duration is taken into account for check if a break can be added
+        // Events and paths are taken into account in order to check if the minimum duration of a breakEvent can be ensured.
         ArrayList<Event> involvedEvents = getEventsIntoIntervalWithPathRegard(schedule.getEvents(), breakEvent);
         return breakEvent.isMinimumEnsuredWithPathRegard(involvedEvents);
     }
@@ -69,29 +70,29 @@ public class ScheduleManager extends UserManager{
         //TODO
     }
 
-    //day represents the wanted day at 00:00:00
+    // Day parameter represents the wanted day at 00:00:00. This function is called in order to calculate the schedule
+    // of a certain day and store it in schedule variable.
     public void setSchedule(long day) {
         ArrayList<Event> events = new ArrayList<Event>();
         ArrayList<BreakEvent> breaks = new ArrayList<BreakEvent>();
         Instant startingTime = Instant.ofEpochSecond(day);
         Instant endingTime = Instant.ofEpochSecond(day + DAILY_SECONDS_MINUS_ONE);
-
-        //obtaining events into the schedule of the specified day
+        // Obtaining events into the schedule of the specified day.
         for(Event event: getCurrentUser().getEvents())
             if(event.isScheduled() && !event.getStartingTime().isBefore(startingTime) && !event.getEndingTime().isAfter(endingTime))
                 events.add(event);
         Collections.sort(events);
-        //obtaining breaks into the schedule of the specified day
+        // Obtaining breaks into the schedule of the specified day.
         for(BreakEvent breakEvent: getCurrentUser().getBreaks())
             if(breakEvent.isScheduled() && !breakEvent.getStartingTime().isBefore(startingTime) &&
                     !breakEvent.getEndingTime().isAfter(endingTime))
                 breaks.add(breakEvent);
         Collections.sort(breaks);
-
+        // The schedule is stored and can be used for next operations.
         schedule = new ScheduleHolder(events, breaks);
     }
 
-    //it returns null if the event would be the first of that day
+    // It returns null if the event would be the first in the schedule of that day.
     public Event getPossiblePreviousEvent (GenericEvent event) {
         for(int i=0; i<schedule.getEvents().size(); i++)
             if (event.getStartingTime().isBefore(schedule.getEvents().get(i).getStartingTime()))
@@ -99,7 +100,7 @@ public class ScheduleManager extends UserManager{
         return (schedule.getEvents().size()==0) ? null : schedule.getEvents().get(schedule.getEvents().size()-1);
     }
 
-    //it returns null if the event would be the last of that day
+    // It returns null if the event would be the last in the schedule of that day.
     public Event getPossibleFollowingEvent (GenericEvent event) {
         for(int i=0; i<schedule.getEvents().size(); i++)
             if(event.getStartingTime().isBefore(schedule.getEvents().get(i).getStartingTime()))
@@ -107,13 +108,14 @@ public class ScheduleManager extends UserManager{
         return null;
     }
 
-    //it returns true if gEvent1 and gEvent2 have not an overlap
+    // It returns true if the two events are not overlapping.
     public boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
         return !event.getStartingTime().isBefore(scheduledEvent.getEndingTime()) ||
                 !event.getEndingTime().isAfter(scheduledEvent.getStartingTime());
     }
 
-    //it returns a List of the events into "events" that overlap in the interval of "intervalEvent" .
+    // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
+    // Possible paths are not taken into account.
     private ArrayList<Event> getEventsIntoInterval(List<Event> events, GenericEvent intervalEvent) {
         ArrayList<Event> involvedEvents = new ArrayList<Event>();
         for(Event event: events)
@@ -123,81 +125,58 @@ public class ScheduleManager extends UserManager{
         return involvedEvents;
     }
 
-    //it returns a List of the events into "events" that overlap in the interval of "intervalEvent" .
-    //It considers also the event-related paths. The List must be ordered.
+    // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
+    // It considers also the event-related paths. The ArrayList passed as a param must be ordered.
     private ArrayList<Event> getEventsIntoIntervalWithPathRegard(List<Event> events, GenericEvent intervalEvent) {
         ArrayList<Event> involvedEvents = new ArrayList<Event>();
-        int i = 0;
-        if(events.size()>0 && events.get(0).getFeasiblePath() == null &&
-                !areEventsOverlapFree(events.get(0), intervalEvent)) {
-            involvedEvents.add(events.get(0));
-            i++;
-        }
-        while(i<events.size()) {
-            if (events.get(i).getEndingTime().isAfter(intervalEvent.getStartingTime()) &&
-                    events.get(i).getFeasiblePath().getStartingTime().isBefore(intervalEvent.getEndingTime()))
-                involvedEvents.add(events.get(i));
-            i++;
-        }
+        // Event-related paths are taken into account in order to check if there is an overlap.
+        for(Event event: events)
+            if (event.getEndingTime().isAfter(intervalEvent.getStartingTime()) &&
+                    event.getFeasiblePath().getStartingTime().isBefore(intervalEvent.getEndingTime()))
+                involvedEvents.add(event);
         return involvedEvents;
     }
 
     // This function is called after that all feasible previous and following paths are calculated.
-    // It deterinates if a combination of a prev and a foll path is feasible according the scheduled breaks.
+    // The two ArrayList passed as params contain possible travels that don't overlap with prev/foll events.
+    // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
     public ArrayList<PathCombination> getFeasiblePathCombinations(Event event, ArrayList<Travel> previous, ArrayList<Travel> following) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
-
-        if(getPossiblePreviousEvent(event) == null)
-            return getFeasiblePathCombinationsFirstEventCase(event, following);
+        /*if(getPossiblePreviousEvent(event) == null)
+            return getFeasiblePathCombinationsFirstEventCase(event, following);*/
         if(getPossibleFollowingEvent(event) == null)
             return getFeasiblePathCombinationsLastEventCase(event, previous);
         for(Travel prev: previous)
             for(Travel foll: following) {
-                boolean ok = true;
-                //analize the case of each combination of prev/foll path
+                boolean combinationFeasible = true;
+                // Analyzing for each combination of prev/foll paths if it would be feasible with each scheduled break.
                 for (BreakEvent breakEvent : schedule.getBreaks()) {
-                    ArrayList<Event> simul = schedule.getListWithNewEventPaths(prev, foll, event);
-                    ArrayList<Event> involvSimul = getEventsIntoIntervalWithPathRegard(simul, breakEvent);
-                    if (!breakEvent.isMinimumEnsuredWithPathRegard(involvSimul))
-                        ok = false;
+                    ArrayList<Event> simulList = schedule.getListWithNewEventPaths(prev, foll, event);
+                    ArrayList<Event> simulInvolved = getEventsIntoIntervalWithPathRegard(simulList, breakEvent);
+                    // simulInvolved contains events that happen in breakEvent interval.
+                    if (!breakEvent.isMinimumEnsuredWithPathRegard(simulInvolved))
+                        combinationFeasible = false;
                 }
-                if (ok)
+                if (combinationFeasible)
                     feasibleComb.add(new PathCombination(prev, foll));
             }
 
             return feasibleComb;
     }
 
-    private ArrayList<PathCombination> getFeasiblePathCombinationsFirstEventCase(Event event, ArrayList<Travel> following) {
-        ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
-
-        for(Travel foll: following) {
-            boolean ok = true;
-            for (BreakEvent breakEvent : schedule.getBreaks()) {
-                ArrayList<Event> simul = schedule.getListWithNewEventPaths(null, foll, event);
-                ArrayList<Event> involvSimul = getEventsIntoIntervalWithPathRegard(simul, breakEvent);
-                if (!breakEvent.isMinimumEnsuredWithPathRegard(involvSimul))
-                    ok = false;
-            }
-            if (ok)
-                feasibleComb.add(new PathCombination(null, foll));
-        }
-
-        return feasibleComb;
-    }
-
+    // It is used when the event to be added into the schedule would be the last: it doesn't have a following path.
     private ArrayList<PathCombination> getFeasiblePathCombinationsLastEventCase(Event event, ArrayList<Travel> previous) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
-
         for(Travel prev: previous) {
-            boolean ok = true;
+            boolean combinationFeasible = true;
+            // Analyzing for each prev path if it would be feasible with each scheduled break.
             for (BreakEvent breakEvent : schedule.getBreaks()) {
-                ArrayList<Event> simul = schedule.getListWithNewEventPaths(prev, null, event);
-                ArrayList<Event> involvSimul = getEventsIntoIntervalWithPathRegard(simul, breakEvent);
-                if (!breakEvent.isMinimumEnsuredWithPathRegard(involvSimul))
-                    ok = false;
+                ArrayList<Event> simulList = schedule.getListWithNewEventPaths(prev, null, event);
+                ArrayList<Event> simulInvolved = getEventsIntoIntervalWithPathRegard(simulList, breakEvent);
+                if (!breakEvent.isMinimumEnsuredWithPathRegard(simulInvolved))
+                    combinationFeasible = false;
             }
-            if (ok)
+            if (combinationFeasible)
                 feasibleComb.add(new PathCombination(prev, null));
         }
 

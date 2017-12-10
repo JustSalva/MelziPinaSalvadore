@@ -14,11 +14,12 @@ public class ScheduleManagerSettingOperations {
     public void settings(ScheduleManagerTest test) {
         ArrayList<Event> events = new ArrayList<>();
         ArrayList<BreakEvent> breaks = new ArrayList<>();
-        Travel travel = setTravel(8, 10);
+        Travel travel2 = setTravel(2, 3);
+        Travel travel4 = setTravel(8, 10);
         events.add(setEvent(test.event1, 2, 12, false));
-        events.add(setEvent(test.event2, 4, 8, true));
+        events.add(setEventWithPath(test.event2, 4, 8, true, travel2));
         events.add(setEvent(test.event3, 10, 16, false));
-        events.add(setEventWithPath(test.event4, 14, 22, true, travel));
+        events.add(setEventWithPath(test.event4, 14, 22, true, travel4));
         events.add(setEvent(test.event5, 21, 26, false));
         breaks.add(setBreakEvent(test.break1, 9, 15, 3, false));
         breaks.add(setBreakEvent(test.break2, 20, 23, 2, false));

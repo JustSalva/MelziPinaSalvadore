@@ -47,14 +47,16 @@ public class BreakEvent extends GenericEvent {
         return GenericEntity.load( BreakEvent.class, key );
     }
 
-    //Every Event in events ArrayList has an overlap with the interval of BreakEvent
+    // Events overlapping with break event are passed as param.
+    // This function checks if, with these events, is possible to ensure the minimum amount of time for the break event.
+    // No path is taken into account in this function.
     public boolean isMinimumEnsuredNoPathRegard(ArrayList<Event> events) {
         if (events.size()==0)
             return true;
-        //checking if there is enough time before the first event
+        // Checking if there is enough time before the first event.
         if(minimumTime <= Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
             return true;
-        //checking if there is enough time between two events
+        // Checking if there is enough time between two events.
         for(int i=0; i<events.size()-1; i++)
             if(minimumTime <= Duration.between(events.get(i).getEndingTime(),
                     events.get(i+1).getStartingTime()).getSeconds())
@@ -67,21 +69,15 @@ public class BreakEvent extends GenericEvent {
     public boolean isMinimumEnsuredWithPathRegard(ArrayList<Event> events) {
         if (events.size()==0)
             return true;
-        if(events.size() == 1) {
-            //if the first event has no previous events
-            if (events.get(0).getFeasiblePath() == null && minimumTime <=
-                    Duration.between(getStartingTime(), events.get(0).getStartingTime()).getSeconds())
-                return true;
-            //checking before the first event if it has a previous event (checking also of the path)
-            else if (enoughTimeBeforeFirstEvent(events.get(0)))
-                return true;
-        }
+        // Checking if there is enough time between the first event and its path or before the first event.
+        if (enoughTimeBeforeFirstEvent(events.get(0)))
+            return true;
         if(events.size()>1){
-            //checking between first event and following path
+            // Checking between first event and following path.
             if(minimumTime <= Duration.between(events.get(0).getEndingTime(),
                     events.get(1).getFeasiblePath().getStartingTime()).getSeconds())
                 return true;
-            //checking if there is enough time between an event and the previous/following path
+            // Checking if there is enough time between an event and the previous/following paths.
             for(int i=1; i<events.size()-1; i++) {
                 if(minimumTime <= Duration.between(events.get(i).getFeasiblePath().getEndingTime(), events.get(i).
                         getStartingTime()).getSeconds() || minimumTime <= Duration.between(events.get(i).
@@ -89,11 +85,10 @@ public class BreakEvent extends GenericEvent {
                     return true;
             }
         }
-        //checking if there is enough time with the last event
+        // Checking if there is enough time between the last event and its path or after the last event.
         return enoughTimeWithLastEvent(events.get(events.size()-1));
     }
 
-    //use dwhen event.getFeasiblePath() is different from NULL
     private boolean enoughTimeBeforeFirstEvent(Event event) {
         Travel path = event.getFeasiblePath();
         return minimumTime <= Duration.between(getStartingTime(), path.getStartingTime()).getSeconds() ||
@@ -101,7 +96,6 @@ public class BreakEvent extends GenericEvent {
                         Math.max(path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond());
     }
 
-    //use dwhen event.getFeasiblePath() is different from NULL
     private boolean enoughTimeWithLastEvent(Event event) {
         Travel path = event.getFeasiblePath();
         return  minimumTime <= Math.min(getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond()) -
