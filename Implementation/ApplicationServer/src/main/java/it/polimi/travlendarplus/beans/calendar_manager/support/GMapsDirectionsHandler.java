@@ -43,16 +43,17 @@ public class GMapsDirectionsHandler {
         return callURL.toString();
         /*addParam("origin", event.getDeparture().getAddress());
         addParam("destination", event.getEventLocation().getAddress());
-        addParam("departure_time", previousEvent.getEndingTime().toString());
+        if (previousEvent != null)
+            addParam("departure_time", previousEvent.getEndingTime().getEpochSecond()+"");
+        else
+            addParam("arrival_time", event.getStartingTime().getEpochSecond()+"");
         return callURL.toString();*/
     }
 
     //it calculates eventual paths after this event: the function requires the following event
     public String getBaseCallFollowingPath(Event event, Event followingEvent) {
-        addParam("origin", event.getEventLocation().getLatitude()+""+
-                event.getEventLocation().getLongitude());
-        addParam("destination", followingEvent.getEventLocation().getLatitude()+""+
-                followingEvent.getEventLocation().getLongitude());
+        addParam("origin", event.getEventLocation().getAddress());
+        addParam("destination", followingEvent.getEventLocation().getAddress());
         addParam("departure_time", event.getEndingTime().toString());
         return callURL.toString();
     }

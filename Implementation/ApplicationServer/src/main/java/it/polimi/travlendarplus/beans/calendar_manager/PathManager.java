@@ -23,23 +23,24 @@ public class PathManager extends UserManager{
     @EJB
     ScheduleManager scheduleManager;
 
-    //attention to first and last event of the schedule (only one array of paths)
+    //attention to last event of the schedule (only one array of paths)
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
                                          ArrayList<TravelMeanEnum> publicMeans, boolean forSwap) {
-
         if(!forSwap)
             scheduleManager.setSchedule(event.getDayAtMidnight());
+        // Obtaining possible paths according to previous and following scheduled events.
         ArrayList<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
         ArrayList<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
 
+        // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         ArrayList<PathCombination> possibleCombinations = scheduleManager.getFeasiblePathCombinations(event,
                 previousPaths, followingPaths);
 
         //TODO preferences on this ArrayList
         //TODO best path among which that remain (return it)
 
-        return null;
+        return possibleCombinations.get(0);
     }
 
     private ArrayList<Travel> getPreviousTravels (Event event, ArrayList<TravelMeanEnum> privateMeans,
@@ -47,10 +48,10 @@ public class PathManager extends UserManager{
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent(event);
-        if(previous == null)
-            return possiblePaths;
         try {
+            // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallPreviousPath(event, previous);
+            // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, previous, event);
         } catch (GMapsGeneralException e) {
             e.printStackTrace();
@@ -64,9 +65,12 @@ public class PathManager extends UserManager{
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event following = scheduleManager.getPossibleFollowingEvent(event);
         if(following == null)
+            // The event would be the last of that day. An empty ArrayList is returned.
             return possiblePaths;
         try {
+            // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallFollowingPath(event, following);
+            // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, event, following);
         } catch (GMapsGeneralException e) {
             e.printStackTrace();
@@ -74,22 +78,29 @@ public class PathManager extends UserManager{
         return possiblePaths;
     }
 
+    //Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
+    //2) eventA is the main event and eventB is the following event -> eventB is not NULL because this case is managed above.
     private ArrayList<Travel> possiblePathsAdder(String baseCall, ArrayList<TravelMeanEnum> privateMeans,
                     ArrayList<TravelMeanEnum> publicMeans, Event eventA, Event eventB) throws GMapsGeneralException{
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         GMapsJSONReader reader = new GMapsJSONReader();
         ArrayList<Travel> possiblePaths = new ArrayList<>();
-        //adding private travels
-        ArrayList<JSONObject> privatePathsJSON = new ArrayList<JSONObject>();
+        // Calculating paths with private travel means.
         for(TravelMeanEnum mean: privateMeans) {
             JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
-            ArrayList<Travel> privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
-                    eventA.getEndingTime().getEpochSecond(), eventA.getEventLocation(), eventB.getEventLocation());
+            ArrayList<Travel> privatePaths;
+            if(eventA != null)
+                privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
+                    eventA.getEndingTime().getEpochSecond(), true, eventA.getEventLocation(), eventB.getEventLocation());
+            else // It is the case when the possible new event would be the first in the schedule.
+                privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
+                        eventB.getStartingTime().getEpochSecond(), false, eventB.getDeparture(), eventB.getEventLocation());
+            // Considering only paths that allow to attend to the event in time
             for(Travel travel: privatePaths)
-                if(travel.getEndingTime().isBefore(eventB.getStartingTime()))
+                if(!travel.getEndingTime().isAfter(eventB.getStartingTime()))
                     possiblePaths.add(travel);
         }
-        //adding public travels
+        // Calculating paths with public travel means.
         JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
         ArrayList<Travel> publicPaths = reader.getTravelWithTransitMeans(publicPathsJSON);
         for(Travel travel: publicPaths)

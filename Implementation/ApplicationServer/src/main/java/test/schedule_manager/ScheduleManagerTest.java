@@ -121,4 +121,21 @@ public class ScheduleManagerTest {
 
     }
 
+    @Test
+    public void getFeasiblePathCombinations2() {
+        setter.settingOnlySetBreaks2(this);
+        ArrayList<Travel> prev = setter.setPrevTravel2();
+        Event event = new Event();
+        event.setId(6);
+        event.setStartingTime(Instant.ofEpochSecond(25));
+        event.setEndingTime(Instant.ofEpochSecond(26));
+        ArrayList<PathCombination> combs = tester.getFeasiblePathCombinations(event, prev, null);
+        assertEquals(2, combs.size());
+        assertEquals(22, combs.get(0).getPrevPath().getStartingTime().getEpochSecond());
+        assertEquals(24, combs.get(0).getPrevPath().getEndingTime().getEpochSecond());
+        assertEquals(23, combs.get(1).getPrevPath().getStartingTime().getEpochSecond());
+        assertEquals(25, combs.get(1).getPrevPath().getEndingTime().getEpochSecond());
+
+    }
+
 }

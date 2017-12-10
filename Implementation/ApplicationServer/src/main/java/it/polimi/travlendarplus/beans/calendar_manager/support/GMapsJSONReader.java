@@ -19,8 +19,9 @@ import java.util.HashMap;
 
 public class GMapsJSONReader {
 
-    //it creates a Travel with only one TravelComponent, related to NO_TRANSIT and NO_SHARING TravelMean
-    public ArrayList<Travel> getTravelNoTransitMeans(JSONObject response, TravelMeanEnum type, long departureTime,
+    // It creates a Travel with only one TravelComponent, related to NO_TRANSIT and NO_SHARING TravelMean of the specified type.
+    // Boolean departure is used to specify if travelTime refers to departure: if FALSE it refers to arrival.
+    public ArrayList<Travel> getTravelNoTransitMeans(JSONObject response, TravelMeanEnum type, long travelTime, boolean departure,
                                          Location depLoc, Location arrLoc) throws GMapsGeneralException{
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
 
@@ -28,8 +29,14 @@ public class GMapsJSONReader {
             JSONArray routes = getRoutes(response);
 
             for (int i = 0; i < routes.length(); i++) {
-                Instant startingTime = Instant.ofEpochSecond(departureTime);
-                Instant endingTime = Instant.ofEpochSecond(departureTime + getTotDurationInSeconds(routes.getJSONObject(i)));
+                Instant startingTime, endingTime;
+                if(departure) {
+                    startingTime = Instant.ofEpochSecond(travelTime);
+                    endingTime = Instant.ofEpochSecond(travelTime + getTotDurationInSeconds(routes.getJSONObject(i)));
+                } else {
+                    startingTime = Instant.ofEpochSecond(travelTime - getTotDurationInSeconds(routes.getJSONObject(i)));
+                    endingTime = Instant.ofEpochSecond(travelTime);
+                }
                 float lengthInKm = ((float) getTotDistanceInMeters(routes.getJSONObject(i))) / 1000;
                 PrivateTravelMean mean = new PrivateTravelMean(type.toString(), type, 0);
 

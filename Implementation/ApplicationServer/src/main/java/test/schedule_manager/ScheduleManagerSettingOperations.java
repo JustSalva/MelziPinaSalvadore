@@ -38,6 +38,14 @@ public class ScheduleManagerSettingOperations {
         test.tester.setSchedule(0);
     }
 
+    public void settingOnlySetBreaks2(ScheduleManagerTest test) {
+        ArrayList<BreakEvent> breaks = new ArrayList<>();
+        breaks.add(setBreakEvent(test.break1, 11,9, 15, 2, false));
+        breaks.add(setBreakEvent(test.break2, 12,20, 26, 1, true));
+        test.tester.getCurrentUser().setBreaks(breaks);
+        test.tester.setSchedule(0);
+    }
+
     private Event setEvent(Event e, long id, long stTime, long endTime, boolean scheduled) {
         e.setId(id);
         e.setStartingTime(Instant.ofEpochSecond(stTime));
@@ -86,5 +94,16 @@ public class ScheduleManagerSettingOperations {
         Travel t1 = setTravel(13,14);
         foll.add(t1);
         return foll;
+    }
+
+    public ArrayList<Travel> setPrevTravel2() {
+        ArrayList<Travel> prev = new ArrayList<Travel>();
+        Travel t1 = setTravel(22,25);
+        Travel t2 = setTravel(22, 24);
+        Travel t3 = setTravel(23, 25);
+        prev.add(t1);
+        prev.add(t2);
+        prev.add(t3);
+        return prev;
     }
 }
