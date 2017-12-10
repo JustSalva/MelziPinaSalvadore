@@ -140,7 +140,7 @@ public class ScheduleManager extends UserManager{
     // This function is called after that all feasible previous and following paths are calculated.
     // The two ArrayList passed as params contain possible travels that don't overlap with prev/foll events.
     // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
-    public ArrayList<PathCombination> getFeasiblePathCombinations(Event event, ArrayList<Travel> previous, ArrayList<Travel> following) {
+    public ArrayList<PathCombination> getFeasiblePathCombinations(Event event, List<Travel> previous, List<Travel> following) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
         if(getPossibleFollowingEvent(event) == null)
             return getFeasiblePathCombinationsLastEventCase(event, previous);
@@ -163,7 +163,7 @@ public class ScheduleManager extends UserManager{
     }
 
     // It is used when the event to be added into the schedule would be the last: it doesn't have a following path.
-    private ArrayList<PathCombination> getFeasiblePathCombinationsLastEventCase(Event event, ArrayList<Travel> previous) {
+    private ArrayList<PathCombination> getFeasiblePathCombinationsLastEventCase(Event event, List<Travel> previous) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
         for(Travel prev: previous) {
             boolean combinationFeasible = true;

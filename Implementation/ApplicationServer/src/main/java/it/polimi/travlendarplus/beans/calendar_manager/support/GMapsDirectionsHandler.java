@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GMapsDirectionsHandler {
     private StringBuilder callURL;
@@ -71,7 +72,7 @@ public class GMapsDirectionsHandler {
         return tempCall + "&mode=" + type.getParam();
     }
 
-    public String getCallByTransit(String tempCall, ArrayList<TravelMeanEnum> transitMeans) {
+    public String getCallByTransit(String tempCall, List<TravelMeanEnum> transitMeans) {
         StringBuilder callWithTravel = new StringBuilder(tempCall);
         if(transitMeans.size()>0) {
             callWithTravel.append("&mode=transit");
