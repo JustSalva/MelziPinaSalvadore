@@ -12,7 +12,7 @@ import javax.ejb.Timer;
 @Stateless
 public class PublicKeyTimer implements PublicKeyTimerInterface
 {
-    private static final long TIMER_MILLISECONDS_DURATION = 60*1000;
+    private static final long TIMER_MILLISECONDS_DURATION = 10*60*1000;
 
     private @Resource SessionContext ctx;
 
