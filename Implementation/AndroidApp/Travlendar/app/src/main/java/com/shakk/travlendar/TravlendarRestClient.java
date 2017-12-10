@@ -1,9 +1,6 @@
 package com.shakk.travlendar;
 
-import android.content.Context;
-
 import com.loopj.android.http.*;
-
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class TravlendarRestClient {
@@ -21,7 +18,9 @@ public class TravlendarRestClient {
         //client.addHeader("Content-Type", "application/json");
         //client.addHeader("Host", "151.236.60.56:8080");
         client.addHeader("Cache-Control", "no-cache");
-        client.setTimeout(10000);
+        client.setTimeout(20 * 1000);
+        client.setResponseTimeout(20 * 1000);
+        client.setConnectTimeout(20 * 1000);
         client.post(null, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 

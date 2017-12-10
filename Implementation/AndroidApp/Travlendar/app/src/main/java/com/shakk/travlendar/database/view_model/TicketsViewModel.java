@@ -15,7 +15,7 @@ import java.util.List;
 public class TicketsViewModel extends AndroidViewModel {
 
     private AppDatabase database = AppDatabase
-            .getAppDatabase(getApplication()
+            .getInstance(getApplication()
                     .getApplicationContext());
 
     private LiveData<List<Ticket>> generalTickets;

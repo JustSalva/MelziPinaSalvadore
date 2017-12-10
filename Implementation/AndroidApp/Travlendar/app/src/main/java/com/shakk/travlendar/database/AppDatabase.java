@@ -16,19 +16,19 @@ import com.shakk.travlendar.database.dao.UserDao;
 @Database(entities = {User.class, Ticket.class, GenericEvent.class, TravelComponent.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
-    private static AppDatabase INSTANCE;
+    private static AppDatabase instance;
 
-    public static AppDatabase getAppDatabase(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = Room
-                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, "travlendarplus-database")
+    public static AppDatabase getInstance(Context context) {
+        if (instance == null) {
+            instance = Room
+                    .databaseBuilder(context, AppDatabase.class, "travlendarplus-database")
                     .build();
         }
-        return INSTANCE;
+        return instance;
     }
 
     public static void destroyInstance() {
-        INSTANCE = null;
+        instance = null;
     }
 
     public abstract UserDao userDao();

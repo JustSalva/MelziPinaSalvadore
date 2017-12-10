@@ -12,8 +12,7 @@ import com.shakk.travlendar.database.entity.User;
 public class UserViewModel extends AndroidViewModel {
 
     private AppDatabase database = AppDatabase
-            .getAppDatabase(getApplication()
-                    .getApplicationContext());
+            .getInstance(getApplication().getApplicationContext());
 
     private LiveData<User> user;
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class CalendarViewModel extends AndroidViewModel {
 
     private AppDatabase database = AppDatabase
-            .getAppDatabase(getApplication()
+            .getInstance(getApplication()
                     .getApplicationContext());
 
     private LiveData<List<GenericEvent>> genericEvents;

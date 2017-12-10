@@ -1,5 +1,7 @@
 package com.shakk.travlendar.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -20,8 +22,11 @@ import com.shakk.travlendar.TravlendarRestClient;
 
 import org.json.*;
 import com.loopj.android.http.*;
+import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.User;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -33,10 +38,9 @@ import cz.msebera.android.httpclient.protocol.HTTP;
  */
 public class RegistrationActivity extends AppCompatActivity {
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    //private UserLoginTask mAuthTask = null;
+    //Database reference and idDevice token.
+    private AppDatabase database;
+    private String token;
 
     // UI references.
     private EditText email_editText;
@@ -47,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button registration_button;
     private ProgressBar progressBar;
 
+    //Strings to be read by input fields.
     private String email;
     private String name;
     private String surname;
@@ -57,6 +62,8 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        database = AppDatabase.getInstance(getApplicationContext());
 
         // Set up the registration form.
         email_editText = findViewById(R.id.email_editText);
@@ -100,7 +107,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         //Retrieve token representing device.
-        String token = FirebaseInstanceId.getInstance().getToken();
+        token = FirebaseInstanceId.getInstance().getToken();
 
         //Build JSON to be sent to server.
         JSONObject jsonParams = new JSONObject();
@@ -122,29 +129,40 @@ public class RegistrationActivity extends AppCompatActivity {
         TravlendarRestClient.post("register", entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
+                //Makes UI unresponsive.
                 waitForServerResponse();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                resumeNormalMode();
                 Log.d("JSON REPLY", response.toString());
+                String univocalCode = "";
+                //Get univocalCode from JSON response.
                 try {
-                    Log.d("RESPONSE", response.getString("token"));
+                    univocalCode = response.getString("token");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                //Insert new User into the local DB.
+                User user = new User(email, name, surname, univocalCode);
+                Log.d("INSERT USER", user.toString());
+                new InsertUserTask().execute(user);
+
+                //Go to calendar activity.
+                goToCalendarActivity();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("RESPONSE ERROR", responseString);
+                //Makes UI responsive again.
                 resumeNormalMode();
-                Log.d("ERRORE", responseString);
             }
         });
     }
 
-    /*
+    /**
      * Checks the fields to assure the all the user's inputs are valid.
      * If not, user gets notified by a toast and errors are shown.
      */
@@ -216,6 +234,10 @@ public class RegistrationActivity extends AppCompatActivity {
         return name.length() > 1;
     }
 
+
+    /**
+     * Disables user input fields.
+     */
     private void waitForServerResponse() {
         registration_button.setEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -223,10 +245,31 @@ public class RegistrationActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Enables user input fields.
+     */
     private void resumeNormalMode() {
         registration_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Launches calendar activity.
+     */
+    private void goToCalendarActivity() {
+        Intent intent = new Intent(this, CalendarActivity.class);
+        startActivity(intent);
+    }
+
+    private class InsertUserTask extends AsyncTask<User, Void, Void> {
+        protected Void doInBackground(User... users) {
+            for (User user : users) {
+                database.userDao().delete();
+                database.userDao().insert(user);
+            }
+            return null;
+        }
     }
 }
 

@@ -5,22 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.database.entity.TravelComponent;
-import com.shakk.travlendar.database.entity.event.Event;
-import com.shakk.travlendar.database.entity.event.GenericEvent;
-import com.shakk.travlendar.database.entity.ticket.DistanceTicket;
-import com.shakk.travlendar.database.entity.ticket.PeriodTicket;
-import com.shakk.travlendar.database.entity.ticket.Ticket;
 import com.shakk.travlendar.database.AppDatabase;
-import com.shakk.travlendar.database.entity.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         AppDatabase.destroyInstance();
-        database = AppDatabase.getAppDatabase(getApplicationContext());
+        database = AppDatabase.getInstance(getApplicationContext());
 
         Stetho.initialize(Stetho.newInitializerBuilder(this)
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

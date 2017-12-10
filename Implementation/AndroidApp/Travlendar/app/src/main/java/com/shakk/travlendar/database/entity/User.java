@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 @Entity
 public class User {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     private String email;
@@ -16,11 +16,11 @@ public class User {
     private String univocalCode;
     private String timestamp;
 
-    public User(int id, String email, String name, String surname) {
-        this.id = id;
+    public User(String email, String name, String surname, String univocalCode) {
         this.email = email;
         this.name = name;
         this.surname = surname;
+        this.univocalCode = univocalCode;
     }
 
     public int getId() {
