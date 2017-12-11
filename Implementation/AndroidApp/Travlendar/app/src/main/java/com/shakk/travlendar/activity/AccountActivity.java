@@ -33,9 +33,12 @@ public class AccountActivity extends MenuActivity {
         // Re-created activity receive the same MyViewModel instance created by the first activity.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
-            name_textView.setText(user.getName());
-            surname_textView.setText(user.getSurname());
-            email_textView.setText(user.getEmail());
+            String name = user != null ? user.getName() : "";
+            name_textView.setText(name);
+            String surname = user != null ? user.getSurname() : "";
+            surname_textView.setText(surname);
+            String email = user != null ? user.getEmail() : "";
+            email_textView.setText(email);
         });
     }
 

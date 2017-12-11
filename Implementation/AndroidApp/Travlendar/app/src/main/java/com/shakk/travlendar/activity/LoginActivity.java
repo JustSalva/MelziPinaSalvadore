@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Performs an User input operation in the DB on a separated thread.
      */
-    private class InsertUserTask extends AsyncTask<User, Void, Void> {
+    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
 
         private AppDatabase database;
 

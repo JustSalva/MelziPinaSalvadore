@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                 .build());
 
         userViewModel = new UserViewModel(getApplication());
-        if (userViewModel.getUser().getValue() == null) {
+        if (userViewModel.getUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), CalendarActivity.class));

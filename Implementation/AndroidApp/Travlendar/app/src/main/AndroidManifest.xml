@@ -30,19 +30,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/login">
         </activity>
-        <activity android:name=".activity.RegistrationActivity"
+        <activity
+            android:name=".activity.RegistrationActivity"
             android:label="@string/title_activity_registration"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.LoginActivity" />
         </activity>
         <activity android:name=".activity.CalendarActivity"
             android:label="@string/calendar"
