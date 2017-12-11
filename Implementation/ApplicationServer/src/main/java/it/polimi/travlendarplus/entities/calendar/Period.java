@@ -29,6 +29,9 @@ public class Period extends EntityWithLongKey {
     @Embedded
     private Timestamp lastUpdate;
 
+    @Column(name = "LAST_PROPAGATED_EVENT")
+    private long lastPropagatedEvent;
+
     public Period() {
         this.lastUpdate = new Timestamp();
     }
@@ -80,7 +83,15 @@ public class Period extends EntityWithLongKey {
         this.lastUpdate = lastUpdate;
     }
 
-    public static Period load(long key) throws EntityNotFoundException {
+    public long getLastPropagatedEvent() {
+        return lastPropagatedEvent;
+    }
+
+    public void setLastPropagatedEvent( long lastPropagatedEvent ) {
+        this.lastPropagatedEvent = lastPropagatedEvent;
+    }
+
+    public static Period load( long key) throws EntityNotFoundException {
         return GenericEntity.load( Period.class, key );
     }
 }

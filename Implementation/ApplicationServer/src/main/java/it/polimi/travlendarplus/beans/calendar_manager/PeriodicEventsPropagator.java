@@ -3,7 +3,9 @@ package it.polimi.travlendarplus.beans.calendar_manager;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.entities.calendar.Period;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -30,13 +32,15 @@ public class PeriodicEventsPropagator {
     }
 
     private List < GenericEvent > getEventsToBePropagated(){
-        List < GenericEvent > periodicEvents = new ArrayList<>(  );
-        periodicEvents.addAll( performEventQuery() );
-        periodicEvents.addAll( performBreakEventQuery() );
-        List < GenericEvent > eventsToBePropagated = new ArrayList<>();
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS ); //TODO change into exact time
 
-        //I select only the last (in time) event with a certain periodicity, so i can add the next periodic event
+        List < Long > genericEventIds = performPeriodicityQuery();
+
+        List < GenericEvent > periodicEvents = new ArrayList<>( performEventQuery( genericEventIds ) );
+        List < GenericEvent > eventsToBePropagated = new ArrayList<>();
+
+        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
+
+        //I keep only the events that needs to be propagated
         for ( GenericEvent event : periodicEvents ){
             if ( event.getPeriodicity().getEndingDay().isAfter( upperbound )
                     && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
@@ -47,20 +51,40 @@ public class PeriodicEventsPropagator {
 
         return eventsToBePropagated;
     }
-
-    private List < Event > performEventQuery(){
+    private List < Long > performPeriodicityQuery (){
         createEntityManagers();
 
-        List < Event > periodicEvents = new ArrayList<>();
+        List < Long > periodicEvents = new ArrayList<>();
 
-        TypedQuery < Event > eventQuery = entityManager.createQuery( "" +
-                        "SELECT event " +
-                        "FROM EVENT event " +
-                        "WHERE event.isScheduled = :TRUE AND event.periodicity <> NULL",
-                Event.class);
-        periodicEvents.addAll( eventQuery.getResultList() );
-        closeEntityManagers();
+        TypedQuery < Long > eventQuery = entityManager.createQuery( "" +
+                        "SELECT period.lastPropagatedEvent " +
+                        "FROM PERIOD period " +
+                        "WHERE period.lastPropagatedEvent <> NULL",
+                Long.class);
+        periodicEvents= new ArrayList<>( eventQuery.getResultList() );
+        closeEntityManager();
 
+        return periodicEvents;
+    }
+    private List < GenericEvent > performEventQuery( List< Long > eventIds){
+
+        List < GenericEvent > periodicEvents = new ArrayList<>(  );
+        GenericEvent genericEvent;
+
+        for ( Long id: eventIds ){
+            try {
+                genericEvent = Event.load( id );
+                periodicEvents.add( genericEvent );
+            } catch ( EntityNotFoundException e ) {
+                try {
+                    genericEvent = BreakEvent.load( id );
+                    periodicEvents.add( genericEvent );
+                } catch ( EntityNotFoundException e1 ) {
+                    // if the pointer does not exist it will be not propagated, exceptional case
+                    //TODO notify admin?
+                }
+            }
+        }
         return periodicEvents;
     }
 
@@ -69,28 +93,9 @@ public class PeriodicEventsPropagator {
         entityManager = entityManagerFactory.createEntityManager();
     }
 
-    private void closeEntityManagers(){
-        entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
-        entityManager = entityManagerFactory.createEntityManager();
+    private void closeEntityManager(){
+        entityManager.close();
     }
-
-    private List < BreakEvent > performBreakEventQuery(){
-        createEntityManagers();
-
-        List < BreakEvent > periodicBreakEvents = new ArrayList<>();
-
-        TypedQuery < BreakEvent > eventQuery = entityManager.createQuery( "" +
-                        "SELECT breakEvent " +
-                        "FROM BREAK_EVENT breakEvent " +
-                        "WHERE breakEvent.isScheduled = :TRUE AND breakEvent.periodicity <> NULL",
-                BreakEvent.class);
-        periodicBreakEvents.addAll( eventQuery.getResultList() );
-
-        closeEntityManagers();
-
-        return periodicBreakEvents;
-    }
-
 
     private void addNextPeriodicEvent( GenericEvent event ){
         GenericEvent genericEvent = event.nextPeriodicEvent( ); //NB by default they are not scheduled

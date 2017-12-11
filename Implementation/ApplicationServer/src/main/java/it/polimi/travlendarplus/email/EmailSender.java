@@ -17,6 +17,9 @@ import javax.mail.internet.MimeMessage;
 
 import java.security.SecureRandom;
 
+/**
+ * It provide functionalities to send emails from travlendar plus proprietary email
+ */
 @Startup
 @Singleton
 public class EmailSender implements EmailInterface{
@@ -50,7 +53,13 @@ public class EmailSender implements EmailInterface{
         mailServerProperties.put( SMTP_SSL_TRUST, HOST );
     }
 
-    private static void sendNewPasswordEmail ( String password, String emailRecipient ) throws MessagingException {
+    /**
+     * It sends an email containing the new password of an user
+     * @param password new password of the recipient user
+     * @param emailRecipient email address of the user which password is to be sent
+     * @throws MessagingException if the email forwarding process fails
+     */
+    private void sendNewPasswordEmail ( String password, String emailRecipient ) throws MessagingException {
         Session getMailSession;
         MimeMessage generateMailMessage;
         getMailSession = Session.getDefaultInstance( mailServerProperties, null );
@@ -67,6 +76,11 @@ public class EmailSender implements EmailInterface{
         transport.close();
     }
 
+    /**
+     * Compute and send a new email to the specified user
+     * @param user user that wants to reset his password
+     * @throws MailPasswordForwardingFailedException if the email forwarding process fails
+     */
     public void sendNewCredentials ( User user ) throws MailPasswordForwardingFailedException{
         SecureRandom secureRandom = new SecureRandom();
         long longToken = Math.abs( secureRandom.nextLong() );

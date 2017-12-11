@@ -87,8 +87,8 @@ public class EventManager extends UserManager{
         if( ! event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
                 && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
                 .isBefore( upperbound )){
-            nextEvent = event.nextPeriodicEvent();
 
+            nextEvent = event.nextPeriodicEvent();
 
             if ( event.isScheduled() ){
                 //TODO check nextEventFeasibility with copied travel
@@ -99,6 +99,10 @@ public class EventManager extends UserManager{
             nextEvent.addInUserList( currentUser );
             currentUser.save();
             propagatedEvents.addAll( propagatePeriodicEvents( nextEvent ) );
+        }else{
+            //If the event is the last propagated one this knowledge is saved into the periodicity class
+            event.getPeriodicity().setLastPropagatedEvent( event.getId() );
+            event.getPeriodicity().save();
         }
         return propagatedEvents;
 
@@ -228,7 +232,9 @@ public class EventManager extends UserManager{
                 false, null, eventMessage.getMinimumTime());
     }
 
-    public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage) throws InvalidFieldException, EntityNotFoundException{
+    public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage)
+            throws InvalidFieldException, EntityNotFoundException{
+
         checkBreakEventFields( eventMessage );
         BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
