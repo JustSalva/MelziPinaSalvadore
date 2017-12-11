@@ -29,12 +29,6 @@ import java.util.List;
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
 
-    @Inject
-    EmailInterface emailSender;
-
-    @EJB
-    PublicKeyTimerInterface publicKeyTimerInterface;
-
     @Path("/register")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,44 +127,6 @@ public class AuthenticationEndpoint {
         return HttpResponseBuilder.ok();
     }
 
-    @Path( "/security/{ idDevice }" )
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response requestPublicKey( @PathParam("idDevice") String idDevice ){
-        RSAEncryption encryption = null;
-        try {
-            encryption = new RSAEncryption( idDevice );
-        } catch ( NoSuchAlgorithmException e ) {
-            return HttpResponseBuilder.notAvaiable();
-        }
-        encryption.save();
-        PublicKey publicKey = encryption.getPublicKey();
-        publicKeyTimerInterface.scheduleSingleTimer( encryption );
-        return HttpResponseBuilder.buildOkResponse( new PublicKeyResponse( publicKey ) );
-    }
-
-    @Path( "/security" )
-    @PATCH
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response askNewCredentials( EmailMessage emailMessage ){
-        User user;
-
-        try {
-            user = loadUser( emailMessage.getEmail() );
-        } catch ( UserNotRegisteredException e ) {
-            return HttpResponseBuilder.badRequest();
-        }
-
-        try {
-            emailSender.sendNewCredentials( user );
-        } catch ( MailPasswordForwardingFailedException e ) {
-            return HttpResponseBuilder.buildBadRequest( "unable to send the email" );
-        }
-        return HttpResponseBuilder.ok();
-    }
-
     /**
      * Find out if exist a user with the specified credentials
      * @param email username of the user
@@ -193,6 +149,8 @@ public class AuthenticationEndpoint {
         try {
             userDevice = UserDevice.load( idDevice );
             //the following instruction is executed only if an instance of that device already exist
+            user.removeUserDevice( idDevice );
+            user.save();
             userDevice.remove();
         } catch ( EntityNotFoundException e ) {
             //nothing if it not exists is ok, we are creating it
@@ -211,7 +169,7 @@ public class AuthenticationEndpoint {
         return HttpResponseBuilder.buildOkResponse( new LoginResponse( token , user.getName(), user.getSurname()) );
     }
 
-    private User loadUser( String email ) throws UserNotRegisteredException {
+    protected static User loadUser( String email ) throws UserNotRegisteredException {
         User user;
         try {
             user = User.load( email );

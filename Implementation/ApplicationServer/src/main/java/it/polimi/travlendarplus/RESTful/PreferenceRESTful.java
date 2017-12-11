@@ -200,7 +200,7 @@ public class PreferenceRESTful {
 
     /**
      * It allows the user to delete a previously inserted preferred location
-     * @param name identifier of the preferred location to be deletd
+     * @param name identifier of the preferred location to be deleted
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code if the preferred location specified does not exist
      */
