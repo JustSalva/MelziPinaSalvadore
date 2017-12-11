@@ -82,7 +82,7 @@ public class EventManager extends UserManager{
     public List < GenericEvent > propagatePeriodicEvents( GenericEvent event ){
         List < GenericEvent > propagatedEvents = new ArrayList<>( );
         propagatedEvents.add( event );
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS ); //TODO change into exact time
+        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
         GenericEvent nextEvent;
         if( ! event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
                 && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
@@ -184,10 +184,13 @@ public class EventManager extends UserManager{
         Event event = getEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
         //TODO it can be inserted in the schedule?
-        //TODO handle periodic events
         //TODO ask and set the feasible path
+        if ( eventMessage.isPropagateToPeriodicEvents() ){
+            //TODO handle periodic events ( delete all and recreate? )
+        }
         //TODO add into either scheduled or not scheduled array and save!
         event.save();
+        currentUser.save();
         return event;
     }
 
@@ -207,11 +210,10 @@ public class EventManager extends UserManager{
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         //TODO it can be inserted in the schedule?
-        //TODO handle periodic events
         //TODO add into either scheduled or not scheduled array and save!
         breakEvent.save();
         currentUser.save();
-        return propagatePeriodicEvents( breakEvent );
+        return propagatePeriodicEvents( breakEvent );   //it handle periodic events
     }
 
     private void checkBreakEventFields ( AddBreakEventMessage eventMessage) throws InvalidFieldException {
@@ -239,7 +241,9 @@ public class EventManager extends UserManager{
         BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
         //TODO it can be inserted in the schedule?
-        //TODO handle periodic events
+        if ( eventMessage.isPropagateToPeriodicEvents() ){
+            //TODO handle periodic events ( delete all and recreate? )
+        }
         //TODO add into either scheduled or not scheduled array and save!
         breakEvent.save();
         return breakEvent;
