@@ -4,7 +4,6 @@ import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import org.junit.jupiter.api.Test;
 
 import javax.persistence.*;
 import java.time.Duration;

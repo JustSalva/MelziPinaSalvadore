@@ -34,7 +34,7 @@ public class PeriodicEventsPropagator {
         periodicEvents.addAll( performEventQuery() );
         periodicEvents.addAll( performBreakEventQuery() );
         List < GenericEvent > eventsToBePropagated = new ArrayList<>();
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
+        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS ); //TODO change into exact time
 
         //I select only the last (in time) event with a certain periodicity, so i can add the next periodic event
         for ( GenericEvent event : periodicEvents ){
@@ -95,8 +95,8 @@ public class PeriodicEventsPropagator {
     private void addNextPeriodicEvent( GenericEvent event ){
         GenericEvent genericEvent = event.nextPeriodicEvent( ); //NB by default they are not scheduled
         //TODO check travel feasibility and add feasible travels to standard Events
-        genericEvent.addInUserList( event.getUser() );
         genericEvent.save();
+        genericEvent.addInUserList( event.getUser() );
         event.getUser().save();
     }
 

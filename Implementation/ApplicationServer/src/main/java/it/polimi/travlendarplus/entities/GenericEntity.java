@@ -26,7 +26,6 @@ public abstract class GenericEntity implements Serializable{
     private void commitTransaction(EntityManager entityManager){
         entityManager.getTransaction().commit();
         entityManager.close();
-        entityManagerFactory.close();
     }
 
     /**

@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.messages.GenericMessage;
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class EventManager extends UserManager{
 
     @EJB
-    PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager;
 
     @PostConstruct
     public void postConstruct() {
@@ -66,17 +67,41 @@ public class EventManager extends UserManager{
         return events;
     }
 
-    public Event addEvent( AddEventMessage eventMessage ) throws InvalidFieldException{
+    public List < GenericEvent > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException{
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
         //TODO it can be inserted in the schedule?
-        //TODO handle periodic events
         //TODO ask and set the feasible path
         //TODO add into either scheduled or not scheduled array and save!
         event.save();
         currentUser.save();
-        return event;
+        return propagatePeriodicEvents( event ); //it handle periodic events
+    }
+
+    public List < GenericEvent > propagatePeriodicEvents( GenericEvent event ){
+        List < GenericEvent > propagatedEvents = new ArrayList<>( );
+        propagatedEvents.add( event );
+        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS ); //TODO change into exact time
+        GenericEvent nextEvent;
+        if( ! event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
+                && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
+                .isBefore( upperbound )){
+            nextEvent = event.nextPeriodicEvent();
+
+
+            if ( event.isScheduled() ){
+                //TODO check nextEventFeasibility with copied travel
+            }else{
+                //TODO if event is not scheduled a path must be computed
+            }
+            nextEvent.save();
+            nextEvent.addInUserList( currentUser );
+            currentUser.save();
+            propagatedEvents.addAll( propagatePeriodicEvents( nextEvent ) );
+        }
+        return propagatedEvents;
+
     }
 
     private Location findLocation( String address ){
@@ -91,7 +116,6 @@ public class EventManager extends UserManager{
     }
 
     private Event createEvent( AddEventMessage eventMessage ){
-        //TODO periodicity
         TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
         Location departure = findLocation( eventMessage.getDeparture() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
@@ -174,7 +198,7 @@ public class EventManager extends UserManager{
         genericEvent.remove();
     }
 
-    public BreakEvent addBreakEvent( AddBreakEventMessage eventMessage) throws InvalidFieldException{
+    public List< GenericEvent > addBreakEvent( AddBreakEventMessage eventMessage) throws InvalidFieldException{
         checkBreakEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
@@ -183,7 +207,7 @@ public class EventManager extends UserManager{
         //TODO add into either scheduled or not scheduled array and save!
         breakEvent.save();
         currentUser.save();
-        return breakEvent;
+        return propagatePeriodicEvents( breakEvent );
     }
 
     private void checkBreakEventFields ( AddBreakEventMessage eventMessage) throws InvalidFieldException {
@@ -200,7 +224,6 @@ public class EventManager extends UserManager{
         }
     }
     private BreakEvent createBreakEvent(AddBreakEventMessage eventMessage){
-       //TODO periodicity
         return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, null, eventMessage.getMinimumTime());
     }
