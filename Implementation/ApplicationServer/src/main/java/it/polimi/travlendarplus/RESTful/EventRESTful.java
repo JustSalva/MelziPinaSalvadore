@@ -50,7 +50,7 @@ public class EventRESTful {
     /**
      * It allows to obtain the info related to a specific event
      * @param id identifier of the requested event
-     * @return an HTTP response containing the GenericEvent requested, either Event or BreakEvent,
+     * @return an HTTP 200 OK response containing the GenericEvent requested, either Event or BreakEvent,
      *         or an HTTP 400 Bad Request response status code that communicate that the requested event does't exist
      */
     @Path("{idEvent}")
@@ -100,7 +100,8 @@ public class EventRESTful {
     /**
      * It adds an event into the user profile
      * @param eventMessage eventMessage that describe the event to be added
-     * @return the event info, visualized by the client or
+     * @return the event info, visualized by the client or or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -117,7 +118,7 @@ public class EventRESTful {
     /**
      * It allows the user to modify a previously inserted event
      * @param eventMessage eventMessage that describe the event fields to be modified
-     * @return bad request HTTP response if the id specified does not exist or if some fields are not consistent
+     * @return a 400 bad request HTTP response if the id specified does not exist or if some fields are not consistent
      * (in this case in the message body is specified which fields are wrong), an ok HTTP response otherwise
      */
     @PATCH
@@ -163,7 +164,8 @@ public class EventRESTful {
     /**
      * It adds an event into the user profile
      * @param eventMessage eventMessage that describe the event to be added
-     * @return the event info, visualized by the client or
+     * @return the event info, visualized by the client or or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
      */
     @Path("/breakEvent")
     @POST
