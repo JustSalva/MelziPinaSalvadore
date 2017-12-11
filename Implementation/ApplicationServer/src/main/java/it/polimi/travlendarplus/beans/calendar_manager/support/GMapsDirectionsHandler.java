@@ -1,11 +1,7 @@
 package it.polimi.travlendarplus.beans.calendar_manager.support;
 
-import it.polimi.travlendarplus.beans.calendar_manager.PathManager;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
-
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GMapsDirectionsHandler {
@@ -32,30 +28,23 @@ public class GMapsDirectionsHandler {
 
     //it calculates eventual paths related to this event: the function requires the previous event
     public String getBaseCallPreviousPath(Event event, Event previousEvent) {
-        long secondi = (48*12*31*24*60*60);
-        addParam("origin", "Lecco,Italy");
-        addParam("destination", "Como,Italy");
-        //addParam("departure_time", secondi+"");
-        //addParam("departure_time", Instant.now().getEpochSecond()+"");
-        addParam("departure_time", 1517262180+"" );
-        addParam("mode", "transit");
-        //addParam("transit_mode", "train");
-        //System.out.println(getCallURL());
-        return callURL.toString();
-        /*addParam("origin", event.getDeparture().getAddress());
-        addParam("destination", event.getEventLocation().getAddress());
+        addParam("origin", event.getDeparture().getLatitude()+","+event.getDeparture().getLongitude());
+        addParam("destination", event.getEventLocation().getLatitude()+","+
+                event.getEventLocation().getLongitude());
         if (previousEvent != null)
             addParam("departure_time", previousEvent.getEndingTime().getEpochSecond()+"");
         else
             addParam("arrival_time", event.getStartingTime().getEpochSecond()+"");
-        return callURL.toString();*/
+        return callURL.toString();
     }
 
     //it calculates eventual paths after this event: the function requires the following event
     public String getBaseCallFollowingPath(Event event, Event followingEvent) {
-        addParam("origin", event.getEventLocation().getAddress());
-        addParam("destination", followingEvent.getEventLocation().getAddress());
-        addParam("departure_time", event.getEndingTime().toString());
+        addParam("origin", event.getEventLocation().getLatitude()+","+
+                event.getEventLocation().getLongitude());
+        addParam("destination", followingEvent.getEventLocation().getLatitude()+","+
+                followingEvent.getEventLocation().getLongitude());
+        addParam("departure_time", event.getEndingTime().getEpochSecond()+"");
         return callURL.toString();
     }
 

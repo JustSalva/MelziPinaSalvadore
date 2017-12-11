@@ -6,16 +6,15 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHa
 import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.ScheduleHolder;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONObject;
-
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,11 @@ public class PathManager extends UserManager{
 
     @EJB
     ScheduleManager scheduleManager;
+
+    @PostConstruct
+    public void postConstruct() {
+        scheduleManager.setCurrentUser(this.getCurrentUser());
+    }
 
     //attention to last event of the schedule (only one array of paths)
 
@@ -201,6 +205,12 @@ public class PathManager extends UserManager{
             scheduleManager.getSchedule().removeSpecEvent(event);
         for(BreakEvent breakEvent: swapOutBreaks)
             scheduleManager.getSchedule().removeSpecBreak(breakEvent);
+    }
+
+    @Override
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.scheduleManager.setCurrentUser(currentUser);
     }
 
     /*private boolean accettablePathCombination(boolean first, boolean last, PathCombination comb) {

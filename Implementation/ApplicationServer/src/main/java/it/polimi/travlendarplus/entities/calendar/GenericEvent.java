@@ -4,11 +4,8 @@ package it.polimi.travlendarplus.entities.calendar;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.entities.travels.Travel;
-
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Entity(name = "GENERIC_EVENT")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -110,7 +107,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     }
 
     public long getDayAtMidnight () {
-        return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % 24*60*60);
+        return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % (24*60*60));
     }
 
     public Timestamp getLastUpdate() {

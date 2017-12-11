@@ -12,10 +12,8 @@ import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GMapsJSONReader {
 
@@ -199,12 +197,16 @@ public class GMapsJSONReader {
 
     private static String getSingleLineName(JSONObject singleStep) {
         JSONObject transitDetails;
-        try {
+        try{
             transitDetails = getTransitDetails(singleStep);
-        } catch (JSONException e) {
+        } catch(JSONException e) {
             return singleStep.getString("html_instructions");
         }
-        return transitDetails.getJSONObject("line").getString("name");
+        try {
+            return transitDetails.getJSONObject("line").getString("name");
+        } catch(JSONException e) {
+            return "";
+        }
     }
 
     private static String getSingleVehicleType(JSONObject singleStep) {

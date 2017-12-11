@@ -18,4 +18,12 @@ public class PathCombination {
     public Travel getFollPath() {
         return follPath;
     }
+
+    @Override
+    public String toString() {
+        return "PathCombination{" +
+                "prevPath=" + prevPath +
+                ", follPath=" + follPath +
+                '}';
+    }
 }
