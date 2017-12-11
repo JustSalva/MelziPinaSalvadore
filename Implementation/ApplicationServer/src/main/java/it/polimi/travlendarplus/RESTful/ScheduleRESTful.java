@@ -70,7 +70,7 @@ public class ScheduleRESTful {
 
 
     /**
-     * Allpw the user to force in the schedule an event not scheduled
+     * Allow the user to force in the schedule an event not scheduled
      * @param id identifier of the event to be forced into the schedule
      * @return an HTTP 400 Bad Request response status code if the identifier of the event does not exist
      * or if the event is already scheduled, otherwise an HTTP 200 OK success status response code

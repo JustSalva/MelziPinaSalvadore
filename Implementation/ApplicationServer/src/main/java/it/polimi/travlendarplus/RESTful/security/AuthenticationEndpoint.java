@@ -29,6 +29,14 @@ import java.util.List;
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
 
+    /**
+     * Allows the user to register himself into the system
+     * @param registrationForm message containing all required info to register an user
+     * @return an HTTP 200 OK success status response code if the request is fulfilled ( and a token in the body )
+     * or an an HTTP 401 Unauthorized response status code if the user is already registered
+     * or otherwise an HTTP 400 Bad Request response status code
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     */
     @Path("/register")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,6 +63,18 @@ public class AuthenticationEndpoint {
         return HttpResponseBuilder.unauthorized();
     }
 
+
+    /**
+     * Allows the user to log himself into the system
+     * @param credentials message containing all required info to recognize an user
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * ( in the body name and surname of the user and a token)
+     * or an an HTTP 401 Unauthorized response status code if the user is not registered
+     * or an HTTP 403 Forbidden response status code if the credential are incorrect,
+     * or an HTTP 400 Bad Request response status code
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     *
+     */
     @Path("/login")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +101,15 @@ public class AuthenticationEndpoint {
         return buildLoginTokenResponse( token, user );
     }
 
+    /**
+     * Allows the user to modify his account info
+     * @param updatedUserInfo message containing the user credentials and the modified infos
+     * @return an HTTP 200 OK success status response code if the request is fulfilled (and in the body a token)
+     * or an an HTTP 401 Unauthorized response status code if the credential are incorrect
+     * or an HTTP 400 Bad Request response status code if hte specified user is not registered,
+     * or an HTTP 400 Bad Request response status code with a body not empty
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     */
     @Path("/manage-user")
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,6 +136,14 @@ public class AuthenticationEndpoint {
         return buildResponseToken( issueToken( user,updatedUserInfo.getIdDevice() ) );
     }
 
+    /**
+     * Allows the user to delete his account
+     * @param email email address of the user
+     * @param password user's password
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or an an HTTP 401 Unauthorized response status code if the credential are incorrect
+     * or an HTTP 400 Bad Request response status code if hte specified user is not registered,
+     */
     @Path("/manage-user/{ email }/{ pws }") //nb DELETE HTTP method cannot contain a body
     @DELETE
     public Response deleteProfile( @PathParam("email") String email, @PathParam("pws") String password){

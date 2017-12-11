@@ -47,7 +47,9 @@ public class PreferenceRESTful {
 
 
     /**
-     * @return all the preference profiles of the user
+     * Allows the user to retrieve all preferences profile
+     * @return  an HTTP 200 OK success status response code and  all the preference profiles of the user
+     * ( in the message body )
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +58,7 @@ public class PreferenceRESTful {
     }
 
     /**
-     * Allow the user to retrieve a specific preference profile
+     * Allows the user to retrieve a specific preference profile
      * @param id identifier of the requested profile
      * @return an HTTP 200 OK success status response code and the requested profile ( in the message body )
      * if present, an HTTP 400 Bad Request response status code otherwise
@@ -73,7 +75,7 @@ public class PreferenceRESTful {
     }
 
     /**
-     * Allow the user to add a new preference profile
+     * Allows the user to add a new preference profile
      * @param typeOfEventMessage message containing the info of the new profile
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
@@ -90,7 +92,7 @@ public class PreferenceRESTful {
     }
 
     /**
-     * Allow the user to modify one of his preference profiles
+     * Allows the user to modify one of his preference profiles
      * @param typeOfEventMessage message containing the info of the profile to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise ( in the body is specified which fields are wrong,
@@ -129,6 +131,7 @@ public class PreferenceRESTful {
     //this RESTfuls manage the preferred location of the user
 
     /**
+     * Allows the user to retrieve all his preferred locations
      * @return all the preferred location of the authenticated user
      */
     @Path( "/location" )
@@ -159,7 +162,7 @@ public class PreferenceRESTful {
 
 
     /**
-     * It allows to add a specific preferred location
+     * It allows the user to add a specific preferred location
      * @param locationMessage message containing the location info
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
@@ -202,7 +205,7 @@ public class PreferenceRESTful {
      * It allows the user to delete a previously inserted preferred location
      * @param name identifier of the preferred location to be deleted
      * @return an HTTP 200 OK success status response code if the request is fulfilled
-     * or HTTP 400 Bad Request response status code if the preferred location specified does not exist
+     * or an HTTP 400 Bad Request response status code if the preferred location specified does not exist
      */
     @Path( "/location/{name}" )
     @DELETE

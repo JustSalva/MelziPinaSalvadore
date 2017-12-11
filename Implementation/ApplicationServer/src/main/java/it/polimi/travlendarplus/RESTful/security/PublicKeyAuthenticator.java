@@ -13,9 +13,19 @@ import java.security.PublicKey;
 
 @Path("/")
 public class PublicKeyAuthenticator {
-    @EJB
-    PublicKeyTimerInterface publicKeyTimerInterface;
 
+    /**
+     *  EJB that provide a timer that will delete the generated Public key after a certain duration
+     */
+    @EJB
+    private PublicKeyTimerInterface publicKeyTimerInterface;
+
+    /**
+     * Allows the user to obtain a public key
+     * @param idDevice identifier of the device that perform the request
+     * @return an HTTP 200 OK success status response code and the requested public key ( in the message body )
+     * or an HTTP 503 Service Unavailable response status code if something goes wrong
+     */
     @Path( "/security/{ idDevice }" )
     @GET
     @Produces( MediaType.APPLICATION_JSON)
