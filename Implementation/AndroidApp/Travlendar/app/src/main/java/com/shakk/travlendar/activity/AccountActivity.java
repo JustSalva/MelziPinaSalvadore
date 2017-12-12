@@ -1,12 +1,9 @@
 package com.shakk.travlendar.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,11 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
-import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.database.view_model.UserViewModel;
 
 import org.json.JSONException;
@@ -37,12 +36,20 @@ public class AccountActivity extends MenuActivity {
     private TextView name_textView;
     private TextView surname_textView;
     private TextView email_textView;
+    private TextView locationAddress_textView;
     private EditText locationName_editText;
-    private EditText locationAddress_editText;
+    private Button selectLocation_button;
     private Button addLocation_button;
     private ProgressBar progressBar;
 
+    private final int PLACE_PICKER_REQUEST = 1;
+
     private UserViewModel userViewModel;
+
+    private String locationName;
+    private String locationAddress;
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +62,14 @@ public class AccountActivity extends MenuActivity {
         surname_textView = findViewById(R.id.surname);
         email_textView = findViewById(R.id.email);
         locationName_editText = findViewById(R.id.locationName_editText);
-        locationAddress_editText = findViewById(R.id.locationAddress_editText);
+        locationAddress_textView = findViewById(R.id.locationAddress_textView);
+        selectLocation_button = findViewById(R.id.selectLocation_button);
         addLocation_button = findViewById(R.id.addLocation_button);
         progressBar = findViewById(R.id.progressBar);
+
+        if (savedInstanceState == null) {
+            loadLocationsFromServer();
+        }
 
         // Create a ViewModel the first time the system calls an activity's onCreate() method.
         // Re-created activity receive the same MyViewModel instance created by the first activity.
@@ -71,20 +83,49 @@ public class AccountActivity extends MenuActivity {
             email_textView.setText(email);
         });
 
-        addLocation_button.setOnClickListener(view -> addLocation());
+        // Setup button listeners.
+        selectLocation_button.setOnClickListener(view -> selectLocationAddress());
+        addLocation_button.setOnClickListener(view -> sendLocationToServer());
     }
 
-    private void addLocation() {
+    private void loadLocationsFromServer() {
+
+    }
+
+    /**
+     * Starts an intent that allows the user to pick a place location using Google APIs.
+     * After selection onActivityResult(...) is called.
+     */
+    private void selectLocationAddress() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Gets called after the selection of a place by selectLocationAddress().
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                locationAddress = place.getAddress().toString();
+                locationAddress_textView.setText(locationAddress);
+                latitude = Double.toString(place.getLatLng().latitude);
+                longitude = Double.toString(place.getLatLng().longitude);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void sendLocationToServer() {
         // Store values at the time of the sending attempt.
-        String locationName = locationName_editText.getText().toString();
-        String locationAddress = locationAddress_editText.getText().toString();
-
-        // Retrieve token representing device.
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        // Retrieve inserted address latitude and longitude.
-        String latitude;
-        String longitude;
+        locationName = locationName_editText.getText().toString();
 
         // Build JSON to be sent to server.
         JSONObject jsonParams = new JSONObject();
@@ -92,8 +133,8 @@ public class AccountActivity extends MenuActivity {
         try {
             jsonParams.put("name", locationName);
             jsonParams.put("address", locationAddress);
-            //jsonParams.put("latitude", latitude);
-            //jsonParams.put("longitude", longitude);
+            jsonParams.put("latitude", latitude);
+            jsonParams.put("longitude", longitude);
             Log.d("JSON", jsonParams.toString());
             entity = new StringEntity(jsonParams.toString());
             entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
@@ -102,7 +143,9 @@ public class AccountActivity extends MenuActivity {
         }
 
         //Send JSON to server.
-        TravlendarRestClient.post("ApplicationServer/preference/location", entity, new JsonHttpResponseHandler() {
+        String univocalCode = userViewModel.getUser().getValue().getUnivocalCode();
+        TravlendarRestClient.post("ApplicationServer/preference/location", univocalCode
+                , entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 //Makes UI unresponsive.

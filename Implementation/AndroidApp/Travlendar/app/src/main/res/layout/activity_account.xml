@@ -114,7 +114,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
                     <Spinner
                         android:id="@+id/locations_spinner"
@@ -126,7 +127,7 @@
                         android:id="@+id/locations_address_textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:layout_gravity="center"
                         android:text="TextView"/>
 
@@ -166,34 +167,41 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/locationAddress_editText"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/location_address"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="@string/location_address"/>
 
-                </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/locationAddress_textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"/>
+
+                    <Button
+                        android:id="@+id/selectLocation_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/select_location" />
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/addLocation_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
                     android:text="@string/save"/>
-
-                <fragment
-                    android:id="@+id/place_autocomplete_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                    />
 
             </LinearLayout>
 

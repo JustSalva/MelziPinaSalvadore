@@ -14,8 +14,17 @@ public class TravlendarRestClient {
     }
 
     public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
-        //client.addHeader("Postman-Token", "e1c8684d-fab0-c724-12a9-e2909789b174");
         client.addHeader("Cache-Control", "no-cache");
+        client.setTimeout(20 * 1000);
+        client.setResponseTimeout(20 * 1000);
+        client.setConnectTimeout(20 * 1000);
+        client.post(null, getAbsoluteUrl(url), entity, "application/json", responseHandler);
+    }
+
+    public static void post(String url, String authorization
+                            , StringEntity entity, AsyncHttpResponseHandler responseHandler) {
+        client.addHeader("Cache-Control", "no-cache");
+        client.addHeader("Authorization", "Bearer " + authorization);
         client.setTimeout(20 * 1000);
         client.setResponseTimeout(20 * 1000);
         client.setConnectTimeout(20 * 1000);
