@@ -37,7 +37,7 @@ public class ScheduleManager extends UserManager{
     public boolean isEventOverlapFreeIntoSchedule(Event event, boolean forSwap) {
         if(!forSwap)
             setSchedule(event.getDayAtMidnight());
-        // Checking free overlapping with scheduled events.
+        // Checking if the event is overlapping free with regard of scheduled events.
         for(Event scheduledEvent: schedule.getEvents())
             if(!(areEventsOverlapFree(event, scheduledEvent)))
                 return false;
@@ -60,14 +60,6 @@ public class ScheduleManager extends UserManager{
         // Events and paths are taken into account in order to check if the minimum duration of a breakEvent can be ensured.
         ArrayList<Event> involvedEvents = getEventsIntoIntervalWithPathRegard(schedule.getEvents(), breakEvent);
         return breakEvent.isMinimumEnsuredWithPathRegard(involvedEvents);
-    }
-
-    public void addToScheduled(Event event /*with best path*/) {
-        //TODO
-    }
-
-    public void addToNotScheduled(Event event) {
-        //TODO
     }
 
     // Day parameter represents the wanted day at 00:00:00. This function is called in order to calculate the schedule

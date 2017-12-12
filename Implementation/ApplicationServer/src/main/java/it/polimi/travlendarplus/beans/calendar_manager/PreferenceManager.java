@@ -254,6 +254,14 @@ public class PreferenceManager extends UserManager{
         return null;
     }
 
+    public ArrayList<TravelMeanEnum> getAllowedMeans(Event event, TravelMeanEnum[] list) {
+        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
+        for(TravelMeanEnum mean: list)
+            if(isVehicleAllowed(event, mean))
+                privateMeans.add(mean);
+        return privateMeans;
+    }
+
     protected boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle){
         return !event.getType().isDeactivated( vehicle );
     }

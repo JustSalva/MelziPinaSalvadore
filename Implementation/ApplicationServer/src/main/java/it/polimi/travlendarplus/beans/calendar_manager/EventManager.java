@@ -1,10 +1,13 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
+import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
+import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.GenericMessage;
@@ -24,15 +27,20 @@ import java.util.stream.Collectors;
 @Stateless
 public class EventManager extends UserManager{
 
+    static TravelMeanEnum[] privateList = {TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT};
+    static TravelMeanEnum[] publicList = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM, TravelMeanEnum.SUBWAY};
+
     @EJB
     private PreferenceManager preferenceManager;
+    private ScheduleManager scheduleManager;
+    private PathManager pathManager;
 
     @PostConstruct
     public void postConstruct() {
         preferenceManager.setCurrentUser( currentUser );
+        scheduleManager.setCurrentUser(currentUser);
+        pathManager.setCurrentUser(currentUser);
     }
-
-
 
     public Event getEventInformation( long id ) throws EntityNotFoundException{
         List<GenericEvent> eventList = new ArrayList<>( currentUser.getEvents() );
@@ -68,12 +76,28 @@ public class EventManager extends UserManager{
     }
 
     public List < GenericEvent > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException{
+        PathCombination feasiblePaths = null;
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
-        //TODO it can be inserted in the schedule?
-        //TODO ask and set the feasible path
-        //TODO add into either scheduled or not scheduled array and save!
+        if(scheduleManager.isEventOverlapFreeIntoSchedule(event, false)) {
+            // CalculatePaths check feasibility into the schedule with regard of TIMETABLE and CONSTRAINTS defined by the user
+            feasiblePaths = pathManager.calculatePath(event, preferenceManager.getAllowedMeans(event, privateList),
+                    preferenceManager.getAllowedMeans(event, publicList), false);
+            // If feasiblePaths id different from NULL there is a feasible solution and the event can be added.
+            if(feasiblePaths != null) {
+                event.setFeasiblePath(feasiblePaths.getPrevPath());
+                Event followingEvent = scheduleManager.getPossibleFollowingEvent(event);
+                // Also info on the following event are uploaded, according to the calculated related-path.
+                if (followingEvent != null) {
+                    //TODO set departure according to boolean on prev location
+                    followingEvent.setDeparture(null); //TODO
+                    followingEvent.setFeasiblePath(feasiblePaths.getFollPath());
+                    followingEvent.save();
+                }
+            }
+        }
+        event.setScheduled(feasiblePaths != null);
         event.save();
         currentUser.save();
         return propagatePeriodicEvents( event ); //it handle periodic events
@@ -209,8 +233,7 @@ public class EventManager extends UserManager{
         checkBreakEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
-        //TODO it can be inserted in the schedule?
-        //TODO add into either scheduled or not scheduled array and save!
+        breakEvent.setScheduled(scheduleManager.isBreakOverlapFreeIntoSchedule(breakEvent, false));
         breakEvent.save();
         currentUser.save();
         return propagatePeriodicEvents( breakEvent );   //it handle periodic events
@@ -249,6 +272,12 @@ public class EventManager extends UserManager{
         return breakEvent;
     }
 
-
+    @Override
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.scheduleManager.setCurrentUser(currentUser);
+        this.preferenceManager.setCurrentUser(currentUser);
+        this.pathManager.setCurrentUser(currentUser);
+    }
 
 }

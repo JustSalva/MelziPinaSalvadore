@@ -18,35 +18,35 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Stateless
 public class PathManager extends UserManager{
 
     @EJB
     ScheduleManager scheduleManager;
+    PreferenceManager preferenceManager;
 
     @PostConstruct
     public void postConstruct() {
-        scheduleManager.setCurrentUser(this.getCurrentUser());
+        scheduleManager.setCurrentUser(currentUser);
+        preferenceManager.setCurrentUser(currentUser);
     }
-
-    //attention to last event of the schedule (only one array of paths)
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
                                          ArrayList<TravelMeanEnum> publicMeans, boolean forSwap) {
         if(!forSwap)
             scheduleManager.setSchedule(event.getDayAtMidnight());
-        // Obtaining possible paths according to previous and following scheduled events.
-        ArrayList<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
-        ArrayList<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
-
+        // Obtaining possible paths that don't overlap with previous and following scheduled events.
+        List<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
+        List<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
+        // Filtering obtained paths according to constraints defined
+        previousPaths = previousPaths.stream().filter(p -> preferenceManager.checkConstraints(p, event.getType())).collect(Collectors.toList());
+        followingPaths = followingPaths.stream().filter(p -> preferenceManager.checkConstraints(p, event.getType())).collect(Collectors.toList());
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         ArrayList<PathCombination> possibleCombinations = scheduleManager.getFeasiblePathCombinations(event,
                 previousPaths, followingPaths);
-
-        //TODO preferences on this ArrayList
         //TODO best path among which that remain (return it)
-
         return possibleCombinations.get(0);
     }
 
@@ -211,6 +211,7 @@ public class PathManager extends UserManager{
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
         this.scheduleManager.setCurrentUser(currentUser);
+        this.preferenceManager.setCurrentUser(currentUser);
     }
 
 }
