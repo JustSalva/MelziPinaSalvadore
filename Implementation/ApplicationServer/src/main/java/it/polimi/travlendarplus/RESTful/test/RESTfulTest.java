@@ -53,4 +53,18 @@ public class RESTfulTest {
         return combination.toString();
     }
 
+    @Path("lastPath")
+    @GET
+    @Produces("text/plain")
+    public String lastPathTest() {
+        RESTfulTestSettings.configureThree(this);
+        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
+        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
+        privateMeans.add(TravelMeanEnum.CAR);
+        privateMeans.add(TravelMeanEnum.BIKE);
+        publicMeans.add(TravelMeanEnum.BUS);
+        publicMeans.add(TravelMeanEnum.TRAIN);
+        combination = pathManager.calculatePath(event3, privateMeans, publicMeans, false);
+        return combination.toString();
+    }
 }

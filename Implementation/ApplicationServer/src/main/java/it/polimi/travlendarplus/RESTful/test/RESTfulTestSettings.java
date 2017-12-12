@@ -48,6 +48,22 @@ public class RESTfulTestSettings {
         test.pathManager.setCurrentUser(test.user);
     }
 
+    public static void configureThree(RESTfulTest test) {
+        setBaseLocations();
+        //2018/01/20 h:8:00 - 10:00
+        test.event1 = setEvent(test.event1, 1, 1516435200, 1516442400, true, mandello, mandello);
+        //2018/01/20 h:18:00 - 20:00
+        test.event3 = setEvent(test.event3, 3, 1516471200, 1516478400, false, lecco, como);
+        //2018/01/20 h:14:00 - 15:00
+        test.event2 = setEvent(test.event2, 2, 1516456800, 1516460400, true, mandello, lecco);
+        ArrayList<Event> events = new ArrayList<Event>();
+        events.add(test.event1);
+        events.add(test.event2);
+        events.add(test.event3);
+        test.user.setEvents(events);
+        test.pathManager.setCurrentUser(test.user);
+    }
+
     public static Event setEvent (Event e, long id, long stTime, long endTime, boolean sch, Location dep, Location arr) {
         e.setId(id);
         e.setStartingTime(Instant.ofEpochSecond(stTime));
