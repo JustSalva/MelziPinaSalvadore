@@ -139,4 +139,16 @@ public class Event extends GenericEvent {
     public void addInUserList( User user ) {
         user.addEvent( this );
     }
+
+    @Override
+    public String toString() {
+        return "Event{" + super.toString()+
+                "description='" + description + '\'' +
+                ", prevLocChoice=" + prevLocChoice +
+                ", type=" + type +
+                ", eventLocation=" + eventLocation +
+                ", departure=" + departure +
+                ", feasiblePath=" + feasiblePath +
+                '}';
+    }
 }

@@ -135,4 +135,17 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public abstract GenericEvent nextPeriodicEvent();
 
     public abstract void addInUserList( User user);
+
+    @Override
+    public String toString() {
+        return "GenericEvent{" +
+                "name='" + name + '\'' +
+                ", startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", isScheduled=" + isScheduled +
+                ", periodicity=" + periodicity +
+                ", user=" + user +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }

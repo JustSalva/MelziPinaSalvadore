@@ -67,4 +67,29 @@ public class RESTfulTest {
         combination = pathManager.calculatePath(event3, privateMeans, publicMeans, false);
         return combination.toString();
     }
+
+    @Path("swap")
+    @GET
+    @Produces("text/plain")
+    public String swap() {
+        RESTfulTestSettings.configureFour(this);
+        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
+        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
+        privateMeans.add(TravelMeanEnum.CAR);
+        privateMeans.add(TravelMeanEnum.BIKE);
+        publicMeans.add(TravelMeanEnum.BUS);
+        publicMeans.add(TravelMeanEnum.TRAIN);
+        Event event4 = new Event();
+        Location maggianico = GMapsGeocoder.getLocationObject(45.8259029, 9.419594);
+        Location lecco = GMapsGeocoder.getLocationObject(45.8565698, 9.397670399999999);
+        event4.setDeparture(lecco);
+        event4.setEventLocation(maggianico);
+        //2018/01/20 h:14:30 - 17:00
+        event4.setStartingTime(Instant.ofEpochSecond(1516458600));
+        event4.setEndingTime(Instant.ofEpochSecond(1516467600));
+        String msg = "";
+        for(Event event: pathManager.swapEvents(event4, privateMeans, publicMeans).getEvents())
+            msg+="***"+event.toString()+"\n";
+        return msg;
+    }
 }

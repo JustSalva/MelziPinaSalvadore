@@ -141,16 +141,14 @@ public class PathManager extends UserManager{
         //System.out.println(response);
     }
 
-    public ScheduleHolder swapEvents(Event forcedEvent) {
+    public ScheduleHolder swapEvents(Event forcedEvent, ArrayList<TravelMeanEnum> privateMeans,
+                                     ArrayList<TravelMeanEnum> publicMeans) {
         scheduleManager.setSchedule(forcedEvent.getDayAtMidnight());
         List<Event> swapOutEvents = new ArrayList<Event>();
         List<BreakEvent> swapOutBreaks = new ArrayList<BreakEvent>();
         List<PathCombination> combs = new ArrayList<PathCombination>();
-        List<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
-        List<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
         firstSwapPhase(forcedEvent);
         // Calculating prev/foll path for the forcedEvent.
-        //TODO get user preferences or specify ALL travel means (some solutions will be removed after whith preferences check)
         boolean complete = false;
         while(!complete && !scheduleManager.getSchedule().getEvents().isEmpty()) {
             swapOutEvents = new ArrayList<Event>();
@@ -172,33 +170,9 @@ public class PathManager extends UserManager{
                 swapOutEvents.add(scheduleManager.getPossibleFollowingEvent(forcedEvent));
             removeEvents(swapOutEvents, swapOutBreaks);
         }
+        
         //TODO update DB with swapOUT events, swapOUT breaks and swapIN
         return scheduleManager.getSchedule();
-
-        /*PathCombination comb = calculatePath(forcedEvent, null, null, true);
-        boolean first = scheduleManager.getPossiblePreviousEvent(forcedEvent) == null;
-        boolean last = scheduleManager.getPossibleFollowingEvent(forcedEvent) == null;
-        while(!accettablePathCombination(first, last, comb)) {
-            //removing a break that can overlap or prev/foll overlapping events
-            //TODO check if there is a break overlapping
-            for(BreakEvent breakScheduled: scheduleManager.getSchedule().getBreaks())
-                if(!scheduleManager.areEventsOverlapFree(forcedEvent, breakScheduled))
-                    swapOutBreaks.add(breakScheduled);
-
-            if(swapOutBreaks.size()>0)
-                scheduleManager.getSchedule().removeSpecBreak(swapOutBreaks.get(0));
-            else {
-                if(!scheduleManager.areEventsOverlapFree(forcedEvent, scheduleManager.getPossiblePreviousEvent(forcedEvent)))
-                    scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossiblePreviousEvent(forcedEvent));
-                if(!scheduleManager.areEventsOverlapFree(forcedEvent, scheduleManager.getPossibleFollowingEvent(forcedEvent)))
-                    scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossibleFollowingEvent(forcedEvent));
-            }
-            //TODO get user preferences or specify ALL travel means (some solutions will be removed after whith preferences check)
-            comb = calculatePath(forcedEvent, null, null, true);
-            first = scheduleManager.getPossiblePreviousEvent(forcedEvent) == null;
-            last = scheduleManager.getPossibleFollowingEvent(forcedEvent) == null;
-        }*/
-
     }
 
     // Removing events that overlap with forcedEvent
@@ -233,15 +207,5 @@ public class PathManager extends UserManager{
         this.currentUser = currentUser;
         this.scheduleManager.setCurrentUser(currentUser);
     }
-
-    /*private boolean accettablePathCombination(boolean first, boolean last, PathCombination comb) {
-        if(first && last)
-            return true;
-        if(first)
-            return comb.getFollPath() != null;
-        if(last)
-            return comb.getPrevPath() != null;
-        return comb.getPrevPath() != null && comb.getFollPath() != null;
-    }*/
 
 }
