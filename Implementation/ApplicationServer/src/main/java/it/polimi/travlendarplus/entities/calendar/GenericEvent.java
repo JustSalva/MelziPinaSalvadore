@@ -14,6 +14,8 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     private static final long serialVersionUID = -4348542805788613273L;
 
+    private final long SECONDS_IN_A_DAY = 24*60*60;
+
     @Column(nullable = false, name = "NAME")
     private String name;
 
@@ -107,7 +109,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     }
 
     public long getDayAtMidnight () {
-        return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % (24*60*60));
+        return startingTime.getEpochSecond() - (startingTime.getEpochSecond() % (SECONDS_IN_A_DAY));
     }
 
     public Timestamp getLastUpdate() {

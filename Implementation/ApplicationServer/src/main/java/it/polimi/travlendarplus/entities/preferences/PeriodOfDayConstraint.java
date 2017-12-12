@@ -13,6 +13,8 @@ public class PeriodOfDayConstraint extends Constraint {
 
     private static final long serialVersionUID = -4287946262554067696L;
 
+    private final long SECONDS_IN_A_DAY = 24*60*60;
+
     @Column(name = "MIN_HOUR")
     private long minHour; //In seconds from 00.00 of the day
 
@@ -46,8 +48,10 @@ public class PeriodOfDayConstraint extends Constraint {
 
     @Override
     public boolean respectConstraint( TravelComponent travelComponent ) {
-        return travelComponent.getStartingTime().getEpochSecond() >= minHour &&
-                travelComponent.getEndingTime().getEpochSecond() <= maxHour;
+        long startingTimeInDay = travelComponent.getStartingTime().getEpochSecond() % (SECONDS_IN_A_DAY);
+        long endingTimeInDay = travelComponent.getEndingTime().getEpochSecond() % (SECONDS_IN_A_DAY);
+        return startingTimeInDay >= minHour &&
+                endingTimeInDay <= maxHour;
     }
 
     public static PeriodOfDayConstraint load( long key) throws EntityNotFoundException {

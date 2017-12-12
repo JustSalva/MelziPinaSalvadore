@@ -32,7 +32,7 @@ public class ScheduleManagerSettingOperations {
 
     public void settingOnlySetBreaks(ScheduleManagerTest test) {
         ArrayList<BreakEvent> breaks = new ArrayList<>();
-        breaks.add(setBreakEvent(test.break1, 11,9, 15, 2, true));
+        breaks.add(setBreakEvent(test.break1, 11,9, 15, 3, true));
         breaks.add(setBreakEvent(test.break2, 12,20, 23, 2, false));
         test.tester.getCurrentUser().setBreaks(breaks);
         test.tester.setSchedule(0);

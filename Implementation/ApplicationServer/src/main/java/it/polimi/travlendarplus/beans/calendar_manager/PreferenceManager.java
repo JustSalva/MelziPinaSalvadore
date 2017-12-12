@@ -238,9 +238,11 @@ public class PreferenceManager extends UserManager{
             if( typeOfEvent.isDeactivated( travelMean ) ){
                 return false;
             }
-            Constraint constraint = typeOfEvent.getLimitedBy( travelMean );
-            if( constraint != null && ! constraint.respectConstraint( travelComponent )){
-                return false;
+            ArrayList<Constraint> consList = typeOfEvent.getLimitedBy( travelMean );
+            for(Constraint constraint: consList) {
+                if (!constraint.respectConstraint(travelComponent)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -253,7 +255,7 @@ public class PreferenceManager extends UserManager{
     }
 
     protected boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle){
-        return event.getType().isDeactivated( vehicle );
+        return !event.getType().isDeactivated( vehicle );
     }
 
 }
