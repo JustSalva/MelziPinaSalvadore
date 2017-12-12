@@ -40,8 +40,8 @@ public class GMapsDirectionsHandler {
 
     //it calculates eventual paths after this event: the function requires the following event
     public String getBaseCallFollowingPath(Event event, Event followingEvent) {
-        addParam("origin", event.getEventLocation().getLatitude()+","+
-                event.getEventLocation().getLongitude());
+        addParam("origin", followingEvent.getDeparture().getLatitude()+","+
+                followingEvent.getDeparture().getLongitude());
         addParam("destination", followingEvent.getEventLocation().getLatitude()+","+
                 followingEvent.getEventLocation().getLongitude());
         addParam("departure_time", event.getEndingTime().getEpochSecond()+"");
