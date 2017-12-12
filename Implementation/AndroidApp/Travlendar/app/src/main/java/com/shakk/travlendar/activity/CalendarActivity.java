@@ -1,37 +1,47 @@
 package com.shakk.travlendar.activity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.DragEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shakk.travlendar.DateUtility;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.activity.fragment.DatePickerFragment;
+import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.event.Event;
+import com.shakk.travlendar.database.entity.event.GenericEvent;
 import com.shakk.travlendar.database.view_model.CalendarViewModel;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class CalendarActivity extends MenuActivity {
 
-    private CalendarViewModel calendarViewModel;
-
     private TextView date_textView;
-    private LinearLayout calendar_linearLayout;
-    private GridLayout overlapping_gridLayout;
+    private Button addEvent_button;
+    private RelativeLayout events_relativeLayout;
+
+    private CalendarViewModel calendarViewModel;
 
     private long dateOfCalendar;
 
@@ -41,90 +51,57 @@ public class CalendarActivity extends MenuActivity {
         setContentView(R.layout.activity_calendar);
         super.setupMenuToolbar();
 
+        // Saves UI references.
         date_textView = findViewById(R.id.date_textView);
-        calendar_linearLayout = findViewById(R.id.calendar_linearLayout);
-        overlapping_gridLayout = findViewById(R.id.overlapping_gridLayout);
+        addEvent_button = findViewById(R.id.addEvent_button);
+        events_relativeLayout = findViewById(R.id.events_relativeLayout);
 
-        overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.calendar_linearLayout).setOnDragListener(new MyDragListener());
+        // TODO: to be removed when downloaded events from server.
+        new InsertEventsTask(getApplicationContext()).execute();
 
+        //overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
 
-        dateOfCalendar = DateUtility.getDateFromString(date_textView.toString());
+        // TODO: set date calendar right
+        // Set as drop recipient for drag action.
+        events_relativeLayout.setOnDragListener(new MyDragListener());
+
+        // Set today's date in the title.
+        date_textView.setText(DateUtility.getStringFromDate(new Date()));
+        //dateOfCalendar = new Instant;
 
         calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
-        calendarViewModel.getEvents(dateOfCalendar).observe(this, user -> {
-            fillCalendarGridLayout();
+        calendarViewModel.getScheduledEvents(dateOfCalendar)
+                .observe(this, scheduledEvents -> {
+            fillEventsRelativeLayout(scheduledEvents);
         });
-    }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        addEvent_button.setOnClickListener(click -> goToEventCreation());
     }
 
     //TODO
-    private void fillCalendarGridLayout() {
-        //calendar_gridLayout.addView(createEventGridLayout(true),1);
+    private void fillEventsRelativeLayout(List<GenericEvent> events) {
+        for (GenericEvent event : events) {
+            events_relativeLayout.addView(createEventTextView(event));
+        }
     }
 
-    //TODO: create cycle filling the gridLayout
-    private GridLayout createEventGridLayout(boolean isScheduled) {
-        GridLayout gridLayout = new GridLayout(getApplicationContext());
-        gridLayout.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
-
-        int color = isScheduled ? Color.parseColor("#FF88CF92") : Color.parseColor("#00000000");
-        gridLayout.setBackgroundColor(color);
-
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0;
-        params.height = WRAP_CONTENT;
-        params.setMargins(10, 10, 10, 10);
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        gridLayout.setLayoutParams(params);
-
-        return gridLayout;
-    }
-
-    //TODO:fill the eventGridLayout
-    private void fillEventGridLayout(GridLayout eventGridLayout) {
+    //TODO:
+    private TextView createEventTextView(GenericEvent event) {
         TextView textView = new TextView(getApplicationContext());
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0;
-        params.height = WRAP_CONTENT;
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        textView.setText(event.getName());
+        textView.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
+
+        int greenColor = Color.parseColor("#FF88CF92");
+        textView.setBackgroundColor(greenColor);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, 500);
+        params.setMargins(10, 10, 10, 10);
         textView.setLayoutParams(params);
 
-
+        return textView;
     }
 
-    public void goToEventCreation(View view) {
+    public void goToEventCreation() {
         Intent intent = new Intent(this, EventEditorActivity.class);
         startActivity(intent);
     }
@@ -187,6 +164,27 @@ public class CalendarActivity extends MenuActivity {
                     break;
             }
             return true;
+        }
+    }
+
+    private static class InsertEventsTask extends AsyncTask<Void, Void, Void> {
+
+        private AppDatabase database;
+
+        InsertEventsTask(Context context) {
+            this.database = AppDatabase.getInstance(context);
+        }
+
+        protected Void doInBackground(Void... users) {
+            database.calendarDao().deleteAll();
+            GenericEvent genericEvent = new GenericEvent(1, "name",
+                    DateUtility.getDateFromString("2017-12-11"), 1100, 1200, true);
+            Event event = new Event("de", "meeting", "qua",
+                    false, null);
+            genericEvent.setType(GenericEvent.EventType.EVENT);
+            genericEvent.setEvent(event);
+            database.calendarDao().insert(genericEvent);
+            return null;
         }
     }
 }

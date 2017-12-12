@@ -13,51 +13,38 @@ import java.util.List;
 
 public class CalendarViewModel extends AndroidViewModel {
 
-    private AppDatabase database = AppDatabase
-            .getInstance(getApplication()
-                    .getApplicationContext());
+    private AppDatabase database;
 
-    private LiveData<List<GenericEvent>> genericEvents;
-    private LiveData<List<GenericEvent>> events;
+    private LiveData<List<GenericEvent>> scheduledEvents;
+    private LiveData<List<GenericEvent>> overlappingEvents;
     private LiveData<List<GenericEvent>> breakEvents;
 
     public CalendarViewModel(@NonNull Application application) {
         super(application);
+        database = AppDatabase.getInstance(application.getApplicationContext());
     }
 
-    public LiveData<List<GenericEvent>> getGenericEvents(long date) {
-        if (genericEvents == null) {
-            genericEvents = new MutableLiveData<>();
-            loadGenericEvents(date);
+    public LiveData<List<GenericEvent>> getScheduledEvents(long date) {
+        if (scheduledEvents == null) {
+            scheduledEvents = new MutableLiveData<>();
+            scheduledEvents = database.calendarDao().getScheduledEvents(date);
         }
-        return genericEvents;
+        return scheduledEvents;
     }
 
-    public LiveData<List<GenericEvent>> getEvents(long date) {
-        if (events == null) {
-            events = new MutableLiveData<>();
-            loadEvents(date);
+    public LiveData<List<GenericEvent>> getOverlappingEvents(long date) {
+        if (overlappingEvents == null) {
+            overlappingEvents = new MutableLiveData<>();
+            overlappingEvents = database.calendarDao().getOverlappingEvents(date);
         }
-        return events;
+        return overlappingEvents;
     }
 
     public LiveData<List<GenericEvent>> getBreakEvents(long date) {
         if (breakEvents == null) {
             breakEvents = new MutableLiveData<>();
-            loadBreakEvents(date);
+            breakEvents = database.calendarDao().getBreakEvents(date);
         }
         return breakEvents;
-    }
-
-    private void loadGenericEvents(long date) {
-        genericEvents = database.calendarDao().getGenericEvents(date);
-    }
-
-    private void loadEvents(long date) {
-        events = database.calendarDao().getEvents(date);
-    }
-
-    private void loadBreakEvents(long date) {
-        events = database.calendarDao().getBreakEvents(date);
     }
 }

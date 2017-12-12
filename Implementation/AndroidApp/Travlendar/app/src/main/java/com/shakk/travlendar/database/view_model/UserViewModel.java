@@ -24,12 +24,8 @@ public class UserViewModel extends AndroidViewModel {
     public LiveData<User> getUser() {
         if (user == null) {
             user = new MutableLiveData<>();
-            loadUser();
+            user = database.userDao().getUser();
         }
         return user;
-    }
-
-    private void loadUser() {
-        user = database.userDao().getUser();
     }
 }

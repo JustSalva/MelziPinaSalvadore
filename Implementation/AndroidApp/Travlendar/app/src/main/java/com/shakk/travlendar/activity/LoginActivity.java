@@ -41,7 +41,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    //Database reference and idDevice token.
+    // idDevice token.
     private String token;
 
     // UI references.
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login_button;
     private ProgressBar progressBar;
 
-    //Strings to be read by input fields.
+    // Strings to be read from input fields.
     private String email;
     private String password;
 
@@ -59,11 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Set up the link to registration button.
         TextView register_textView = findViewById(R.id.linkToRegister_textView);
         register_textView.setPaintFlags(register_textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        register_textView.setOnClickListener((event) -> {
-            startActivity(new Intent(this, RegistrationActivity.class));
-        });
+        register_textView.setOnClickListener((event) ->
+                startActivity(new Intent(this, RegistrationActivity.class)));
 
         // Set up the registration form.
         email_editText = findViewById(R.id.email_editText);
@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         login_button = findViewById(R.id.login_button);
         progressBar = findViewById(R.id.progressBar);
 
+        // Listener on the password field.
         password_editText.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 logIn();
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         });
 
+        // Listener on the login button.
         login_button.setOnClickListener(view -> logIn());
     }
 
@@ -89,8 +91,6 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void logIn() {
-        Log.d("TAG", "LogIn");
-
         // Store values at the time of the login attempt.
         email = email_editText.getText().toString();
         password = password_editText.getText().toString();
@@ -100,10 +100,10 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        //Retrieve token representing device.
+        // Retrieve token representing device.
         token = FirebaseInstanceId.getInstance().getToken();
 
-        //Build JSON to be sent to server.
+        // Build JSON to be sent to server.
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
         try {
@@ -117,21 +117,21 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //Send JSON to server.
-        TravlendarRestClient.post("login", entity, new JsonHttpResponseHandler() {
+        // Send JSON to server.
+        TravlendarRestClient.post("ApplicationServerArchive/login", entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
-                //Makes UI unresponsive.
+                // Makes UI unresponsive during the sending.
                 waitForServerResponse();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("JSON REPLY", response.toString());
+                // Sending successful.
                 String univocalCode = "";
                 String name = "";
                 String surname = "";
-                //Get univocalCode from JSON response.
+                // Get fields from JSON response.
                 try {
                     univocalCode = response.getString("token");
                     name = response.getString("name");
@@ -140,19 +140,26 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //Insert new User into the local DB.
+                // Insert new User into the local DB.
                 User user = new User(email, name, surname, univocalCode);
                 Log.d("INSERT USER", user.toString());
                 new InsertUserTask(getApplicationContext()).execute(user);
 
-                //Go to calendar activity.
+                // Go to calendar activity.
                 goToCalendarActivity();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                // Sending failed.
+                // TODO: read error message and communicate to user.
+                if (statusCode == 403) {
+                    Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 400) {
+                    Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
+                }
                 Log.d("RESPONSE ERROR", responseString);
-                //Makes UI responsive again.
+                // Makes UI responsive again.
                 resumeNormalMode();
             }
         });

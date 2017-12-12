@@ -38,21 +38,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), CalendarActivity.class));
         }
     }
-
-    public void goToLogin(View view) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToRegistration(View view) {
-        Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToCalendar(View view) {
-        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-        startActivity(intent);
-    }
 /*
             database.userDao().delete();
             database.userDao().insert(new User(1, "10486221@polimi.it", "Alessandro", "Pina"));
@@ -87,32 +72,4 @@ public class MainActivity extends AppCompatActivity {
                     "here", "there", "0800", "0900"));
             database.calendarDao().insert(list);
 */
-
-    /**
-     * Performs an User search operation in the DB on a separated thread.
-     */
-    private static class SearchUserTask extends AsyncTask<Void, Void, User> {
-
-        private AppDatabase database;
-
-        private WeakReference<Context> weakContext;
-
-        SearchUserTask(Context context) {
-            this.database = AppDatabase.getInstance(context);
-            this.weakContext = new WeakReference<>(context);
-        }
-
-        protected User doInBackground(Void... voids) {
-            LiveData<User> user = database.userDao().getUser();
-            return user.getValue();
-        }
-
-        protected void onPostExecute(User user) {
-            Context context = weakContext.get();
-            if (user == null) {
-                context.startActivity(new Intent(context, LoginActivity.class));
-            }
-            context.startActivity(new Intent(context, CalendarActivity.class));
-        }
-    }
 }

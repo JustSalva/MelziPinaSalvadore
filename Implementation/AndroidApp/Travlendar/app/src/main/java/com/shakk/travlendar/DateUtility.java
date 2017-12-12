@@ -18,4 +18,11 @@ public class DateUtility {
         }
         return date.getTime();
     }
+
+    public static String getStringFromDate(Date date) {
+        String dateString;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        dateString = sdf.format(date);
+        return dateString;
+    }
 }

@@ -37,20 +37,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_gravity="center"
-                android:text="@string/today"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textSize="30dp"
-                android:textStyle="bold"
-                android:onClick="goToEventViewer" />
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/addEvent_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/add_event"
-                android:onClick="goToEventCreation"/>
+                android:text="@string/add_event"/>
         </LinearLayout>
 
         <LinearLayout
@@ -89,38 +86,42 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/calendar_linearLayout"
+                <RelativeLayout
+                    android:id="@+id/events_relativeLayout"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1">
-
-                    <GridLayout
+<!--
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/rectangle"
                         android:backgroundTint="#88cf92"/>
+-->
+                </RelativeLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <GridLayout
-                        android:id="@+id/overlapping_gridLayout"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_columnWeight="1"
+                        android:layout_marginTop="35dp"
+                        android:background="@drawable/rectangle"
+                        android:backgroundTint="#d24c38" />
+
+                    <TextView
+                        android:id="@+id/overlapping_"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/rectangle"
-                        android:backgroundTint="#d24c38" >
+                        android:backgroundTint="#d24c38" />
 
-                    </GridLayout>
-
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 

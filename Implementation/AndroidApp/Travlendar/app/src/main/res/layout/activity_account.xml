@@ -18,6 +18,12 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -150,7 +156,7 @@
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
-                        android:id="@+id/location_name"
+                        android:id="@+id/locationName_editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/location_name"
@@ -165,7 +171,7 @@
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
-                        android:id="@+id/location_address"
+                        android:id="@+id/locationAddress_editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/location_address"
@@ -176,10 +182,18 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
+                    android:id="@+id/addLocation_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/save"/>
+
+                <fragment
+                    android:id="@+id/place_autocomplete_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
             </LinearLayout>
 

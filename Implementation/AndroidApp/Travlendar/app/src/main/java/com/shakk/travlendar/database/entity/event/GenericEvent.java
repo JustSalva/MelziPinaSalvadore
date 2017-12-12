@@ -133,8 +133,8 @@ public class GenericEvent {
     }
 
     public enum EventType {
-        EVENT("Event"),
-        BREAK("Break");
+        EVENT("event"),
+        BREAK("break");
 
         private String type;
 

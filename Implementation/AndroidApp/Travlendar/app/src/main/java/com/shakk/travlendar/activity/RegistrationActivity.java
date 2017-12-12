@@ -38,7 +38,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
  */
 public class RegistrationActivity extends AppCompatActivity {
 
-    //Database reference and idDevice token.
+    // Database reference and idDevice token.
     private String token;
 
     // UI references.
@@ -50,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button registration_button;
     private ProgressBar progressBar;
 
-    //Strings to be read by input fields.
+    // Strings to be read from input fields.
     private String email;
     private String name;
     private String surname;
@@ -71,6 +71,7 @@ public class RegistrationActivity extends AppCompatActivity {
         registration_button = findViewById(R.id.registration_button);
         progressBar = findViewById(R.id.progressBar);
 
+        // Added listener to password input field.
         password1_editText.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 signUp();
@@ -79,6 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return false;
         });
 
+        // Added listener to registration button.
         registration_button.setOnClickListener(view -> signUp());
     }
 
@@ -89,8 +91,6 @@ public class RegistrationActivity extends AppCompatActivity {
      * errors are presented and no actual registration attempt is made.
      */
     private void signUp() {
-        Log.d("TAG", "SignUp");
-
         // Store values at the time of the registration attempt.
         email = email_editText.getText().toString();
         name = name_editText.getText().toString();
@@ -103,10 +103,10 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        //Retrieve token representing device.
+        // Retrieve token representing device.
         token = FirebaseInstanceId.getInstance().getToken();
 
-        //Build JSON to be sent to server.
+        // Build JSON to be sent to server.
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
         try {
@@ -122,8 +122,8 @@ public class RegistrationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //Send JSON to server.
-        TravlendarRestClient.post("register", entity, new JsonHttpResponseHandler() {
+        // Send JSON to server.
+        TravlendarRestClient.post("ApplicationServerArchive/register", entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 //Makes UI unresponsive.
@@ -132,27 +132,27 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("JSON REPLY", response.toString());
+                // Sending successful.
                 String univocalCode = "";
-                //Get univocalCode from JSON response.
+                // Get univocalCode from JSON response.
                 try {
                     univocalCode = response.getString("token");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //Insert new User into the local DB.
+                // Insert new User into the local DB.
                 User user = new User(email, name, surname, univocalCode);
                 Log.d("INSERT USER", user.toString());
                 new InsertUserTask(getApplicationContext()).execute(user);
 
-                //Go to calendar activity.
                 goToCalendarActivity();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("RESPONSE ERROR", responseString);
+                //Sending failed.
+                // TODO: read failure message and notifies the user.
                 //Makes UI responsive again.
                 resumeNormalMode();
             }
@@ -262,7 +262,7 @@ public class RegistrationActivity extends AppCompatActivity {
     /**
      * Performs an User input operation in the DB on a separated thread.
      */
-    private class InsertUserTask extends AsyncTask<User, Void, Void> {
+    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
 
         private AppDatabase database;
 

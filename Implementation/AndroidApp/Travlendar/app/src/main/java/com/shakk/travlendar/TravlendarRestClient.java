@@ -5,7 +5,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class TravlendarRestClient {
 
-    private static final String BASE_URL = "http://151.236.60.56:8080/ApplicationServerArchive/";
+    private static final String BASE_URL = "http://151.236.60.56:8080/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -14,9 +14,7 @@ public class TravlendarRestClient {
     }
 
     public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
-        client.addHeader("Postman-Token", "e1c8684d-fab0-c724-12a9-e2909789b174");
-        //client.addHeader("Content-Type", "application/json");
-        //client.addHeader("Host", "151.236.60.56:8080");
+        //client.addHeader("Postman-Token", "e1c8684d-fab0-c724-12a9-e2909789b174");
         client.addHeader("Cache-Control", "no-cache");
         client.setTimeout(20 * 1000);
         client.setResponseTimeout(20 * 1000);
