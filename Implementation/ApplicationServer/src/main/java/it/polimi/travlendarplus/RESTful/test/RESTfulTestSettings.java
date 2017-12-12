@@ -24,7 +24,7 @@ public class RESTfulTestSettings {
         //2018/01/20 h:8:00 - 10:00
         test.event1 = setEvent(test.event1, 1, 1516435200, 1516442400, true, mandello, mandello);
         //2018/01/20 h:18:00 - 20:00
-        test.event3 = setEvent(test.event3, 3, 1516471200, 1516478400, true, mandello, como);
+        test.event3 = setEvent(test.event3, 3, 1516471200, 1516478400, true, lecco, como);
         //2018/01/20 h:14:00 - 15:00
         test.event2 = setEvent(test.event2, 2, 1516456800, 1516460400, false, mandello, lecco);
         ArrayList<Event> events = new ArrayList<Event>();

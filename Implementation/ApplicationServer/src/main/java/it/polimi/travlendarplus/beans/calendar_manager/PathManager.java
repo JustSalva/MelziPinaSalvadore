@@ -9,9 +9,9 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctiona
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import org.json.JSONException;
 import org.json.JSONObject;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -87,58 +87,63 @@ public class PathManager extends UserManager{
         return possiblePaths;
     }
 
-    //Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
-    //2) eventA is the main event and eventB is the following event -> eventB is not NULL because this case is managed above.
     private ArrayList<Travel> possiblePathsAdder(String baseCall, List<TravelMeanEnum> privateMeans,
                     List<TravelMeanEnum> publicMeans, Event eventA, Event eventB, boolean sameLoc) throws GMapsGeneralException{
-        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
+        ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
+        privatePathsHandler(possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc);
+        publicPathsHandler(possiblePaths, baseCall, eventB, publicMeans, sameLoc);
+        return possiblePaths;
+    }
+
+    private void privatePathsHandler(List<Travel> possiblePaths, String baseCall, Event eventA, Event eventB,
+                                 List<TravelMeanEnum> privateMeans, boolean sameLoc) throws GMapsGeneralException {
         GMapsJSONReader reader = new GMapsJSONReader();
-        ArrayList<Travel> possiblePaths = new ArrayList<>();
+        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if(sameLoc)
             privateMeans = privateMeansSameLoc(privateMeans);
-        // Calculating paths with private travel means.
         for(TravelMeanEnum mean: privateMeans) {
             JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
-            ArrayList<Travel> privatePaths;
-            if(eventA != null)
-                privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
-                    eventA.getEndingTime().getEpochSecond(), true, eventB.getDeparture(), eventB.getEventLocation());
-            else // It is the case when the possible new event would be the first in the schedule.
-                privatePaths = reader.getTravelNoTransitMeans(privatePathJSON, mean,
-                        eventB.getStartingTime().getEpochSecond(), false, eventB.getDeparture(), eventB.getEventLocation());
+            ArrayList<Travel> privatePaths = new ArrayList<Travel>();
+            try {
+                //Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
+                //2) eventA is the main event and eventB is the following event -> eventB is not NULL because this case is managed above.
+                privatePaths = (eventA != null) ?
+                    reader.getTravelNoTransitMeans(privatePathJSON, mean, eventA.getEndingTime().getEpochSecond(),
+                        true, eventB.getDeparture(), eventB.getEventLocation()) :
+                    // It is the case when the possible new event would be the first in the schedule.
+                    reader.getTravelNoTransitMeans(privatePathJSON, mean, eventB.getStartingTime().getEpochSecond(),
+                        false, eventB.getDeparture(), eventB.getEventLocation());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             // Considering only paths that allow to attend to the event in time
             for(Travel travel: privatePaths)
                 if(!travel.getEndingTime().isAfter(eventB.getStartingTime()))
                     possiblePaths.add(travel);
         }
-        // Calculating paths with public travel means.
+    }
+
+    private void publicPathsHandler(List<Travel> possiblePaths, String baseCall, Event eventB,
+                                    List<TravelMeanEnum> publicMeans, boolean sameLoc) throws GMapsGeneralException {
+        GMapsJSONReader reader = new GMapsJSONReader();
+        GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if(!sameLoc) { // If departure location is the same of arrival location, the path can be done only with private means.
             JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
-            ArrayList<Travel> publicPaths = reader.getTravelWithTransitMeans(publicPathsJSON);
+            ArrayList<Travel> publicPaths = new ArrayList<Travel>();
+            try {
+                publicPaths = reader.getTravelWithTransitMeans(publicPathsJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             for (Travel travel : publicPaths)
                 if (travel.getEndingTime().isBefore(eventB.getStartingTime()))
                     possiblePaths.add(travel);
         }
-        return possiblePaths;
     }
 
     private boolean isBetweenSameLocations(Event event) {   
         return event.getDeparture().getLatitude() == event.getEventLocation().getLatitude() &&
                 event.getDeparture().getLongitude() == event.getEventLocation().getLongitude();
-    }
-
-
-    public static void main (String[] a) {
-        GMapsDirectionsHandler gMapsURL = new GMapsDirectionsHandler();
-        JSONObject response = HTMLCallAndResponse.performCall(gMapsURL.getBaseCallPreviousPath(null, null));
-        GMapsJSONReader responseReader = new GMapsJSONReader();
-        //System.out.println(responseReader.getTravelNoTransitMeans(response, TravelMeanEnum.CAR, 1512558191, null, null));
-        try {
-            System.out.println(responseReader.getTravelWithTransitMeans(response));
-        } catch (GMapsGeneralException e) {
-            e.printStackTrace();
-        }
-        //System.out.println(response);
     }
 
     public ScheduleHolder swapEvents(Event forcedEvent, ArrayList<TravelMeanEnum> privateMeans,
