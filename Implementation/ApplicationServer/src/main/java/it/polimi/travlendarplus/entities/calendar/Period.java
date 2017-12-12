@@ -48,7 +48,7 @@ public class Period extends EntityWithLongKey {
     }
 
     public void setId(long id) {
-        id = id;
+        this.id = id;
     }
 
     public Instant getStartingDay() {
