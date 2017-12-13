@@ -157,7 +157,8 @@ public class AccountActivity extends MenuActivity {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        // TODO: error messages.
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
                     }
 
                     @Override
@@ -243,8 +244,17 @@ public class AccountActivity extends MenuActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                // TODO: error messages
-                Log.d("RESPONSE ERROR", responseString);
+                //Sending failed.
+                switch (statusCode) {
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
+                }
             }
 
             @Override
@@ -304,8 +314,17 @@ public class AccountActivity extends MenuActivity {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        // TODO: error messages
-                        Log.d("RESPONSE ERROR", responseString);
+                        // Request failed.
+                        switch (statusCode) {
+                            case 400:
+                                Toast.makeText(getBaseContext(), "The location specified does not exist!", Toast.LENGTH_LONG).show();
+                                Log.d("ERROR_RESPONSE", responseString);
+                                break;
+                            default:
+                                Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                                Log.d("ERROR_RESPONSE", responseString);
+                                break;
+                        }
                     }
 
                     @Override

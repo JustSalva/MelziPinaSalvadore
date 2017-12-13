@@ -152,7 +152,19 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 //Sending failed.
-                // TODO: read failure message and notifies the user.
+                switch (statusCode) {
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
+                    case 401:
+                        Toast.makeText(getBaseContext(), "This email is already taken!", Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
+                }
             }
 
             @Override

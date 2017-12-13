@@ -152,13 +152,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 // Sending failed.
-                // TODO: read error message and communicate to user.
-                if (statusCode == 403) {
-                    Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
-                } else if (statusCode == 400) {
-                    Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
+                switch (statusCode) {
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
+                    case 401:
+                        Toast.makeText(getBaseContext(), "This user is not registered!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 403:
+                        Toast.makeText(getBaseContext(), "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();
+                        password_editText.setError("Wrong password!");
+                        password_editText.requestFocus();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", responseString);
+                        break;
                 }
-                Log.d("RESPONSE ERROR", responseString);
             }
 
             @Override
