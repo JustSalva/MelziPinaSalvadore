@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
+import it.polimi.travlendarplus.UserLocation;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
@@ -162,18 +163,20 @@ public class PreferenceManager extends UserManager{
 
     //PREFERRED LOCATIONS
 
-    public Map<Location, String> getAllPreferredLocations(){
-        return new HashMap<>( currentUser.getPreferredLocations() );
+    public List< UserLocation > getAllPreferredLocations(){
+        return new ArrayList< UserLocation >( currentUser.getPreferredLocations() );
     }
 
-    public Location getPreferredLocation( String name ) throws EntityNotFoundException{
-        Map<Location, String> preferredLocations = currentUser.getPreferredLocations();
-        for (Map.Entry<Location, String> entry : preferredLocations.entrySet()) {
-            if(entry.getValue().equals( name )) {
-                return entry.getKey();
-            }
+    public UserLocation getPreferredLocation( String name ) throws EntityNotFoundException{
+        List < UserLocation > preferredLocations = currentUser.getPreferredLocations();
+
+        UserLocation requested = preferredLocations.stream()
+                .filter( userLocation -> userLocation.getName().equals( name ) )
+                .findFirst().orElse( null );
+        if ( requested == null){
+            throw new EntityNotFoundException(  );
         }
-        throw new EntityNotFoundException();
+        return requested;
     }
 
     public void addPreferredLocation( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
@@ -204,26 +207,14 @@ public class PreferenceManager extends UserManager{
             throws InvalidFieldException, EntityNotFoundException{
 
         checkLocationConsistency( locationMessage );
-        Map<Location, String> preferredLocations = currentUser.getPreferredLocations();
-        Location location = null;
-        for (Map.Entry<Location, String> entry : preferredLocations.entrySet()) {
-            if(entry.getValue().equals( locationMessage.getName() )){
-                location =entry.getKey();
-                currentUser.removeLocation( locationMessage.getName() );
-                currentUser.save();
-                break;
-            }
-
-        }
-        if( location == null){
-            throw new EntityNotFoundException();
-        }
+        currentUser.getPreferredLocations();
+        deletePreferredLocation( locationMessage.getName() );
         addPreferredLocation( locationMessage );
     }
 
     public void deletePreferredLocation( String name ) throws EntityNotFoundException{
-        getPreferredLocation( name ); //checks the location existence
-        currentUser.removeLocation( name  );
+        UserLocation location = getPreferredLocation( name );
+        currentUser.removeLocation( name );
         currentUser.save();
     }
 

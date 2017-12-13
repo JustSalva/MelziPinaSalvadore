@@ -138,8 +138,7 @@ public class PreferenceRESTful {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPreferredLocations() {
-        return HttpResponseBuilder.buildOkResponse(
-                new ListPreferredLocationsResponse( preferenceManager.getAllPreferredLocations() ) );
+        return HttpResponseBuilder.buildOkResponse( preferenceManager.getAllPreferredLocations() ) ;
     }
 
     /**
@@ -153,8 +152,7 @@ public class PreferenceRESTful {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPreferredLocation(@PathParam("locationName") String locationName) {
         try {
-            return HttpResponseBuilder.buildOkResponse( new PreferredLocationResponse(
-                    locationName, preferenceManager.getPreferredLocation( locationName ).getAddress() ));
+            return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferredLocation( locationName ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         }

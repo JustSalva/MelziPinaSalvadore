@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.entities;
 
-import it.polimi.travlendarplus.entities.calendar.Event;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

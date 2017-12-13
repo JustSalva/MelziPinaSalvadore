@@ -1,4 +1,4 @@
-package test.schedule_manager;
+package it.polimi.travlendarplus.beans.calendar_manager.schedule_manager;
 
 import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
