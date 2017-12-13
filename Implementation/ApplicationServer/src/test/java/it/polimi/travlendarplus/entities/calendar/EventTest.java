@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.GenericEntityTest;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith( Arquillian.class )
@@ -16,12 +17,17 @@ public class EventTest extends GenericEntityTest{
     }
 
     @Override
-    protected void clearTableQuery() throws Exception{
-        em.createQuery( "DELETE FROM EVENT" ).executeUpdate();
+    protected void clearTableQuery() {
+       // entityManager.createQuery( "DELETE FROM EVENT" ).executeUpdate();
     }
 
     @Override
-    protected void loadTestData() throws Exception {
+    protected void loadTestData() {
         //TODO
+    }
+
+    @Test
+    public void name() {
+
     }
 }

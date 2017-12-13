@@ -22,20 +22,21 @@ public abstract class GenericEntityTest {
 
 
     @PersistenceContext
-    public EntityManager em;
+    public EntityManager entityManager;
 
     @Inject
-    public UserTransaction utx;
+    public UserTransaction userTransaction;
 
 
-    @Deployment
+
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create( JavaArchive.class )
                 .addPackage( GenericEntity.class.getPackage() )
+                .addClass( Location.class )
                 .addAsResource(  "test-persistence.xml", "META-INF/persistence.xml" )
                 .addAsManifestResource( EmptyAsset.INSTANCE, "beans.xml" );
     }
-    @Before
+
     public void preparePersistenceTest() throws Exception {
         clearData();
         insertData();
@@ -44,7 +45,7 @@ public abstract class GenericEntityTest {
 
     @After
     public void commitTransaction() throws Exception {
-        utx.commit();
+        userTransaction.commit();
     }
 
     private void clearData() throws Exception {
@@ -53,7 +54,7 @@ public abstract class GenericEntityTest {
         commitTransaction();
     }
 
-    protected abstract void clearTableQuery() throws Exception;
+    protected abstract void clearTableQuery();
 
     private void insertData() throws Exception {
         startTransaction();
@@ -61,14 +62,14 @@ public abstract class GenericEntityTest {
         loadTestData();
         commitTransaction();
         // clear the persistence context (first-level cache)
-        em.clear();
+        entityManager.clear();
     }
 
-    protected abstract void loadTestData() throws Exception;
+    protected abstract void loadTestData();
 
     private void startTransaction() throws Exception {
-        utx.begin();
-        em.joinTransaction();
+        userTransaction.begin();
+        entityManager.joinTransaction();
     }
 
 }
