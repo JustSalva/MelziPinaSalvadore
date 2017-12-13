@@ -85,9 +85,9 @@ public class ScheduleManager extends UserManager{
     }
 
     // It returns null if the event would be the first in the schedule of that day.
-    public Event getPossiblePreviousEvent (GenericEvent event) {
+    public Event getPossiblePreviousEvent (Instant startingTime) {
         for(int i=0; i<schedule.getEvents().size(); i++)
-            if (event.getStartingTime().isBefore(schedule.getEvents().get(i).getStartingTime()))
+            if (startingTime.isBefore(schedule.getEvents().get(i).getStartingTime()))
                 return i==0 ? null : schedule.getEvents().get(i-1);
         return (schedule.getEvents().size()==0) ? null : schedule.getEvents().get(schedule.getEvents().size()-1);
     }

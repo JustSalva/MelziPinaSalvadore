@@ -89,6 +89,7 @@ public class RESTfulTest {
         event4.setStartingTime(Instant.ofEpochSecond(1516458600));
         event4.setEndingTime(Instant.ofEpochSecond(1516467600));
         event4.setType(new TypeOfEvent("", null));
+        event4.setPrevLocChoice(true);
         String msg = "";
         for(Event event: pathManager.swapEvents(event4, privateMeans, publicMeans).getEvents())
             msg+="***"+event.toString()+"\n";

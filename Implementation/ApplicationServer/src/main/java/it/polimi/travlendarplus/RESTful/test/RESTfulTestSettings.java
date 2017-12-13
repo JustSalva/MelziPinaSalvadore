@@ -121,6 +121,7 @@ public class RESTfulTestSettings {
         e.setDeparture(dep);
         e.setEventLocation(arr);
         e.setType(new TypeOfEvent("",null));
+        e.setPrevLocChoice(true);
         return e;
     }
 

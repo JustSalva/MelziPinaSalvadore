@@ -54,7 +54,9 @@ public class PathManager extends UserManager{
                                                   List<TravelMeanEnum> publicMeans) {
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
-        Event previous = scheduleManager.getPossiblePreviousEvent(event);
+        Event previous = scheduleManager.getPossiblePreviousEvent(event.getStartingTime());
+        if(event.isPrevLocChoice())
+            event.setDeparture(previous.getEventLocation());
         try {
             // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallPreviousPath(event, previous);
@@ -76,6 +78,9 @@ public class PathManager extends UserManager{
             // The event would be the last of that day. An empty ArrayList is returned.
             return possiblePaths;
         try {
+            if(following.isPrevLocChoice()) {
+                following.setDeparture(event.getEventLocation());
+            }
             // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallFollowingPath(event, following);
             boolean sameLoc = isBetweenSameLocations(following);
@@ -169,8 +174,8 @@ public class PathManager extends UserManager{
                         if(!scheduleManager.areEventsOverlapFree(forcedEvent, breakScheduled))
                             swapOutBreaks.add(breakScheduled);
             }
-            else if(prev.isEmpty() && scheduleManager.getPossiblePreviousEvent(forcedEvent) != null)
-                swapOutEvents.add(scheduleManager.getPossiblePreviousEvent(forcedEvent));
+            else if(prev.isEmpty() && scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()) != null)
+                swapOutEvents.add(scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()));
             else if(foll.isEmpty() && scheduleManager.getPossibleFollowingEvent(forcedEvent) != null)
                 swapOutEvents.add(scheduleManager.getPossibleFollowingEvent(forcedEvent));
             removeEvents(swapOutEvents, swapOutBreaks);

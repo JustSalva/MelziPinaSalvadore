@@ -86,14 +86,18 @@ public class EventManager extends UserManager{
             // CalculatePaths check feasibility into the schedule with regard of TIMETABLE and CONSTRAINTS defined by the user
             feasiblePaths = pathManager.calculatePath(event, preferenceManager.getAllowedMeans(event, privateList),
                     preferenceManager.getAllowedMeans(event, publicList), false);
-            // If feasiblePaths id different from NULL there is a feasible solution and the event can be added.
+            // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
             if(feasiblePaths != null) {
+                // Setting previous location if prevLocChoice boolean param is true.
+                if(event.isPrevLocChoice())
+                    event.setDeparture(scheduleManager.getPossiblePreviousEvent(event.getStartingTime()).getEventLocation());
                 event.setFeasiblePath(feasiblePaths.getPrevPath());
                 Event followingEvent = scheduleManager.getPossibleFollowingEvent(event);
                 // Also info on the following event are uploaded, according to the calculated related-path.
                 if (followingEvent != null) {
-                    //TODO set departure according to boolean on prev location
-                    followingEvent.setDeparture(null); //TODO
+                    // Setting previous location if prevLocChoice boolean param is true.
+                    if(followingEvent.isPrevLocChoice())
+                        followingEvent.setDeparture(event.getEventLocation());
                     followingEvent.setFeasiblePath(feasiblePaths.getFollPath());
                     followingEvent.save();
                 }
@@ -147,7 +151,9 @@ public class EventManager extends UserManager{
 
     private Event createEvent( AddEventMessage eventMessage ){
         TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
-        Location departure = findLocation( eventMessage.getDeparture() );
+        Location departure = null;
+        if(!eventMessage.isPrevLocChoice())
+            departure = findLocation( eventMessage.getDeparture() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(), type,
@@ -158,7 +164,8 @@ public class EventManager extends UserManager{
         List<String> errors = new ArrayList<>( );
 
         errors.addAll( checkGenericEventFields( eventMessage ) );
-
+        if(eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent(eventMessage.getStartingTime()) == null)
+            errors.add("Not exists a previous location");
         try {
             preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
         } catch ( EntityNotFoundException e ) {
