@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -100,7 +102,21 @@ public class AccountActivity extends MenuActivity {
             if (savedInstanceState == null) {
                 loadLocationsFromServer();
             }
-            Toast.makeText(getBaseContext(), "UNI".concat(univocalCode), Toast.LENGTH_LONG).show();
+        });
+
+        //Setup locations spinner listeners.
+        locations_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // Shows address of the selected locations next to the spinner.
+                String address = locations.get(adapterView.getSelectedItem().toString());
+                locationsAddressViewer_textView.setText(address);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing happens.
+            }
         });
 
         // Setup button listeners.
@@ -111,19 +127,18 @@ public class AccountActivity extends MenuActivity {
 
     private void loadLocationsFromServer() {
         //Send request to server.
-        TravlendarRestClient.get("ApplicationServerArchive/preference/location", univocalCode
+        TravlendarRestClient.getWithAuth("ApplicationServerArchive/preference/location", univocalCode
                 , new JsonHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         //Makes UI unresponsive.
-                        Toast.makeText(getBaseContext(), "Start", Toast.LENGTH_LONG).show();
                         waitForServerResponse();
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("JSON REPLY", response.toString());
-                        Toast.makeText(getBaseContext(), "OK", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "Locations updated!", Toast.LENGTH_LONG).show();
                         //Get locations array from JSON response.
                         locations = new HashMap<>();
                         try {
@@ -133,7 +148,7 @@ public class AccountActivity extends MenuActivity {
                                 String name = location.getString("name");
                                 String address = location.getString("address");
                                 locations.put(name, address);
-                                Toast.makeText(getBaseContext(), name.concat(address), Toast.LENGTH_LONG).show();
+                                populateLocationsSpinner();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -142,13 +157,7 @@ public class AccountActivity extends MenuActivity {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        if (statusCode == 403) {
-                            Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
-                        } else if (statusCode == 400) {
-                            Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
-                        }
-                        Log.d("RESPONSE ERROR", responseString);
-                        Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
+                        // TODO: error messages.
                     }
 
                     @Override
@@ -184,8 +193,6 @@ public class AccountActivity extends MenuActivity {
                 locationAddress_textView.setText(locationAddress);
                 latitude = Double.toString(place.getLatLng().latitude);
                 longitude = Double.toString(place.getLatLng().longitude);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -210,7 +217,6 @@ public class AccountActivity extends MenuActivity {
             jsonParams.put("address", locationAddress);
             jsonParams.put("latitude", latitude);
             jsonParams.put("longitude", longitude);
-            Log.d("JSON", jsonParams.toString());
             entity = new StringEntity(jsonParams.toString());
             entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
         } catch (JSONException | UnsupportedEncodingException e) {
@@ -218,7 +224,7 @@ public class AccountActivity extends MenuActivity {
         }
 
         //Send JSON to server.
-        TravlendarRestClient.post("ApplicationServerArchive/preference/location", univocalCode
+        TravlendarRestClient.postWithAuth("ApplicationServerArchive/preference/location", univocalCode
                 , entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -232,15 +238,12 @@ public class AccountActivity extends MenuActivity {
                 Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
                 // Add location to the list.
                 locations.put(locationName, locationAddress);
+                populateLocationsSpinner();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (statusCode == 403) {
-                    Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
-                } else if (statusCode == 400) {
-                    Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
-                }
+                // TODO: error messages
                 Log.d("RESPONSE ERROR", responseString);
             }
 
@@ -279,22 +282,12 @@ public class AccountActivity extends MenuActivity {
     }
 
     private void deleteLocationFromServer() {
-        // TODO: Retrieve name of the location from the spinner.
+        // Retrieve location name to be deleted.
+        String selectedLocation = locations_spinner.getSelectedItem().toString();
 
-        // Build JSON to be sent to server.
-        JSONObject jsonParams = new JSONObject();
-        StringEntity entity = null;
-        try {
-            jsonParams.put("name", locationName);
-            entity = new StringEntity(jsonParams.toString());
-            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        //Send JSON to server.
-        TravlendarRestClient.post("ApplicationServerArchive/preference/location/name", univocalCode
-                , entity, new JsonHttpResponseHandler() {
+        //Send request to server.
+        TravlendarRestClient.deleteWithAuth("ApplicationServerArchive/preference/location/".concat(selectedLocation), univocalCode
+                , new JsonHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         //Makes UI unresponsive.
@@ -304,18 +297,14 @@ public class AccountActivity extends MenuActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // Notify the user that the location has been added.
-                        Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();
                         // Add location to the list.
-                        locations.put(locationName, locationAddress);
+                        locations.remove(locationName);
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        if (statusCode == 403) {
-                            Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
-                        } else if (statusCode == 400) {
-                            Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
-                        }
+                        // TODO: error messages
                         Log.d("RESPONSE ERROR", responseString);
                     }
 
@@ -325,6 +314,17 @@ public class AccountActivity extends MenuActivity {
                         resumeNormalMode();
                     }
                 });
+    }
+
+    private void populateLocationsSpinner() {
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext()
+                , android.R.layout.simple_spinner_item
+                , locations.keySet().toArray(new String[locations.size()]));
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        locations_spinner.setAdapter(adapter);
     }
 
     /**

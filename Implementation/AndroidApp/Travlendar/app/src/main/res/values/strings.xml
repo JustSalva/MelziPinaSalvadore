@@ -111,6 +111,7 @@
     <string name="goToRegistration">No account yet? Register right now!</string>
     <string name="location_address">Location address</string>
     <string name="select_location">Select location</string>
+    <string name="deleteLocation_imageDescription">Trash bin to delete location</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

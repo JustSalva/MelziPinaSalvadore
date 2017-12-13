@@ -25,16 +25,21 @@ public class TravlendarRestClient {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void get(String url, String authorization, AsyncHttpResponseHandler responseHandler) {
+    public static void getWithAuth(String url, String authorization, AsyncHttpResponseHandler responseHandler) {
         client.addHeader("Authorization", "Bearer ".concat(authorization));
         client.get(getAbsoluteUrl(url), responseHandler);
+    }
+
+    public static void deleteWithAuth(String url, String authorization, AsyncHttpResponseHandler responseHandler) {
+        client.addHeader("Authorization", "Bearer ".concat(authorization));
+        client.delete(getAbsoluteUrl(url), responseHandler);
     }
 
     public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
         client.post(null, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
-    public static void post(String url, String authorization
+    public static void postWithAuth(String url, String authorization
                             , StringEntity entity, AsyncHttpResponseHandler responseHandler) {
         client.addHeader("Authorization", "Bearer ".concat(authorization));
         client.post(null, getAbsoluteUrl(url), entity, "application/json", responseHandler);

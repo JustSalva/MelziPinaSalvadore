@@ -118,6 +118,7 @@
                         android:id="@+id/locations_spinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight="1" />
 
                     <TextView
@@ -125,25 +126,25 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:minLines="3"
                         android:layout_gravity="center"
-                        android:text="TextView"/>
+                        android:textAlignment="center"/>
 
                     <ImageView
                         android:id="@+id/deleteLocation_imageView"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_weight="0.3"
-                        app:srcCompat="@drawable/ic_delete_black_24dp" />
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_delete_black_24dp"
+                        android:contentDescription="@string/deleteLocation_imageDescription" />
 
                 </LinearLayout>
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:text="@string/add_location"
                     android:textAlignment="center"
                     android:textSize="18sp"
@@ -174,14 +175,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="@string/location_address"/>
+                        android:textStyle="bold"
+                        android:text="@string/location_address"
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/locationAddress_textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="2"/>
+                        android:layout_weight="2"
+                        android:textAlignment="center"/>
 
                     <Button
                         android:id="@+id/selectLocation_button"
