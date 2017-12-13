@@ -136,8 +136,8 @@ public class ScheduleManager extends UserManager{
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
         if(getPossibleFollowingEvent(event) == null)
             return getFeasiblePathCombinationsLastEventCase(event, previous);
-        for(Travel prev: previous)
-            for(Travel foll: following) {
+        for(Travel prev: previous) {
+            for (Travel foll : following) {
                 boolean combinationFeasible = true;
                 // Analyzing for each combination of prev/foll paths if it would be feasible with each scheduled break.
                 for (BreakEvent breakEvent : schedule.getBreaks()) {
@@ -150,8 +150,8 @@ public class ScheduleManager extends UserManager{
                 if (combinationFeasible)
                     feasibleComb.add(new PathCombination(prev, foll));
             }
-
-            return feasibleComb;
+        }
+        return feasibleComb;
     }
 
     // It is used when the event to be added into the schedule would be the last: it doesn't have a following path.

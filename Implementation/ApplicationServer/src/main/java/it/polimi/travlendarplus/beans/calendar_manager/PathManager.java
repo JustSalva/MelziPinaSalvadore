@@ -25,6 +25,7 @@ public class PathManager extends UserManager{
 
     @EJB
     ScheduleManager scheduleManager;
+    @EJB
     PreferenceManager preferenceManager;
 
     @PostConstruct
@@ -46,8 +47,7 @@ public class PathManager extends UserManager{
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         ArrayList<PathCombination> possibleCombinations = scheduleManager.getFeasiblePathCombinations(event,
                 previousPaths, followingPaths);
-        //TODO best path among which that remain (return it)
-        return possibleCombinations.get(0);
+        return (!possibleCombinations.isEmpty()) ? preferenceManager.findBestpath(possibleCombinations, event.getType()) : null;
     }
 
     private ArrayList<Travel> getPreviousTravels (Event event, List<TravelMeanEnum> privateMeans,

@@ -56,22 +56,25 @@ public class Travel extends EntityWithLongKey {
         this.miniTravels = miniTravels;
     }
 
-    //amount of time in minutes spent on travel
-    public int getTravelTime() {
-        int totalMinutes = 0;
+    // Amount of time (in seconds) spent on travel.
+    public long getTravelTime() {
+        long totalSeconds = 0;
         for(TravelComponent component: miniTravels)
-            totalMinutes += component.deltaTimeInSeconds();
-        return totalMinutes;
+            totalSeconds += component.deltaTimeInSeconds();
+        return totalSeconds;
     }
 
-    //amount of time in seconds between departure and arrival time
+    // Amount of time in seconds between departure and arrival time
     public long getTotalTime() {
         return getEndingTime().getEpochSecond() - getStartingTime().getEpochSecond();
     }
 
-    public int getTotalLength() {
-        //TODO
-        return 0;
+    // Total length in Km
+    public float getTotalLength() {
+        float length = 0;
+        for(TravelComponent comp: miniTravels)
+            length += comp.getLength();
+        return length;
     }
 
     public Instant getStartingTime() {

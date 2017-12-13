@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctiona
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -87,6 +88,7 @@ public class RESTfulTest {
         //2018/01/20 h:14:30 - 17:00
         event4.setStartingTime(Instant.ofEpochSecond(1516458600));
         event4.setEndingTime(Instant.ofEpochSecond(1516467600));
+        event4.setType(new TypeOfEvent("", null));
         String msg = "";
         for(Event event: pathManager.swapEvents(event4, privateMeans, publicMeans).getEvents())
             msg+="***"+event.toString()+"\n";

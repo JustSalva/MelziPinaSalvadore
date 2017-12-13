@@ -32,7 +32,9 @@ public class EventManager extends UserManager{
 
     @EJB
     private PreferenceManager preferenceManager;
+    @EJB
     private ScheduleManager scheduleManager;
+    @EJB
     private PathManager pathManager;
 
     @PostConstruct

@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.RESTful.test;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsGeocoder;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 
@@ -119,6 +120,7 @@ public class RESTfulTestSettings {
         e.setScheduled(sch);
         e.setDeparture(dep);
         e.setEventLocation(arr);
+        e.setType(new TypeOfEvent("",null));
         return e;
     }
 

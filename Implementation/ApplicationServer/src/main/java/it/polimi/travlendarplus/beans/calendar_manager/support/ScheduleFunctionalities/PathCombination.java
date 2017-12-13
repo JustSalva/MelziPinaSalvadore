@@ -26,4 +26,12 @@ public class PathCombination {
                 ", follPath=" + follPath +
                 '}';
     }
+
+    public float getTotalLength() {
+        return prevPath.getTotalLength() + follPath.getTotalLength();
+    }
+
+    public long getTotalTime() {
+        return prevPath.getTotalTime() + follPath.getTotalTime();
+    }
 }

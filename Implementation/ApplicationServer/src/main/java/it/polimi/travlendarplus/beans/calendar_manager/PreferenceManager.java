@@ -1,15 +1,10 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
 import it.polimi.travlendarplus.entities.Location;
-import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.preferences.Constraint;
-import it.polimi.travlendarplus.entities.preferences.DistanceConstraint;
-import it.polimi.travlendarplus.entities.preferences.PeriodOfDayConstraint;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
+import it.polimi.travlendarplus.entities.preferences.*;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -232,7 +227,7 @@ public class PreferenceManager extends UserManager{
         currentUser.save();
     }
 
-    protected boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent){
+    public boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent){
         for ( TravelComponent travelComponent : travel.getMiniTravels()){
             TravelMeanEnum travelMean = travelComponent.getMeanUsed().getType();
             if( typeOfEvent.isDeactivated( travelMean ) ){
@@ -248,10 +243,35 @@ public class PreferenceManager extends UserManager{
         return true;
     }
 
-    protected Travel findBestpath ( ArrayList< Travel > travels, TypeOfEvent typeOfEvent, User user){
-        //user is initialized before or it's better this way?
-        //TODO
-        return null;
+    public PathCombination findBestpath (ArrayList<PathCombination> combs, TypeOfEvent typeOfEvent){
+        if(typeOfEvent.getParamFirstPath() != null) {
+            switch (typeOfEvent.getParamFirstPath()) {
+                case MIN_LENGHT:
+                    return getPathsWithMinLength(combs);
+                case MIN_TIME:
+                    return getPathsWithMinTime(combs);
+                default:
+                    return combs.get(0); //TODO cost and eco cases
+            }
+        }
+        else
+            return combs.get(0);
+    }
+
+    private PathCombination getPathsWithMinLength(ArrayList<PathCombination> combs){
+        PathCombination best = (combs != null) ? combs.get(0) : null;
+        for(PathCombination singleComb: combs)
+            if(singleComb.getTotalLength() < best.getTotalLength())
+                best = singleComb;
+        return best;
+    }
+
+    private PathCombination getPathsWithMinTime(ArrayList<PathCombination> combs) {
+        PathCombination best = (combs != null) ? combs.get(0) : null;
+        for(PathCombination singleComb: combs)
+            if(singleComb.getTotalTime() < best.getTotalTime())
+                best = singleComb;
+        return best;
     }
 
     public ArrayList<TravelMeanEnum> getAllowedMeans(Event event, TravelMeanEnum[] list) {
