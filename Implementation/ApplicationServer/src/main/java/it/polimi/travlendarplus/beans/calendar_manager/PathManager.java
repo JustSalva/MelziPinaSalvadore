@@ -18,6 +18,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -63,8 +65,8 @@ public class PathManager extends UserManager{
             boolean sameLoc = isBetweenSameLocations(event);
             // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, previous, event, sameLoc);
-        } catch (GMapsGeneralException e) {
-            e.printStackTrace();
+        } catch (GMapsGeneralException err) {
+            Logger.getLogger(PathManager.class.getName()).log(Level.SEVERE, err.getMessage(), err);
         }
         return possiblePaths;
     }
@@ -86,8 +88,8 @@ public class PathManager extends UserManager{
             boolean sameLoc = isBetweenSameLocations(following);
             // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder(baseCall, privateMeans, publicMeans, event, following, sameLoc);
-        } catch (GMapsGeneralException e) {
-            e.printStackTrace();
+        } catch (GMapsGeneralException err) {
+            Logger.getLogger(PathManager.class.getName()).log(Level.SEVERE, err.getMessage(), err);
         }
         return possiblePaths;
     }
@@ -107,9 +109,9 @@ public class PathManager extends UserManager{
         if(sameLoc)
             privateMeans = privateMeansSameLoc(privateMeans);
         for(TravelMeanEnum mean: privateMeans) {
-            JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
             ArrayList<Travel> privatePaths = new ArrayList<Travel>();
             try {
+                JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
                 //Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
                 //2) eventA is the main event and eventB is the following event -> eventB is not NULL because this case is managed above.
                 privatePaths = (eventA != null) ?
@@ -118,8 +120,8 @@ public class PathManager extends UserManager{
                     // It is the case when the possible new event would be the first in the schedule.
                     reader.getTravelNoTransitMeans(privatePathJSON, mean, eventB.getStartingTime().getEpochSecond(),
                         false, eventB.getDeparture(), eventB.getEventLocation());
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException err) {
+                Logger.getLogger(PathManager.class.getName()).log(Level.SEVERE, err.getMessage(), err);
             }
             // Considering only paths that allow to attend to the event in time
             for(Travel travel: privatePaths)
@@ -133,9 +135,9 @@ public class PathManager extends UserManager{
         GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if(!sameLoc) { // If departure location is the same of arrival location, the path can be done only with private means.
-            JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
             ArrayList<Travel> publicPaths = new ArrayList<Travel>();
             try {
+                JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
                 publicPaths = reader.getTravelWithTransitMeans(publicPathsJSON);
             } catch (JSONException e) {
                 e.printStackTrace();
