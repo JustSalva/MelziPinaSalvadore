@@ -105,6 +105,7 @@ public class EventManager extends UserManager{
         }
         event.setScheduled(feasiblePaths != null);
         event.save();
+        currentUser.addEvent( event );
         currentUser.save();
         return propagatePeriodicEvents( event ); //it handle periodic events
     }
@@ -244,6 +245,7 @@ public class EventManager extends UserManager{
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         breakEvent.setScheduled(scheduleManager.isBreakOverlapFreeIntoSchedule(breakEvent, false));
         breakEvent.save();
+        currentUser.addBreak( breakEvent );
         currentUser.save();
         return propagatePeriodicEvents( breakEvent );   //it handle periodic events
     }

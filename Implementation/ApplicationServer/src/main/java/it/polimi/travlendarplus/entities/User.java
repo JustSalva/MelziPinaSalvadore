@@ -236,6 +236,7 @@ public class User extends GenericEntity {
                 preferredLocations.remove( entry.getKey() );
             }
         }
+
     }
     public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;

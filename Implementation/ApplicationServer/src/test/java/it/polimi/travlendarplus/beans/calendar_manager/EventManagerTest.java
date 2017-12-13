@@ -8,12 +8,22 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ejb.EJB;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
+
 import static org.junit.Assert.*;
 
 @RunWith( Arquillian.class )
 public class EventManagerTest {
 
-    private static final String container = "glassfish-remote";
+    @PersistenceContext
+    EntityManager em;
+
+    @Inject
+    UserTransaction utx;
 
     @Deployment
     public static JavaArchive createDeployment() {

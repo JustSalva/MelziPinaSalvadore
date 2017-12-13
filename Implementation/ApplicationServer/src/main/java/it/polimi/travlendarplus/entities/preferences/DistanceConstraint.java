@@ -11,40 +11,40 @@ import javax.persistence.*;
 @DiscriminatorValue("DISTANCE")
 public class DistanceConstraint extends Constraint{
 
-    @Column(name = "MIN_LENGHT")
-    private int minLenght;
+    @Column(name = "MIN_LENGTH")
+    private int minLength;
 
-    @Column(name = "MAX_LENGHT")
-    private int maxLenght;
+    @Column(name = "MAX_LENGTH")
+    private int maxLength;
 
-    public DistanceConstraint(TravelMeanEnum concerns, int minLenght, int maxLenght) {
+    public DistanceConstraint(TravelMeanEnum concerns, int minLength, int maxLength) {
         super(concerns);
-        this.minLenght = minLenght;
-        this.maxLenght = maxLenght;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
     }
 
     public DistanceConstraint() {
     }
 
-    public int getMinLenght() {
-        return minLenght;
+    public int getMinLength() {
+        return minLength;
     }
 
-    public void setMinLenght(int minLenght) {
-        this.minLenght = minLenght;
+    public void setMinLength(int minLength) {
+        this.minLength = minLength;
     }
 
-    public int getMaxLenght() {
-        return maxLenght;
+    public int getMaxLength() {
+        return maxLength;
     }
 
-    public void setMaxLenght(int maxLenght) {
-        this.maxLenght = maxLenght;
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
     }
 
     @Override
     public boolean respectConstraint( TravelComponent travelComponent ) {
-        return travelComponent.getLength() >= minLenght && travelComponent.getLength() <= maxLenght;
+        return travelComponent.getLength() >= minLength && travelComponent.getLength() <= maxLength;
     }
 
     public static DistanceConstraint load( long key) throws EntityNotFoundException {

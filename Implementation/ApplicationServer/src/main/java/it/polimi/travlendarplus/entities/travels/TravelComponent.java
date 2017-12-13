@@ -21,7 +21,7 @@ public class TravelComponent extends EntityWithLongKey{
     @Column(name = "ENDING_TIME")
     private Instant endingTime;
 
-    @Column(name = "LENGHT")
+    @Column(name = "LENGTH")
     //distance in Km
     private float length;
 

@@ -246,7 +246,7 @@ public class PreferenceManager extends UserManager{
     public PathCombination findBestpath (ArrayList<PathCombination> combs, TypeOfEvent typeOfEvent){
         if(typeOfEvent.getParamFirstPath() != null) {
             switch (typeOfEvent.getParamFirstPath()) {
-                case MIN_LENGHT:
+                case MIN_LENGTH:
                     return getPathsWithMinLength(combs);
                 case MIN_TIME:
                     return getPathsWithMinTime(combs);
