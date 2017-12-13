@@ -153,6 +153,10 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 //Sending failed.
                 // TODO: read failure message and notifies the user.
+            }
+
+            @Override
+            public void onFinish() {
                 //Makes UI responsive again.
                 resumeNormalMode();
             }

@@ -159,7 +159,11 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Bad response", Toast.LENGTH_LONG).show();
                 }
                 Log.d("RESPONSE ERROR", responseString);
-                // Makes UI responsive again.
+            }
+
+            @Override
+            public void onFinish() {
+                //Makes UI responsive again.
                 resumeNormalMode();
             }
         });

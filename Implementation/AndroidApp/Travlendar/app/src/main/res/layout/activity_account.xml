@@ -100,13 +100,10 @@
                         android:gravity="center" />
                 </GridLayout>
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:text="@string/locations"
                     android:textAlignment="center"
                     android:textSize="18sp"
@@ -124,10 +121,10 @@
                         android:layout_weight="1" />
 
                     <TextView
-                        android:id="@+id/locations_address_textView"
+                        android:id="@+id/locationsAddressViewer_textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
                         android:text="TextView"/>
 
@@ -184,7 +181,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"/>
 
                     <Button
                         android:id="@+id/selectLocation_button"

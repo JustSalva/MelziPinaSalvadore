@@ -1,21 +1,12 @@
 package com.shakk.travlendar.activity;
 
-import android.arch.lifecycle.LiveData;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 
 import com.facebook.stetho.Stetho;
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.database.AppDatabase;
-import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.database.view_model.UserViewModel;
-
-import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
