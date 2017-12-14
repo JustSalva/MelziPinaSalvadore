@@ -18,6 +18,12 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -42,27 +48,25 @@
                         android:layout_gravity="center"/>
 
                     <Spinner
-                        android:id="@+id/typeofEvent_spinner"
+                        android:id="@+id/preferences_spinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
                     <ImageView
-                        android:id="@+id/deleteLocation_imageView"
+                        android:id="@+id/deletePreference_imageView"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_weight="0.3"
-                        app:srcCompat="@drawable/ic_delete_black_24dp" />
+                        app:srcCompat="@drawable/ic_delete_black_24dp"
+                        android:contentDescription="@string/deletePreference_imageDescription" />
 
                 </LinearLayout>
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     android:baselineAligned="false">
 
@@ -80,68 +84,11 @@
                             android:text="@string/travel_means_allowed"
                             android:textStyle="bold"/>
 
-                        <CheckBox
-                            android:id="@+id/bicycle_checkBox"
+                        <LinearLayout
+                            android:id="@+id/checkBoxes_linearLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/bicycle" />
-
-                        <CheckBox
-                            android:id="@+id/car_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/car" />
-
-                        <CheckBox
-                            android:id="@+id/foot_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/foot" />
-
-                        <CheckBox
-                            android:id="@+id/metro_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/metro" />
-
-                        <CheckBox
-                            android:id="@+id/taxi_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/taxi" />
-
-                        <CheckBox
-                            android:id="@+id/train_checkbox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/train" />
-
-                        <CheckBox
-                            android:id="@+id/tram_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/tram" />
-
-                        <CheckBox
-                            android:id="@+id/bikeSharing_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/bike_sharing" />
-
-                        <CheckBox
-                            android:id="@+id/carSharing_checkBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="@string/car_sharing" />
+                            android:orientation="vertical"/>
 
                     </LinearLayout>
 
@@ -208,18 +155,19 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/textView2"
+                                android:id="@+id/minTime_textView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/_00_00" />
 
                             <Button
-                                android:id="@+id/button2"
+                                android:id="@+id/minTime_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@string/min_time" />
+                                android:text="@string/min_time"
+                                android:onClick="showTimePickerDialog"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -229,18 +177,20 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/textView3"
+                                android:id="@+id/maxTime_textView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/_24_00" />
 
                             <Button
-                                android:id="@+id/button3"
+                                android:id="@+id/maxTime_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@string/max_time" />
+                                android:text="@string/max_time"
+                                android:onClick="showTimePickerDialog"/>
+                            
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

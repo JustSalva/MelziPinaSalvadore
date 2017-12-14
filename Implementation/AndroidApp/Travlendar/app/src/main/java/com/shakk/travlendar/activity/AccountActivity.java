@@ -306,9 +306,9 @@ public class AccountActivity extends MenuActivity {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        // Notify the user that the location has been added.
+                        // Notify the user that the location has been removed.
                         Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();
-                        // Add location to the list.
+                        // Remove location to the list.
                         locations.remove(locationName);
                     }
 

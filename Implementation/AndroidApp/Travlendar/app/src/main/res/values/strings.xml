@@ -112,14 +112,17 @@
     <string name="location_address">Location address</string>
     <string name="select_location">Select location</string>
     <string name="deleteLocation_imageDescription">Trash bin to delete location</string>
+    <string name="deletePreference_imageDescription">Trash bin to delete preference</string>
+    <string name="subway">Subway</string>
+    <string name="bus">Bus</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
         <item>Bicycle</item>
+        <item>Bus</item>
         <item>Car</item>
         <item>Foot</item>
-        <item>Metro</item>
-        <item>Taxi</item>
+        <item>Subway</item>
         <item>Train</item>
         <item>Tram</item>
         <item>Bike Sharing</item>
@@ -129,6 +132,7 @@
     <string-array name="preferredPath_array">
         <item>Minimum cost</item>
         <item>Minimum length</item>
+        <item>Minimum time</item>
         <item>Eco-friendly</item>
     </string-array>
 </resources>
