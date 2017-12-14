@@ -21,7 +21,6 @@ public class ScheduleManager extends UserManager{
     final long DAILY_SECONDS_MINUS_ONE = 24*60*60-1;
 
     private ScheduleHolder schedule;
-    //TODO (in path manager?) ensure relation event-path when an event is added (particular cases: first/last event)
 
     public ScheduleHolder getSchedule() {
         return schedule;

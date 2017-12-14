@@ -167,7 +167,7 @@ public class PathManager extends UserManager{
             swapOutBreaks = new ArrayList<BreakEvent>();
             List<Travel> prev = getPreviousTravels(forcedEvent, privateMeans, publicMeans);
             List<Travel> foll = getFollowingTravels(forcedEvent, privateMeans, publicMeans);
-            if(!prev.isEmpty() && (!foll.isEmpty() || scheduleManager.getSchedule().isLastScheduledEvent(forcedEvent))) {
+            if(!prev.isEmpty() && (!foll.isEmpty() || scheduleManager.getSchedule().isLastEvent(forcedEvent))) {
                 combs = scheduleManager.getFeasiblePathCombinations(forcedEvent, prev, foll);
                 //TODO apply user preferences on combs
                 complete = !combs.isEmpty();

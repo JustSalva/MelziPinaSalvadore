@@ -58,8 +58,8 @@ public class ScheduleHolder {
         return newList;
     }
 
-    public boolean isLastScheduledEvent(Event event) {
-        return event.getId() == events.get(events.size()-1).getId();
+    public boolean isLastEvent(Event event) {
+        return !event.getStartingTime().isBefore(events.get(events.size()-1).getStartingTime());
     }
 
     private ArrayList<Event> copyEventList() {

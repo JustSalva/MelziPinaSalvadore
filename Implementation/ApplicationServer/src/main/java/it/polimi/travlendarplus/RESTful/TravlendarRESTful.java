@@ -1,17 +1,11 @@
 package it.polimi.travlendarplus.RESTful;
 
 import it.polimi.travlendarplus.HelloWorld;
-import it.polimi.travlendarplus.RESTful.security.AuthenticatedUserProducer;
-import it.polimi.travlendarplus.RESTful.security.AuthenticationEndpoint;
-import it.polimi.travlendarplus.RESTful.security.AuthenticationFilter;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

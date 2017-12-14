@@ -40,7 +40,7 @@ public class BreakEvent extends GenericEvent {
         return minimumTime;
     }
 
-    public void setMinimumTime(int minimumTime) {
+    public void setMinimumTime(long minimumTime) {
         this.minimumTime = minimumTime;
     }
 

@@ -58,6 +58,7 @@ public class User extends GenericEntity {
 
     public User() {
         this.lastUpdate = new Timestamp();
+        this.userDevices = new ArrayList< UserDevice >();
         this.breaks = new ArrayList< BreakEvent >();
         this.events = new ArrayList< Event >();
         this.heldTickets = new ArrayList< Ticket >();
@@ -84,17 +85,11 @@ public class User extends GenericEntity {
 
     //constructor for user with empty ArrayLists
     public User( String email, String name, String surname, String password ) {
+        this();
         this.email = email;
         this.name = name;
         this.surname = surname;
         this.password = password;
-        this.userDevices = new ArrayList< UserDevice >();
-        this.breaks = new ArrayList< BreakEvent >();
-        this.events = new ArrayList< Event >();
-        this.heldTickets = new ArrayList< Ticket >();
-        this.preferences = new ArrayList< TypeOfEvent >();
-        this.preferredLocations = new ArrayList< UserLocation >();
-        this.lastUpdate = new Timestamp();
     }
 
     public String getEmail() {

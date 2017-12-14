@@ -12,8 +12,6 @@ public class GMapsDirectionsHandler {
         baseCall();
     }
 
-    //TODO handle the case in which the first of travel components is by feet (departure time set to 0)
-
     public GMapsDirectionsHandler(String callURL) {
         this.callURL = new StringBuilder(callURL);
     }
