@@ -1,10 +1,7 @@
 package it.polimi.travlendarplus.entities;
 
-import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Assert;
@@ -12,18 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-
 @RunWith( Arquillian.class )
-public class LocationTest extends GenericEntityTest{
+public class LocationTest extends GenericEntityTest {
 
     private List< Location > testLocations;
 
@@ -32,9 +22,13 @@ public class LocationTest extends GenericEntityTest{
         return GenericEntityTest.createDeployment().addClass( Location.class );
     }
 
+    public static Location getTestLocation( int index ) {
+        return new Location( index, index, "address" + index );
+    }
+
     @Before
     public void setUp() throws Exception {
-        testLocations = new ArrayList<>(  );
+        testLocations = new ArrayList<>();
         testLocations.add( new Location( 123, 456, "address1" ) );
         testLocations.add( new Location( 147, 258, "address2" ) );
         testLocations.add( new Location( 789, 369, "address3" ) );
@@ -43,13 +37,12 @@ public class LocationTest extends GenericEntityTest{
 
     @Test
     public void allLocationAreFoundUsingJpqlQuery() {
-        //all locations loaded
-        List < Location > retrievedLocations =
-                entityManager.createQuery(" SELECT location FROM LOCATION location ORDER BY location.address", Location.class)
+
+        List< Location > retrievedLocations =
+                entityManager.createQuery( " SELECT location FROM LOCATION location ORDER BY location.address", Location.class )
                         .getResultList();
         assertContainsAllLocations( retrievedLocations );
     }
-
 
     private void assertContainsAllLocations( List< Location > retrievedLocations ) {
 
@@ -61,21 +54,20 @@ public class LocationTest extends GenericEntityTest{
 
     }
 
-    public void assertLocationsAreEquals(Location expected, Location retrieved ) {
+    public void assertLocationsAreEquals( Location expected, Location retrieved ) {
         Assert.assertEquals( expected.getAddress(), retrieved.getAddress() );
-        Assert.assertEquals( expected.getLatitude(), retrieved.getLatitude() , 0);
+        Assert.assertEquals( expected.getLatitude(), retrieved.getLatitude(), 0 );
         Assert.assertEquals( expected.getLongitude(), retrieved.getLongitude(), 0 );
     }
 
-
     @Override
-    protected void clearTableQuery(){
+    protected void clearTableQuery() {
         entityManager.createQuery( "DELETE FROM LOCATION " ).executeUpdate();
     }
 
     @Override
-    protected void loadTestData(){
-        for ( Location location : testLocations ){
+    protected void loadTestData() {
+        for ( Location location : testLocations ) {
             entityManager.persist( location );
         }
     }
@@ -83,9 +75,5 @@ public class LocationTest extends GenericEntityTest{
     @After
     public void tearDown() throws Exception {
         super.commitTransaction();
-    }
-
-    public static Location getTestLocations( int index ){
-        return new Location( index, index, "address"+index );
     }
 }

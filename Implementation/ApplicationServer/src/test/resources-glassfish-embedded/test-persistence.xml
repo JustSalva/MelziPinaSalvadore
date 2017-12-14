@@ -5,6 +5,7 @@
 	<persistence-unit name="TravlendarDB" transaction-type="JTA">
 		<jta-data-source>jdbc/__default</jta-data-source>
 		<class> it.polimi.travlendarplus.entities.UserDevice</class>
+        <class> it.polimi.travlendarplus.entities.User</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />

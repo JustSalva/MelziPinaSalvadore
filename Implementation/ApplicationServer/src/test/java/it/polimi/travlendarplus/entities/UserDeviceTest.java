@@ -2,8 +2,6 @@ package it.polimi.travlendarplus.entities;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Assert;
@@ -11,38 +9,41 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith( Arquillian.class )
-public class UserDeviceTest extends GenericEntityTest{
+public class UserDeviceTest extends GenericEntityTest {
 
     private List< UserDevice > userDevices;
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return GenericEntityTest.createDeployment();
+        return GenericEntityTest.createDeployment()
+                .addClass( UserDevice.class )
+                .addClass( User.class );
     }
 
     @Before
     public void setUp() throws Exception {
-        userDevices = new ArrayList<>(  );
-        userDevices.add( new UserDevice( "Device1",
-                new User( "email1", "name1", "surname1", "password1" ) ) );
-        userDevices.add( new UserDevice( "Device2",
-                new User( "email2", "name2", "surname2", "password2" ) ) );
+        userDevices = new ArrayList<>();
+
+        User user1 = new User( "email1", "name1", "surname1", "password1" );
+        user1.addUserDevice( "Device1" );
+        userDevices.add( user1.getUserDevice( "Device1" ) );
+
+        User user2 = new User( "email2", "name2", "surname2", "password2" );
+        user2.addUserDevice( "Device2" );
+        userDevices.add( user2.getUserDevice( "Device2" ) );
         super.preparePersistenceTest();
     }
 
     @Test
     public void allDevicesAreFoundUsingJpqlQuery() {
-        //all locations loaded
-        List < UserDevice > retrievedComponents =
+
+        List< UserDevice > retrievedComponents =
                 entityManager.createQuery(
-                        " SELECT devices FROM USER_DEVICES devices ORDER BY devices.idDevice", UserDevice.class)
+                        " SELECT devices FROM USER_DEVICES devices ORDER BY devices.idDevice", UserDevice.class )
                         .getResultList();
         assertContainsAllUserDevices( retrievedComponents );
     }
@@ -61,15 +62,14 @@ public class UserDeviceTest extends GenericEntityTest{
 
 
     @Override
-    protected void clearTableQuery(){
-        //entityManager.createQuery( "DELETE FROM USER_DEVICES " ).executeUpdate();
+    protected void clearTableQuery() {
+        entityManager.createQuery( "DELETE FROM TRAVLENDAR_USER " ).executeUpdate();
     }
 
     @Override
-    protected void loadTestData(){
-        for ( UserDevice userDevice : userDevices ){
+    protected void loadTestData() {
+        for ( UserDevice userDevice : userDevices ) {
             entityManager.persist( userDevice.getUser() );
-            entityManager.persist( userDevice );
         }
     }
 

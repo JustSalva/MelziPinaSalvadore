@@ -6,22 +6,14 @@ import it.polimi.travlendarplus.entities.preferences.Constraint;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMean;
 import it.polimi.travlendarplus.entities.travels.Travel;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
-
-import static org.junit.Assert.*;
 
 public abstract class GenericEntityTest {
 
@@ -41,7 +33,7 @@ public abstract class GenericEntityTest {
                 .addPackage( Travel.class.getPackage() )
                 .addClass( UserLocation.class )
                 .addClass( Location.class )
-                .addAsResource(  "test-persistence.xml", "META-INF/persistence.xml" )
+                .addAsResource( "test-persistence.xml", "META-INF/persistence.xml" )
                 .addAsManifestResource( EmptyAsset.INSTANCE, "beans.xml" );
     }
 

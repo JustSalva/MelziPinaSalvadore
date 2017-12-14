@@ -8,9 +8,11 @@ import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-@Entity( name = "USER" )
+@Entity( name = "TRAVLENDAR_USER" )
 public class User extends GenericEntity {
 
     private static final long serialVersionUID = 771264263714054170L;

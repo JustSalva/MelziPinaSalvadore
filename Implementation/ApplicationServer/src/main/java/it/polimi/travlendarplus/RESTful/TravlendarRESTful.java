@@ -4,7 +4,6 @@ import it.polimi.travlendarplus.HelloWorld;
 import it.polimi.travlendarplus.RESTful.security.AuthenticatedUserProducer;
 import it.polimi.travlendarplus.RESTful.security.AuthenticationEndpoint;
 import it.polimi.travlendarplus.RESTful.security.AuthenticationFilter;
-import it.polimi.travlendarplus.entities.TransactionsInterceptor;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
