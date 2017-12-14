@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,9 @@ public class PreferencesActivity extends MenuActivity {
     private ProgressBar progressBar;
 
     private String univocalCode;
-    private Map<String, Preference> preferences;
+    private Map<String, Preference> preferences = new HashMap<>();
+    private Preference selectedPreference = new Preference();
+    private String selectedTravelMeanConstrained;
 
     private UserViewModel userViewModel;
 
@@ -55,6 +58,7 @@ public class PreferencesActivity extends MenuActivity {
         setContentView(R.layout.activity_preferences);
         super.setupMenuToolbar();
 
+        // UI references.
         deletePreference_imageView = findViewById(R.id.deletePreference_imageView);
         checkBoxes_linearLayout = findViewById(R.id.checkBoxes_linearLayout);
         preferences_spinner = findViewById(R.id.preferences_spinner);
@@ -79,10 +83,10 @@ public class PreferencesActivity extends MenuActivity {
         preferences_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // Shows address of the selected locations next to the spinner.
-                Preference preference = preferences.get(adapterView.getSelectedItem().toString());
-                createTravelMeansCheckBoxes(preference);
-                setPreferredPathSpinner(preference);
+                // Change the selected preference.
+                selectedPreference = preferences.get(adapterView.getSelectedItem().toString());
+                createTravelMeansCheckBoxes(selectedPreference);
+                setPreferredPathSpinner(selectedPreference);
             }
 
             @Override
@@ -91,14 +95,13 @@ public class PreferencesActivity extends MenuActivity {
             }
         });
 
-        // Setup preferences spinner listeners.
-        preferences_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // Setup travel mean constrained spinner listeners.
+        travelMeanConstrained_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // Shows address of the selected locations next to the spinner.
-                Preference preference = preferences.get(adapterView.getSelectedItem().toString());
-                createTravelMeansCheckBoxes(preference);
-                setPreferredPathSpinner(preference);
+                // Change the selected travel men constrained.
+                selectedTravelMeanConstrained = TravelMeanEnum.values()[i].travelMean;
+                setTravelMeanConstraints(selectedPreference, selectedTravelMeanConstrained);
             }
 
             @Override
@@ -126,15 +129,13 @@ public class PreferencesActivity extends MenuActivity {
                         Log.d("JSON_REPLY", response.toString());
                         Toast.makeText(getBaseContext(), "Preferences updated!", Toast.LENGTH_LONG).show();
                         //Get locations array from JSON response.
-                        preferences = new HashMap<>();
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 Gson gson = new Gson();
                                 Preference preference = gson
                                         .fromJson(String.valueOf(response.getJSONObject(i)), Preference.class);
-                                preferences.put(preference.getName(), preference);
+                                preferences.put(preference.name, preference);
                                 populatePreferencesSpinner();
-                                Log.d("CHECK", preference.deactivate.toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -188,7 +189,7 @@ public class PreferencesActivity extends MenuActivity {
 
     private void setPreferredPathSpinner(Preference preference) {
         int index = 0;
-        ParamFirstPath param = preference.getParamFirstPath();
+        ParamFirstPath param = preference.paramFirstPath;
         for (int i = 0; i < ParamFirstPath.values().length; i++) {
             if (ParamFirstPath.values()[i] == param) {
                 index = i;
@@ -197,12 +198,21 @@ public class PreferencesActivity extends MenuActivity {
         preferredPath_spinner.setSelection(index);
     }
 
-
+    private void setTravelMeanConstraints(Preference preference, String travelMean) {
+        List<Constraint> constraints = preference.getLimitedBy(travelMean);
+        minTime_textView.setText("00:00");
+        maxTime_textView.setText("24:00");
+        for (Constraint constraint : constraints) {
+            if (! (constraint.minHour == 0 && constraint.maxHour == 0)) {
+                minTime_textView.setText(Integer.toString(constraint.minHour));
+                maxTime_textView.setText(Integer.toString(constraint.maxHour));
+            }
+        }
+    }
 
     private void deletePreferenceFromServer() {
         // Retrieve preference name to be deleted.
-        String selectedPreference = preferences_spinner.getSelectedItem().toString();
-        String idPreference = Integer.toString(preferences.get(selectedPreference).getId());
+        String idPreference = Integer.toString(preferences.get(selectedPreference.name).id);
 
         //Send request to server.
         TravlendarRestClient.deleteWithAuth("ApplicationServerArchive/preference/".concat(idPreference), univocalCode
@@ -218,7 +228,7 @@ public class PreferencesActivity extends MenuActivity {
                         // Notify the user that the preference has been removed.
                         Toast.makeText(getBaseContext(), "Preference removed!", Toast.LENGTH_LONG).show();
                         // Remove preference from the list.
-                        preferences.remove(selectedPreference);
+                        preferences.remove(selectedPreference.name);
                     }
 
                     @Override
@@ -279,28 +289,25 @@ public class PreferencesActivity extends MenuActivity {
         private List<Constraint> limitedBy;
         private List<TravelMeanEnum> deactivate;
 
-        Preference(int id, String name, ParamFirstPath paramFirstPath, List<Constraint> constraints
-                , List<TravelMeanEnum> deactivated) {
-            this.id = id;
-            this.name = name;
-            this.paramFirstPath = paramFirstPath;
-            this.limitedBy = constraints;
-            this.deactivate = deactivated;
+        Preference() {
+            this.id = 0;
+            this.name = "Standard";
+            this.paramFirstPath = ParamFirstPath.MIN_TIME;
+            this.limitedBy = new ArrayList<>();
+            this.deactivate = new ArrayList<>();
         }
 
-        public int getId() {
-            return id;
+        List<Constraint> getLimitedBy(String travelMean) {
+            List<Constraint> constraints = new ArrayList<>();
+            for (Constraint constraint : limitedBy) {
+                if (constraint.concerns.getTravelMean().equals(travelMean)) {
+                    constraints.add(constraint);
+                }
+            }
+            return constraints;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public ParamFirstPath getParamFirstPath() {
-            return paramFirstPath;
-        }
-
-        public boolean isActivated(TravelMeanEnum travelMean) {
+        boolean isActivated(TravelMeanEnum travelMean) {
             return !deactivate.contains(travelMean);
         }
     }
@@ -312,33 +319,6 @@ public class PreferencesActivity extends MenuActivity {
         private int maxHour;
         private int minLength;
         private int maxLength;
-
-        Constraint(int id, TravelMeanEnum concerns) {
-            this.id = id;
-            this.concerns = concerns;
-        }
-    }
-
-    private class TimeConstraint extends Constraint {
-        private int minHour;
-        private int maxHour;
-
-        TimeConstraint(int id, TravelMeanEnum concerns, int minHour, int maxHour) {
-            super(id, concerns);
-            this.minHour = minHour;
-            this.maxHour = maxHour;
-        }
-    }
-
-    private class SpaceConstraint extends Constraint {
-        private int minLength;
-        private int maxLength;
-
-        SpaceConstraint(int id, TravelMeanEnum concerns, int minLength, int maxLength) {
-            super(id, concerns);
-            this.minLength = minLength;
-            this.maxLength = maxLength;
-        }
     }
 
     private enum ParamFirstPath {
@@ -359,15 +339,15 @@ public class PreferencesActivity extends MenuActivity {
     }
 
     private enum TravelMeanEnum {
-        CAR ("Car"),
         BIKE ("Bike"),
         BUS ("Bus"),
         BY_FOOT ("By Foot"),
+        CAR ("Car"),
         SUBWAY ("Subway"),
         TRAIN ("Train"),
         TRAM ("Tram"),
-        SHARING_CAR ("Sharing Car"),
-        SHARING_BIKE ("Sharing Bike");
+        SHARING_BIKE ("Sharing Bike"),
+        SHARING_CAR ("Sharing Car");
 
         private final String travelMean;
 

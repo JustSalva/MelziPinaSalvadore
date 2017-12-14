@@ -120,8 +120,8 @@
     <string-array name="travelMeans_array">
         <item>Bicycle</item>
         <item>Bus</item>
+        <item>By foot</item>
         <item>Car</item>
-        <item>Foot</item>
         <item>Subway</item>
         <item>Train</item>
         <item>Tram</item>

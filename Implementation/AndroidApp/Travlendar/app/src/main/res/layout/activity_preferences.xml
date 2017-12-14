@@ -190,7 +190,7 @@
                                 android:layout_weight="1"
                                 android:text="@string/max_time"
                                 android:onClick="showTimePickerDialog"/>
-                            
+
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
