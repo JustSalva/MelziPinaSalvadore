@@ -11,7 +11,7 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.persistence.*;
 
-@Entity( name = "Encryption keys" )
+@Entity( name = "Encryption_keys" )
 public class RSAEncryption extends GenericEntity {
 
     private static final long serialVersionUID = 8890765076763091319L;

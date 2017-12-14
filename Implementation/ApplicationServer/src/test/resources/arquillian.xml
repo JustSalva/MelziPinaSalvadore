@@ -4,10 +4,11 @@
     http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
      <container qualifier="glassfish" default="true" >
+
          <configuration>
-             <property name="adminUser">admin</property>
+             <!--property name="adminUser">admin</property>
              <property name="adminPassword">password</property>
-             <property name="target">server</property>
+             <property name="target">server</property-->
          </configuration>
      </container>
 </arquillian>

@@ -23,17 +23,13 @@ import javax.transaction.UserTransaction;
 
 import static org.junit.Assert.*;
 
-@RunWith( Arquillian.class )
 public abstract class GenericEntityTest {
-
 
     @PersistenceContext
     public EntityManager entityManager;
 
     @Inject
     public UserTransaction userTransaction;
-
-
 
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create( JavaArchive.class )
@@ -55,7 +51,6 @@ public abstract class GenericEntityTest {
         startTransaction();
     }
 
-    @After
     public void commitTransaction() throws Exception {
         userTransaction.commit();
     }

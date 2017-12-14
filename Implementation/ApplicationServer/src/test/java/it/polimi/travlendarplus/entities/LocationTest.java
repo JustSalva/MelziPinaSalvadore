@@ -1,15 +1,21 @@
 package it.polimi.travlendarplus.entities;
 
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +50,7 @@ public class LocationTest extends GenericEntityTest{
         assertContainsAllLocations( retrievedLocations );
     }
 
+
     private void assertContainsAllLocations( List< Location > retrievedLocations ) {
 
         Assert.assertEquals( testLocations.size(), retrievedLocations.size() );
@@ -54,7 +61,7 @@ public class LocationTest extends GenericEntityTest{
 
     }
 
-    private void assertLocationsAreEquals(Location expected, Location retrieved ) {
+    public void assertLocationsAreEquals(Location expected, Location retrieved ) {
         Assert.assertEquals( expected.getAddress(), retrieved.getAddress() );
         Assert.assertEquals( expected.getLatitude(), retrieved.getLatitude() , 0);
         Assert.assertEquals( expected.getLongitude(), retrieved.getLongitude(), 0 );
@@ -71,5 +78,14 @@ public class LocationTest extends GenericEntityTest{
         for ( Location location : testLocations ){
             entityManager.persist( location );
         }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        super.commitTransaction();
+    }
+
+    public static Location getTestLocations( int index ){
+        return new Location( index, index, "address"+index );
     }
 }
