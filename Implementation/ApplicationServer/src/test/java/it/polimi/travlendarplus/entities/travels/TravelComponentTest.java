@@ -47,7 +47,7 @@ public class TravelComponentTest extends GenericEntityTest{
     }
 
     @Test
-    public void allLocationAreFoundUsingJpqlQuery() {
+    public void allTravelComponentsAreFoundUsingJpqlQuery() {
         //all locations loaded
         List < TravelComponent > retrievedComponents =
                 entityManager.createQuery(
@@ -92,5 +92,17 @@ public class TravelComponentTest extends GenericEntityTest{
     @After
     public void tearDown() throws Exception {
         super.commitTransaction();
+    }
+
+    public static TravelComponent getTestTravelComponent( int index ){
+        return new TravelComponent( Instant.ofEpochSecond( 200*index ), Instant.ofEpochSecond( 200*index ),
+                10*index, LocationTest.getTestLocations( index ), LocationTest.getTestLocations( index+10),
+                new PublicTravelMean( "name" + index, TravelMeanEnum.BUS,index*3 ) );
+    }
+
+    public void assertContainsAllTravelComponents( List< TravelComponent > testTravelComponents,
+                                                   List< TravelComponent > retrievedComponents ) {
+        this.testTravelComponents = testTravelComponents;
+        assertContainsAllTravelComponents( retrievedComponents );
     }
 }
