@@ -1,98 +1,110 @@
 package it.polimi.travlendarplus.RESTful.test;
 
-import it.polimi.travlendarplus.beans.calendar_manager.PathManager;
-import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsGeocoder;
-import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
-import it.polimi.travlendarplus.entities.Location;
-import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
-import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import java.time.Instant;
-import java.util.ArrayList;
 
 @Path("test")
 public class RESTfulTest {
 
-    Event event1 = new Event();
-    Event event2 = new Event();
-    Event event3 = new Event();
-    PathCombination combination;
-    User user = new User();
-
     @Inject
-    PathManager pathManager;
+    RESTfulTestSettings set;
 
     @Path("calcPath")
     @GET
     @Produces("text/plain")
     public String baseTest() {
-        RESTfulTestSettings.configureOne(this);
-        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
-        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
-        privateMeans.add(TravelMeanEnum.CAR);
-        publicMeans.add(TravelMeanEnum.BUS);
-        publicMeans.add(TravelMeanEnum.TRAIN);
-        combination = pathManager.calculatePath(event2, privateMeans, publicMeans, false);
-        return combination.toString();
+        return set.addEventBaseCaseTest(true, false, true, false);
     }
 
     @Path("firstPath")
     @GET
     @Produces("text/plain")
     public String firstPathTest() {
-        RESTfulTestSettings.configureTwo(this);
-        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
-        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
-        privateMeans.add(TravelMeanEnum.CAR);
-        privateMeans.add(TravelMeanEnum.BIKE);
-        publicMeans.add(TravelMeanEnum.BUS);
-        publicMeans.add(TravelMeanEnum.TRAIN);
-        combination = pathManager.calculatePath(event1, privateMeans, publicMeans, false);
-        return combination.toString();
+        return set.addEventBaseCaseTest(false, true, true, false);
     }
 
     @Path("lastPath")
     @GET
     @Produces("text/plain")
     public String lastPathTest() {
-        RESTfulTestSettings.configureThree(this);
-        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
-        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
-        privateMeans.add(TravelMeanEnum.CAR);
-        privateMeans.add(TravelMeanEnum.BIKE);
-        publicMeans.add(TravelMeanEnum.BUS);
-        publicMeans.add(TravelMeanEnum.TRAIN);
-        combination = pathManager.calculatePath(event3, privateMeans, publicMeans, false);
-        return combination.toString();
+        return set.addEventBaseCaseTest(true, true, false, false);
+    }
+
+    @Path("calcPathWithBreakOk")
+    @GET
+    @Produces("text/plain")
+    public String addEventBreakOk() {
+        return set.addEventWithBreak(true, true, true, true, 1*60*60);
+    }
+
+    @Path("calcPathWithBreakErr")
+    @GET
+    @Produces("text/plain")
+    public String addEventBreakErr() {
+        return set.addEventWithBreak(true, true, true, true, 2*60*60);
+    }
+
+    @Path("addBreakOvBreak")
+    @GET
+    @Produces("text/plain")
+    public String addBreakOverOtherBreak() {
+        //2018/01/20 h:10:30 - 11:30
+        return set.addBreakEvent(1516444200, 1516447800, 1);
+    }
+
+    @Path("addBreakNoFeas")
+    @GET
+    @Produces("text/plain")
+    public String addNoFeasibleBreak() {
+        //2018/01/20 h:11:00 - 13:00
+        return set.addBreakEvent(1516446000, 1516453200, 3600+1);
+    }
+
+    @Path("addBreakFeas")
+    @GET
+    @Produces("text/plain")
+    public String addFeasibleBreak() {
+        //2018/01/20 h:11:00 - 13:00
+        return set.addBreakEvent(1516446000, 1516453200, 3600);
     }
 
     @Path("swap")
     @GET
     @Produces("text/plain")
     public String swap() {
-        RESTfulTestSettings.configureFour(this);
-        ArrayList<TravelMeanEnum> privateMeans = new ArrayList<TravelMeanEnum>();
-        ArrayList<TravelMeanEnum> publicMeans = new ArrayList<TravelMeanEnum>();
-        privateMeans.add(TravelMeanEnum.CAR);
-        privateMeans.add(TravelMeanEnum.BIKE);
-        publicMeans.add(TravelMeanEnum.BUS);
-        publicMeans.add(TravelMeanEnum.TRAIN);
-        Event event4 = new Event();
-        Location maggianico = GMapsGeocoder.getLocationObject(45.8259029, 9.419594);
-        Location lecco = GMapsGeocoder.getLocationObject(45.8565698, 9.397670399999999);
-        event4.setDeparture(lecco);
-        event4.setEventLocation(maggianico);
-        //2018/01/20 h:14:30 - 17:00
-        event4.setStartingTime(Instant.ofEpochSecond(1516458600));
-        event4.setEndingTime(Instant.ofEpochSecond(1516467600));
-        event4.setType(new TypeOfEvent("", null));
-        event4.setPrevLocChoice(true);
-        String msg = "";
-        for(Event event: pathManager.swapEvents(event4, privateMeans, publicMeans).getEvents())
-            msg+="***"+event.toString()+"\n";
-        return msg;
+        //2018/01/20 h:16:00 - 17:00
+        return set.swapEvents(1516464000, 1516467600, false);
+    }
+
+    @Path("swapPrevOut")
+    @GET
+    @Produces("text/plain")
+    public String swapPrevOut() {
+        //2018/01/20 h:15:00 - 17:00
+        return set.swapEvents(1516460400+1, 1516467600, false);
+    }
+
+    @Path("swapFollOut")
+    @GET
+    @Produces("text/plain")
+    public String swapFollOut() {
+        //2018/01/20 h:14:30 - 18:00
+        return set.swapEvents(1516458600, 1516471200-1, false);
+    }
+
+    @Path("swapBreakFeas")
+    @GET
+    @Produces("text/plain")
+    public String swapBreakFeas() {
+        //2018/01/20 h:10:55 - 12:00
+        return set.swapEvents(1516444200+25*60, 1516449600, true);
+    }
+
+    @Path("swapBreakOut")
+    @GET
+    @Produces("text/plain")
+    public String swapBreakOut() {
+        //2018/01/20 h:10:30 - 12:00
+        return set.swapEvents(1516444200, 1516449600, true);
     }
 }
