@@ -101,7 +101,7 @@ public class PathManager extends UserManager{
             privatePathsHandler(possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc);
         }
         if(!publicMeans.isEmpty()) {
-            publicPathsHandler(possiblePaths, baseCall, eventB, publicMeans, sameLoc);
+            publicPathsHandler(possiblePaths, baseCall, eventA, eventB, publicMeans, sameLoc);
         }
         return possiblePaths;
     }
@@ -118,7 +118,7 @@ public class PathManager extends UserManager{
                 JSONObject privatePathJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallWithNoTransit(baseCall, mean));
                 //Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
                 //2) eventA is the main event and eventB is the following event -> eventB is not NULL because this case is managed above.
-                privatePaths = (eventA != null) ?
+                privatePaths = (eventA != null && !eventB.isTravelAtLastChoice()) ?
                     reader.getTravelNoTransitMeans(privatePathJSON, mean, eventA.getEndingTime().getEpochSecond(),
                         true, eventB.getDeparture(), eventB.getEventLocation()) :
                     // It is the case when the possible new event would be the first in the schedule.
@@ -129,16 +129,16 @@ public class PathManager extends UserManager{
             }
             // Considering only paths that allow to attend to the event in time
             for(Travel travel: privatePaths)
-                if(!travel.getEndingTime().isAfter(eventB.getStartingTime()))
+                if(travelFeasibleInTimeslot(eventA, eventB, travel))
                     possiblePaths.add(travel);
         }
     }
 
-    private void publicPathsHandler(List<Travel> possiblePaths, String baseCall, Event eventB,
+    private void publicPathsHandler(List<Travel> possiblePaths, String baseCall, Event eventA, Event eventB,
                                     List<TravelMeanEnum> publicMeans, boolean sameLoc) throws GMapsGeneralException {
         GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
-        if(!sameLoc) { // If departure location is the same of arrival location, the path can be done only with private means.
+        if (!sameLoc) { // If departure location is the same of arrival location, the path can be done only with private means.
             ArrayList<Travel> publicPaths = new ArrayList<Travel>();
             try {
                 JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(directionsHandler.getCallByTransit(baseCall, publicMeans));
@@ -147,9 +147,14 @@ public class PathManager extends UserManager{
                 e.printStackTrace();
             }
             for (Travel travel : publicPaths)
-                if (travel.getEndingTime().isBefore(eventB.getStartingTime()))
+                if (travelFeasibleInTimeslot(eventA, eventB, travel))
                     possiblePaths.add(travel);
         }
+    }
+
+    private boolean travelFeasibleInTimeslot(Event eventA, Event eventB, Travel travel) {
+        return (!eventB.isTravelAtLastChoice() && !travel.getEndingTime().isAfter(eventB.getStartingTime())) ||
+            (eventB.isTravelAtLastChoice() && !travel.getStartingTime().isBefore(eventA.getEndingTime()));
     }
 
     private boolean isBetweenSameLocations(Event event) {   
