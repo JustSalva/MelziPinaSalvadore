@@ -1,9 +1,9 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntityTest;
-
 import it.polimi.travlendarplus.entities.Location;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
+import it.polimi.travlendarplus.entities.LocationTest;
+import it.polimi.travlendarplus.entities.User;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -13,69 +13,66 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Instant;
 
 @RunWith( Arquillian.class )
-public class EventTest extends GenericEntityTest{
+public class EventTest extends GenericEntityTest {
 
     private Event testEvent;
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return GenericEntityTest.createDeployment().addClass( Event.class );
+        return GenericEntityTest.createDeployment()
+                .addClass( Event.class )
+                .addClass( GenericEvent.class );
     }
 
-    /*@Before
+    @Before
     public void setUp() throws Exception {
-        TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
-        Location departure = null;
-        if(!eventMessage.isPrevLocChoice())
-            departure = findLocation( eventMessage.getDeparture() );
-        Location arrival = findLocation( eventMessage.getEventLocation() );
-        return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(), type,
-                arrival, departure);
+        Location departure = LocationTest.getTestLocation( 34 );
+        Location arrival = LocationTest.getTestLocation( 67 );
+        User user = new User( "email", "name", "surname", "password" );
 
-        testEvents.add( new Event( 123, 456, "address1" ) );
-        testEvents.add( new Location( 147, 258, "address2" ) );
+        testEvent = new Event( "name", Instant.ofEpochSecond( 120 ), Instant.ofEpochSecond( 500 ),
+                false, null, "description", false, null,
+                arrival, departure );
+        testEvent.setUser( user );
+
         super.preparePersistenceTest();
     }
 
     @Test
-    public void allLocationAreFoundUsingJpqlQuery() {
-        //all locations loaded
-        List < Location > retrievedLocations =
-                entityManager.createQuery(" SELECT location FROM LOCATION location ORDER BY location.address", Location.class)
-                        .getResultList();
-        assertContainsAllLocations( retrievedLocations );
+    public void eventIsFoundUsingJpqlQuery() {
+
+        Event retrievedEvent =
+                entityManager.createQuery( " SELECT event FROM EVENT event", Event.class )
+                        .getSingleResult();
+        assertSameEvents( retrievedEvent );
     }
 
 
-    private void assertContainsAllLocations( List< Location > retrievedLocations ) {
+    private void assertSameEvents( Event retrievedEvent ) {
+        Assert.assertEquals( testEvent.getName(), retrievedEvent.getName() );
+        Assert.assertEquals( testEvent.getStartingTime(), retrievedEvent.getStartingTime() );
+        Assert.assertEquals( testEvent.getEndingTime(), retrievedEvent.getEndingTime() );
+        Assert.assertEquals( testEvent.isScheduled(), retrievedEvent.isScheduled() );
+        Assert.assertEquals( testEvent.getDescription(), retrievedEvent.getDescription() );
+        Assert.assertEquals( testEvent.isPrevLocChoice(), retrievedEvent.isPrevLocChoice() );
+        new LocationTest().assertLocationsAreEquals( testEvent.getEventLocation(), retrievedEvent.getEventLocation() );
+        new LocationTest().assertLocationsAreEquals( testEvent.getDeparture(), retrievedEvent.getDeparture() );
 
-        Assert.assertEquals( testEvents.size(), retrievedLocations.size() );
-        assertLocationsAreEquals( testEvents.get( 0 ), retrievedLocations.get( 0 ) );
-        assertLocationsAreEquals( testEvents.get( 1 ), retrievedLocations.get( 1 ) );
-        assertLocationsAreEquals( testEvents.get( 2 ), retrievedLocations.get( 2 ) );
-
-
-    }
-
-    public void assertLocationsAreEquals(Location expected, Location retrieved ) {
-        Assert.assertEquals( expected.getAddress(), retrieved.getAddress() );
-        Assert.assertEquals( expected.getLatitude(), retrieved.getLatitude() , 0);
-        Assert.assertEquals( expected.getLongitude(), retrieved.getLongitude(), 0 );
-    }*/
-
-
-    @Override
-    protected void clearTableQuery(){
-        entityManager.createQuery( "DELETE FROM LOCATION " ).executeUpdate();
     }
 
     @Override
-    protected void loadTestData(){
+    protected void clearTableQuery() {
+        entityManager.createQuery( "DELETE FROM EVENT " ).executeUpdate();
+    }
+
+    @Override
+    protected void loadTestData() {
+        entityManager.persist( testEvent.getUser() );
+        entityManager.persist( testEvent.getEventLocation() );
+        entityManager.persist( testEvent.getDeparture() );
         entityManager.persist( testEvent );
     }
 
@@ -84,7 +81,4 @@ public class EventTest extends GenericEntityTest{
         super.commitTransaction();
     }
 
-    public static Location getTestEvent( int index ){
-        return new Location( index, index, "address" + index );
-    }
 }

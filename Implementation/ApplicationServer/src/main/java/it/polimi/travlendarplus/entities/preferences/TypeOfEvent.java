@@ -42,6 +42,9 @@ public class TypeOfEvent extends EntityWithLongKey {
         this.paramFirstPath = paramFirstPath;
     }
 
+    public static TypeOfEvent load( long key ) throws EntityNotFoundException {
+        return GenericEntity.load( TypeOfEvent.class, key );
+    }
 
     public ParamFirstPath getParamFirstPath() {
         return paramFirstPath;
@@ -63,6 +66,10 @@ public class TypeOfEvent extends EntityWithLongKey {
         return Collections.unmodifiableList( limitedBy );
     }
 
+    public void setLimitedBy( List< Constraint > limitedBy ) {
+        this.limitedBy = limitedBy;
+    }
+
     public ArrayList< Constraint > getLimitedBy( TravelMeanEnum travelMeanEnum ) {
         ArrayList< Constraint > cons = new ArrayList< Constraint >();
         for ( Constraint constraint : limitedBy ) {
@@ -71,11 +78,6 @@ public class TypeOfEvent extends EntityWithLongKey {
             }
         }
         return cons;
-    }
-
-
-    public void setLimitedBy( List< Constraint > limitedBy ) {
-        this.limitedBy = limitedBy;
     }
 
     public List< TravelMeanEnum > getDeactivate() {
@@ -104,9 +106,5 @@ public class TypeOfEvent extends EntityWithLongKey {
 
     public void removeConstraint( long id ) {
         limitedBy.removeIf( constraint -> constraint.getId() == id );
-    }
-
-    public static TypeOfEvent load( long key ) throws EntityNotFoundException {
-        return GenericEntity.load( TypeOfEvent.class, key );
     }
 }

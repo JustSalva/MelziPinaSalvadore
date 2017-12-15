@@ -1,60 +1,57 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-@Entity(name = "EVENT")
-@DiscriminatorValue("EVENT")
+@Entity( name = "EVENT" )
+@DiscriminatorValue( "EVENT" )
 public class Event extends GenericEvent {
 
     private static final long serialVersionUID = 8421808089635462963L;
 
-    @Column(name = "DESCRIPTION")
+    @Column( name = "DESCRIPTION" )
     private String description;
 
-    @Column(name = "PREV_LOCATION_CHOICE")
+    @Column( name = "PREV_LOCATION_CHOICE" )
     private boolean prevLocChoice;
 
     @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumn(name="TYPE_OF_EVENT" )
+    @JoinColumn( name = "TYPE_OF_EVENT" )
     private TypeOfEvent type;
 
     @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumns({
-            @JoinColumn(name="EVENT_LATITUDE", referencedColumnName="latitude"),
-            @JoinColumn(name="EVENT_LONGITUDE", referencedColumnName="longitude")
-    })
+    @JoinColumns( {
+            @JoinColumn( name = "EVENT_LATITUDE", referencedColumnName = "latitude" ),
+            @JoinColumn( name = "EVENT_LONGITUDE", referencedColumnName = "longitude" )
+    } )
     private Location eventLocation;
 
     @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumns({
-            @JoinColumn(name="DEPARTURE_LATITUDE", referencedColumnName="latitude"),
-            @JoinColumn(name="DEPARTURE_LONGITUDE", referencedColumnName="longitude")
-    })
+    @JoinColumns( {
+            @JoinColumn( name = "DEPARTURE_LATITUDE", referencedColumnName = "latitude" ),
+            @JoinColumn( name = "DEPARTURE_LONGITUDE", referencedColumnName = "longitude" )
+    } )
     private Location departure;
 
     @OneToOne( fetch = FetchType.LAZY )
-    @JoinColumn(name = "LIMITED_BY")
+    @JoinColumn( name = "LIMITED_BY" )
     private Travel feasiblePath;
 
     public Event() {
     }
 
-    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
-                 String description, boolean prevLocChoice, TypeOfEvent type, Location eventLocation,
-                 Location departure) {
-        super(name, startingTime, endingTime, isScheduled, periodicity);
+    public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
+                  String description, boolean prevLocChoice, TypeOfEvent type, Location eventLocation,
+                  Location departure ) {
+        super( name, startingTime, endingTime, isScheduled, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
         this.type = type;
@@ -63,10 +60,10 @@ public class Event extends GenericEvent {
     }
 
     //constructor for generic event with no periodicity
-    public Event(String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                 String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation,
-                 Location departure, Travel feasiblePath) {
-        super(name, startingTime, endingTime, isScheduled);
+    public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                  String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation,
+                  Location departure, Travel feasiblePath ) {
+        super( name, startingTime, endingTime, isScheduled );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
         //this.user = user;
@@ -76,11 +73,15 @@ public class Event extends GenericEvent {
         this.feasiblePath = feasiblePath;
     }
 
+    public static Event load( long key ) throws EntityNotFoundException {
+        return GenericEntity.load( Event.class, key );
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription( String description ) {
         this.description = description;
     }
 
@@ -88,7 +89,7 @@ public class Event extends GenericEvent {
         return prevLocChoice;
     }
 
-    public void setPrevLocChoice(boolean prevLocChoice) {
+    public void setPrevLocChoice( boolean prevLocChoice ) {
         this.prevLocChoice = prevLocChoice;
     }
 
@@ -96,7 +97,7 @@ public class Event extends GenericEvent {
         return type;
     }
 
-    public void setType(TypeOfEvent type) {
+    public void setType( TypeOfEvent type ) {
         this.type = type;
     }
 
@@ -104,7 +105,7 @@ public class Event extends GenericEvent {
         return eventLocation;
     }
 
-    public void setEventLocation(Location eventLocation) {
+    public void setEventLocation( Location eventLocation ) {
         this.eventLocation = eventLocation;
     }
 
@@ -112,7 +113,7 @@ public class Event extends GenericEvent {
         return departure;
     }
 
-    public void setDeparture(Location departure) {
+    public void setDeparture( Location departure ) {
         this.departure = departure;
     }
 
@@ -120,19 +121,15 @@ public class Event extends GenericEvent {
         return feasiblePath;
     }
 
-    public void setFeasiblePath(Travel feasiblePath) {
+    public void setFeasiblePath( Travel feasiblePath ) {
         this.feasiblePath = feasiblePath;
-    }
-
-    public static Event load(long key) throws EntityNotFoundException {
-        return GenericEntity.load( Event.class, key );
     }
 
     public Event nextPeriodicEvent() {
         Instant startingTime = this.getStartingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
-                this.description, this.prevLocChoice, this.type, this.eventLocation, this.departure);
+                this.description, this.prevLocChoice, this.type, this.eventLocation, this.departure );
     }
 
     @Override
@@ -142,7 +139,7 @@ public class Event extends GenericEvent {
 
     @Override
     public String toString() {
-        return "Event{" + super.toString()+
+        return "Event{" + super.toString() +
                 "description='" + description + '\'' +
                 ", prevLocChoice=" + prevLocChoice +
                 ", type=" + type +

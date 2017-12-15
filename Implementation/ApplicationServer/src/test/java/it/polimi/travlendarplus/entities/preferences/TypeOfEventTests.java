@@ -89,4 +89,14 @@ public class TypeOfEventTests extends GenericEntityTest{
         super.commitTransaction();
     }
 
+    public static TypeOfEvent getTestTypeOfEvent( int index ){
+        ArrayList< Constraint > testConstraints = new ArrayList<>();
+        testConstraints.add( new PeriodOfDayConstraint( TravelMeanEnum.SUBWAY, index,10*index ) );
+        testConstraints.add( new DistanceConstraint( TravelMeanEnum.BIKE, 10*index, 20*index ) );
+        TypeOfEvent requestedTestTypeOfEvent = new TypeOfEvent( "name", ParamFirstPath.MIN_COST);
+        requestedTestTypeOfEvent.addDeactivated( TravelMeanEnum.BUS );
+        requestedTestTypeOfEvent.setLimitedBy( testConstraints );
+        return requestedTestTypeOfEvent;
+    }
+
 }

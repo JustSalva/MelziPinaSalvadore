@@ -22,7 +22,7 @@ public class AlternativeTravel extends EntityWithLongKey {
     private Event eventRelated;
 
     @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumn(name = "USER", nullable = false)
+    @JoinColumn(name = "TRAVEL_OWNER", nullable = false)
     private User user;
 
     public AlternativeTravel() {

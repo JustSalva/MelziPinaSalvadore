@@ -36,7 +36,7 @@ public class LocationTest extends GenericEntityTest {
     }
 
     @Test
-    public void allLocationAreFoundUsingJpqlQuery() {
+    public void allLocationsAreFoundUsingJpqlQuery() {
 
         List< Location > retrievedLocations =
                 entityManager.createQuery( " SELECT location FROM LOCATION location ORDER BY location.address", Location.class )

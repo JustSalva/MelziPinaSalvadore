@@ -8,46 +8,50 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.*;
 import java.time.Instant;
 
-@Entity(name = "PERIOD")
+@Entity( name = "PERIOD" )
 public class Period extends EntityWithLongKey {
 
     private static final long serialVersionUID = -7420043997157726131L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
 
-    @Column(name = "STARTING_DAY")
+    @Column( name = "STARTING_DAY" )
     private Instant startingDay;
 
-    @Column(name = "ENDING_DAY")
+    @Column( name = "ENDING_DAY" )
     private Instant endingDay;
 
-    @Column(name = "DELTA_DAYS")
+    @Column( name = "DELTA_DAYS" )
     private int deltaDays;
 
     @Embedded
     private Timestamp lastUpdate;
 
-    @Column(name = "LAST_PROPAGATED_EVENT")
+    @Column( name = "LAST_PROPAGATED_EVENT" )
     private long lastPropagatedEvent;
 
     public Period() {
         this.lastUpdate = new Timestamp();
     }
 
-    public Period(Instant startingDay, Instant endingDay, int deltaDays) {
+    public Period( Instant startingDay, Instant endingDay, int deltaDays ) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
         this.lastUpdate = new Timestamp();
     }
 
+    public static Period load( long key ) throws EntityNotFoundException {
+        return GenericEntity.load( Period.class, key );
+    }
+
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId( long id ) {
         this.id = id;
     }
 
@@ -55,23 +59,23 @@ public class Period extends EntityWithLongKey {
         return startingDay;
     }
 
+    public void setStartingDay( Instant startingDay ) {
+        this.startingDay = startingDay;
+    }
+
     public Instant getEndingDay() {
         return endingDay;
+    }
+
+    public void setEndingDay( Instant endingDay ) {
+        this.endingDay = endingDay;
     }
 
     public int getDeltaDays() {
         return deltaDays;
     }
 
-    public void setStartingDay(Instant startingDay) {
-        this.startingDay = startingDay;
-    }
-
-    public void setEndingDay(Instant endingDay) {
-        this.endingDay = endingDay;
-    }
-
-    public void setDeltaDays(int deltaDays) {
+    public void setDeltaDays( int deltaDays ) {
         this.deltaDays = deltaDays;
     }
 
@@ -79,7 +83,7 @@ public class Period extends EntityWithLongKey {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Timestamp lastUpdate) {
+    public void setLastUpdate( Timestamp lastUpdate ) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -89,9 +93,5 @@ public class Period extends EntityWithLongKey {
 
     public void setLastPropagatedEvent( long lastPropagatedEvent ) {
         this.lastPropagatedEvent = lastPropagatedEvent;
-    }
-
-    public static Period load( long key) throws EntityNotFoundException {
-        return GenericEntity.load( Period.class, key );
     }
 }
