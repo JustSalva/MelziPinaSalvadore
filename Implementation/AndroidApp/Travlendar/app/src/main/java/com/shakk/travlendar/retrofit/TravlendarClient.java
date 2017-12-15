@@ -2,6 +2,7 @@ package com.shakk.travlendar.retrofit;
 
 
 import com.shakk.travlendar.retrofit.body.LoginBody;
+import com.shakk.travlendar.retrofit.body.RegisterBody;
 import com.shakk.travlendar.retrofit.response.LoginResponse;
 import com.shakk.travlendar.retrofit.response.RegisterResponse;
 
@@ -15,7 +16,7 @@ import retrofit2.http.Path;
 public interface TravlendarClient {
     @POST("register")
     Call<RegisterResponse> register(
-            @Body LoginBody registerBody
+            @Body RegisterBody registerBody
     );
 
     @POST("login")

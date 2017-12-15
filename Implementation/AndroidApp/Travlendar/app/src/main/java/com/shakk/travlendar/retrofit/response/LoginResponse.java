@@ -1,6 +1,7 @@
 package com.shakk.travlendar.retrofit.response;
 
 public class LoginResponse {
+
     private String univocalCode;
     private String name;
     private String surname;

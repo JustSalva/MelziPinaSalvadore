@@ -3,6 +3,9 @@ package com.shakk.travlendar.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import org.json.*;
 import com.loopj.android.http.*;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
+import com.shakk.travlendar.retrofit.controller.RegisterController;
 
 import java.io.UnsupportedEncodingException;
 
@@ -57,6 +61,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private String password1;
     private String password2;
 
+    // Handler for server responses.
+    private Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +89,38 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // Added listener to registration button.
         registration_button.setOnClickListener(view -> signUp());
+
+        // Handle server responses.
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 200:
+                        // Retrieve data from bundle.
+                        Bundle bundle = msg.getData();
+                        String univocalCode = bundle.getString("univocalCode");
+
+                        // Insert new User into the local DB.
+                        User user = new User(email, name, surname, univocalCode);
+                        Log.d("INSERT_USER", user.toString());
+                        new InsertUserTask(getApplicationContext()).execute(user);
+
+                        goToCalendarActivity();
+                        break;
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 401:
+                        Toast.makeText(getBaseContext(), "This email is already taken!", Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", msg.toString());
+                        break;
+                }
+                resumeNormalMode();
+            }
+        };
     }
 
 
@@ -98,6 +137,7 @@ public class RegistrationActivity extends AppCompatActivity {
         password1 = password1_editText.getText().toString();
         password2 = password2_editText.getText().toString();
 
+        // Check if inputs are correct.
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
@@ -106,73 +146,10 @@ public class RegistrationActivity extends AppCompatActivity {
         // Retrieve token representing device.
         token = FirebaseInstanceId.getInstance().getToken();
 
-        // Build JSON to be sent to server.
-        JSONObject jsonParams = new JSONObject();
-        StringEntity entity = null;
-        try {
-            jsonParams.put("email", email);
-            jsonParams.put("password", password1);
-            jsonParams.put("idDevice", token);
-            jsonParams.put("name", name);
-            jsonParams.put("surname", surname);
-            Log.d("JSON", jsonParams.toString());
-            entity = new StringEntity(jsonParams.toString());
-            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        // Send JSON to server.
-        TravlendarRestClient.post("ApplicationServerArchive/register", entity, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                //Makes UI unresponsive.
-                waitForServerResponse();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // Sending successful.
-                String univocalCode = "";
-                // Get univocalCode from JSON response.
-                try {
-                    univocalCode = response.getString("token");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                // Insert new User into the local DB.
-                User user = new User(email, name, surname, univocalCode);
-                Log.d("INSERT USER", user.toString());
-                new InsertUserTask(getApplicationContext()).execute(user);
-
-                goToCalendarActivity();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                //Sending failed.
-                switch (statusCode) {
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                    case 401:
-                        Toast.makeText(getBaseContext(), "This email is already taken!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                //Makes UI responsive again.
-                resumeNormalMode();
-            }
-        });
+        // Send request to server.
+        waitForServerResponse();
+        RegisterController registerController = new RegisterController(handler);
+        registerController.start(email, password1, token, name, surname);
     }
 
     /**
