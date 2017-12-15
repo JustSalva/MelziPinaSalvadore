@@ -7,9 +7,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

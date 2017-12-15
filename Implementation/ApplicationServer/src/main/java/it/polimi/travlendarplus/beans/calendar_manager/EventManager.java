@@ -83,19 +83,17 @@ public class EventManager extends UserManager {
         return events;
     }
 
-    public List< GenericEvent > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException {
+    public List< Event > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException {
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
         Event following = addEventAndModifyFollowingEvent( event );
-        List< GenericEvent > responseList = new ArrayList<>();
+        List< Event > responseList = new ArrayList<>();
         if ( following != null ) {
             following.save();
             responseList.add( following );
         }
         event.setUser( currentUser );
-        event.setFeasiblePath( null );
-        event.save();
         responseList.add( event );
         currentUser.addEvent( event );
         currentUser.save();
@@ -287,7 +285,7 @@ public class EventManager extends UserManager {
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         addBreakEvent( breakEvent );
         startEventPropagatorThread( breakEvent );
-        breakEvent.save();
+        breakEvent.setUser( currentUser );
         currentUser.addBreak( breakEvent );
         currentUser.save();
         return breakEvent;   //it handle periodic events

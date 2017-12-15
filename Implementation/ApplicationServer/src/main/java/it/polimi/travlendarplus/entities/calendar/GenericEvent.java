@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -35,9 +36,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     @JoinColumn( name = "PERIODICITY_ID" )
     private Period periodicity;
 
-    @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumn( name = "OWNER", nullable = false )
-    private User user;
+    private String userId;
 
     @Embedded
     private Timestamp lastUpdate;
@@ -123,12 +122,25 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         this.lastUpdate = lastUpdate;
     }
 
+    public String getuserId() {
+        return userId;
+    }
+
+    public void setuserId( String userId ) {
+        this.userId = userId;
+    }
+
     public User getUser() {
-        return user;
+        try {
+            return User.load( this.userId );
+        } catch ( EntityNotFoundException e ) {
+            //it always have to be found
+            return null;
+        }
     }
 
     public void setUser( User user ) {
-        this.user = user;
+        this.userId = user.getEmail();
     }
 
     //used to remove correctly an event into function of ScheduleHolder class
@@ -146,6 +158,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public abstract void addEventAndModifyFollowingEvent( EventManager eventManager );
 
     public abstract void removeFeasiblePath();
+
     @Override
     public String toString() {
         return "GenericEvent{" +
@@ -154,7 +167,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
                 ", endingTime=" + endingTime +
                 ", isScheduled=" + isScheduled +
                 ", periodicity=" + periodicity +
-                ", user=" + user +
+                ", userId=" + userId +
                 ", lastUpdate=" + lastUpdate +
                 '}';
     }

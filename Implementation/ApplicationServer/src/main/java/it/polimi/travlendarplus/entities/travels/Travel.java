@@ -19,10 +19,6 @@ public class Travel extends EntityWithLongKey {
 
     private static final long serialVersionUID = 3515840069172744899L;
 
-    @OneToOne( fetch=FetchType.LAZY )
-    @JoinColumn(name="RELATED_EVENT")
-    private Event relatedEvent;
-
     @JoinTable(name = "TRAVEL_COMPONENTS")
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<TravelComponent> miniTravels;
@@ -34,8 +30,7 @@ public class Travel extends EntityWithLongKey {
         this.lastUpdate = new Timestamp();
     }
 
-    public Travel(Event relatedEvent, ArrayList<TravelComponent> miniTravels) {
-        this.relatedEvent = relatedEvent;
+    public Travel( ArrayList<TravelComponent> miniTravels) {
         this.miniTravels = miniTravels;
         this.lastUpdate = new Timestamp();
     }
@@ -133,7 +128,6 @@ public class Travel extends EntityWithLongKey {
     @Override
     public String toString() {
         return "Travel{" +
-                "relatedEvent=" + relatedEvent +
                 ", miniTravels=" + miniTravels +
                 ", lastUpdate=" + lastUpdate +
                 '}';

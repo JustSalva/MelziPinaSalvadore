@@ -42,7 +42,7 @@ public class GMapsJSONReader {
                 ArrayList<TravelComponent> listTC = new ArrayList<TravelComponent>();
                 listTC.add(component);
 
-                Travel travel = new Travel(null, listTC);
+                Travel travel = new Travel( listTC );
                 possiblePaths.add(travel);
             }
             return possiblePaths;
@@ -80,7 +80,7 @@ public class GMapsJSONReader {
                             arrivalLoc, mean);
                     travelSteps.add(step);
                 }
-                Travel travelOption = new Travel(null, travelSteps);
+                Travel travelOption = new Travel( travelSteps );
                 possiblePaths.add(travelOption);
             }
 

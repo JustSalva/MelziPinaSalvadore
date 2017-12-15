@@ -27,7 +27,7 @@ public class TravelTest extends GenericEntityTest {
         ArrayList< TravelComponent > firstTravelComponents = new ArrayList<>();
         firstTravelComponents.add( TravelComponentTest.getTestTravelComponent( index ) );
         firstTravelComponents.add( TravelComponentTest.getTestTravelComponent( 2 * index ) );
-        return new Travel( new Event(), firstTravelComponents );
+        return new Travel( firstTravelComponents );
     }
 
     @Before
@@ -35,7 +35,7 @@ public class TravelTest extends GenericEntityTest {
         ArrayList< TravelComponent > firstTravelComponents = new ArrayList<>();
         firstTravelComponents.add( TravelComponentTest.getTestTravelComponent( 1 ) );
         firstTravelComponents.add( TravelComponentTest.getTestTravelComponent( 2 ) );
-        testTravel = new Travel( null, firstTravelComponents );
+        testTravel = new Travel( firstTravelComponents );
 
         super.preparePersistenceTest();
     }

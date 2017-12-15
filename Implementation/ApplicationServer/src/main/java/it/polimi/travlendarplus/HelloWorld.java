@@ -8,12 +8,14 @@ import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.DistanceConstraint;
 import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.PeriodOfDayConstraint;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddEventMessage;
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.LocationMessage;
@@ -72,12 +74,25 @@ public class HelloWorld {
         typeOfEvent.addConstraint( new PeriodOfDayConstraint( TravelMeanEnum.BUS, 3,11 ) );
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonOutput = gson.toJson(typeOfEvent);*/
-        AddEventMessage addEventMessage = new AddEventMessage( "name", Instant.now(), Instant.now(),
+        /*AddEventMessage addEventMessage = new AddEventMessage( "name", Instant.now(), Instant.now(),
                 new PeriodMessage(  Instant.now(), Instant.now().plus( 10, ChronoUnit.DAYS ),
                         10),"description", true, true, 10,
                 new LocationMessage( 45.85317, 9.39005, "Lecco" ),
-                new LocationMessage( 45.46427, 9.18951, "Milano" ) );
-        return Response.ok( addEventMessage ).build();
+                new LocationMessage( 45.46427, 9.18951, "Milano" ) );*/
+        Location arrival = new Location( 1, 1, "address" );
+        arrival.save();
+        Location departure = new Location( 2, 2, "address" );
+        departure.save();
+        Event event = new Event( "name" , Instant.ofEpochSecond( 120  ), Instant.ofEpochSecond( 500 ),
+                false, null, "description", false,false, null,
+                arrival, departure );
+        Travel travel = new Travel(  );
+        event.setFeasiblePath( travel );
+        User user = new User( "email", "name", "surname", "password" );
+        user.save();
+        event.setUser( user );
+        event.save();
+        return HttpResponseBuilder.buildOkResponse( event );
         /*ogg.setAddress("prova");
         ogg.save();*/
         //ogg.remove();
