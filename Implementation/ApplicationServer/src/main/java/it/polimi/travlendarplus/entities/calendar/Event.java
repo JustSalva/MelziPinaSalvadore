@@ -25,6 +25,9 @@ public class Event extends GenericEvent {
     @Column( name = "PREV_LOCATION_CHOICE" )
     private boolean prevLocChoice;
 
+    @Column( name = "TRAVEL_AT_LAST_CHOICE" )
+    private boolean travelAtLastChoice;
+
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "TYPE_OF_EVENT" )
     private TypeOfEvent type;
@@ -51,11 +54,12 @@ public class Event extends GenericEvent {
     }
 
     public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
-                  String description, boolean prevLocChoice, TypeOfEvent type, Location eventLocation,
-                  Location departure ) {
+                  String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type,
+                  Location eventLocation, Location departure ) {
         super( name, startingTime, endingTime, isScheduled, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
+        this.travelAtLastChoice = travelAtLastChoice;
         this.type = type;
         this.eventLocation = eventLocation;
         this.departure = departure;
@@ -63,12 +67,12 @@ public class Event extends GenericEvent {
 
     //constructor for generic event with no periodicity
     public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                  String description, boolean prevLocChoice, User user, TypeOfEvent type, Location eventLocation,
+                  String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type, Location eventLocation,
                   Location departure, Travel feasiblePath ) {
         super( name, startingTime, endingTime, isScheduled );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
-        //this.user = user;
+        this.travelAtLastChoice = travelAtLastChoice;
         this.type = type;
         this.eventLocation = eventLocation;
         this.departure = departure;
@@ -127,11 +131,20 @@ public class Event extends GenericEvent {
         this.feasiblePath = feasiblePath;
     }
 
+    public boolean isTravelAtLastChoice() {
+        return travelAtLastChoice;
+    }
+
+    public void setTravelAtLastChoice( boolean travelAtLastChoice ) {
+        this.travelAtLastChoice = travelAtLastChoice;
+    }
+
     public Event nextPeriodicEvent() {
         Instant startingTime = this.getStartingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
-                this.description, this.prevLocChoice, this.type, this.eventLocation, this.departure );
+                this.description, this.prevLocChoice, this.travelAtLastChoice,
+                this.type, this.eventLocation, this.departure );
     }
 
     @Override

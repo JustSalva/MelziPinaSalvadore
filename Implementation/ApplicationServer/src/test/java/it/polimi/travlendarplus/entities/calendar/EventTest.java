@@ -32,7 +32,7 @@ public class EventTest extends GenericEntityTest {
         Location arrival = LocationTest.getTestLocation( 67 * index );
 
         return new Event( "name" + index, Instant.ofEpochSecond( 120 * index ), Instant.ofEpochSecond( 500 * index ),
-                false, null, "description" + index, false, null,
+                false, null, "description" + index, false,false, null,
                 arrival, departure );
     }
 
@@ -43,7 +43,7 @@ public class EventTest extends GenericEntityTest {
         User user = new User( "email", "name", "surname", "password" );
 
         testEvent = new Event( "name", Instant.ofEpochSecond( 120 ), Instant.ofEpochSecond( 500 ),
-                false, null, "description", false, null,
+                false, null, "description", false, false, null,
                 arrival, departure );
         testEvent.setUser( user );
 
@@ -67,6 +67,7 @@ public class EventTest extends GenericEntityTest {
         Assert.assertEquals( testEvent.isScheduled(), retrievedEvent.isScheduled() );
         Assert.assertEquals( testEvent.getDescription(), retrievedEvent.getDescription() );
         Assert.assertEquals( testEvent.isPrevLocChoice(), retrievedEvent.isPrevLocChoice() );
+        Assert.assertEquals( testEvent.isTravelAtLastChoice(), retrievedEvent.isTravelAtLastChoice() );
         new LocationTest().assertLocationsAreEquals( testEvent.getEventLocation(), retrievedEvent.getEventLocation() );
         new LocationTest().assertLocationsAreEquals( testEvent.getDeparture(), retrievedEvent.getDeparture() );
     }

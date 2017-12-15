@@ -9,20 +9,23 @@ public class AddEventMessage extends AddGenericEventMessage {
 
     private String description;
     private boolean prevLocChoice;
+    private boolean travelAtLastChoice;
     private long idTypeOfEvent;
-    private String eventLocation;
-    private String departure;
+    private LocationMessage eventLocation;
+    private LocationMessage departure;
 
     public AddEventMessage() {
     }
 
     public AddEventMessage( String name, Instant startingTime, Instant endingTime,
                             PeriodMessage periodicity, String description, boolean prevLocChoice,
-                            long idTypeOfEvent, String eventLocation, String departure ) {
+                            boolean travelAtLastChoice, long idTypeOfEvent,
+                            LocationMessage eventLocation, LocationMessage departure ) {
 
         super( name, startingTime, endingTime, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
+        this.travelAtLastChoice = travelAtLastChoice;
         this.idTypeOfEvent = idTypeOfEvent;
         this.eventLocation = eventLocation;
         this.departure = departure;
@@ -52,19 +55,27 @@ public class AddEventMessage extends AddGenericEventMessage {
         this.idTypeOfEvent = idTypeOfEvent;
     }
 
-    public String getEventLocation() {
+    public LocationMessage getEventLocation() {
         return eventLocation;
     }
 
-    public void setEventLocation( String eventLocation ) {
+    public void setEventLocation( LocationMessage eventLocation ) {
         this.eventLocation = eventLocation;
     }
 
-    public String getDeparture() {
+    public LocationMessage getDeparture() {
         return departure;
     }
 
-    public void setDeparture( String departure ) {
+    public void setDeparture( LocationMessage departure ) {
         this.departure = departure;
+    }
+
+    public boolean isTravelAtLastChoice() {
+        return travelAtLastChoice;
+    }
+
+    public void setTravelAtLastChoice( boolean travelAtLastChoice ) {
+        this.travelAtLastChoice = travelAtLastChoice;
     }
 }

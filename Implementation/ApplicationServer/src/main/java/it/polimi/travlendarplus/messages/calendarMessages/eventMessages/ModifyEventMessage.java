@@ -13,10 +13,11 @@ public class ModifyEventMessage extends AddEventMessage {
     }
 
     public ModifyEventMessage( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
-                               String description, boolean prevLocChoice, long idTypeOfEvent, String eventLocation,
-                               String departure, long eventId, boolean propagateToPeriodicEvents) {
+                               String description, boolean prevLocChoice, boolean travelAtLastChoice,
+                               long idTypeOfEvent, LocationMessage eventLocation, LocationMessage departure,
+                               long eventId, boolean propagateToPeriodicEvents) {
 
-        super( name, startingTime, endingTime, periodicity, description, prevLocChoice,
+        super( name, startingTime, endingTime, periodicity, description, prevLocChoice, travelAtLastChoice,
                 idTypeOfEvent, eventLocation, departure );
         this.eventId = eventId;
         this.propagateToPeriodicEvents = propagateToPeriodicEvents;
