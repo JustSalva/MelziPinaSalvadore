@@ -13,10 +13,6 @@ public class Period extends EntityWithLongKey {
 
     private static final long serialVersionUID = -7420043997157726131L;
 
-    @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    private long id;
-
     @Column( name = "STARTING_DAY" )
     private Instant startingDay;
 
@@ -45,14 +41,6 @@ public class Period extends EntityWithLongKey {
 
     public static Period load( long key ) throws EntityNotFoundException {
         return GenericEntity.load( Period.class, key );
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId( long id ) {
-        this.id = id;
     }
 
     public Instant getStartingDay() {

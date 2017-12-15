@@ -1,11 +1,14 @@
 package it.polimi.travlendarplus.beans.calendar_manager;
 
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
+import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
@@ -37,7 +40,7 @@ public class EventManager extends UserManager {
     private PathManager pathManager;
 
     @Resource(name = "DefaultManagedExecutorService")
-    ManagedExecutorService executor;
+    private ManagedExecutorService executor;
 
     @PostConstruct
     public void postConstruct() {
@@ -148,9 +151,19 @@ public class EventManager extends UserManager {
         }
     }
 
-    private Location findLocation( String address ) {
+    private Location findLocation( LocationMessage locationMessage ) {
         //TODO create if not present
-        return new Location();
+        Location location;
+        try {
+            location = Location.load(
+                    new LocationId( locationMessage.getLatitude(), locationMessage.getLongitude() ) );
+            return location;
+        } catch ( EntityNotFoundException e ) {
+            location = new Location( locationMessage.getLatitude(),
+                    locationMessage.getLongitude(), locationMessage.getAddress());
+            location.save();
+            return location;
+        }
     }
 
     private TypeOfEvent findTypeOfEvent( long name ) {
@@ -160,24 +173,35 @@ public class EventManager extends UserManager {
     }
 
     private Event createEvent( AddEventMessage eventMessage ) {
-        TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
+        TypeOfEvent type;
+        if( eventMessage.getIdTypeOfEvent() == 0 ){
+            type = new TypeOfEvent();
+            type.setName( "emptyTypeOfEvent" );
+            type.setParamFirstPath( ParamFirstPath.MIN_TIME );
+            type.save();
+        } else {
+            type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
+        }
         Location departure = null;
-        if ( !eventMessage.isPrevLocChoice() )
+        if ( !eventMessage.isPrevLocChoice() ) {
             departure = findLocation( eventMessage.getDeparture() );
+        }
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(), type,
-                arrival, departure );
+                false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
+                eventMessage.isTravelAtLastChoice(), type, arrival, departure );
     }
 
     private void checkEventFields( AddEventMessage eventMessage ) throws InvalidFieldException {
         List< String > errors = new ArrayList<>();
-
         errors.addAll( checkGenericEventFields( eventMessage ) );
-        if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
-            errors.add( "Not exists a previous location" );
+
+        /*if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
+            errors.add( "Not exists a previous location" );*/
         try {
-            preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
+            if ( eventMessage.getIdTypeOfEvent() != 0 ){
+                preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
+            }
         } catch ( EntityNotFoundException e ) {
             errors.add( "TypeOfEvent not found" );
         }

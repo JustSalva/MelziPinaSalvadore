@@ -15,7 +15,7 @@ public class PeriodMessage extends CalendarMessage {
     public PeriodMessage() {
     }
 
-    public PeriodMessage( Instant startingDay, Instant endingDay, int deltaDays, Instant lastUpdate ) {
+    public PeriodMessage( Instant startingDay, Instant endingDay, int deltaDays ) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;

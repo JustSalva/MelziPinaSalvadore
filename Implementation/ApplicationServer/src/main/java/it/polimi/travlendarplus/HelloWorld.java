@@ -15,6 +15,9 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddEventMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.LocationMessage;
+import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.PeriodMessage;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -26,6 +29,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 // The Java class will be hosted at the URI path "/prova"
@@ -59,14 +65,19 @@ public class HelloWorld {
         } catch ( EntityNotFoundException e ) {
             e.printStackTrace();
         }*/
-        TypeOfEvent typeOfEvent = new TypeOfEvent( "name", ParamFirstPath.MIN_COST );
+        /*TypeOfEvent typeOfEvent = new TypeOfEvent( "name", ParamFirstPath.MIN_COST );
         typeOfEvent.addDeactivated( TravelMeanEnum.CAR );
         typeOfEvent.addDeactivated( TravelMeanEnum.SHARING_BIKE );
         typeOfEvent.addConstraint( new DistanceConstraint( TravelMeanEnum.BIKE, 9,10) );
         typeOfEvent.addConstraint( new PeriodOfDayConstraint( TravelMeanEnum.BUS, 3,11 ) );
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonOutput = gson.toJson(typeOfEvent);
-        return Response.ok( jsonOutput ).build();
+        String jsonOutput = gson.toJson(typeOfEvent);*/
+        AddEventMessage addEventMessage = new AddEventMessage( "name", Instant.now(), Instant.now(),
+                new PeriodMessage(  Instant.now(), Instant.now().plus( 10, ChronoUnit.DAYS ),
+                        10),"description", true, true, 10,
+                new LocationMessage( 45.85317, 9.39005, "Lecco" ),
+                new LocationMessage( 45.46427, 9.18951, "Milano" ) );
+        return Response.ok( addEventMessage ).build();
         /*ogg.setAddress("prova");
         ogg.save();*/
         //ogg.remove();

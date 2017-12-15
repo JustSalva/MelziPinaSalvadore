@@ -11,9 +11,22 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity( name = "TYPE_OF_EVENT" )
-public class TypeOfEvent extends EntityWithLongKey {
+@TableGenerator( name="typeOfEventId", initialValue = 10 )
+public class TypeOfEvent extends GenericEntity {
 
     private static final long serialVersionUID = 1979790161261960888L;
+
+    @Id
+    @GeneratedValue( strategy=GenerationType.TABLE, generator="typeOfEventId")
+    private long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @Column( nullable = false, name = "NAME" )
     private String name;
@@ -106,5 +119,15 @@ public class TypeOfEvent extends EntityWithLongKey {
 
     public void removeConstraint( long id ) {
         limitedBy.removeIf( constraint -> constraint.getId() == id );
+    }
+
+    @Override
+    public boolean isAlreadyInDb() {
+        try {
+            load( id );
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }
