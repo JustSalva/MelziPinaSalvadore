@@ -7,6 +7,8 @@ import it.polimi.travlendarplus.entities.calendar.Period;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
+import javax.ejb.EJB;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.*;
@@ -19,11 +21,14 @@ import java.util.List;
 @Singleton
 public class PeriodicEventsPropagator {
 
+    @EJB
+    private EventManager eventManager;
+
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
     //TODO uncomment when periodic events propagation is done
-    //@Schedule(hour = "23", minute = "55", second = "00")
+    @Schedule(hour = "23", minute = "55", second = "00")
     public void propagatePeriodicEvents() {
         List < GenericEvent > eventsToBePropagated = getEventsToBePropagated();
         for ( GenericEvent genericEvent : eventsToBePropagated ){
@@ -99,10 +104,9 @@ public class PeriodicEventsPropagator {
 
     private void addNextPeriodicEvent( GenericEvent event ){
         GenericEvent genericEvent = event.nextPeriodicEvent( ); //NB by default they are not scheduled
-        //TODO check travel feasibility and add feasible travels to standard Events
+        eventManager.setCurrentUser( genericEvent.getUser() );
+        eventManager.propagatePeriodicEvents( genericEvent );
         genericEvent.save();
-        genericEvent.addInUserList( event.getUser() );
-        event.getUser().save();
     }
 
 }
