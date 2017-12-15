@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 
+import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
 import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
@@ -141,6 +142,8 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public abstract boolean isOverlapFreeIntoSchedule( ScheduleManager scheduleManager );
 
     public abstract void addInUserList( User user );
+
+    public abstract void addEventAndModifyFollowingEvent( EventManager eventManager );
 
     @Override
     public String toString() {

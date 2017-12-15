@@ -208,7 +208,7 @@ public class PreferenceRESTful {
     @Path( "/location/{name}" )
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deletePreferredLocation( @PathParam("name") String name ) {   //TODO
+    public Response deletePreferredLocation( @PathParam("name") String name ) {
         try {
             preferenceManager.deletePreferredLocation( name );
         } catch ( EntityNotFoundException e ) {

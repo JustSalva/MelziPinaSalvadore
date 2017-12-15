@@ -10,7 +10,6 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import it.polimi.travlendarplus.messages.GenericMessage;
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;
 
 import javax.annotation.PostConstruct;
@@ -18,17 +17,15 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
-public class EventManager extends UserManager{
+public class EventManager extends UserManager {
 
-    static TravelMeanEnum[] privateList = {TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT};
-    static TravelMeanEnum[] publicList = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM, TravelMeanEnum.SUBWAY};
+    static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
+    static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM, TravelMeanEnum.SUBWAY };
 
     @EJB
     private PreferenceManager preferenceManager;
@@ -40,21 +37,21 @@ public class EventManager extends UserManager{
     @PostConstruct
     public void postConstruct() {
         preferenceManager.setCurrentUser( currentUser );
-        scheduleManager.setCurrentUser(currentUser);
-        pathManager.setCurrentUser(currentUser);
+        scheduleManager.setCurrentUser( currentUser );
+        pathManager.setCurrentUser( currentUser );
     }
 
-    public Event getEventInformation( long id ) throws EntityNotFoundException{
-        List<GenericEvent> eventList = new ArrayList<>( currentUser.getEvents() );
-        return (Event) findEvent( eventList, id );
+    public Event getEventInformation( long id ) throws EntityNotFoundException {
+        List< GenericEvent > eventList = new ArrayList<>( currentUser.getEvents() );
+        return ( Event ) findEvent( eventList, id );
     }
 
-    public BreakEvent getBreakEventInformation( long id ) throws EntityNotFoundException{
-        List<GenericEvent> eventList = new ArrayList<>( currentUser.getBreaks() );
-        return (BreakEvent) findEvent( eventList, id );
+    public BreakEvent getBreakEventInformation( long id ) throws EntityNotFoundException {
+        List< GenericEvent > eventList = new ArrayList<>( currentUser.getBreaks() );
+        return ( BreakEvent ) findEvent( eventList, id );
     }
 
-    private GenericEvent findEvent( List<GenericEvent> eventList, long id ) throws EntityNotFoundException{
+    private GenericEvent findEvent( List< GenericEvent > eventList, long id ) throws EntityNotFoundException {
         GenericEvent requestedEvent = eventList.stream()
                 .filter( event -> event.getId() == id ).findFirst().orElse( null );
         if ( requestedEvent == null )
@@ -62,135 +59,140 @@ public class EventManager extends UserManager{
         return requestedEvent;
     }
 
-    public List< GenericEvent > getEventsUpdated( Instant timestampLocal ){
+    public List< GenericEvent > getEventsUpdated( Instant timestampLocal ) {
         List< GenericEvent > updatedEvents = getEvents();
 
         updatedEvents = updatedEvents.stream()
                 .filter( event -> event.getLastUpdate().getTimestamp().isAfter( timestampLocal ) )
-                .collect( Collectors.toCollection( ArrayList::new));
+                .collect( Collectors.toCollection( ArrayList::new ) );
         return updatedEvents;
     }
 
-    public List< GenericEvent > getEvents(){
-        List< GenericEvent > events = new ArrayList<>(  currentUser.getEvents() );
+    public List< GenericEvent > getEvents() {
+        List< GenericEvent > events = new ArrayList<>( currentUser.getEvents() );
         events.addAll( currentUser.getBreaks() );
         return events;
     }
 
-    public List < GenericEvent > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException{
-        PathCombination feasiblePaths = null;
+    public List< GenericEvent > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException {
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
-        if(scheduleManager.isEventOverlapFreeIntoSchedule(event, false)) {
-            // CalculatePaths check feasibility into the schedule with regard of TIMETABLE and CONSTRAINTS defined by the user
-            feasiblePaths = pathManager.calculatePath(event, preferenceManager.getAllowedMeans(event, privateList),
-                    preferenceManager.getAllowedMeans(event, publicList));
-            // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
-            if(feasiblePaths != null) {
-                // Setting previous location if prevLocChoice boolean param is true.
-                if(event.isPrevLocChoice())
-                    event.setDeparture(scheduleManager.getPossiblePreviousEvent(event.getStartingTime()).getEventLocation());
-                event.setFeasiblePath(feasiblePaths.getPrevPath());
-                Event followingEvent = scheduleManager.getPossibleFollowingEvent(event);
-                // Also info on the following event are uploaded, according to the calculated related-path.
-                if (followingEvent != null) {
-                    // Setting previous location if prevLocChoice boolean param is true.
-                    if(followingEvent.isPrevLocChoice())
-                        followingEvent.setDeparture(event.getEventLocation());
-                    followingEvent.setFeasiblePath(feasiblePaths.getFollPath());
-                    followingEvent.save();
-                }
-            }
+        Event following = addEventAndModifyFollowingEvent( event );
+        List< GenericEvent > responseList = new ArrayList<>();
+        responseList.add( event );
+        if ( following != null ) {
+            responseList.add( following );
+            following.save();
         }
-        event.setScheduled(feasiblePaths != null);
         event.save();
         currentUser.addEvent( event );
         currentUser.save();
-        return propagatePeriodicEvents( event ); //it handle periodic events
+        //TODO start periodic thread
+        propagatePeriodicEvents( event );
+        return responseList;
     }
 
-    public List < GenericEvent > propagatePeriodicEvents( GenericEvent event ){
-        List < GenericEvent > propagatedEvents = new ArrayList<>( );
-        propagatedEvents.add( event );
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
-        GenericEvent nextEvent;
-        if( ! event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
-                && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
-                .isBefore( upperbound )){
-
-            nextEvent = event.nextPeriodicEvent();
-
-            if ( event.isScheduled() ){
-                
-                scheduleManager.setSchedule( nextEvent.getDayAtMidnight() );
-                if ( nextEvent.isOverlapFreeIntoSchedule( scheduleManager ) ){
-                    //TODO check nextEventFeasibility with copied travel
+    public Event addEventAndModifyFollowingEvent( Event event ) {
+        PathCombination feasiblePaths = null;
+        Event followingEvent = null;
+        if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
+            // CalculatePaths check feasibility into the schedule with regard of TIMETABLE and CONSTRAINTS defined by the user
+            feasiblePaths = pathManager.calculatePath( event, preferenceManager.getAllowedMeans( event, privateList ),
+                    preferenceManager.getAllowedMeans( event, publicList ) );
+            // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
+            if ( feasiblePaths != null ) {
+                // Setting previous location if prevLocChoice boolean param is true.
+                if ( event.isPrevLocChoice() ) {
+                    event.setDeparture( scheduleManager.getPossiblePreviousEvent( event.getStartingTime() )
+                            .getEventLocation() );
                 }
-
-            }else{
-                //TODO if event is not scheduled a path must be computed
+                event.setFeasiblePath( feasiblePaths.getPrevPath() );
+                followingEvent = scheduleManager.getPossibleFollowingEvent( event );
+                // Also info on the following event are uploaded, according to the calculated related-path.
+                if ( followingEvent != null ) {
+                    // Setting previous location if prevLocChoice boolean param is true.
+                    if ( followingEvent.isPrevLocChoice() ) {
+                        followingEvent.setDeparture( event.getEventLocation() );
+                    }
+                    followingEvent.setFeasiblePath( feasiblePaths.getFollPath() );
+                }
             }
+        }
+        event.setScheduled( feasiblePaths != null );
+
+        return followingEvent;
+    }
+
+    public void propagatePeriodicEvents( GenericEvent event ) {
+
+        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
+        if ( !event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
+                && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
+                .isBefore( upperbound ) ) {
+            GenericEvent nextEvent;
+            nextEvent = event.nextPeriodicEvent();
+            nextEvent.addEventAndModifyFollowingEvent( this );
             nextEvent.save();
             nextEvent.addInUserList( currentUser );
             currentUser.save();
-            propagatedEvents.addAll( propagatePeriodicEvents( nextEvent ) );
-        }else{
+            propagatePeriodicEvents( nextEvent );
+        } else {
             //If the event is the last propagated one this knowledge is saved into the periodicity class
             event.getPeriodicity().setLastPropagatedEvent( event.getId() );
             event.getPeriodicity().save();
         }
-        return propagatedEvents;
-
     }
 
-    private Location findLocation( String address ){
+    private Location findLocation( String address ) {
         //TODO create if not present
-        return new Location( );
+        return new Location();
     }
 
-    private TypeOfEvent findTypeOfEvent( long name ){
+    private TypeOfEvent findTypeOfEvent( long name ) {
         return currentUser.getPreferences().stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == name )
                 .findFirst().get(); //NB his presence has to be already checked
     }
 
-    private Event createEvent( AddEventMessage eventMessage ){
+    private Event createEvent( AddEventMessage eventMessage ) {
         TypeOfEvent type = findTypeOfEvent( eventMessage.getIdTypeOfEvent() );
         Location departure = null;
-        if(!eventMessage.isPrevLocChoice())
+        if ( !eventMessage.isPrevLocChoice() )
             departure = findLocation( eventMessage.getDeparture() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(), type,
-                arrival, departure);
+                arrival, departure );
     }
 
-    private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
-        List<String> errors = new ArrayList<>( );
+    private void checkEventFields( AddEventMessage eventMessage ) throws InvalidFieldException {
+        List< String > errors = new ArrayList<>();
 
         errors.addAll( checkGenericEventFields( eventMessage ) );
-        if(eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent(eventMessage.getStartingTime()) == null)
-            errors.add("Not exists a previous location");
+        if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
+            errors.add( "Not exists a previous location" );
         try {
             preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
         } catch ( EntityNotFoundException e ) {
             errors.add( "TypeOfEvent not found" );
         }
+
+
         /*private String eventLocation;
         private String departure;*/
         //TODO how to check that location String is correct?
-        if( errors.size() > 0 ){
+        if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
         }
     }
 
-    private List< String > checkGenericEventFields ( AddGenericEventMessage eventMessage ){
-        List<String> genericEventErrors = new ArrayList<>( );
-        if (eventMessage.getName() == null ){
+    private List< String > checkGenericEventFields( AddGenericEventMessage eventMessage ) {
+        List< String > genericEventErrors = new ArrayList<>();
+        if ( eventMessage.getName() == null ) {
             genericEventErrors.add( " name" );
         }
-        if ( ! eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ){
+        if ( !eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
             genericEventErrors.add( " starting time must be less than ending time" );
         }
         genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );
@@ -198,33 +200,33 @@ public class EventManager extends UserManager{
         return genericEventErrors;
     }
 
-    private List< String > checkPeriodicity ( PeriodMessage periodMessage ){
-        List<String> periodicityErrors = new ArrayList<>( );
+    private List< String > checkPeriodicity( PeriodMessage periodMessage ) {
+        List< String > periodicityErrors = new ArrayList<>();
 
-        if ( ! periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ){
+        if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
             periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
         }
-        if ( periodMessage.getDeltaDays() < 0 ){
+        if ( periodMessage.getDeltaDays() < 0 ) {
             periodicityErrors.add( "deltaDays must be greater than zero" );
         }
 
         long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
-                .until( periodMessage.getEndingDay(), ChronoUnit.DAYS  );
+                .until( periodMessage.getEndingDay(), ChronoUnit.DAYS );
 
-        if ( deltaBetweenStartAndEndingTime > periodMessage.getDeltaDays() ){
+        if ( deltaBetweenStartAndEndingTime > periodMessage.getDeltaDays() ) {
             periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
         }
 
         return periodicityErrors;
     }
 
-    public Event modifyEvent( ModifyEventMessage eventMessage) throws InvalidFieldException, EntityNotFoundException{
+    public Event modifyEvent( ModifyEventMessage eventMessage ) throws InvalidFieldException, EntityNotFoundException {
         checkEventFields( eventMessage );
         Event event = getEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
         //TODO it can be inserted in the schedule?
         //TODO ask and set the feasible path
-        if ( eventMessage.isPropagateToPeriodicEvents() ){
+        if ( eventMessage.isPropagateToPeriodicEvents() ) {
             //TODO handle periodic events ( delete all and recreate? )
         }
         //TODO add into either scheduled or not scheduled array and save!
@@ -234,53 +236,60 @@ public class EventManager extends UserManager{
     }
 
 
-    public void deleteEvent( long id ) throws EntityNotFoundException{
+    public void deleteEvent( long id ) throws EntityNotFoundException {
         GenericEvent genericEvent;
         try {
             genericEvent = getEventInformation( id );
         } catch ( EntityNotFoundException e ) {
-                genericEvent = getBreakEventInformation( id );
+            genericEvent = getBreakEventInformation( id );
         }
         genericEvent.remove();
     }
 
-    public List< GenericEvent > addBreakEvent( AddBreakEventMessage eventMessage) throws InvalidFieldException{
+    public BreakEvent addBreakEvent( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
         checkBreakEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
-        breakEvent.setScheduled(scheduleManager.isBreakOverlapFreeIntoSchedule(breakEvent, false));
+        addBreakEvent( breakEvent );
+        //TODO start periodic thread
+        propagatePeriodicEvents( breakEvent );
         breakEvent.save();
         currentUser.addBreak( breakEvent );
         currentUser.save();
-        return propagatePeriodicEvents( breakEvent );   //it handle periodic events
+        return breakEvent;   //it handle periodic events
     }
 
-    private void checkBreakEventFields ( AddBreakEventMessage eventMessage) throws InvalidFieldException {
-        List<String> errors = new ArrayList<>( );
+    public void addBreakEvent( BreakEvent breakEvent ) {
+        breakEvent.setScheduled( scheduleManager.isBreakOverlapFreeIntoSchedule( breakEvent, false ) );
+    }
+
+    private void checkBreakEventFields( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
+        List< String > errors = new ArrayList<>();
 
         errors.addAll( checkGenericEventFields( eventMessage ) );
 
         if ( eventMessage.getMinimumTime() > eventMessage.getStartingTime()
-                .until( eventMessage.getEndingTime(), ChronoUnit.SECONDS  )){
+                .until( eventMessage.getEndingTime(), ChronoUnit.SECONDS ) ) {
             errors.add( " minimum time must be less than the slack between start and ending time" );
         }
-        if( errors.size() > 0 ){
+        if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
         }
     }
-    private BreakEvent createBreakEvent(AddBreakEventMessage eventMessage){
+
+    private BreakEvent createBreakEvent( AddBreakEventMessage eventMessage ) {
         return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, null, eventMessage.getMinimumTime());
+                false, null, eventMessage.getMinimumTime() );
     }
 
-    public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage)
-            throws InvalidFieldException, EntityNotFoundException{
+    public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage )
+            throws InvalidFieldException, EntityNotFoundException {
 
         checkBreakEventFields( eventMessage );
         BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
         //TODO it can be inserted in the schedule?
-        if ( eventMessage.isPropagateToPeriodicEvents() ){
+        if ( eventMessage.isPropagateToPeriodicEvents() ) {
             //TODO handle periodic events ( delete all and recreate? )
         }
         //TODO add into either scheduled or not scheduled array and save!
@@ -289,11 +298,11 @@ public class EventManager extends UserManager{
     }
 
     @Override
-    public void setCurrentUser(User currentUser) {
+    public void setCurrentUser( User currentUser ) {
         this.currentUser = currentUser;
-        this.scheduleManager.setCurrentUser(currentUser);
-        this.preferenceManager.setCurrentUser(currentUser);
-        this.pathManager.setCurrentUser(currentUser);
+        this.scheduleManager.setCurrentUser( currentUser );
+        this.preferenceManager.setCurrentUser( currentUser );
+        this.pathManager.setCurrentUser( currentUser );
     }
 
 }

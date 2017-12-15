@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
 import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
@@ -125,5 +126,10 @@ public class BreakEvent extends GenericEvent {
     @Override
     public void addInUserList( User user ) {
         user.addBreak( this );
+    }
+
+    @Override
+    public void addEventAndModifyFollowingEvent( EventManager eventManager ) {
+        eventManager.addBreakEvent( this );
     }
 }
