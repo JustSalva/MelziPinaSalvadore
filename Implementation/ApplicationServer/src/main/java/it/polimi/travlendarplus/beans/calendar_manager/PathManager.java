@@ -9,10 +9,13 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctiona
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.net.www.content.text.Generic;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -74,7 +77,7 @@ public class PathManager extends UserManager{
                                                    List<TravelMeanEnum> publicMeans) {
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
-        Event following = scheduleManager.getPossibleFollowingEvent(event);
+        Event following = scheduleManager.getPossibleFollowingEvent(event.getStartingTime());
         if(following == null)
             // The event would be the last of that day. An empty ArrayList is returned.
             return possiblePaths;
@@ -96,8 +99,12 @@ public class PathManager extends UserManager{
     private ArrayList<Travel> possiblePathsAdder(String baseCall, List<TravelMeanEnum> privateMeans,
                     List<TravelMeanEnum> publicMeans, Event eventA, Event eventB, boolean sameLoc) throws GMapsGeneralException{
         ArrayList<Travel> possiblePaths = new ArrayList<Travel>();
-        privatePathsHandler(possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc);
-        publicPathsHandler(possiblePaths, baseCall, eventB, publicMeans, sameLoc);
+        if(!privateMeans.isEmpty()) {
+            privatePathsHandler(possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc);
+        }
+        if(!publicMeans.isEmpty()) {
+            publicPathsHandler(possiblePaths, baseCall, eventB, publicMeans, sameLoc);
+        }
         return possiblePaths;
     }
 
@@ -152,16 +159,15 @@ public class PathManager extends UserManager{
                 event.getDeparture().getLongitude() == event.getEventLocation().getLongitude();
     }
 
-    public ScheduleHolder swapEvents(Event forcedEvent, ArrayList<TravelMeanEnum> privateMeans,
-                                     ArrayList<TravelMeanEnum> publicMeans) {
+    public ArrayList<GenericEvent> swapEvents(Event forcedEvent, ArrayList<TravelMeanEnum> privateMeans,
+                                         ArrayList<TravelMeanEnum> publicMeans) {
         scheduleManager.setSchedule(forcedEvent.getDayAtMidnight());
-        List<Event> swapOutEvents = new ArrayList<Event>();
+        List<GenericEvent> swapOutEvents = new ArrayList<GenericEvent>();
         ArrayList<PathCombination> combs = new ArrayList<PathCombination>();
-        firstSwapPhase(forcedEvent);
+        firstSwapPhase(forcedEvent, swapOutEvents);
         // Calculating prev/foll path for the forcedEvent.
         boolean complete = false;
         while(!complete && !scheduleManager.getSchedule().getEvents().isEmpty()) {
-            swapOutEvents = new ArrayList<Event>();
             List<Travel> prev = getPreviousTravels(forcedEvent, privateMeans, publicMeans);
             List<Travel> foll = getFollowingTravels(forcedEvent, privateMeans, publicMeans);
             prev = prev.stream().filter(p -> preferenceManager.checkConstraints(p, forcedEvent.getType())).collect(Collectors.toList());
@@ -169,23 +175,51 @@ public class PathManager extends UserManager{
             // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if(!prev.isEmpty() && (!foll.isEmpty() || scheduleManager.getSchedule().isLastEvent(forcedEvent))) {
                 combs = scheduleManager.getFeasiblePathCombinations(forcedEvent, prev, foll);
-                if(combs.isEmpty())
-                    scheduleManager.getSchedule().removeSpecBreak(breakToRemove(forcedEvent));
+                if(combs.isEmpty()) {
+                    BreakEvent toRemove = breakToRemove(forcedEvent);
+                    scheduleManager.getSchedule().removeSpecBreak(toRemove);
+                    swapOutEvents.add(toRemove);
+                }
                 else
                     complete = true;
             }
             // If prev or foll path is not founded, a related-event is removed from the schedule.
-            else if(prev.isEmpty() && scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()) != null)
+            else if(prev.isEmpty() && scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()) != null) {
                 swapOutEvents.add(scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()));
-            else if(foll.isEmpty() && scheduleManager.getPossibleFollowingEvent(forcedEvent) != null)
-                swapOutEvents.add(scheduleManager.getPossibleFollowingEvent(forcedEvent));
-            removeEvents(swapOutEvents);
+                scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()));
+            }
+            else if(foll.isEmpty() && scheduleManager.getPossibleFollowingEvent(forcedEvent.getStartingTime()) != null) {
+                swapOutEvents.add(scheduleManager.getPossibleFollowingEvent(forcedEvent.getStartingTime()));
+                scheduleManager.getSchedule().removeSpecEvent(scheduleManager.getPossibleFollowingEvent(forcedEvent.getStartingTime()));
+            }
         }
-        PathCombination best;
-        if(complete)
-            best = preferenceManager.findBestpath(combs, forcedEvent.getType());
+        PathCombination best = (complete) ? preferenceManager.findBestpath(combs, forcedEvent.getType()) : null;
         //TODO update DB with swapOUT events, swapOUT breaks and swapIN
-        return scheduleManager.getSchedule();
+        return conclusionForSwap(best, forcedEvent, swapOutEvents);
+    }
+
+    private ArrayList<GenericEvent> conclusionForSwap(PathCombination best, Event forcedEvent, List<GenericEvent> swapOut) {
+        ArrayList<GenericEvent> response = new ArrayList<GenericEvent>();
+        // Updating swap out events into DB removing scheduled param and path.
+        for(GenericEvent genEv: swapOut) {
+            genEv.setScheduled(false);
+            genEv.removeFeasiblePath();
+            //genEv.save();
+            response.add(genEv);
+        }
+        // Updating swap in event into DB adding scheduled param and path.
+        forcedEvent.setScheduled(true);
+        forcedEvent.setFeasiblePath(best.getPrevPath());
+        //forcedEvent.save();
+        response.add(forcedEvent);
+        // Updating following path into DB
+        Event following = scheduleManager.getPossibleFollowingEvent(forcedEvent.getStartingTime());
+        if (following != null) {
+            following.setFeasiblePath(best.getFollPath());
+            //following.save();
+            response.add(following);
+        }
+        return response;
     }
 
     private BreakEvent breakToRemove(Event forcedEvent) {
@@ -200,18 +234,12 @@ public class PathManager extends UserManager{
     }
 
     // Removing events that overlap with forcedEvent
-    private void firstSwapPhase(Event forcedEvent) {
-        ArrayList<Event> swapOutEvents = new ArrayList<Event>();
+    private void firstSwapPhase(Event forcedEvent, List<GenericEvent> swapOutEvents) {
         for (Event event : scheduleManager.getSchedule().getEvents())
             if (!scheduleManager.areEventsOverlapFree(event, forcedEvent))
                 swapOutEvents.add(event);
-        for (Event event : swapOutEvents)
-            scheduleManager.getSchedule().removeSpecEvent(event);
-    }
-
-    private void removeEvents(List<Event> swapOutEvents){
-        for(Event event: swapOutEvents)
-            scheduleManager.getSchedule().removeSpecEvent(event);
+        for (GenericEvent event : swapOutEvents)
+            scheduleManager.getSchedule().removeSpecEvent((Event)event);
     }
 
     private ArrayList<TravelMeanEnum> privateMeansSameLoc(List<TravelMeanEnum> privateMeans) {

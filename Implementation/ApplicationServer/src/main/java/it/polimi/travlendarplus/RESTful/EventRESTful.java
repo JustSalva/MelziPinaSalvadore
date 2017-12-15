@@ -4,7 +4,6 @@ import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.security.Secured;
 import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
 import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;

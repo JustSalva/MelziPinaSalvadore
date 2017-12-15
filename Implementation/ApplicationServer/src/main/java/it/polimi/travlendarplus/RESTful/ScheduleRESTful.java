@@ -60,15 +60,6 @@ public class ScheduleRESTful {
         return HttpResponseBuilder.buildOkResponse( scheduleManager.getScheduleByDay(day) );
     }
 
-    @Path( "/updateLocalDb/{timestampLocal}" )
-    @GET
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response getUpdatedSchedule( @PathParam("timestampLocal") long timestamp ) {
-        //TODO this method is really needed? it is identical to getEventsUpdated in eventRESTful
-        return HttpResponseBuilder.buildOkResponse( null );
-    }
-
-
     /**
      * Allow the user to force in the schedule an event not scheduled
      * @param id identifier of the event to be forced into the schedule

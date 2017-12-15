@@ -92,9 +92,9 @@ public class ScheduleManagerTest {
         ev2.setStartingTime(Instant.ofEpochSecond(7));
         Event ev3 = new Event();
         ev3.setStartingTime(Instant.ofEpochSecond(20));
-        assertEquals(4, tester.getPossibleFollowingEvent(ev1).getStartingTime().getEpochSecond());
-        assertEquals(14, tester.getPossibleFollowingEvent(ev2).getStartingTime().getEpochSecond());
-        assertEquals(null, tester.getPossibleFollowingEvent(ev3));
+        assertEquals(4, tester.getPossibleFollowingEvent(ev1.getStartingTime()).getStartingTime().getEpochSecond());
+        assertEquals(14, tester.getPossibleFollowingEvent(ev2.getStartingTime()).getStartingTime().getEpochSecond());
+        assertEquals(null, tester.getPossibleFollowingEvent(ev3.getStartingTime()));
     }
 
     @Test

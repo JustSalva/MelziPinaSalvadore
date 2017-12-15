@@ -108,7 +108,7 @@ public class EventManager extends UserManager {
                             .getEventLocation() );
                 }
                 event.setFeasiblePath( feasiblePaths.getPrevPath() );
-                followingEvent = scheduleManager.getPossibleFollowingEvent( event );
+                followingEvent = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
                 // Also info on the following event are uploaded, according to the calculated related-path.
                 if ( followingEvent != null ) {
                     // Setting previous location if prevLocChoice boolean param is true.

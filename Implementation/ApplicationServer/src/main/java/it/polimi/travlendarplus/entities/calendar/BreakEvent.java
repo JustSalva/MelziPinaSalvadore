@@ -132,4 +132,8 @@ public class BreakEvent extends GenericEvent {
     public void addEventAndModifyFollowingEvent( EventManager eventManager ) {
         eventManager.addBreakEvent( this );
     }
+
+    @Override
+    public void removeFeasiblePath() {
+    }
 }

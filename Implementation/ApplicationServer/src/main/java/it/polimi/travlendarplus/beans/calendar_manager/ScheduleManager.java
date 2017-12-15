@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.PathNotFeasibleException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import sun.net.www.content.text.Generic;
 
@@ -94,9 +95,9 @@ public class ScheduleManager extends UserManager{
     }
 
     // It returns null if the event would be the last in the schedule of that day.
-    public Event getPossibleFollowingEvent (GenericEvent event) {
+    public Event getPossibleFollowingEvent (Instant startingTime) {
         for(int i=0; i<schedule.getEvents().size(); i++)
-            if(event.getStartingTime().isBefore(schedule.getEvents().get(i).getStartingTime()))
+            if(startingTime.isBefore(schedule.getEvents().get(i).getStartingTime()))
                 return schedule.getEvents().get(i);
         return null;
     }
@@ -143,7 +144,7 @@ public class ScheduleManager extends UserManager{
     // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
     public ArrayList<PathCombination> getFeasiblePathCombinations(Event event, List<Travel> previous, List<Travel> following) {
         ArrayList<PathCombination> feasibleComb = new ArrayList<PathCombination>();
-        if(getPossibleFollowingEvent(event) == null)
+        if(getPossibleFollowingEvent(event.getStartingTime()) == null)
             return getFeasiblePathCombinationsLastEventCase(event, previous);
         for(Travel prev: previous) {
             for (Travel foll : following) {

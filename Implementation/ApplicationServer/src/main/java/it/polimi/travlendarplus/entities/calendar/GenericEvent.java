@@ -145,6 +145,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     public abstract void addEventAndModifyFollowingEvent( EventManager eventManager );
 
+    public abstract void removeFeasiblePath();
     @Override
     public String toString() {
         return "GenericEvent{" +

@@ -28,10 +28,14 @@ public class PathCombination {
     }
 
     public float getTotalLength() {
-        return prevPath.getTotalLength() + follPath.getTotalLength();
+        float prev = (prevPath != null) ? prevPath.getTotalLength() : 0;
+        float foll = (follPath != null) ? follPath.getTotalLength() : 0;
+        return prev + foll;
     }
 
     public long getTotalTime() {
-        return prevPath.getTotalTime() + follPath.getTotalTime();
+        long prev = (prevPath != null) ? prevPath.getTotalTime() : 0;
+        long foll = (follPath != null) ? follPath.getTotalTime() : 0;
+        return prev + foll;
     }
 }

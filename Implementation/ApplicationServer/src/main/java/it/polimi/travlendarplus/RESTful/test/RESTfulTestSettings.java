@@ -9,6 +9,8 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
@@ -32,8 +34,8 @@ public class RESTfulTestSettings {
     private PathCombination combination = new PathCombination(null, null);
     private ArrayList<TravelMeanEnum> privateMeans;
     private ArrayList<TravelMeanEnum> publicMeans;
-    private TravelMeanEnum[] privM = {TravelMeanEnum.CAR, TravelMeanEnum.BIKE};
-    private TravelMeanEnum[] pubM = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS};
+    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/ {TravelMeanEnum.CAR};
+    private TravelMeanEnum[] pubM = /*{TravelMeanEnum.TRAIN, TravelMeanEnum.BUS}*/ new TravelMeanEnum[0];
 
     @Inject
     PathManager pathManager;
@@ -49,7 +51,7 @@ public class RESTfulTestSettings {
     public String addEventWithBreak(boolean first, boolean second, boolean third, boolean setTravel, long minInt) {
         baseCaseConfiguration(first, second, third, setTravel);
         //2018/01/20 h:12:00 - 13:00
-        toe1 = setTypeOfEvent("");
+        toe1 = setTypeOfEvent("test", ParamFirstPath.MIN_TIME);
         e4 = setEvent(4,1516449600,1516453200, true, null, abbadia, toe1);
         //e4 is the event that I try to add
         //2018/01/20 h:9:00 - 14:00
@@ -71,7 +73,7 @@ public class RESTfulTestSettings {
 
     public String swapEvents(long stTime, long endTime, boolean breakEvent) {
         baseCaseConfiguration(true, true, true, true);
-        toe1 = setTypeOfEvent("");
+        toe1 = setTypeOfEvent("test", ParamFirstPath.MIN_TIME);
         e4 = setEvent(4,stTime, endTime, true, lecco, maggianico, toe1);
         String msg = "";
         //2018/01/20 h:10:00 - 11:00
@@ -79,17 +81,15 @@ public class RESTfulTestSettings {
             be1 = setBreakEvent(1516442400, 1516446000, 30 * 60, true);
             user.addBreak(be1);
         }
-        ScheduleHolder sch = pathManager.swapEvents(e4, privateMeans, publicMeans);
-        for(Event event: sch.getEvents())
-            msg += "E - "+event.toString()+"\n";
-        for(BreakEvent br: sch.getBreaks())
-            msg += "B - "+br.toString()+"\n";
+        ArrayList<GenericEvent> swapResponse = pathManager.swapEvents(e4, privateMeans, publicMeans);
+        for(GenericEvent event: swapResponse)
+            msg += event.toString()+"\n";
         return msg;
     }
 
     private void baseCaseConfiguration(boolean first, boolean second, boolean third, boolean setTravels) {
         setBaseLocations();
-        toe1 = setTypeOfEvent("");
+        toe1 = setTypeOfEvent("test", ParamFirstPath.MIN_TIME);
         //2018/01/20 h:8:00 - 10:00
         e1 = setEvent(1, 1516435200, 1516442400, false, mandello, mandello, toe1);
         //2018/01/20 h:14:00 - 15:00
@@ -176,11 +176,18 @@ public class RESTfulTestSettings {
         como = setLocation(51.502079, -0.174816);
         maggianico = setLocation(51.507857, -0.087833);
         abbadia = setLocation(51.503040, -0.137823);*/
+        lecco.save();
+        mandello.save();
+        como.save();
+        maggianico.save();
+        abbadia.save();
     }
 
-    private TypeOfEvent setTypeOfEvent(String name) {
+    private TypeOfEvent setTypeOfEvent(String name, ParamFirstPath param) {
         TypeOfEvent toe = new TypeOfEvent();
         toe.setName(name);
+        toe.setParamFirstPath(param);
+        toe.save();
         return toe;
     }
 

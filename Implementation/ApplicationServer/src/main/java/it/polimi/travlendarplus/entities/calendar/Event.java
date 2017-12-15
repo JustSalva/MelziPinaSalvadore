@@ -43,7 +43,7 @@ public class Event extends GenericEvent {
     } )
     private Location departure;
 
-    @OneToOne( fetch = FetchType.LAZY )
+    @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL )
     @JoinColumn( name = "LIMITED_BY" )
     private Travel feasiblePath;
 
@@ -147,6 +147,11 @@ public class Event extends GenericEvent {
     @Override
     public void addEventAndModifyFollowingEvent( EventManager eventManager ) {
         eventManager.addEventAndModifyFollowingEvent( this );
+    }
+
+    @Override
+    public void removeFeasiblePath() {
+        feasiblePath = null;
     }
 
     @Override

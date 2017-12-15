@@ -28,21 +28,6 @@ public class TravlendarRESTful extends ResourceConfig{
         // Enable Tracing support, to be removed before deploy.
         property( ServerProperties.TRACING, "ALL");
     }
-    /*@Override
-    public Set<Class<?>> getClasses() {
-        HashSet h = new HashSet<Class<?>>();
-        h.add(AuthenticationEndpoint.class);
-        h.add(AuthenticationFilter.class);
-        h.add(AuthenticatedUserProducer.class);
-        h.add(EventRESTful.class);
-        h.add(ScheduleRESTful.class);
-        h.add(PathRESTful.class);
-        h.add(PreferenceRESTful.class);
-        h.add(UserRESTful.class);
-        //h.add(TripRESTful.class); TODO
-        h.add(HelloWorld.class);
-        h.add(TransactionsInterceptor.class);
-        return h;
-    }*/
+
 }
 
