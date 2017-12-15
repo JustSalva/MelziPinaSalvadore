@@ -21,6 +21,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
@@ -66,7 +67,8 @@ public class AccountActivity extends MenuActivity {
     private String longitude;
 
     // Store locations received by the server.
-    private Map<String, String> locations;
+    private Map<String, Location> locations;
+    private Location selectedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +111,8 @@ public class AccountActivity extends MenuActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // Shows address of the selected locations next to the spinner.
-                String address = locations.get(adapterView.getSelectedItem().toString());
-                locationsAddressViewer_textView.setText(address);
+                selectedLocation = locations.get(adapterView.getSelectedItem().toString());
+                locationsAddressViewer_textView.setText(selectedLocation.location.address);
             }
 
             @Override
@@ -136,18 +138,16 @@ public class AccountActivity extends MenuActivity {
                     }
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         Log.d("JSON REPLY", response.toString());
                         Toast.makeText(getBaseContext(), "Locations updated!", Toast.LENGTH_LONG).show();
                         //Get locations array from JSON response.
                         locations = new HashMap<>();
                         try {
-                            JSONArray jsonArray = response.getJSONArray("locations");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject location = jsonArray.getJSONObject(i);
-                                String name = location.getString("name");
-                                String address = location.getString("address");
-                                locations.put(name, address);
+                            for (int i = 0; i < response.length(); i++) {
+                                Gson gson = new Gson();
+                                Location location = gson.fromJson(String.valueOf(response.getJSONObject(i)), Location.class);
+                                locations.put(location.name, location);
                                 populateLocationsSpinner();
                             }
                         } catch (JSONException e) {
@@ -238,7 +238,8 @@ public class AccountActivity extends MenuActivity {
                 // Notify the user that the location has been added.
                 Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
                 // Add location to the list.
-                locations.put(locationName, locationAddress);
+                Location location = new Location(locationName, new Position(locationAddress));
+                locations.put(locationName, location);
                 populateLocationsSpinner();
             }
 
@@ -363,5 +364,25 @@ public class AccountActivity extends MenuActivity {
         addLocation_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.GONE);
+    }
+
+    private class Location {
+        private String name;
+        private Position location;
+
+        public Location(String name, Position location) {
+            this.name = name;
+            this.location = location;
+        }
+    }
+
+    private class Position {
+        private float latitude;
+        private float longitude;
+        private String address;
+
+        public Position(String address) {
+            this.address = address;
+        }
     }
 }
