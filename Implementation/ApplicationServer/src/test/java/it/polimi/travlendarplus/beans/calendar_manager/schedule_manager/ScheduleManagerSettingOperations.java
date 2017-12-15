@@ -26,7 +26,7 @@ public class ScheduleManagerSettingOperations {
         test.user.setBreaks(breaks);
 
         test.tester.setCurrentUser(test.user);
-        test.tester.setSchedule(0);
+        test.tester.setSchedule(Instant.ofEpochSecond(20), 20);
     }
 
     public void settingOnlySetBreaks(ScheduleManagerTest test) {
@@ -34,7 +34,7 @@ public class ScheduleManagerSettingOperations {
         breaks.add(setBreakEvent(test.break1, 11,9, 15, 3, true));
         breaks.add(setBreakEvent(test.break2, 12,20, 23, 2, false));
         test.tester.getCurrentUser().setBreaks(breaks);
-        test.tester.setSchedule(0);
+        test.tester.setSchedule(Instant.ofEpochSecond(20), 20);
     }
 
     public void settingOnlySetBreaks2(ScheduleManagerTest test) {
@@ -42,7 +42,7 @@ public class ScheduleManagerSettingOperations {
         breaks.add(setBreakEvent(test.break1, 11,9, 15, 2, false));
         breaks.add(setBreakEvent(test.break2, 12,20, 26, 1, true));
         test.tester.getCurrentUser().setBreaks(breaks);
-        test.tester.setSchedule(0);
+        test.tester.setSchedule(Instant.ofEpochSecond(20), 20);
     }
 
     private Event setEvent(Event e, long id, long stTime, long endTime, boolean scheduled) {

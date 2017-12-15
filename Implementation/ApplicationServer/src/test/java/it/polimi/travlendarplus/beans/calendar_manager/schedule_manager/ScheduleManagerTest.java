@@ -61,8 +61,8 @@ public class ScheduleManagerTest {
 
     @Test
     public void getSchedule() {
-        assertEquals(2, tester.getScheduleByDay(0).getEvents().size());
-        assertEquals(1, tester.getScheduleByDay(5).getEvents().size());
+        assertEquals(0, tester.getScheduleByDay(0).getEvents().size());
+        assertEquals(1, tester.getScheduleByDay(13).getEvents().size());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ScheduleManagerTest {
         assertEquals(3, updList.size());
         assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
     }
-
+/*
     @Test
     public void getFeasiblePathCombinations() {
         setter.settingOnlySetBreaks(this);
@@ -137,5 +137,5 @@ public class ScheduleManagerTest {
         assertEquals(25, combs.get(1).getPrevPath().getEndingTime().getEpochSecond());
 
     }
-
+*/
 }

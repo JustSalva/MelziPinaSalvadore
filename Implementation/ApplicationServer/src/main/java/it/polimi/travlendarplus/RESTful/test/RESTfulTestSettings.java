@@ -114,6 +114,7 @@ public class RESTfulTestSettings {
         br.setEndingTime(Instant.ofEpochSecond(endTime));
         br.setMinimumTime(minTime);
         br.setScheduled(sch);
+        br.save();
         return br;
     }
 
@@ -145,6 +146,7 @@ public class RESTfulTestSettings {
 
     private Event setEvent (long id, long stTime, long endTime, boolean prevLoc, Location dep, Location arr, TypeOfEvent toe) {
         Event e = new Event();
+        e.setName("T+");
         e.setId(id);
         e.setStartingTime(Instant.ofEpochSecond(stTime));
         e.setEndingTime(Instant.ofEpochSecond(endTime));
@@ -152,7 +154,15 @@ public class RESTfulTestSettings {
         e.setDeparture(dep);
         e.setEventLocation(arr);
         e.setType(toe);
+        setUser();
+        e.setUser(user);
+        user.save();
+        e.save();
         return e;
+    }
+
+    private void setUser() {
+        user.setEmail("test");
     }
 
     private void setScheduleld(boolean first, boolean second, boolean third) {

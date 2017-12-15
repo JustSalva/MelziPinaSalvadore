@@ -5,7 +5,6 @@ import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsJSONReader;
 import it.polimi.travlendarplus.beans.calendar_manager.support.GMapsDirectionsHandler;
 import it.polimi.travlendarplus.beans.calendar_manager.support.HTMLCallAndResponse;
 import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.PathCombination;
-import it.polimi.travlendarplus.beans.calendar_manager.support.ScheduleFunctionalities.ScheduleHolder;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
@@ -14,7 +13,6 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.net.www.content.text.Generic;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -41,7 +39,7 @@ public class PathManager extends UserManager{
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
                                          ArrayList<TravelMeanEnum> publicMeans) {
-        scheduleManager.setSchedule(event.getDayAtMidnight());
+        scheduleManager.setSchedule(event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY);
         // Obtaining possible paths that don't overlap with previous and following scheduled events.
         List<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
         List<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
@@ -161,7 +159,7 @@ public class PathManager extends UserManager{
 
     public ArrayList<GenericEvent> swapEvents(Event forcedEvent, ArrayList<TravelMeanEnum> privateMeans,
                                          ArrayList<TravelMeanEnum> publicMeans) {
-        scheduleManager.setSchedule(forcedEvent.getDayAtMidnight());
+        scheduleManager.setSchedule(forcedEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY);
         List<GenericEvent> swapOutEvents = new ArrayList<GenericEvent>();
         ArrayList<PathCombination> combs = new ArrayList<PathCombination>();
         firstSwapPhase(forcedEvent, swapOutEvents);
@@ -194,8 +192,7 @@ public class PathManager extends UserManager{
             }
         }
         PathCombination best = (complete) ? preferenceManager.findBestpath(combs, forcedEvent.getType()) : null;
-        //TODO update DB with swapOUT events, swapOUT breaks and swapIN
-        return conclusionForSwap(best, forcedEvent, swapOutEvents);
+        return best != null ? conclusionForSwap(best, forcedEvent, swapOutEvents) : null;
     }
 
     private ArrayList<GenericEvent> conclusionForSwap(PathCombination best, Event forcedEvent, List<GenericEvent> swapOut) {
@@ -204,19 +201,19 @@ public class PathManager extends UserManager{
         for(GenericEvent genEv: swapOut) {
             genEv.setScheduled(false);
             genEv.removeFeasiblePath();
-            //genEv.save();
+            genEv.save();
             response.add(genEv);
         }
         // Updating swap in event into DB adding scheduled param and path.
         forcedEvent.setScheduled(true);
         forcedEvent.setFeasiblePath(best.getPrevPath());
-        //forcedEvent.save();
+        forcedEvent.save();
         response.add(forcedEvent);
         // Updating following path into DB
         Event following = scheduleManager.getPossibleFollowingEvent(forcedEvent.getStartingTime());
         if (following != null) {
             following.setFeasiblePath(best.getFollPath());
-            //following.save();
+            following.save();
             response.add(following);
         }
         return response;

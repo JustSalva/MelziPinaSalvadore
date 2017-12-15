@@ -21,7 +21,7 @@ import java.util.List;
 @Stateless
 public class ScheduleManager extends UserManager{
 
-    final long DAILY_SECONDS_MINUS_ONE = 24*60*60-1;
+    public final static long SECONDS_IN_A_DAY = 24*60*60;
 
     private ScheduleHolder schedule;
 
@@ -29,8 +29,9 @@ public class ScheduleManager extends UserManager{
         return schedule;
     }
 
+    // day is a long corresponding to the unix time at 12:00 of the day wanted.
     public ScheduleHolder getScheduleByDay(long day) {
-        setSchedule(day);
+        setSchedule(Instant.ofEpochSecond(day), 2);
         return schedule;
     }
 
@@ -38,7 +39,7 @@ public class ScheduleManager extends UserManager{
     // Paths are not considered in this function because the addition of an event will cause the recalculation of involved paths.
     public boolean isEventOverlapFreeIntoSchedule(Event event, boolean forSwap) {
         if(!forSwap)
-            setSchedule(event.getDayAtMidnight());
+            setSchedule(event.getStartingTime(), SECONDS_IN_A_DAY);
         // Checking if the event is overlapping free with regard of scheduled events.
         for(Event scheduledEvent: schedule.getEvents())
             if(!(areEventsOverlapFree(event, scheduledEvent)))
@@ -54,7 +55,7 @@ public class ScheduleManager extends UserManager{
     // This function is called when a breakEvent could be added into the schedule.
     public boolean isBreakOverlapFreeIntoSchedule(BreakEvent breakEvent, boolean forSwap) {
         if(!forSwap)
-            setSchedule(breakEvent.getDayAtMidnight());
+            setSchedule(breakEvent.getStartingTime(), SECONDS_IN_A_DAY);
         // In the system is not allowed the overlapping of two break events.
         for(BreakEvent scheduledBreak: schedule.getBreaks())
             if(!areEventsOverlapFree(breakEvent, scheduledBreak))
@@ -64,22 +65,23 @@ public class ScheduleManager extends UserManager{
         return breakEvent.isMinimumEnsuredWithPathRegard(involvedEvents);
     }
 
-    // Day parameter represents the wanted day at 00:00:00. This function is called in order to calculate the schedule
-    // of a certain day and store it in schedule variable.
-    public void setSchedule(long day) {
+    // delta parameter represents an interval in seconds used to filter the user's events.
+    // This function is called in order to calculate the schedule of a certain period of time.
+    public void setSchedule(Instant centralTime, long delta) {
         ArrayList<Event> events = new ArrayList<Event>();
         ArrayList<BreakEvent> breaks = new ArrayList<BreakEvent>();
-        Instant startingTime = Instant.ofEpochSecond(day);
-        Instant endingTime = Instant.ofEpochSecond(day + DAILY_SECONDS_MINUS_ONE);
+        Instant startingTime = Instant.ofEpochSecond(centralTime.getEpochSecond() - delta);
+        Instant endingTime = Instant.ofEpochSecond(centralTime.getEpochSecond() + delta);
         // Obtaining events into the schedule of the specified day.
         for(Event event: getCurrentUser().getEvents())
-            if(event.isScheduled() && !event.getStartingTime().isBefore(startingTime) && !event.getEndingTime().isAfter(endingTime))
+            if(event.isScheduled() && !event.getStartingTime().isBefore(startingTime) &&
+                    !event.getStartingTime().isAfter(endingTime))
                 events.add(event);
         Collections.sort(events);
         // Obtaining breaks into the schedule of the specified day.
         for(BreakEvent breakEvent: getCurrentUser().getBreaks())
             if(breakEvent.isScheduled() && !breakEvent.getStartingTime().isBefore(startingTime) &&
-                    !breakEvent.getEndingTime().isAfter(endingTime))
+                    !breakEvent.getStartingTime().isAfter(endingTime))
                 breaks.add(breakEvent);
         Collections.sort(breaks);
         // The schedule is stored and can be used for next operations.
@@ -88,18 +90,39 @@ public class ScheduleManager extends UserManager{
 
     // It returns null if the event would be the first in the schedule of that day.
     public Event getPossiblePreviousEvent (Instant startingTime) {
-        for(int i=0; i<schedule.getEvents().size(); i++)
+        long visitedLimit = startingTime.getEpochSecond() - SECONDS_IN_A_DAY;
+        for (int i = 0; i < schedule.getEvents().size(); i++)
             if (startingTime.isBefore(schedule.getEvents().get(i).getStartingTime()))
-                return i==0 ? null : schedule.getEvents().get(i-1);
-        return (schedule.getEvents().size()==0) ? null : schedule.getEvents().get(schedule.getEvents().size()-1);
+                return i == 0 ? getFurtherPreviousEvent(Instant.ofEpochSecond(visitedLimit)) : schedule.getEvents().get(i - 1);
+        return (schedule.getEvents().isEmpty()) ? getFurtherPreviousEvent(Instant.ofEpochSecond(visitedLimit)) :
+                schedule.getEvents().get(schedule.getEvents().size() - 1);
+    }
+
+    private Event getFurtherPreviousEvent (Instant visitedLimit) {
+        ArrayList<Event> events = new ArrayList<Event>();
+        for(Event event: currentUser.getEvents())
+            if(event.isScheduled() && event.getStartingTime().isBefore(visitedLimit))
+                events.add(event);
+        Collections.sort(events);
+        return (!events.isEmpty()) ? events.get(events.size()-1) : null;
     }
 
     // It returns null if the event would be the last in the schedule of that day.
     public Event getPossibleFollowingEvent (Instant startingTime) {
+        long visitedLimit = startingTime.getEpochSecond() + SECONDS_IN_A_DAY;
         for(int i=0; i<schedule.getEvents().size(); i++)
             if(startingTime.isBefore(schedule.getEvents().get(i).getStartingTime()))
                 return schedule.getEvents().get(i);
-        return null;
+        return getFurtherFollowingEvent(Instant.ofEpochSecond(visitedLimit));
+    }
+
+    private Event getFurtherFollowingEvent (Instant visitedLimit) {
+        ArrayList<Event> events = new ArrayList<Event>();
+        for(Event event: currentUser.getEvents())
+            if(event.isScheduled() && event.getStartingTime().isAfter(visitedLimit))
+                events.add(event);
+        Collections.sort(events);
+        return (!events.isEmpty()) ? events.get(0) : null;
     }
 
     // It returns true if the two events are not overlapping.
