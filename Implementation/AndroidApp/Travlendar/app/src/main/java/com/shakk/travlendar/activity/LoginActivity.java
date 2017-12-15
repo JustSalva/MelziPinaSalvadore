@@ -3,10 +3,14 @@ package com.shakk.travlendar.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -25,16 +29,22 @@ import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
+import com.shakk.travlendar.retrofit.LoginController;
+import com.shakk.travlendar.retrofit.LoginResponse;
+import com.shakk.travlendar.retrofit.ServiceGenerator;
+import com.shakk.travlendar.retrofit.TravlendarClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
+import retrofit2.Call;
 
 /**
  * A login screen that offers login via email/password.
@@ -53,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
     // Strings to be read from input fields.
     private String email;
     private String password;
+
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +94,25 @@ public class LoginActivity extends AppCompatActivity {
 
         // Listener on the login button.
         login_button.setOnClickListener(view -> logIn());
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 200:
+                        //Got the good response
+                        //loginOK();
+                        Log.d("HANDLER", "OK");
+                        break;
+                    case 401:
+                        //loginFail();
+                        break;
+                    default:
+                        //loginFail();
+                        break;
+                }
+            }
+        };
     }
 
 
@@ -103,21 +134,10 @@ public class LoginActivity extends AppCompatActivity {
         // Retrieve token representing device.
         token = FirebaseInstanceId.getInstance().getToken();
 
-        // Build JSON to be sent to server.
-        JSONObject jsonParams = new JSONObject();
-        StringEntity entity = null;
-        try {
-            jsonParams.put("email", email);
-            jsonParams.put("password", password);
-            jsonParams.put("idDevice", token);
-            Log.d("JSON", jsonParams.toString());
-            entity = new StringEntity(jsonParams.toString());
-            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        LoginController loginController = new LoginController(handler);
+        loginController.start(email, password, token);
 
-        // Send JSON to server.
+        /* Send JSON to server.
         TravlendarRestClient.post("ApplicationServerArchive/login", entity, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -177,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                 //Makes UI responsive again.
                 resumeNormalMode();
             }
-        });
+        });*/
     }
 
     /**
