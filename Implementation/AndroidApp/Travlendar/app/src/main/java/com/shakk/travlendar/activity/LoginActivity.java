@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
 
+    // Handler for server responses.
     private Handler handler;
 
     @Override
@@ -95,22 +96,42 @@ public class LoginActivity extends AppCompatActivity {
         // Listener on the login button.
         login_button.setOnClickListener(view -> logIn());
 
+        // Handle server responses.
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
                     case 200:
-                        //Got the good response
-                        //loginOK();
-                        Log.d("HANDLER", "OK");
+                        // Retrieve data from bundle.
+                        Bundle bundle = msg.getData();
+                        String name = bundle.getString("name");
+                        String surname = bundle.getString("surname");
+                        String univocalCode = bundle.getString("univocalCode");
+
+                        // Insert new User into the local DB.
+                        User user = new User(email, name, surname, univocalCode);
+                        Log.d("INSERT USER", user.toString());
+                        new InsertUserTask(getApplicationContext()).execute(user);
+
+                        goToCalendarActivity();
+                        break;
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
                         break;
                     case 401:
-                        //loginFail();
+                        Toast.makeText(getBaseContext(), "This user is not registered!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 403:
+                        Toast.makeText(getBaseContext(), "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();
+                        password_editText.setError("Wrong password!");
+                        password_editText.requestFocus();
                         break;
                     default:
-                        //loginFail();
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", msg.toString());
                         break;
                 }
+                resumeNormalMode();
             }
         };
     }
@@ -126,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         email = email_editText.getText().toString();
         password = password_editText.getText().toString();
 
+        // Check if inputs are correct.
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
@@ -134,70 +156,10 @@ public class LoginActivity extends AppCompatActivity {
         // Retrieve token representing device.
         token = FirebaseInstanceId.getInstance().getToken();
 
+        // Send request to server.
+        waitForServerResponse();
         LoginController loginController = new LoginController(handler);
         loginController.start(email, password, token);
-
-        /* Send JSON to server.
-        TravlendarRestClient.post("ApplicationServerArchive/login", entity, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                // Makes UI unresponsive during the sending.
-                waitForServerResponse();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // Sending successful.
-                String univocalCode = "";
-                String name = "";
-                String surname = "";
-                // Get fields from JSON response.
-                try {
-                    univocalCode = response.getString("token");
-                    name = response.getString("name");
-                    surname = response.getString("surname");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                // Insert new User into the local DB.
-                User user = new User(email, name, surname, univocalCode);
-                Log.d("INSERT USER", user.toString());
-                new InsertUserTask(getApplicationContext()).execute(user);
-
-                // Go to calendar activity.
-                goToCalendarActivity();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                // Sending failed.
-                switch (statusCode) {
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                    case 401:
-                        Toast.makeText(getBaseContext(), "This user is not registered!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 403:
-                        Toast.makeText(getBaseContext(), "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();
-                        password_editText.setError("Wrong password!");
-                        password_editText.requestFocus();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                //Makes UI responsive again.
-                resumeNormalMode();
-            }
-        });*/
     }
 
     /**
