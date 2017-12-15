@@ -19,7 +19,7 @@ public class Travel extends EntityWithLongKey {
 
     private static final long serialVersionUID = 3515840069172744899L;
 
-    @ManyToOne( fetch=FetchType.LAZY )
+    @OneToOne( fetch=FetchType.LAZY )
     @JoinColumn(name="RELATED_EVENT")
     private Event relatedEvent;
 
@@ -38,14 +38,6 @@ public class Travel extends EntityWithLongKey {
         this.relatedEvent = relatedEvent;
         this.miniTravels = miniTravels;
         this.lastUpdate = new Timestamp();
-    }
-
-    public Event getRelatedEvent() {
-        return relatedEvent;
-    }
-
-    public void setRelatedEvent(Event relatedEvent) {
-        this.relatedEvent = relatedEvent;
     }
 
     public List<TravelComponent> getMiniTravels() {

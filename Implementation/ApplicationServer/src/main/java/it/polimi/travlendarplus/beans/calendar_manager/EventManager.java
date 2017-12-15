@@ -8,6 +8,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.entities.calendar.Period;
 import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
@@ -88,12 +89,14 @@ public class EventManager extends UserManager {
         Event event = createEvent( eventMessage );
         Event following = addEventAndModifyFollowingEvent( event );
         List< GenericEvent > responseList = new ArrayList<>();
-        responseList.add( event );
         if ( following != null ) {
-            responseList.add( following );
             following.save();
+            responseList.add( following );
         }
+        event.setUser( currentUser );
+        event.setFeasiblePath( null );
         event.save();
+        responseList.add( event );
         currentUser.addEvent( event );
         currentUser.save();
         startEventPropagatorThread( event );
@@ -152,7 +155,7 @@ public class EventManager extends UserManager {
     }
 
     private Location findLocation( LocationMessage locationMessage ) {
-        //TODO create if not present
+        //TODO check correctness?
         Location location;
         try {
             location = Location.load(
@@ -186,16 +189,20 @@ public class EventManager extends UserManager {
         if ( !eventMessage.isPrevLocChoice() ) {
             departure = findLocation( eventMessage.getDeparture() );
         }
+        Period  periodicity = createPeriodicity( eventMessage.getPeriodicity() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, null, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
+                false, periodicity, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
                 eventMessage.isTravelAtLastChoice(), type, arrival, departure );
+    }
+
+    private Period createPeriodicity( PeriodMessage periodMessage ){
+        return new Period( periodMessage.getStartingDay(), periodMessage.getEndingDay(), periodMessage.getDeltaDays() );
     }
 
     private void checkEventFields( AddEventMessage eventMessage ) throws InvalidFieldException {
         List< String > errors = new ArrayList<>();
         errors.addAll( checkGenericEventFields( eventMessage ) );
-
         /*if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
             errors.add( "Not exists a previous location" );*/
         try {
@@ -306,7 +313,7 @@ public class EventManager extends UserManager {
 
     private BreakEvent createBreakEvent( AddBreakEventMessage eventMessage ) {
         return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, null, eventMessage.getMinimumTime() );
+                false, createPeriodicity( eventMessage.getPeriodicity() ), eventMessage.getMinimumTime() );
     }
 
     public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage )
