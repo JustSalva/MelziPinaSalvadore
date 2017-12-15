@@ -29,10 +29,10 @@ public class GMapsDirectionsHandler {
         addParam("origin", event.getDeparture().getLatitude()+","+event.getDeparture().getLongitude());
         addParam("destination", event.getEventLocation().getLatitude()+","+
                 event.getEventLocation().getLongitude());
-        if (previousEvent != null)
-            addParam("departure_time", previousEvent.getEndingTime().getEpochSecond()+"");
+        if (previousEvent == null || event.isTravelAtLastChoice())
+            addParam("arrival_time", event.getStartingTime().getEpochSecond() + "");
         else
-            addParam("arrival_time", event.getStartingTime().getEpochSecond()+"");
+            addParam("departure_time", previousEvent.getEndingTime().getEpochSecond() + "");
         return callURL.toString();
     }
 
@@ -42,7 +42,10 @@ public class GMapsDirectionsHandler {
                 followingEvent.getDeparture().getLongitude());
         addParam("destination", followingEvent.getEventLocation().getLatitude()+","+
                 followingEvent.getEventLocation().getLongitude());
-        addParam("departure_time", event.getEndingTime().getEpochSecond()+"");
+        if(followingEvent.isTravelAtLastChoice())
+            addParam("arrival_time", followingEvent.getStartingTime().getEpochSecond()+"");
+        else
+            addParam("departure_time", event.getEndingTime().getEpochSecond()+"");
         return callURL.toString();
     }
 

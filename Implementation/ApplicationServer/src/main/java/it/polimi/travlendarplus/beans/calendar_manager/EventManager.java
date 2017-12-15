@@ -203,8 +203,8 @@ public class EventManager extends UserManager {
     private void checkEventFields( AddEventMessage eventMessage ) throws InvalidFieldException {
         List< String > errors = new ArrayList<>();
         errors.addAll( checkGenericEventFields( eventMessage ) );
-        /*if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
-            errors.add( "Not exists a previous location" );*/
+        if ( eventMessage.isPrevLocChoice() && scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
+            errors.add( "Not exists a previous location" );
         try {
             if ( eventMessage.getIdTypeOfEvent() != 0 ){
                 preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
