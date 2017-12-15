@@ -13,8 +13,10 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.*;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.enterprise.concurrent.ManagedExecutorService;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class EventManager extends UserManager {
     private ScheduleManager scheduleManager;
     @EJB
     private PathManager pathManager;
+
+    @Resource(name = "DefaultManagedExecutorService")
+    ManagedExecutorService executor;
 
     @PostConstruct
     public void postConstruct() {
@@ -88,8 +93,7 @@ public class EventManager extends UserManager {
         event.save();
         currentUser.addEvent( event );
         currentUser.save();
-        //TODO start periodic thread
-        propagatePeriodicEvents( event );
+        startEventPropagatorThread( event );
         return responseList;
     }
 
@@ -251,8 +255,7 @@ public class EventManager extends UserManager {
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         addBreakEvent( breakEvent );
-        //TODO start periodic thread
-        propagatePeriodicEvents( breakEvent );
+        startEventPropagatorThread( breakEvent );
         breakEvent.save();
         currentUser.addBreak( breakEvent );
         currentUser.save();
@@ -295,6 +298,12 @@ public class EventManager extends UserManager {
         //TODO add into either scheduled or not scheduled array and save!
         breakEvent.save();
         return breakEvent;
+    }
+    private void startEventPropagatorThread( GenericEvent genericEvent){
+        if ( genericEvent.getPeriodicity() != null ){
+            PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this , genericEvent);
+            executor.submit( runnable );
+        }
     }
 
     @Override
