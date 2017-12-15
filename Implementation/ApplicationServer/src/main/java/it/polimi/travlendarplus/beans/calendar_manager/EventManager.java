@@ -122,7 +122,12 @@ public class EventManager extends UserManager{
             nextEvent = event.nextPeriodicEvent();
 
             if ( event.isScheduled() ){
-                //TODO check nextEventFeasibility with copied travel
+                
+                scheduleManager.setSchedule( nextEvent.getDayAtMidnight() );
+                if ( nextEvent.isOverlapFreeIntoSchedule( scheduleManager ) ){
+                    //TODO check nextEventFeasibility with copied travel
+                }
+
             }else{
                 //TODO if event is not scheduled a path must be computed
             }

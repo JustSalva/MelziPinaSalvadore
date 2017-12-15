@@ -62,6 +62,11 @@ public class TypeOfEventTests extends GenericEntityTest{
         assertSameDeactivatedTravelMean( testTypeOfEvent.getDeactivate(), retrievedTypeOfEvent.getDeactivate() );
     }
 
+    public void assertContainsTypeOfEvent( TypeOfEvent testTypeOfEvent, TypeOfEvent retrievedTypeOfEvent ) {
+        this.testTypeOfEvent = testTypeOfEvent;
+        assertContainsTypeOfEvent( retrievedTypeOfEvent );
+    }
+
     private void assertSameLimitedByConstraints( List <Constraint> expected, List <Constraint> retrieved ){
         Assert.assertEquals( expected.size(), retrieved.size() );
         Assert.assertEquals( expected.get( 0 ).getConcerns(), retrieved.get( 0 ).getConcerns() );

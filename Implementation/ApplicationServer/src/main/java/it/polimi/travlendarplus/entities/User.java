@@ -92,6 +92,10 @@ public class User extends GenericEntity {
         this.password = password;
     }
 
+    public static User load( String key ) throws EntityNotFoundException {
+        return GenericEntity.load( User.class, key );
+    }
+
     public String getEmail() {
         return email;
     }
@@ -159,6 +163,10 @@ public class User extends GenericEntity {
         return lastUpdate;
     }
 
+    public void setLastUpdate( Timestamp lastUpdate ) {
+        this.lastUpdate = lastUpdate;
+    }
+
     public List< BreakEvent > getBreaks() {
         return Collections.unmodifiableList( breaks );
     }
@@ -220,19 +228,11 @@ public class User extends GenericEntity {
     }
 
     public void addLocation( String name, Location location ) {
-        this.preferredLocations.add( new UserLocation( name, location) );
+        this.preferredLocations.add( new UserLocation( name, location ) );
     }
 
     public void removeLocation( String name ) {
         preferredLocations.removeIf( userLocation -> userLocation.getName().equals( name ) );
-    }
-
-    public void setLastUpdate( Timestamp lastUpdate ) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public static User load( String key ) throws EntityNotFoundException {
-        return GenericEntity.load( User.class, key );
     }
 
     @Override

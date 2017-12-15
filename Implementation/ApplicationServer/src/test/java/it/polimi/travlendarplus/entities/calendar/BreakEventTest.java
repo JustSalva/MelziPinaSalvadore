@@ -25,6 +25,12 @@ public class BreakEventTest extends GenericEntityTest {
                 .addClass( GenericEvent.class );
     }
 
+    public static BreakEvent getTestBreakEvent( int index ) {
+        return new BreakEvent( "name" + index, Instant.ofEpochSecond( 10 * index ), Instant.ofEpochSecond( 60 * index ),
+                false, null, 23 * index );
+
+    }
+
     @Before
     public void setUp() throws Exception {
         User user = new User( "email", "name", "surname", "password" );
@@ -46,12 +52,17 @@ public class BreakEventTest extends GenericEntityTest {
     }
 
 
-    private void assertSameBreakEvents( BreakEvent retrievedEvent ) {
+    public void assertSameBreakEvents( BreakEvent retrievedEvent ) {
         Assert.assertEquals( testBreakEvent.getName(), retrievedEvent.getName() );
         Assert.assertEquals( testBreakEvent.getStartingTime(), retrievedEvent.getStartingTime() );
         Assert.assertEquals( testBreakEvent.getEndingTime(), retrievedEvent.getEndingTime() );
         Assert.assertEquals( testBreakEvent.isScheduled(), retrievedEvent.isScheduled() );
         Assert.assertEquals( testBreakEvent.getMinimumTime(), retrievedEvent.getMinimumTime() );
+    }
+
+    public void assertSameBreakEvents(BreakEvent testBreakEvent, BreakEvent retrievedEvent ) {
+        this.testBreakEvent = testBreakEvent;
+        assertSameBreakEvents( retrievedEvent );
     }
 
     @Override

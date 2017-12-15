@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
@@ -104,6 +105,11 @@ public class BreakEvent extends GenericEvent {
         return minimumTime <= Math.min( getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond() ) -
                 Math.max( path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond() ) ||
                 minimumTime <= Duration.between( event.getEndingTime(), getEndingTime() ).getSeconds();
+    }
+
+    @Override
+    public boolean isOverlapFreeIntoSchedule( ScheduleManager scheduleManager ) {
+        return scheduleManager.isBreakOverlapFreeIntoSchedule( this, false );
     }
 
     @Override

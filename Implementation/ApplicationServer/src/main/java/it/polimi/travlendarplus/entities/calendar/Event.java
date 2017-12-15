@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
@@ -130,6 +131,11 @@ public class Event extends GenericEvent {
         Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
                 this.description, this.prevLocChoice, this.type, this.eventLocation, this.departure );
+    }
+
+    @Override
+    public boolean isOverlapFreeIntoSchedule( ScheduleManager scheduleManager ) {
+        return scheduleManager.isEventOverlapFreeIntoSchedule( this, false );
     }
 
     @Override
