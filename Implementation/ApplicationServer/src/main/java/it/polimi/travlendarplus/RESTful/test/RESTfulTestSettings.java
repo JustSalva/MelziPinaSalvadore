@@ -42,7 +42,7 @@ public class RESTfulTestSettings {
 
     public String addEventBaseCaseTest(boolean first, boolean second, boolean third, boolean setTravel) {
         baseCaseConfiguration(first, second, third, setTravel);
-        combination = pathManager.calculatePath((!second) ? e2 : (!first) ? e1 : e3, privateMeans, publicMeans, false);
+        combination = pathManager.calculatePath((!second) ? e2 : (!first) ? e1 : e3, privateMeans, publicMeans);
         return combination.toString();
     }
 
@@ -55,7 +55,7 @@ public class RESTfulTestSettings {
         //2018/01/20 h:9:00 - 14:00
         be1 = setBreakEvent(1516438800, 1516456800, minInt, true);
         user.addBreak(be1);
-        combination = pathManager.calculatePath(e4, privateMeans, publicMeans, false);
+        combination = pathManager.calculatePath(e4, privateMeans, publicMeans);
         return (combination != null) ? combination.toString() : "NO_FEASIBLE_PATHS";
     }
 
@@ -171,6 +171,11 @@ public class RESTfulTestSettings {
         como = setLocation(45.8080597, 9.085176499999999);
         maggianico = setLocation(45.8259029, 9.419594);
         abbadia = setLocation(45.8948976, 9.336341900000001);
+        /*lecco = setLocation(51.500970, -0.124862);
+        mandello = setLocation(51.502288, 0.045226);
+        como = setLocation(51.502079, -0.174816);
+        maggianico = setLocation(51.507857, -0.087833);
+        abbadia = setLocation(51.503040, -0.137823);*/
     }
 
     private TypeOfEvent setTypeOfEvent(String name) {

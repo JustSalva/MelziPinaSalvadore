@@ -41,7 +41,8 @@ public class ScheduleHolder {
 
     //the event is really removed from the schedule
     public void removeSpecBreak(BreakEvent breakToRemove) {
-        breaks.remove(breakToRemove);
+        if(breakToRemove != null)
+            breaks.remove(breakToRemove);
     }
 
     // It returns a list of events composed by the scheduled events, the new event and the new event-related paths.

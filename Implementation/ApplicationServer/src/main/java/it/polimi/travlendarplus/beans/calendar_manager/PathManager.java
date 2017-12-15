@@ -37,9 +37,8 @@ public class PathManager extends UserManager{
     }
 
     public PathCombination calculatePath(Event event, ArrayList<TravelMeanEnum> privateMeans,
-                                         ArrayList<TravelMeanEnum> publicMeans, boolean forSwap) {
-        if(!forSwap)
-            scheduleManager.setSchedule(event.getDayAtMidnight());
+                                         ArrayList<TravelMeanEnum> publicMeans) {
+        scheduleManager.setSchedule(event.getDayAtMidnight());
         // Obtaining possible paths that don't overlap with previous and following scheduled events.
         List<Travel> previousPaths = getPreviousTravels(event, privateMeans, publicMeans);
         List<Travel> followingPaths = getFollowingTravels(event, privateMeans, publicMeans);
@@ -157,34 +156,47 @@ public class PathManager extends UserManager{
                                      ArrayList<TravelMeanEnum> publicMeans) {
         scheduleManager.setSchedule(forcedEvent.getDayAtMidnight());
         List<Event> swapOutEvents = new ArrayList<Event>();
-        List<BreakEvent> swapOutBreaks = new ArrayList<BreakEvent>();
-        List<PathCombination> combs = new ArrayList<PathCombination>();
+        ArrayList<PathCombination> combs = new ArrayList<PathCombination>();
         firstSwapPhase(forcedEvent);
         // Calculating prev/foll path for the forcedEvent.
         boolean complete = false;
         while(!complete && !scheduleManager.getSchedule().getEvents().isEmpty()) {
             swapOutEvents = new ArrayList<Event>();
-            swapOutBreaks = new ArrayList<BreakEvent>();
             List<Travel> prev = getPreviousTravels(forcedEvent, privateMeans, publicMeans);
             List<Travel> foll = getFollowingTravels(forcedEvent, privateMeans, publicMeans);
+            prev = prev.stream().filter(p -> preferenceManager.checkConstraints(p, forcedEvent.getType())).collect(Collectors.toList());
+            foll = foll.stream().filter(p -> preferenceManager.checkConstraints(p, forcedEvent.getType())).collect(Collectors.toList());
+            // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if(!prev.isEmpty() && (!foll.isEmpty() || scheduleManager.getSchedule().isLastEvent(forcedEvent))) {
                 combs = scheduleManager.getFeasiblePathCombinations(forcedEvent, prev, foll);
-                //TODO apply user preferences on combs
-                complete = !combs.isEmpty();
-                if(!complete)
-                    for(BreakEvent breakScheduled: scheduleManager.getSchedule().getBreaks())
-                        if(!scheduleManager.areEventsOverlapFree(forcedEvent, breakScheduled))
-                            swapOutBreaks.add(breakScheduled);
+                if(combs.isEmpty())
+                    scheduleManager.getSchedule().removeSpecBreak(breakToRemove(forcedEvent));
+                else
+                    complete = true;
             }
+            // If prev or foll path is not founded, a related-event is removed from the schedule.
             else if(prev.isEmpty() && scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()) != null)
                 swapOutEvents.add(scheduleManager.getPossiblePreviousEvent(forcedEvent.getStartingTime()));
             else if(foll.isEmpty() && scheduleManager.getPossibleFollowingEvent(forcedEvent) != null)
                 swapOutEvents.add(scheduleManager.getPossibleFollowingEvent(forcedEvent));
-            removeEvents(swapOutEvents, swapOutBreaks);
+            removeEvents(swapOutEvents);
         }
-        
+        PathCombination best;
+        if(complete)
+            best = preferenceManager.findBestpath(combs, forcedEvent.getType());
         //TODO update DB with swapOUT events, swapOUT breaks and swapIN
         return scheduleManager.getSchedule();
+    }
+
+    private BreakEvent breakToRemove(Event forcedEvent) {
+        if(scheduleManager.getSchedule().getBreaks().isEmpty())
+            return null;
+        BreakEvent toRemove = scheduleManager.getSchedule().getBreaks().get(0);
+        for(int i=1; i < scheduleManager.getSchedule().getBreaks().size(); i++)
+            if(scheduleManager.overlappingTime(scheduleManager.getSchedule().getBreaks().get(i), forcedEvent) <
+                    scheduleManager.overlappingTime(toRemove, forcedEvent))
+                toRemove = scheduleManager.getSchedule().getBreaks().get(i);
+        return toRemove;
     }
 
     // Removing events that overlap with forcedEvent
@@ -197,11 +209,9 @@ public class PathManager extends UserManager{
             scheduleManager.getSchedule().removeSpecEvent(event);
     }
 
-    private void removeEvents(List<Event> swapOutEvents, List<BreakEvent> swapOutBreaks){
+    private void removeEvents(List<Event> swapOutEvents){
         for(Event event: swapOutEvents)
             scheduleManager.getSchedule().removeSpecEvent(event);
-        for(BreakEvent breakEvent: swapOutBreaks)
-            scheduleManager.getSchedule().removeSpecBreak(breakEvent);
     }
 
     private ArrayList<TravelMeanEnum> privateMeansSameLoc(List<TravelMeanEnum> privateMeans) {

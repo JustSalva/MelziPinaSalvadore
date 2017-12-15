@@ -8,8 +8,10 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import sun.net.www.content.text.Generic;
 
 import javax.ejb.Stateless;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,6 +105,14 @@ public class ScheduleManager extends UserManager{
     public boolean areEventsOverlapFree (GenericEvent event, GenericEvent scheduledEvent) {
         return !event.getStartingTime().isBefore(scheduledEvent.getEndingTime()) ||
                 !event.getEndingTime().isAfter(scheduledEvent.getStartingTime());
+    }
+
+    public long overlappingTime(GenericEvent event1, GenericEvent event2) {
+        if(areEventsOverlapFree(event1, event2))
+            return 0;
+        return Math.min(event1.getEndingTime().getEpochSecond(), event2.getEndingTime().getEpochSecond()) -
+                ((event1.getStartingTime().isBefore(event2.getEndingTime())) ? event2.getStartingTime().getEpochSecond() :
+                event1.getStartingTime().getEpochSecond());
     }
 
     // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .

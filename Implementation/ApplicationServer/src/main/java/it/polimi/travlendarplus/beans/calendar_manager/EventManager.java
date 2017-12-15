@@ -85,7 +85,7 @@ public class EventManager extends UserManager{
         if(scheduleManager.isEventOverlapFreeIntoSchedule(event, false)) {
             // CalculatePaths check feasibility into the schedule with regard of TIMETABLE and CONSTRAINTS defined by the user
             feasiblePaths = pathManager.calculatePath(event, preferenceManager.getAllowedMeans(event, privateList),
-                    preferenceManager.getAllowedMeans(event, publicList), false);
+                    preferenceManager.getAllowedMeans(event, publicList));
             // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
             if(feasiblePaths != null) {
                 // Setting previous location if prevLocChoice boolean param is true.
