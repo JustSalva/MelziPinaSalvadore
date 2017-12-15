@@ -1,6 +1,10 @@
 package com.shakk.travlendar.retrofit;
 
 
+import com.shakk.travlendar.retrofit.body.LoginBody;
+import com.shakk.travlendar.retrofit.response.LoginResponse;
+import com.shakk.travlendar.retrofit.response.RegisterResponse;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

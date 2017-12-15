@@ -1,4 +1,4 @@
-package com.shakk.travlendar.retrofit;
+package com.shakk.travlendar.retrofit.body;
 
 
 public class LoginBody {

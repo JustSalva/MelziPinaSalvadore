@@ -1,4 +1,4 @@
-package com.shakk.travlendar.retrofit;
+package com.shakk.travlendar.retrofit.response;
 
 public class LoginResponse {
     private String univocalCode;

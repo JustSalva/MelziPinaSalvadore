@@ -1,4 +1,4 @@
-package com.shakk.travlendar.retrofit;
+package com.shakk.travlendar.retrofit.controller;
 
 
 import android.os.Bundle;
@@ -6,7 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.IOException;
+import com.shakk.travlendar.retrofit.ServiceGenerator;
+import com.shakk.travlendar.retrofit.TravlendarClient;
+import com.shakk.travlendar.retrofit.body.LoginBody;
+import com.shakk.travlendar.retrofit.response.LoginResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;

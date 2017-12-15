@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -24,27 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
-import com.shakk.travlendar.retrofit.LoginController;
-import com.shakk.travlendar.retrofit.LoginResponse;
-import com.shakk.travlendar.retrofit.ServiceGenerator;
-import com.shakk.travlendar.retrofit.TravlendarClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
-import retrofit2.Call;
+import com.shakk.travlendar.retrofit.controller.LoginController;
 
 /**
  * A login screen that offers login via email/password.
