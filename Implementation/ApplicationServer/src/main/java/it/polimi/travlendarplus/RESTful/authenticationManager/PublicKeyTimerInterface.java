@@ -6,5 +6,5 @@ import javax.ejb.Local;
 
 @Local
 public interface PublicKeyTimerInterface {
-    void scheduleSingleTimer( RSAEncryption rsaEncryption );
+    void scheduleSingleTimer ( RSAEncryption rsaEncryption );
 }

@@ -9,28 +9,28 @@ public class AddDistanceConstraintMessage extends AddConstraintMessage {
     private int minLength;
     private int maxLength;
 
-    public AddDistanceConstraintMessage() {
+    public AddDistanceConstraintMessage () {
     }
 
-    public AddDistanceConstraintMessage( TravelMeanEnum concerns, int minLength, int maxLength ) {
+    public AddDistanceConstraintMessage ( TravelMeanEnum concerns, int minLength, int maxLength ) {
         super( concerns );
         this.minLength = minLength;
         this.maxLength = maxLength;
     }
 
-    public int getMinLength() {
+    public int getMinLength () {
         return minLength;
     }
 
-    public void setMinLength( int minLength ) {
+    public void setMinLength ( int minLength ) {
         this.minLength = minLength;
     }
 
-    public int getMaxLength() {
+    public int getMaxLength () {
         return maxLength;
     }
 
-    public void setMaxLength( int maxLength ) {
+    public void setMaxLength ( int maxLength ) {
         this.maxLength = maxLength;
     }
 }

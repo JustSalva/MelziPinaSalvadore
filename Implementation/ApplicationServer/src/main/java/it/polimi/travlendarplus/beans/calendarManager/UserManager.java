@@ -9,11 +9,11 @@ public class UserManager {
 
     protected User currentUser;
 
-    public User getCurrentUser() {
+    public User getCurrentUser () {
         return currentUser;
     }
 
-    public void setCurrentUser(User currentUser) {
+    public void setCurrentUser ( User currentUser ) {
         this.currentUser = currentUser;
     }
 }

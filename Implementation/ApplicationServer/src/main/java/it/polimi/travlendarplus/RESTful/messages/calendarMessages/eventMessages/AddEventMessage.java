@@ -14,13 +14,13 @@ public class AddEventMessage extends AddGenericEventMessage {
     private LocationMessage eventLocation;
     private LocationMessage departure;
 
-    public AddEventMessage() {
+    public AddEventMessage () {
     }
 
-    public AddEventMessage( String name, Instant startingTime, Instant endingTime,
-                            PeriodMessage periodicity, String description, boolean prevLocChoice,
-                            boolean travelAtLastChoice, long idTypeOfEvent,
-                            LocationMessage eventLocation, LocationMessage departure ) {
+    public AddEventMessage ( String name, Instant startingTime, Instant endingTime,
+                             PeriodMessage periodicity, String description, boolean prevLocChoice,
+                             boolean travelAtLastChoice, long idTypeOfEvent,
+                             LocationMessage eventLocation, LocationMessage departure ) {
 
         super( name, startingTime, endingTime, periodicity );
         this.description = description;
@@ -31,51 +31,51 @@ public class AddEventMessage extends AddGenericEventMessage {
         this.departure = departure;
     }
 
-    public String getDescription() {
+    public String getDescription () {
         return description;
     }
 
-    public void setDescription( String description ) {
+    public void setDescription ( String description ) {
         this.description = description;
     }
 
-    public boolean isPrevLocChoice() {
+    public boolean isPrevLocChoice () {
         return prevLocChoice;
     }
 
-    public void setPrevLocChoice( boolean prevLocChoice ) {
+    public void setPrevLocChoice ( boolean prevLocChoice ) {
         this.prevLocChoice = prevLocChoice;
     }
 
-    public long getIdTypeOfEvent() {
+    public long getIdTypeOfEvent () {
         return idTypeOfEvent;
     }
 
-    public void setIdTypeOfEvent( long idTypeOfEvent ) {
+    public void setIdTypeOfEvent ( long idTypeOfEvent ) {
         this.idTypeOfEvent = idTypeOfEvent;
     }
 
-    public LocationMessage getEventLocation() {
+    public LocationMessage getEventLocation () {
         return eventLocation;
     }
 
-    public void setEventLocation( LocationMessage eventLocation ) {
+    public void setEventLocation ( LocationMessage eventLocation ) {
         this.eventLocation = eventLocation;
     }
 
-    public LocationMessage getDeparture() {
+    public LocationMessage getDeparture () {
         return departure;
     }
 
-    public void setDeparture( LocationMessage departure ) {
+    public void setDeparture ( LocationMessage departure ) {
         this.departure = departure;
     }
 
-    public boolean isTravelAtLastChoice() {
+    public boolean isTravelAtLastChoice () {
         return travelAtLastChoice;
     }
 
-    public void setTravelAtLastChoice( boolean travelAtLastChoice ) {
+    public void setTravelAtLastChoice ( boolean travelAtLastChoice ) {
         this.travelAtLastChoice = travelAtLastChoice;
     }
 }

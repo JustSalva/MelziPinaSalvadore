@@ -9,13 +9,13 @@ public class ModifyEventMessage extends AddEventMessage {
     private long eventId;
     private boolean propagateToPeriodicEvents;
 
-    public ModifyEventMessage() {
+    public ModifyEventMessage () {
     }
 
-    public ModifyEventMessage( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
-                               String description, boolean prevLocChoice, boolean travelAtLastChoice,
-                               long idTypeOfEvent, LocationMessage eventLocation, LocationMessage departure,
-                               long eventId, boolean propagateToPeriodicEvents ) {
+    public ModifyEventMessage ( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
+                                String description, boolean prevLocChoice, boolean travelAtLastChoice,
+                                long idTypeOfEvent, LocationMessage eventLocation, LocationMessage departure,
+                                long eventId, boolean propagateToPeriodicEvents ) {
 
         super( name, startingTime, endingTime, periodicity, description, prevLocChoice, travelAtLastChoice,
                 idTypeOfEvent, eventLocation, departure );
@@ -23,19 +23,19 @@ public class ModifyEventMessage extends AddEventMessage {
         this.propagateToPeriodicEvents = propagateToPeriodicEvents;
     }
 
-    public long getEventId() {
+    public long getEventId () {
         return eventId;
     }
 
-    public void setEventId( long eventId ) {
+    public void setEventId ( long eventId ) {
         this.eventId = eventId;
     }
 
-    public boolean isPropagateToPeriodicEvents() {
+    public boolean isPropagateToPeriodicEvents () {
         return propagateToPeriodicEvents;
     }
 
-    public void setPropagateToPeriodicEvents( boolean propagateToPeriodicEvents ) {
+    public void setPropagateToPeriodicEvents ( boolean propagateToPeriodicEvents ) {
         this.propagateToPeriodicEvents = propagateToPeriodicEvents;
     }
 }

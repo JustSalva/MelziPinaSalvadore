@@ -9,7 +9,10 @@ import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -26,55 +29,57 @@ public class PeriodicEventsPropagator {
     private EntityManager entityManager;
 
     //TODO uncomment when periodic events propagation is done
-    @Schedule(hour = "23", minute = "55", second = "00")
-    public void propagatePeriodicEvents() {
+    @Schedule( hour = "23", minute = "55", second = "00" )
+    public void propagatePeriodicEvents () {
         List < GenericEvent > eventsToBePropagated = getEventsToBePropagated();
-        for ( GenericEvent genericEvent : eventsToBePropagated ){
+        for ( GenericEvent genericEvent : eventsToBePropagated ) {
             addNextPeriodicEvent( genericEvent );
         }
     }
 
-    private List < GenericEvent > getEventsToBePropagated(){
+    private List < GenericEvent > getEventsToBePropagated () {
 
         List < Long > genericEventIds = performPeriodicityQuery();
 
-        List < GenericEvent > periodicEvents = new ArrayList<>( performEventQuery( genericEventIds ) );
-        List < GenericEvent > eventsToBePropagated = new ArrayList<>();
+        List < GenericEvent > periodicEvents = new ArrayList <>( performEventQuery( genericEventIds ) );
+        List < GenericEvent > eventsToBePropagated = new ArrayList <>();
 
         Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
 
         //I keep only the events that needs to be propagated
-        for ( GenericEvent event : periodicEvents ){
+        for ( GenericEvent event : periodicEvents ) {
             if ( event.getPeriodicity().getEndingDay().isAfter( upperbound )
                     && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
-                    .isAfter( upperbound ) && ! event.getStartingTime().isAfter( upperbound )) {
+                    .isAfter( upperbound ) && !event.getStartingTime().isAfter( upperbound ) ) {
                 eventsToBePropagated.add( event );
             }
         }
 
         return eventsToBePropagated;
     }
-    private List < Long > performPeriodicityQuery (){
+
+    private List < Long > performPeriodicityQuery () {
         createEntityManagers();
 
-        List < Long > periodicEvents = new ArrayList<>();
+        List < Long > periodicEvents = new ArrayList <>();
 
         TypedQuery < Long > eventQuery = entityManager.createQuery( "" +
                         "SELECT period.lastPropagatedEvent " +
                         "FROM PERIOD period " +
                         "WHERE period.lastPropagatedEvent <> NULL",
-                Long.class);
-        periodicEvents= new ArrayList<>( eventQuery.getResultList() );
+                Long.class );
+        periodicEvents = new ArrayList <>( eventQuery.getResultList() );
         closeEntityManager();
 
         return periodicEvents;
     }
-    private List < GenericEvent > performEventQuery( List< Long > eventIds){
 
-        List < GenericEvent > periodicEvents = new ArrayList<>(  );
+    private List < GenericEvent > performEventQuery ( List < Long > eventIds ) {
+
+        List < GenericEvent > periodicEvents = new ArrayList <>();
         GenericEvent genericEvent;
 
-        for ( Long id: eventIds ){
+        for ( Long id : eventIds ) {
             try {
                 genericEvent = Event.load( id );
                 periodicEvents.add( genericEvent );
@@ -91,17 +96,17 @@ public class PeriodicEventsPropagator {
         return periodicEvents;
     }
 
-    private void createEntityManagers(){
-        entityManagerFactory = Persistence.createEntityManagerFactory("TravlendarDB");
+    private void createEntityManagers () {
+        entityManagerFactory = Persistence.createEntityManagerFactory( "TravlendarDB" );
         entityManager = entityManagerFactory.createEntityManager();
     }
 
-    private void closeEntityManager(){
+    private void closeEntityManager () {
         entityManager.close();
     }
 
-    private void addNextPeriodicEvent( GenericEvent event ){
-        GenericEvent genericEvent = event.nextPeriodicEvent( ); //NB by default they are not scheduled
+    private void addNextPeriodicEvent ( GenericEvent event ) {
+        GenericEvent genericEvent = event.nextPeriodicEvent(); //NB by default they are not scheduled
         eventManager.setCurrentUser( genericEvent.getUser() );
         eventManager.propagatePeriodicEvents( genericEvent );
         genericEvent.save();

@@ -17,20 +17,20 @@ public abstract class Constraint extends EntityWithLongKey {
     @Enumerated( EnumType.STRING )
     private TravelMeanEnum concerns;
 
-    public Constraint() {
+    public Constraint () {
     }
 
-    public Constraint( TravelMeanEnum concerns ) {
+    public Constraint ( TravelMeanEnum concerns ) {
         this.concerns = concerns;
     }
 
-    public TravelMeanEnum getConcerns() {
+    public TravelMeanEnum getConcerns () {
         return concerns;
     }
 
-    public void setConcerns( TravelMeanEnum concerns ) {
+    public void setConcerns ( TravelMeanEnum concerns ) {
         this.concerns = concerns;
     }
 
-    public abstract boolean respectConstraint( TravelComponent travelComponent );
+    public abstract boolean respectConstraint ( TravelComponent travelComponent );
 }

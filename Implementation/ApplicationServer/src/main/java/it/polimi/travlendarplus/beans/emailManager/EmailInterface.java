@@ -7,5 +7,5 @@ import javax.ejb.Local;
 
 @Local
 public interface EmailInterface {
-    void sendNewCredentials ( User user ) throws MailPasswordForwardingFailedException ;
+    void sendNewCredentials ( User user ) throws MailPasswordForwardingFailedException;
 }

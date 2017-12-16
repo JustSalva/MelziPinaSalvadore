@@ -8,10 +8,10 @@ public class InvalidCredentialsException extends AuthenticationException {
 
     private static final long serialVersionUID = 8479223991838275408L;
 
-    public InvalidCredentialsException() {
+    public InvalidCredentialsException () {
     }
 
-    public InvalidCredentialsException(String message) {
-        super(message);
+    public InvalidCredentialsException ( String message ) {
+        super( message );
     }
 }

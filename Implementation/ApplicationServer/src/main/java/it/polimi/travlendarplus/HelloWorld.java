@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 import java.time.Instant;
 
 // The Java class will be hosted at the URI path "/prova"
-@Path("/prova")
+@Path( "/prova" )
 public class HelloWorld {
 
     @Inject
@@ -27,18 +27,18 @@ public class HelloWorld {
 
     @GET
     @Secured
-    @Path("/a")
-    @Produces("text/plain")
+    @Path( "/a" )
+    @Produces( "text/plain" )
     public String prova () {
         return authenticatedUser.getEmail();
     }
 
-    @Path("IdTest/{id}")
+    @Path( "IdTest/{id}" )
     // The Java method will process HTTP GET requests
     @GET
     // The Java method will produce content identified by the MIME Media type "text/plain"
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getClichedMessage( @PathParam("id") Integer id) {
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getClichedMessage ( @PathParam( "id" ) Integer id ) {
         // Return some cliched textual content
         /*DistanceTicket ogg = new DistanceTicket( id,new ArrayList<>(),10);
         ogg.save();
@@ -64,10 +64,10 @@ public class HelloWorld {
         arrival.save();
         Location departure = new Location( 2, 2, "address" );
         departure.save();
-        Event event = new Event( "name" , Instant.ofEpochSecond( 120  ), Instant.ofEpochSecond( 500 ),
-                false, null, "description", false,false, null,
+        Event event = new Event( "name", Instant.ofEpochSecond( 120 ), Instant.ofEpochSecond( 500 ),
+                false, null, "description", false, false, null,
                 arrival, departure );
-        Travel travel = new Travel(  );
+        Travel travel = new Travel();
         event.setFeasiblePath( travel );
         User user = new User( "email", "name", "surname", "password" );
         user.save();

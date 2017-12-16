@@ -31,7 +31,7 @@ public class PublicKeyAuthenticator {
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response requestPublicKey( @PathParam( "idDevice" ) String idDevice ) {
+    public Response requestPublicKey ( @PathParam( "idDevice" ) String idDevice ) {
         RSAEncryption encryption = null;
         try {
             encryption = new RSAEncryption( idDevice );

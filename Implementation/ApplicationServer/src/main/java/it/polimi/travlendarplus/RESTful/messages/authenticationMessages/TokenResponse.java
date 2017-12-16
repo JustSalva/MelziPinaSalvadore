@@ -10,18 +10,18 @@ public class TokenResponse extends AuthenticationResponse {
 
     private String token;
 
-    public TokenResponse() {
+    public TokenResponse () {
     }
 
-    public TokenResponse( String token ) {
+    public TokenResponse ( String token ) {
         this.token = token;
     }
 
-    public String getToken() {
+    public String getToken () {
         return token;
     }
 
-    public void setToken( String token ) {
+    public void setToken ( String token ) {
         this.token = token;
     }
 }

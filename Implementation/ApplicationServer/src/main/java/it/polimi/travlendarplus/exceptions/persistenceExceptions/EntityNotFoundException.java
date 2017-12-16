@@ -6,10 +6,10 @@ public class EntityNotFoundException extends TravlendarPlusException {
 
     private static final long serialVersionUID = -1665060021863456498L;
 
-    public EntityNotFoundException() {
+    public EntityNotFoundException () {
     }
 
-    public EntityNotFoundException( String message ) {
+    public EntityNotFoundException ( String message ) {
         super( message );
     }
 }

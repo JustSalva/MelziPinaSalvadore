@@ -6,34 +6,34 @@ public class PathCombination {
     private Travel prevPath;
     private Travel follPath;
 
-    public PathCombination( Travel prevPath, Travel follPath ) {
+    public PathCombination ( Travel prevPath, Travel follPath ) {
         this.prevPath = prevPath;
         this.follPath = follPath;
     }
 
-    public Travel getPrevPath() {
+    public Travel getPrevPath () {
         return prevPath;
     }
 
-    public Travel getFollPath() {
+    public Travel getFollPath () {
         return follPath;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "PathCombination{" +
                 "prevPath=" + prevPath +
                 ", follPath=" + follPath +
                 '}';
     }
 
-    public float getTotalLength() {
+    public float getTotalLength () {
         float prev = ( prevPath != null ) ? prevPath.getTotalLength() : 0;
         float foll = ( follPath != null ) ? follPath.getTotalLength() : 0;
         return prev + foll;
     }
 
-    public long getTotalTime() {
+    public long getTotalTime () {
         long prev = ( prevPath != null ) ? prevPath.getTotalTime() : 0;
         long foll = ( follPath != null ) ? follPath.getTotalTime() : 0;
         return prev + foll;

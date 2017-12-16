@@ -44,7 +44,7 @@ public class PreferenceRESTful {
      * It will be executed before any request is actually performed
      */
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         preferenceManager.setCurrentUser( authenticatedUser );
     }
 
@@ -57,7 +57,7 @@ public class PreferenceRESTful {
      */
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getPreferencesProfiles() {
+    public Response getPreferencesProfiles () {
         return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferencesProfiles() );
     }
 
@@ -71,7 +71,7 @@ public class PreferenceRESTful {
     @Path( "/{id}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getPreferencesProfile( @PathParam( "id" ) long id ) {
+    public Response getPreferencesProfile ( @PathParam( "id" ) long id ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferencesProfile( id ) );
         } catch ( EntityNotFoundException e ) {
@@ -89,7 +89,7 @@ public class PreferenceRESTful {
      */
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response addPreference( AddTypeOfEventMessage typeOfEventMessage ) {
+    public Response addPreference ( AddTypeOfEventMessage typeOfEventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.addTypeOfEvent( typeOfEventMessage ) );
         } catch ( InvalidFieldException e ) {
@@ -107,7 +107,7 @@ public class PreferenceRESTful {
      */
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response modifyPreference( ModifyTypeOfEventMessage typeOfEventMessage ) {
+    public Response modifyPreference ( ModifyTypeOfEventMessage typeOfEventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.modifyTypeOfEvent( typeOfEventMessage ) );
         } catch ( InvalidFieldException e ) {
@@ -127,7 +127,7 @@ public class PreferenceRESTful {
     @Path( "{idPreference}" )
     @DELETE
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response deletePreference( @PathParam( "idPreference" ) long id ) {
+    public Response deletePreference ( @PathParam( "idPreference" ) long id ) {
         try {
             preferenceManager.deleteTypeOfEvent( id );
         } catch ( EntityNotFoundException e ) {
@@ -146,7 +146,7 @@ public class PreferenceRESTful {
     @Path( "/location" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getAllPreferredLocations() {
+    public Response getAllPreferredLocations () {
         return HttpResponseBuilder.buildOkResponse( preferenceManager.getAllPreferredLocations() );
     }
 
@@ -160,7 +160,7 @@ public class PreferenceRESTful {
     @Path( "/location/{locationName}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getPreferredLocation( @PathParam( "locationName" ) String locationName ) {
+    public Response getPreferredLocation ( @PathParam( "locationName" ) String locationName ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferredLocation( locationName ) );
         } catch ( EntityNotFoundException e ) {
@@ -180,7 +180,7 @@ public class PreferenceRESTful {
     @Path( "/location" )
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response addPreferredLocation( PreferredLocationMessage locationMessage ) {
+    public Response addPreferredLocation ( PreferredLocationMessage locationMessage ) {
         try {
             preferenceManager.addPreferredLocation( locationMessage );
         } catch ( InvalidFieldException e ) {
@@ -200,7 +200,7 @@ public class PreferenceRESTful {
     @Path( "/location" )
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response modifyPreferredLocation( PreferredLocationMessage locationMessage ) {
+    public Response modifyPreferredLocation ( PreferredLocationMessage locationMessage ) {
         try {
             preferenceManager.modifyPreferredLocation( locationMessage );
         } catch ( InvalidFieldException e ) {
@@ -221,7 +221,7 @@ public class PreferenceRESTful {
     @Path( "/location/{name}" )
     @DELETE
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response deletePreferredLocation( @PathParam( "name" ) String name ) {
+    public Response deletePreferredLocation ( @PathParam( "name" ) String name ) {
         try {
             preferenceManager.deletePreferredLocation( name );
         } catch ( EntityNotFoundException e ) {

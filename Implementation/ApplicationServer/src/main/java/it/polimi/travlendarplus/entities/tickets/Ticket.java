@@ -21,46 +21,46 @@ public abstract class Ticket extends EntityWithLongKey {
 
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     @JoinColumn( name = "RELATED_TO" )
-    private List< PublicTravelMean > relatedTo;
+    private List < PublicTravelMean > relatedTo;
 
     @Embedded
     private Timestamp lastUpdate;
 
-    public Ticket() {
+    public Ticket () {
         this.lastUpdate = new Timestamp();
     }
 
-    public Ticket( float cost, ArrayList< PublicTravelMean > relatedTo ) {
+    public Ticket ( float cost, ArrayList < PublicTravelMean > relatedTo ) {
         this.cost = cost;
         this.relatedTo = relatedTo;
         this.lastUpdate = new Timestamp();
     }
 
-    public float getCost() {
+    public float getCost () {
         return cost;
     }
 
-    public void setCost( float cost ) {
+    public void setCost ( float cost ) {
         this.cost = cost;
     }
 
-    public List< PublicTravelMean > getRelatedTo() {
+    public List < PublicTravelMean > getRelatedTo () {
         return Collections.unmodifiableList( relatedTo );
     }
 
-    public void setRelatedTo( ArrayList< PublicTravelMean > relatedTo ) {
+    public void setRelatedTo ( ArrayList < PublicTravelMean > relatedTo ) {
         this.relatedTo = relatedTo;
     }
 
-    public void addTravelMean( PublicTravelMean travelMean ) {
+    public void addTravelMean ( PublicTravelMean travelMean ) {
         this.relatedTo.add( travelMean );
     }
 
-    public Timestamp getLastUpdate() {
+    public Timestamp getLastUpdate () {
         return lastUpdate;
     }
 
-    public void setLastUpdate( Timestamp lastUpdate ) {
+    public void setLastUpdate ( Timestamp lastUpdate ) {
         this.lastUpdate = lastUpdate;
     }
 }

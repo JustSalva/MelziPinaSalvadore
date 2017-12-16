@@ -17,27 +17,27 @@ public class DateOfCalendar extends GenericEntity {
 
     //TODO private ArrayList<EnvironmentConditions> conditions;
 
-    public DateOfCalendar() {
+    public DateOfCalendar () {
     }
 
-    public DateOfCalendar( long date ) {
+    public DateOfCalendar ( long date ) {
         this.date = date;
     }
 
-    public static DateOfCalendar load( long key ) throws EntityNotFoundException {
+    public static DateOfCalendar load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( DateOfCalendar.class, key );
     }
 
-    public long getDate() {
+    public long getDate () {
         return date;
     }
 
-    public void setDate( long date ) {
+    public void setDate ( long date ) {
         this.date = date;
     }
 
     @Override
-    public boolean isAlreadyInDb() {
+    public boolean isAlreadyInDb () {
         try {
             load( date );
         } catch ( EntityNotFoundException e ) {

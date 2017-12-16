@@ -8,10 +8,10 @@ public class TravlendarPlusException extends Exception {
 
     private static final long serialVersionUID = -1603342441878689900L;
 
-    public TravlendarPlusException() {
+    public TravlendarPlusException () {
     }
 
-    public TravlendarPlusException(String message) {
-        super(message);
+    public TravlendarPlusException ( String message ) {
+        super( message );
     }
 }

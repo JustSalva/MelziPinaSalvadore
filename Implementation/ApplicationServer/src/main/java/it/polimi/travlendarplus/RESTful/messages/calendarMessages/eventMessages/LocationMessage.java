@@ -10,36 +10,36 @@ public class LocationMessage extends CalendarMessage {
     private double longitude;
     private String address;
 
-    public LocationMessage() {
+    public LocationMessage () {
     }
 
-    public LocationMessage( double latitude, double longitude, String address ) {
+    public LocationMessage ( double latitude, double longitude, String address ) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
     }
 
-    public double getLatitude() {
+    public double getLatitude () {
         return latitude;
     }
 
-    public void setLatitude( double latitude ) {
+    public void setLatitude ( double latitude ) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public double getLongitude () {
         return longitude;
     }
 
-    public void setLongitude( double longitude ) {
+    public void setLongitude ( double longitude ) {
         this.longitude = longitude;
     }
 
-    public String getAddress() {
+    public String getAddress () {
         return address;
     }
 
-    public void setAddress( String address ) {
+    public void setAddress ( String address ) {
         this.address = address;
     }
 }

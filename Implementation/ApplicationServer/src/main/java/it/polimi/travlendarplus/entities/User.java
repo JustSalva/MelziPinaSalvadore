@@ -30,45 +30,45 @@ public class User extends GenericEntity {
 
     @JoinTable( name = "USER_DEVICES" )
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< UserDevice > userDevices;
+    private List < UserDevice > userDevices;
 
     @JoinTable( name = "USER_BREAK_EVENTS" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< BreakEvent > breaks;
+    private List < BreakEvent > breaks;
 
     @JoinTable( name = "USER_EVENTS" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< Event > events;
+    private List < Event > events;
 
     @JoinTable( name = "USER_TICKETS" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< Ticket > heldTickets;
+    private List < Ticket > heldTickets;
 
     @JoinTable( name = "USER_PREFERENCES" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< TypeOfEvent > preferences;
+    private List < TypeOfEvent > preferences;
 
     @JoinTable( name = "USER_PREFERRED_LOCATIONS" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< UserLocation > preferredLocations;
+    private List < UserLocation > preferredLocations;
 
     @Embedded
     private Timestamp lastUpdate;
 
-    public User() {
+    public User () {
         this.lastUpdate = new Timestamp();
-        this.userDevices = new ArrayList< UserDevice >();
-        this.breaks = new ArrayList< BreakEvent >();
-        this.events = new ArrayList< Event >();
-        this.heldTickets = new ArrayList< Ticket >();
-        this.preferences = new ArrayList< TypeOfEvent >();
-        this.preferredLocations = new ArrayList< UserLocation >();
+        this.userDevices = new ArrayList < UserDevice >();
+        this.breaks = new ArrayList < BreakEvent >();
+        this.events = new ArrayList < Event >();
+        this.heldTickets = new ArrayList < Ticket >();
+        this.preferences = new ArrayList < TypeOfEvent >();
+        this.preferredLocations = new ArrayList < UserLocation >();
     }
 
-    public User( String email, String name, String surname, String password,
-                 List< UserDevice > userDevices, List< BreakEvent > breaks, List< Event > events,
-                 List< Ticket > heldTickets, List< TypeOfEvent > preferences,
-                 List< UserLocation > preferredLocations ) {
+    public User ( String email, String name, String surname, String password,
+                  List < UserDevice > userDevices, List < BreakEvent > breaks, List < Event > events,
+                  List < Ticket > heldTickets, List < TypeOfEvent > preferences,
+                  List < UserLocation > preferredLocations ) {
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -83,7 +83,7 @@ public class User extends GenericEntity {
     }
 
     //constructor for user with empty ArrayLists
-    public User( String email, String name, String surname, String password ) {
+    public User ( String email, String name, String surname, String password ) {
         this();
         this.email = email;
         this.name = name;
@@ -91,55 +91,55 @@ public class User extends GenericEntity {
         this.password = password;
     }
 
-    public static User load( String key ) throws EntityNotFoundException {
+    public static User load ( String key ) throws EntityNotFoundException {
         return GenericEntity.load( User.class, key );
     }
 
-    public String getEmail() {
+    public String getEmail () {
         return email;
     }
 
-    public void setEmail( String email ) {
+    public void setEmail ( String email ) {
         this.email = email;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName ( String name ) {
         this.name = name;
     }
 
-    public String getSurname() {
+    public String getSurname () {
         return surname;
     }
 
-    public void setSurname( String surname ) {
+    public void setSurname ( String surname ) {
         this.surname = surname;
     }
 
-    public String getPassword() {
+    public String getPassword () {
         return password;
     }
 
-    public void setPassword( String password ) {
+    public void setPassword ( String password ) {
         this.password = password;
     }
 
-    public List< UserDevice > getUserDevices() {
+    public List < UserDevice > getUserDevices () {
         return userDevices;
     }
 
-    public void setUserDevices( List< UserDevice > userDevices ) {
+    public void setUserDevices ( List < UserDevice > userDevices ) {
         this.userDevices = userDevices;
     }
 
-    public void addUserDevice( String idDevice ) {
+    public void addUserDevice ( String idDevice ) {
         this.userDevices.add( new UserDevice( idDevice, this ) );
     }
 
-    public void removeUserDevice( String idDevice ) {
+    public void removeUserDevice ( String idDevice ) {
         userDevices.removeIf( userDevice -> userDevice.getIdDevice().equals( idDevice ) );
     }
 
@@ -149,7 +149,7 @@ public class User extends GenericEntity {
      * @param idDevice id of the requested UserDevice
      * @return the requested UserDevice class instance or null if it doesn't exist
      */
-    public UserDevice getUserDevice( String idDevice ) {
+    public UserDevice getUserDevice ( String idDevice ) {
         for ( UserDevice userDevice : userDevices ) {
             if ( userDevice.getIdDevice().equals( idDevice ) ) {
                 return userDevice;
@@ -158,92 +158,92 @@ public class User extends GenericEntity {
         return null;
     }
 
-    public Timestamp getLastUpdate() {
+    public Timestamp getLastUpdate () {
         return lastUpdate;
     }
 
-    public void setLastUpdate( Timestamp lastUpdate ) {
+    public void setLastUpdate ( Timestamp lastUpdate ) {
         this.lastUpdate = lastUpdate;
     }
 
-    public List< BreakEvent > getBreaks() {
+    public List < BreakEvent > getBreaks () {
         return Collections.unmodifiableList( breaks );
     }
 
-    public void setBreaks( List< BreakEvent > breaks ) {
+    public void setBreaks ( List < BreakEvent > breaks ) {
         this.breaks = breaks;
     }
 
-    public void addBreak( BreakEvent event ) {
+    public void addBreak ( BreakEvent event ) {
         this.breaks.add( event );
     }
 
-    public void removeBreakEvent( long id ) {
+    public void removeBreakEvent ( long id ) {
         this.breaks.removeIf( event -> event.getId() == id );
     }
 
-    public List< Event > getEvents() {
+    public List < Event > getEvents () {
         return Collections.unmodifiableList( events );
     }
 
-    public void setEvents( List< Event > events ) {
+    public void setEvents ( List < Event > events ) {
         this.events = events;
     }
 
-    public void addEvent( Event event ) {
+    public void addEvent ( Event event ) {
         this.events.add( event );
     }
 
-    public void removeEvent( long id ) {
+    public void removeEvent ( long id ) {
         this.events.removeIf( event -> event.getId() == id );
     }
 
-    public List< Ticket > getHeldTickets() {
+    public List < Ticket > getHeldTickets () {
         return Collections.unmodifiableList( heldTickets );
     }
 
-    public void setHeldTickets( List< Ticket > heldTickets ) {
+    public void setHeldTickets ( List < Ticket > heldTickets ) {
         this.heldTickets = heldTickets;
     }
 
-    public void addTicket( Ticket ticket ) {
+    public void addTicket ( Ticket ticket ) {
         this.heldTickets.add( ticket );
     }
 
-    public List< TypeOfEvent > getPreferences() {
+    public List < TypeOfEvent > getPreferences () {
         return Collections.unmodifiableList( preferences );
     }
 
-    public void setPreferences( List< TypeOfEvent > preferences ) {
+    public void setPreferences ( List < TypeOfEvent > preferences ) {
         this.preferences = preferences;
     }
 
-    public void addPreference( TypeOfEvent preference ) {
+    public void addPreference ( TypeOfEvent preference ) {
         this.preferences.add( preference );
     }
 
-    public void removePreference( long id ) {
+    public void removePreference ( long id ) {
         preferences.removeIf( typeOfEvent -> typeOfEvent.getId() == id );
     }
 
-    public List< UserLocation > getPreferredLocations() {
+    public List < UserLocation > getPreferredLocations () {
         return Collections.unmodifiableList( preferredLocations );
     }
 
-    public void setPreferredLocations( List< UserLocation > preferredLocations ) {
+    public void setPreferredLocations ( List < UserLocation > preferredLocations ) {
         this.preferredLocations = preferredLocations;
     }
 
-    public void addLocation( String name, Location location ) {
+    public void addLocation ( String name, Location location ) {
         this.preferredLocations.add( new UserLocation( name, location ) );
     }
 
-    public void removeLocation( String name ) {
+    public void removeLocation ( String name ) {
         preferredLocations.removeIf( userLocation -> userLocation.getName().equals( name ) );
     }
 
     @Override
-    public boolean isAlreadyInDb() {
+    public boolean isAlreadyInDb () {
         try {
             load( email );
         } catch ( EntityNotFoundException e ) {

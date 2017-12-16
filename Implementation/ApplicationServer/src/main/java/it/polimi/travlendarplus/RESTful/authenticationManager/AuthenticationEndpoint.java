@@ -24,7 +24,7 @@ import java.util.List;
 public class AuthenticationEndpoint {
     //TODO encryption of the messages!!!
 
-    protected static User loadUser( String email ) throws UserNotRegisteredException {
+    protected static User loadUser ( String email ) throws UserNotRegisteredException {
         User user;
         try {
             user = User.load( email );
@@ -47,7 +47,7 @@ public class AuthenticationEndpoint {
     @POST
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response register( RegistrationForm registrationForm ) {
+    public Response register ( RegistrationForm registrationForm ) {
         User userToBeRegistered;
         try {
             checkRegistrationForm( registrationForm );
@@ -84,7 +84,7 @@ public class AuthenticationEndpoint {
     @POST
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response submitLogin( Credentials credentials ) {
+    public Response submitLogin ( Credentials credentials ) {
         User user;
         try {
             checkCredentials( credentials );
@@ -120,7 +120,7 @@ public class AuthenticationEndpoint {
     @PATCH
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response editProfile( RegistrationForm updatedUserInfo ) {
+    public Response editProfile ( RegistrationForm updatedUserInfo ) {
         try {
             checkRegistrationForm( updatedUserInfo );
         } catch ( InvalidFieldException e ) {
@@ -153,7 +153,7 @@ public class AuthenticationEndpoint {
      */
     @Path( "/manage-user/{ email }/{ pws }" ) //nb DELETE HTTP method cannot contain a body
     @DELETE
-    public Response deleteProfile( @PathParam( "email" ) String email, @PathParam( "pws" ) String password ) {
+    public Response deleteProfile ( @PathParam( "email" ) String email, @PathParam( "pws" ) String password ) {
         //TODO timeout of tot days or email confirm?
         //TODO password decrypt
         User user;
@@ -179,13 +179,13 @@ public class AuthenticationEndpoint {
      * @throws InvalidCredentialsException if not exist an user with the specified credentials
      * @throws UserNotRegisteredException  if the user credential specified are not registered in the system
      */
-    private User authenticate( String email, String password ) throws InvalidCredentialsException, UserNotRegisteredException {
+    private User authenticate ( String email, String password ) throws InvalidCredentialsException, UserNotRegisteredException {
         User userToBeAuthenticated = loadUser( email );
         authenticate( userToBeAuthenticated, password );
         return userToBeAuthenticated;
     }
 
-    private String issueToken( User user, String idDevice ) {
+    private String issueToken ( User user, String idDevice ) {
         // Issue a token (can be a random String persisted to a database or a JWT token)
         // The issued token must be associated to a user
         // Return the issued token
@@ -206,22 +206,22 @@ public class AuthenticationEndpoint {
         return user.getUserDevice( idDevice ).getUnivocalCode();
     }
 
-    private Response buildResponseToken( String token ) {
+    private Response buildResponseToken ( String token ) {
         return HttpResponseBuilder.buildOkResponse( new TokenResponse( token ) );
     }
 
-    private Response buildLoginTokenResponse( String token, User user ) {
+    private Response buildLoginTokenResponse ( String token, User user ) {
         return HttpResponseBuilder.buildOkResponse( new LoginResponse( token, user.getName(), user.getSurname() ) );
     }
 
-    private void authenticate( User userToBeAuthenticated, String password ) throws InvalidCredentialsException {
+    private void authenticate ( User userToBeAuthenticated, String password ) throws InvalidCredentialsException {
         if ( !userToBeAuthenticated.getPassword().equals( password ) ) {
             throw new InvalidCredentialsException();
         }
     }
 
-    private void checkRegistrationForm( RegistrationForm registrationForm ) throws InvalidFieldException {
-        List< String > registrationErrors = new ArrayList<>();
+    private void checkRegistrationForm ( RegistrationForm registrationForm ) throws InvalidFieldException {
+        List < String > registrationErrors = new ArrayList <>();
         if ( registrationForm.getName() == null ) {
             registrationErrors.add( "name" );
         }
@@ -239,8 +239,8 @@ public class AuthenticationEndpoint {
         }
     }
 
-    private void checkCredentials( Credentials credentials ) throws InvalidFieldException {
-        List< String > credentialErrors = new ArrayList<>();
+    private void checkCredentials ( Credentials credentials ) throws InvalidFieldException {
+        List < String > credentialErrors = new ArrayList <>();
         try {
             // Create InternetAddress object and validated the supplied
             // address which is this case is an email address.

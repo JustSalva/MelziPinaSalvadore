@@ -12,36 +12,36 @@ public class PeriodMessage extends CalendarMessage {
     private Instant endingDay;
     private int deltaDays;
 
-    public PeriodMessage() {
+    public PeriodMessage () {
     }
 
-    public PeriodMessage( Instant startingDay, Instant endingDay, int deltaDays ) {
+    public PeriodMessage ( Instant startingDay, Instant endingDay, int deltaDays ) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
     }
 
-    public Instant getStartingDay() {
+    public Instant getStartingDay () {
         return startingDay;
     }
 
-    public void setStartingDay( Instant startingDay ) {
+    public void setStartingDay ( Instant startingDay ) {
         this.startingDay = startingDay;
     }
 
-    public Instant getEndingDay() {
+    public Instant getEndingDay () {
         return endingDay;
     }
 
-    public void setEndingDay( Instant endingDay ) {
+    public void setEndingDay ( Instant endingDay ) {
         this.endingDay = endingDay;
     }
 
-    public int getDeltaDays() {
+    public int getDeltaDays () {
         return deltaDays;
     }
 
-    public void setDeltaDays( int deltaDays ) {
+    public void setDeltaDays ( int deltaDays ) {
         this.deltaDays = deltaDays;
     }
 }

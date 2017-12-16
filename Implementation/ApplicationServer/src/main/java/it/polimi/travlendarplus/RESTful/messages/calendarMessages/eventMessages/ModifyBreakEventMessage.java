@@ -9,29 +9,29 @@ public class ModifyBreakEventMessage extends AddBreakEventMessage {
     private long eventId;
     private boolean propagateToPeriodicEvents;
 
-    public ModifyBreakEventMessage() {
+    public ModifyBreakEventMessage () {
     }
 
-    public ModifyBreakEventMessage( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
-                                    long minimumTime, long eventId, boolean propagateToPeriodicEvents ) {
+    public ModifyBreakEventMessage ( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity,
+                                     long minimumTime, long eventId, boolean propagateToPeriodicEvents ) {
         super( name, startingTime, endingTime, periodicity, minimumTime );
         this.eventId = eventId;
         this.propagateToPeriodicEvents = propagateToPeriodicEvents;
     }
 
-    public long getEventId() {
+    public long getEventId () {
         return eventId;
     }
 
-    public void setEventId( long eventId ) {
+    public void setEventId ( long eventId ) {
         this.eventId = eventId;
     }
 
-    public boolean isPropagateToPeriodicEvents() {
+    public boolean isPropagateToPeriodicEvents () {
         return propagateToPeriodicEvents;
     }
 
-    public void setPropagateToPeriodicEvents( boolean propagateToPeriodicEvents ) {
+    public void setPropagateToPeriodicEvents ( boolean propagateToPeriodicEvents ) {
         this.propagateToPeriodicEvents = propagateToPeriodicEvents;
     }
 }

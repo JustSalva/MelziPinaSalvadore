@@ -16,12 +16,12 @@ public class PublicKeyTimer implements PublicKeyTimerInterface {
     private @Resource
     SessionContext ctx;
 
-    public void scheduleSingleTimer( RSAEncryption rsaEncryption ) {
+    public void scheduleSingleTimer ( RSAEncryption rsaEncryption ) {
         ctx.getTimerService().createTimer( TIMER_MILLISECONDS_DURATION, rsaEncryption.getIdDevice() );
     }
 
     @Timeout
-    public void timeoutHandler( Timer timer ) {
+    public void timeoutHandler ( Timer timer ) {
         RSAEncryption rsaEncryption;
         String idDevice = ( String ) timer.getInfo();
         try {

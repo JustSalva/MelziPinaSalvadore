@@ -6,16 +6,16 @@ public class InvalidFieldException extends CalendarException {
 
     private static final long serialVersionUID = 127086253559991638L;
 
-    List< String > invalidFields;
+    List < String > invalidFields;
 
-    public InvalidFieldException() {
+    public InvalidFieldException () {
     }
 
-    public InvalidFieldException( List< String > invalidFields ) {
+    public InvalidFieldException ( List < String > invalidFields ) {
         this.invalidFields = invalidFields;
     }
 
-    public List< String > getInvalidFields() {
+    public List < String > getInvalidFields () {
         return invalidFields;
     }
 }

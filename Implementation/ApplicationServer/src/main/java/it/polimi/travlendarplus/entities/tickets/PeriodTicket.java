@@ -27,11 +27,11 @@ public class PeriodTicket extends Ticket {
     @JoinColumn( name = "PERIODICAL_TICKET" )
     private Ticket decorator;
 
-    public PeriodTicket() {
+    public PeriodTicket () {
     }
 
-    public PeriodTicket( float cost, ArrayList< PublicTravelMean > relatedTo, String name,
-                         Instant startingDate, Instant endingDate, Ticket decorator ) {
+    public PeriodTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, String name,
+                          Instant startingDate, Instant endingDate, Ticket decorator ) {
         super( cost, relatedTo );
         this.name = name;
         this.startingDate = startingDate;
@@ -39,31 +39,31 @@ public class PeriodTicket extends Ticket {
         this.decorator = decorator;
     }
 
-    public static PeriodTicket load( long key ) throws EntityNotFoundException {
+    public static PeriodTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PeriodTicket.class, key );
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName ( String name ) {
         this.name = name;
     }
 
-    public Instant getStartingDate() {
+    public Instant getStartingDate () {
         return startingDate;
     }
 
-    public void setStartingDate( Instant startingDate ) {
+    public void setStartingDate ( Instant startingDate ) {
         this.startingDate = startingDate;
     }
 
-    public Instant getEndingDate() {
+    public Instant getEndingDate () {
         return endingDate;
     }
 
-    public void setEndingDate( Instant endingDate ) {
+    public void setEndingDate ( Instant endingDate ) {
         this.endingDate = endingDate;
     }
 }

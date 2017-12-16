@@ -10,10 +10,10 @@ public class InvalidTokenException extends TravlendarPlusException {
 
     private static final long serialVersionUID = -3276042348718545662L;
 
-    public InvalidTokenException() {
+    public InvalidTokenException () {
     }
 
-    public InvalidTokenException( String message ) {
+    public InvalidTokenException ( String message ) {
         super( message );
     }
 }

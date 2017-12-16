@@ -19,37 +19,37 @@ public class DistanceConstraint extends Constraint {
     @Column( name = "MAX_LENGTH" )
     private int maxLength;
 
-    public DistanceConstraint( TravelMeanEnum concerns, int minLength, int maxLength ) {
+    public DistanceConstraint ( TravelMeanEnum concerns, int minLength, int maxLength ) {
         super( concerns );
         this.minLength = minLength;
         this.maxLength = maxLength;
     }
 
-    public DistanceConstraint() {
+    public DistanceConstraint () {
     }
 
-    public static DistanceConstraint load( long key ) throws EntityNotFoundException {
+    public static DistanceConstraint load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( DistanceConstraint.class, key );
     }
 
-    public int getMinLength() {
+    public int getMinLength () {
         return minLength;
     }
 
-    public void setMinLength( int minLength ) {
+    public void setMinLength ( int minLength ) {
         this.minLength = minLength;
     }
 
-    public int getMaxLength() {
+    public int getMaxLength () {
         return maxLength;
     }
 
-    public void setMaxLength( int maxLength ) {
+    public void setMaxLength ( int maxLength ) {
         this.maxLength = maxLength;
     }
 
     @Override
-    public boolean respectConstraint( TravelComponent travelComponent ) {
+    public boolean respectConstraint ( TravelComponent travelComponent ) {
         return travelComponent.getLength() >= minLength && travelComponent.getLength() <= maxLength;
     }
 }

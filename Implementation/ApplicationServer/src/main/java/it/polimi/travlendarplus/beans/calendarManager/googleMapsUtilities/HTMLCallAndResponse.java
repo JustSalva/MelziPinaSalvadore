@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class HTMLCallAndResponse {
 
-    public static JSONObject performCall( String urlString ) {
+    public static JSONObject performCall ( String urlString ) {
         String html = "";
 
         try {

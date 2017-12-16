@@ -3,7 +3,6 @@ package it.polimi.travlendarplus.beans.emailManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.MailPasswordForwardingFailedException;
 
-import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -13,25 +12,24 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-
 import java.security.SecureRandom;
+import java.util.Properties;
 
 /**
  * It provide functionalities to send emails from travlendar plus proprietary email
  */
 @Startup
 @Singleton
-public class EmailSender implements EmailInterface{
+public class EmailSender implements EmailInterface {
 
     private static String SMTP = "smtp";
     private static String HOST = "smtp.gmail.com";
     private static String TRUE = "true";
     private static String PORT = "587";
-    private static String SMTP_PORT= "mail.smtp.port";
-    private static String SMTP_AUTH= "mail.smtp.auth";
-    private static String SMTP_TLS_ENABLE= "mail.smtp.starttls.enable";
-    private static String SMTP_SSL_TRUST= "mail.smtp.ssl.trust";
+    private static String SMTP_PORT = "mail.smtp.port";
+    private static String SMTP_AUTH = "mail.smtp.auth";
+    private static String SMTP_TLS_ENABLE = "mail.smtp.starttls.enable";
+    private static String SMTP_SSL_TRUST = "mail.smtp.ssl.trust";
 
     private static String SUBJECT_RESET_PASSWORD = "Travlendar plus - Password Reset";
     private static String BODY_RESET_PASSWORD = "Hi, <br><br> this is your new password: <br>";
@@ -44,8 +42,17 @@ public class EmailSender implements EmailInterface{
 
     private static Properties mailServerProperties;
 
+    public static void main ( String[] args ) {
+        EmailSender emailSender = new EmailSender();
+        try {
+            emailSender.sendNewPasswordEmail( "password", "matteo.salvadore@gmail.com" );
+        } catch ( MessagingException e ) {
+            e.printStackTrace();
+        }
+    }
+
     @PostConstruct
-    public void setUP(){
+    public void setUP () {
         mailServerProperties = System.getProperties();
         mailServerProperties.put( SMTP_PORT, PORT );
         mailServerProperties.put( SMTP_AUTH, TRUE );
@@ -55,7 +62,8 @@ public class EmailSender implements EmailInterface{
 
     /**
      * It sends an email containing the new password of an user
-     * @param password new password of the recipient user
+     *
+     * @param password       new password of the recipient user
      * @param emailRecipient email address of the user which password is to be sent
      * @throws MessagingException if the email forwarding process fails
      */
@@ -68,23 +76,24 @@ public class EmailSender implements EmailInterface{
         generateMailMessage.setSubject( SUBJECT_RESET_PASSWORD );
         //TODO better-looking email?
         String emailBody = BODY_RESET_PASSWORD + password + BODY_SIGNATURE;
-        generateMailMessage.setContent(emailBody, TEXT_HTML);
-        Transport transport = getMailSession.getTransport(SMTP);
+        generateMailMessage.setContent( emailBody, TEXT_HTML );
+        Transport transport = getMailSession.getTransport( SMTP );
 
-        transport.connect(HOST, TRAVLENDAR_MAIL, PWS);
-        transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+        transport.connect( HOST, TRAVLENDAR_MAIL, PWS );
+        transport.sendMessage( generateMailMessage, generateMailMessage.getAllRecipients() );
         transport.close();
     }
 
     /**
      * Compute and send a new email to the specified user
+     *
      * @param user user that wants to reset his password
      * @throws MailPasswordForwardingFailedException if the email forwarding process fails
      */
-    public void sendNewCredentials ( User user ) throws MailPasswordForwardingFailedException{
+    public void sendNewCredentials ( User user ) throws MailPasswordForwardingFailedException {
         SecureRandom secureRandom = new SecureRandom();
         long longToken = Math.abs( secureRandom.nextLong() );
-        String newPassword = Long.toString( longToken, 25);
+        String newPassword = Long.toString( longToken, 25 );
         user.setPassword( newPassword );
 
         try {
@@ -94,14 +103,5 @@ public class EmailSender implements EmailInterface{
         }
 
         user.save();
-    }
-
-    public static void main (String[] args ) {
-        EmailSender emailSender = new EmailSender();
-        try {
-            emailSender.sendNewPasswordEmail( "password", "matteo.salvadore@gmail.com" );
-        } catch ( MessagingException e ) {
-            e.printStackTrace();
-        }
     }
 }

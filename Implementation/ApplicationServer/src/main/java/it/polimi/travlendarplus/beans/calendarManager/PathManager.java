@@ -32,33 +32,33 @@ public class PathManager extends UserManager {
     PreferenceManager preferenceManager;
 
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         scheduleManager.setCurrentUser( currentUser );
         preferenceManager.setCurrentUser( currentUser );
     }
 
-    public PathCombination calculatePath( Event event, ArrayList< TravelMeanEnum > privateMeans,
-                                          ArrayList< TravelMeanEnum > publicMeans ) {
+    public PathCombination calculatePath ( Event event, ArrayList < TravelMeanEnum > privateMeans,
+                                           ArrayList < TravelMeanEnum > publicMeans ) {
         scheduleManager.setSchedule( event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         // Obtaining possible paths that don't overlap with previous and following scheduled events.
-        List< Travel > previousPaths = getPreviousTravels( event, privateMeans, publicMeans );
-        List< Travel > followingPaths = getFollowingTravels( event, privateMeans, publicMeans );
+        List < Travel > previousPaths = getPreviousTravels( event, privateMeans, publicMeans );
+        List < Travel > followingPaths = getFollowingTravels( event, privateMeans, publicMeans );
         // Filtering obtained paths according to constraints defined
         previousPaths = previousPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
                 .collect( Collectors.toList() );
         followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
                 .collect( Collectors.toList() );
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
-        ArrayList< PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
+        ArrayList < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
                 previousPaths, followingPaths );
         return ( !possibleCombinations.isEmpty() ) ? preferenceManager.findBestpath(
                 possibleCombinations, event.getType() )
                 : null;
     }
 
-    private ArrayList< Travel > getPreviousTravels( Event event, List< TravelMeanEnum > privateMeans,
-                                                    List< TravelMeanEnum > publicMeans ) {
-        ArrayList< Travel > possiblePaths = new ArrayList< Travel >();
+    private ArrayList < Travel > getPreviousTravels ( Event event, List < TravelMeanEnum > privateMeans,
+                                                      List < TravelMeanEnum > publicMeans ) {
+        ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
         if ( event.isPrevLocChoice() )
@@ -75,9 +75,9 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
-    private ArrayList< Travel > getFollowingTravels( Event event, List< TravelMeanEnum > privateMeans,
-                                                     List< TravelMeanEnum > publicMeans ) {
-        ArrayList< Travel > possiblePaths = new ArrayList< Travel >();
+    private ArrayList < Travel > getFollowingTravels ( Event event, List < TravelMeanEnum > privateMeans,
+                                                       List < TravelMeanEnum > publicMeans ) {
+        ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event following = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
         if ( following == null )
@@ -98,11 +98,11 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
-    private ArrayList< Travel > possiblePathsAdder( String baseCall, List< TravelMeanEnum > privateMeans,
-                                                    List< TravelMeanEnum > publicMeans, Event eventA, Event eventB,
-                                                    boolean sameLoc )
+    private ArrayList < Travel > possiblePathsAdder ( String baseCall, List < TravelMeanEnum > privateMeans,
+                                                      List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
+                                                      boolean sameLoc )
             throws GMapsGeneralException {
-        ArrayList< Travel > possiblePaths = new ArrayList< Travel >();
+        ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         if ( !privateMeans.isEmpty() ) {
             privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
         }
@@ -112,15 +112,15 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
-    private void privatePathsHandler( List< Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
-                                      List< TravelMeanEnum > privateMeans, boolean sameLoc )
+    private void privatePathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
+                                       List < TravelMeanEnum > privateMeans, boolean sameLoc )
             throws GMapsGeneralException {
         GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( sameLoc )
             privateMeans = privateMeansSameLoc( privateMeans );
         for ( TravelMeanEnum mean : privateMeans ) {
-            ArrayList< Travel > privatePaths = new ArrayList< Travel >();
+            ArrayList < Travel > privatePaths = new ArrayList < Travel >();
             try {
                 JSONObject privatePathJSON = HTMLCallAndResponse.performCall(
                         directionsHandler.getCallWithNoTransit( baseCall, mean ) );
@@ -144,14 +144,14 @@ public class PathManager extends UserManager {
         }
     }
 
-    private void publicPathsHandler( List< Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
-                                     List< TravelMeanEnum > publicMeans, boolean sameLoc )
+    private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
+                                      List < TravelMeanEnum > publicMeans, boolean sameLoc )
             throws GMapsGeneralException {
         GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( !sameLoc ) { // If departure location is the same of arrival location, the path can be done only
             // with private means.
-            ArrayList< Travel > publicPaths = new ArrayList< Travel >();
+            ArrayList < Travel > publicPaths = new ArrayList < Travel >();
             try {
                 JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(
                         directionsHandler.getCallByTransit( baseCall, publicMeans ) );
@@ -165,7 +165,7 @@ public class PathManager extends UserManager {
         }
     }
 
-    private boolean travelFeasibleInTimeslot( Event eventA, Event eventB, Travel travel ) {
+    private boolean travelFeasibleInTimeslot ( Event eventA, Event eventB, Travel travel ) {
         if ( eventA == null ) {
             return true;
         }
@@ -173,22 +173,22 @@ public class PathManager extends UserManager {
                 ( eventB.isTravelAtLastChoice() && !travel.getStartingTime().isBefore( eventA.getEndingTime() ) );
     }
 
-    private boolean isBetweenSameLocations( Event event ) {
+    private boolean isBetweenSameLocations ( Event event ) {
         return event.getDeparture().getLatitude() == event.getEventLocation().getLatitude() &&
                 event.getDeparture().getLongitude() == event.getEventLocation().getLongitude();
     }
 
-    public ArrayList< GenericEvent > swapEvents( Event forcedEvent, ArrayList< TravelMeanEnum > privateMeans,
-                                                 ArrayList< TravelMeanEnum > publicMeans ) {
+    public ArrayList < GenericEvent > swapEvents ( Event forcedEvent, ArrayList < TravelMeanEnum > privateMeans,
+                                                   ArrayList < TravelMeanEnum > publicMeans ) {
         scheduleManager.setSchedule( forcedEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
-        List< GenericEvent > swapOutEvents = new ArrayList< GenericEvent >();
-        ArrayList< PathCombination > combs = new ArrayList< PathCombination >();
+        List < GenericEvent > swapOutEvents = new ArrayList < GenericEvent >();
+        ArrayList < PathCombination > combs = new ArrayList < PathCombination >();
         firstSwapPhase( forcedEvent, swapOutEvents );
         // Calculating prev/foll path for the forcedEvent.
         boolean complete = false;
         while ( !complete && !scheduleManager.getSchedule().getEvents().isEmpty() ) {
-            List< Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
-            List< Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
+            List < Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
+            List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
                     .collect( Collectors.toList() );
             foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
@@ -221,9 +221,9 @@ public class PathManager extends UserManager {
         return best != null ? conclusionForSwap( best, forcedEvent, swapOutEvents ) : null;
     }
 
-    private ArrayList< GenericEvent > conclusionForSwap( PathCombination best, Event forcedEvent,
-                                                         List< GenericEvent > swapOut ) {
-        ArrayList< GenericEvent > response = new ArrayList< GenericEvent >();
+    private ArrayList < GenericEvent > conclusionForSwap ( PathCombination best, Event forcedEvent,
+                                                           List < GenericEvent > swapOut ) {
+        ArrayList < GenericEvent > response = new ArrayList < GenericEvent >();
         // Updating swap out events into DB removing scheduled param and path.
         for ( GenericEvent genEv : swapOut ) {
             genEv.setScheduled( false );
@@ -246,7 +246,7 @@ public class PathManager extends UserManager {
         return response;
     }
 
-    private BreakEvent breakToRemove( Event forcedEvent ) {
+    private BreakEvent breakToRemove ( Event forcedEvent ) {
         if ( scheduleManager.getSchedule().getBreaks().isEmpty() )
             return null;
         BreakEvent toRemove = scheduleManager.getSchedule().getBreaks().get( 0 );
@@ -258,7 +258,7 @@ public class PathManager extends UserManager {
     }
 
     // Removing events that overlap with forcedEvent
-    private void firstSwapPhase( Event forcedEvent, List< GenericEvent > swapOutEvents ) {
+    private void firstSwapPhase ( Event forcedEvent, List < GenericEvent > swapOutEvents ) {
         for ( Event event : scheduleManager.getSchedule().getEvents() )
             if ( !scheduleManager.areEventsOverlapFree( event, forcedEvent ) )
                 swapOutEvents.add( event );
@@ -266,8 +266,8 @@ public class PathManager extends UserManager {
             scheduleManager.getSchedule().removeSpecEvent( ( Event ) event );
     }
 
-    private ArrayList< TravelMeanEnum > privateMeansSameLoc( List< TravelMeanEnum > privateMeans ) {
-        ArrayList< TravelMeanEnum > copy = new ArrayList< TravelMeanEnum >();
+    private ArrayList < TravelMeanEnum > privateMeansSameLoc ( List < TravelMeanEnum > privateMeans ) {
+        ArrayList < TravelMeanEnum > copy = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : privateMeans )
             if ( !mean.getParam().equals( "driving" ) )
                 copy.add( mean );
@@ -277,7 +277,7 @@ public class PathManager extends UserManager {
     }
 
     @Override
-    public void setCurrentUser( User currentUser ) {
+    public void setCurrentUser ( User currentUser ) {
         this.currentUser = currentUser;
         this.scheduleManager.setCurrentUser( currentUser );
         this.preferenceManager.setCurrentUser( currentUser );

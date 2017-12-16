@@ -9,18 +9,18 @@ public abstract class AddConstraintMessage extends CalendarMessage {
 
     private TravelMeanEnum concerns;
 
-    public AddConstraintMessage() {
+    public AddConstraintMessage () {
     }
 
-    public AddConstraintMessage( TravelMeanEnum concerns ) {
+    public AddConstraintMessage ( TravelMeanEnum concerns ) {
         this.concerns = concerns;
     }
 
-    public TravelMeanEnum getConcerns() {
+    public TravelMeanEnum getConcerns () {
         return concerns;
     }
 
-    public void setConcerns( TravelMeanEnum concerns ) {
+    public void setConcerns ( TravelMeanEnum concerns ) {
         this.concerns = concerns;
     }
 }

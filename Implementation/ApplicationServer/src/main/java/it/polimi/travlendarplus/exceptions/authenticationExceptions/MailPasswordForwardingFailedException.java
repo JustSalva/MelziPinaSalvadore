@@ -4,10 +4,10 @@ public class MailPasswordForwardingFailedException extends AuthenticationExcepti
 
     private static final long serialVersionUID = -2057701012575125049L;
 
-    public MailPasswordForwardingFailedException() {
+    public MailPasswordForwardingFailedException () {
     }
 
-    public MailPasswordForwardingFailedException( String message ) {
+    public MailPasswordForwardingFailedException ( String message ) {
         super( message );
     }
 }

@@ -41,7 +41,7 @@ public class ScheduleRESTful {
      * It will be executed before any request is actually performed
      */
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         scheduleManager.setCurrentUser( authenticatedUser );
     }
 
@@ -55,7 +55,7 @@ public class ScheduleRESTful {
     @Path( "{day}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getDailySchedule( @PathParam( "day" ) long day ) {
+    public Response getDailySchedule ( @PathParam( "day" ) long day ) {
         return HttpResponseBuilder.buildOkResponse( scheduleManager.getScheduleByDay( day ) );
     }
 
@@ -70,7 +70,7 @@ public class ScheduleRESTful {
     @Path( "{idEvent}" )
     @PATCH
     @Produces( MediaType.APPLICATION_JSON )
-    public Response swapSchedule( @PathParam( "idEvent" ) long id ) {   //TODO
+    public Response swapSchedule ( @PathParam( "idEvent" ) long id ) {   //TODO
         try {
             return HttpResponseBuilder.buildOkResponse( scheduleManager.swapEvents( id ) );
         } catch ( EntityNotFoundException e ) {

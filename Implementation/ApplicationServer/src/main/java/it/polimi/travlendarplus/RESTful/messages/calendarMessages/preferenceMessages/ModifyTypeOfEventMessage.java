@@ -11,19 +11,19 @@ public class ModifyTypeOfEventMessage extends AddTypeOfEventMessage {
 
     private long id;
 
-    public ModifyTypeOfEventMessage() {
+    public ModifyTypeOfEventMessage () {
     }
 
-    public ModifyTypeOfEventMessage( String name, ParamFirstPath paramFirstPath, List< AddPeriodConstraintMessage > limitedByPeriod, List< AddDistanceConstraintMessage > limitedByDistance, List< TravelMeanEnum > deactivate, long id ) {
+    public ModifyTypeOfEventMessage ( String name, ParamFirstPath paramFirstPath, List < AddPeriodConstraintMessage > limitedByPeriod, List < AddDistanceConstraintMessage > limitedByDistance, List < TravelMeanEnum > deactivate, long id ) {
         super( name, paramFirstPath, limitedByPeriod, limitedByDistance, deactivate );
         this.id = id;
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public void setId( long id ) {
+    public void setId ( long id ) {
         this.id = id;
     }
 }

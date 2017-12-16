@@ -18,55 +18,55 @@ import java.util.ArrayList;
 
 public class GMapsJSONReader {
 
-    public static String getStatus( JSONObject response ) {
+    public static String getStatus ( JSONObject response ) {
         return response.getString( "status" );
     }
 
-    private static JSONArray getRoutes( JSONObject response ) {
+    private static JSONArray getRoutes ( JSONObject response ) {
         return response.getJSONArray( "routes" );
     }
 
     //for the use in T+ we have only an element in legs[]
-    private static JSONObject getLegs( JSONObject singleRoute ) {
+    private static JSONObject getLegs ( JSONObject singleRoute ) {
         return singleRoute.getJSONArray( "legs" ).getJSONObject( 0 );
     }
 
-    private static String getOverviewPoliline( JSONObject singleRoute ) {
+    private static String getOverviewPoliline ( JSONObject singleRoute ) {
         return singleRoute.getString( "overview_polyline" );
     }
 
-    private static JSONObject getBounds( JSONObject singleRoute ) {
+    private static JSONObject getBounds ( JSONObject singleRoute ) {
         return singleRoute.getJSONObject( "bounds" );
     }
 
-    private static JSONArray getSteps( JSONObject singleRoute ) {
+    private static JSONArray getSteps ( JSONObject singleRoute ) {
         return getLegs( singleRoute ).getJSONArray( "steps" );
     }
 
-    private static int getTotDistanceInMeters( JSONObject singleRoute ) {
+    private static int getTotDistanceInMeters ( JSONObject singleRoute ) {
         return getLegs( singleRoute ).getJSONObject( "distance" ).getInt( "value" );
     }
 
-    private static int getTotDurationInSeconds( JSONObject singleRoute ) {
+    private static int getTotDurationInSeconds ( JSONObject singleRoute ) {
         return getLegs( singleRoute ).getJSONObject( "duration" ).getInt( "value" );
     }
 
-    private static int getDurationInTrafficInSeconds( JSONObject singleRoute ) {
+    private static int getDurationInTrafficInSeconds ( JSONObject singleRoute ) {
         return getLegs( singleRoute ).getJSONObject( "duration_in_traffic" ).getInt( "value" );
     }
 
-    private static int getSingleDistanceInMeters( JSONObject singleStep ) {
+    private static int getSingleDistanceInMeters ( JSONObject singleStep ) {
         return singleStep.getJSONObject( "distance" ).getInt( "value" );
     }
 
     //getTransitDetails() is called in case of TRANSIT call.
     //The only case in which no "transit_details" are given is when there is a WALKING step
     //in this case a JSONException is thrown.
-    private static JSONObject getTransitDetails( JSONObject singleStep ) {
+    private static JSONObject getTransitDetails ( JSONObject singleStep ) {
         return singleStep.getJSONObject( "transit_details" );
     }
 
-    private static Location getSingleArrivalStop( JSONObject singleStep ) {
+    private static Location getSingleArrivalStop ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -81,7 +81,7 @@ public class GMapsJSONReader {
                 forName.getString( "name" ) );
     }
 
-    private static Location getSingleDepartureStop( JSONObject singleStep ) {
+    private static Location getSingleDepartureStop ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -100,7 +100,7 @@ public class GMapsJSONReader {
     // due to getTransitDetails() function, the parameters are taken from a different position in JSONObject.
     // The only difference is that departure time is setted to 0 and arrival time contains the duration in time!!!
 
-    private static long getSingleArrivalTimeInUnix( JSONObject singleStep ) {
+    private static long getSingleArrivalTimeInUnix ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -110,7 +110,7 @@ public class GMapsJSONReader {
         return transitDetails.getJSONObject( "arrival_time" ).getLong( "value" );
     }
 
-    private static long getSingleDepartureTimeInUnix( JSONObject singleStep ) {
+    private static long getSingleDepartureTimeInUnix ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -120,7 +120,7 @@ public class GMapsJSONReader {
         return transitDetails.getJSONObject( "departure_time" ).getLong( "value" );
     }
 
-    private static String getSingleLineName( JSONObject singleStep ) {
+    private static String getSingleLineName ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -134,7 +134,7 @@ public class GMapsJSONReader {
         }
     }
 
-    private static String getSingleVehicleType( JSONObject singleStep ) {
+    private static String getSingleVehicleType ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -144,7 +144,7 @@ public class GMapsJSONReader {
         return transitDetails.getJSONObject( "line" ).getJSONObject( "vehicle" ).getString( "type" );
     }
 
-    private static TravelMeanEnum getProperTravelMeanEnum( String vehicleType ) {
+    private static TravelMeanEnum getProperTravelMeanEnum ( String vehicleType ) {
         switch ( vehicleType ) {
             case "RAIL":
             case "MONORAIL":
@@ -170,12 +170,12 @@ public class GMapsJSONReader {
 
     // It creates a Travel with only one TravelComponent, related to NO_TRANSIT and NO_SHARING TravelMean of the specified type.
     // Boolean departure is used to specify if travelTime refers to departure: if FALSE it refers to arrival.
-    public ArrayList< Travel > getTravelNoTransitMeans( JSONObject response, TravelMeanEnum type,
-                                                        long travelTime, boolean departure,
-                                                        Location depLoc, Location arrLoc )
+    public ArrayList < Travel > getTravelNoTransitMeans ( JSONObject response, TravelMeanEnum type,
+                                                          long travelTime, boolean departure,
+                                                          Location depLoc, Location arrLoc )
             throws GMapsGeneralException {
 
-        ArrayList< Travel > possiblePaths = new ArrayList< Travel >();
+        ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
 
         if ( getStatus( response ).equals( "OK" ) || getStatus( response ).equals( "ZERO_RESULTS" ) ) {
             JSONArray routes = getRoutes( response );
@@ -196,7 +196,7 @@ public class GMapsJSONReader {
 
                 TravelComponent component = new TravelComponent( startingTime, endingTime,
                         lengthInKm, depLoc, arrLoc, mean );
-                ArrayList< TravelComponent > listTC = new ArrayList< TravelComponent >();
+                ArrayList < TravelComponent > listTC = new ArrayList < TravelComponent >();
                 listTC.add( component );
 
                 Travel travel = new Travel( listTC );
@@ -212,15 +212,15 @@ public class GMapsJSONReader {
     }
 
     //it creates a Travel composed by one or more components, related to TRANSIT TravelMeans
-    public ArrayList< Travel > getTravelWithTransitMeans( JSONObject response ) throws GMapsGeneralException {
-        ArrayList< Travel > possiblePaths = new ArrayList< Travel >();
+    public ArrayList < Travel > getTravelWithTransitMeans ( JSONObject response ) throws GMapsGeneralException {
+        ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
 
         if ( getStatus( response ).equals( "OK" ) || getStatus( response ).equals( "ZERO_RESULTS" ) ) {
             JSONArray routes = getRoutes( response );
 
             for ( int i = 0; i < routes.length(); i++ ) {
                 JSONArray steps = getSteps( routes.getJSONObject( i ) );
-                ArrayList< TravelComponent > travelSteps = new ArrayList< TravelComponent >();
+                ArrayList < TravelComponent > travelSteps = new ArrayList < TravelComponent >();
 
                 for ( int j = 0; j < steps.length(); j++ ) {
                     Instant startingTime = Instant.ofEpochSecond(

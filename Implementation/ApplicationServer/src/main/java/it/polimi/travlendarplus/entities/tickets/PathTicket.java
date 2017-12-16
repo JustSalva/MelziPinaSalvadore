@@ -28,32 +28,32 @@ public class PathTicket extends GenericTicket {
     } )
     private Location endingLocation;
 
-    public PathTicket() {
+    public PathTicket () {
     }
 
-    public PathTicket( float cost, ArrayList< PublicTravelMean > relatedTo, String lineName, Location startingLocation, Location endingLocation ) {
+    public PathTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, String lineName, Location startingLocation, Location endingLocation ) {
         super( cost, relatedTo, lineName );
         this.startingLocation = startingLocation;
         this.endingLocation = endingLocation;
     }
 
-    public Location getStartingLocation() {
+    public static PathTicket load ( long key ) throws EntityNotFoundException {
+        return GenericEntity.load( PathTicket.class, key );
+    }
+
+    public Location getStartingLocation () {
         return startingLocation;
     }
 
-    public void setStartingLocation( Location startingLocation ) {
+    public void setStartingLocation ( Location startingLocation ) {
         this.startingLocation = startingLocation;
     }
 
-    public Location getEndingLocation() {
+    public Location getEndingLocation () {
         return endingLocation;
     }
 
-    public void setEndingLocation( Location endingLocation ) {
+    public void setEndingLocation ( Location endingLocation ) {
         this.endingLocation = endingLocation;
-    }
-
-    public static PathTicket load( long key ) throws EntityNotFoundException {
-        return GenericEntity.load( PathTicket.class, key );
     }
 }

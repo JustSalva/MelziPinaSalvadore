@@ -1,9 +1,9 @@
 package it.polimi.travlendarplus.beans.calendarManager;
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.*;
-import it.polimi.travlendarplus.entities.UserLocation;
 import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.UserLocation;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.Constraint;
 import it.polimi.travlendarplus.entities.preferences.DistanceConstraint;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 @Stateless
 public class PreferenceManager extends UserManager {
 
-    public List< TypeOfEvent > getPreferencesProfiles() {
+    public List < TypeOfEvent > getPreferencesProfiles () {
         return currentUser.getPreferences();
     }
 
-    public TypeOfEvent getPreferencesProfile( long id ) throws EntityNotFoundException {
-        List< TypeOfEvent > profiles = getPreferencesProfiles();
+    public TypeOfEvent getPreferencesProfile ( long id ) throws EntityNotFoundException {
+        List < TypeOfEvent > profiles = getPreferencesProfiles();
         TypeOfEvent requested = profiles.stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == id )
                 .findFirst().orElse( null );
@@ -38,7 +38,7 @@ public class PreferenceManager extends UserManager {
         return requested;
     }
 
-    public TypeOfEvent addTypeOfEvent( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
+    public TypeOfEvent addTypeOfEvent ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
         checkTypeOfEventConsistency( typeOfEventMessage );
         TypeOfEvent typeOfEvent = createTypeOfEvent( typeOfEventMessage );
         typeOfEvent.save();
@@ -47,7 +47,7 @@ public class PreferenceManager extends UserManager {
         return typeOfEvent;
     }
 
-    public TypeOfEvent modifyTypeOfEvent( ModifyTypeOfEventMessage typeOfEventMessage )
+    public TypeOfEvent modifyTypeOfEvent ( ModifyTypeOfEventMessage typeOfEventMessage )
             throws InvalidFieldException, EntityNotFoundException {
         //TODO call check on events that depends from it?
         checkTypeOfEventConsistency( typeOfEventMessage );
@@ -57,7 +57,7 @@ public class PreferenceManager extends UserManager {
         return typeOfEvent;
     }
 
-    public void deleteTypeOfEvent( long id ) throws EntityNotFoundException {
+    public void deleteTypeOfEvent ( long id ) throws EntityNotFoundException {
         //TODO what about event dependencies? remain relation only with events?
         TypeOfEvent typeOfEvent = getPreferencesProfile( id );
         currentUser.removePreference( id );
@@ -65,8 +65,8 @@ public class PreferenceManager extends UserManager {
         typeOfEvent.remove();
     }
 
-    private void checkTypeOfEventConsistency( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
-        List< String > errors = new ArrayList<>();
+    private void checkTypeOfEventConsistency ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
+        List < String > errors = new ArrayList <>();
         if ( typeOfEventMessage.getName() == null ) {
             errors.add( "name" );
         }
@@ -82,8 +82,8 @@ public class PreferenceManager extends UserManager {
         }
     }
 
-    private List< String > checkPeriodConstraints( List< AddPeriodConstraintMessage > periodConstraints ) {
-        List< String > periodErrors = new ArrayList<>();
+    private List < String > checkPeriodConstraints ( List < AddPeriodConstraintMessage > periodConstraints ) {
+        List < String > periodErrors = new ArrayList <>();
         //checks that min < max hour
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMinHour() > periodConstraint.getMaxHour() )
@@ -105,13 +105,13 @@ public class PreferenceManager extends UserManager {
                         periodConstraints.indexOf( periodConstraint ) +
                         " max hour must be less than 24 h" )
                 .collect( Collectors.toList() ) );
-        periodErrors.addAll( checkTravelMeanEnum( new ArrayList<>( periodConstraints ) ) );
+        periodErrors.addAll( checkTravelMeanEnum( new ArrayList <>( periodConstraints ) ) );
 
         return periodErrors;
     }
 
-    private List< String > checkDistanceConstraints( List< AddDistanceConstraintMessage > distanceConstraints ) {
-        List< String > distanceErrors = new ArrayList<>();
+    private List < String > checkDistanceConstraints ( List < AddDistanceConstraintMessage > distanceConstraints ) {
+        List < String > distanceErrors = new ArrayList <>();
         //checks that min length >= 0
         distanceErrors.addAll( distanceConstraints.stream()
                 .filter( distanceConstraint -> distanceConstraint.getMinLength() < 0 )
@@ -126,13 +126,13 @@ public class PreferenceManager extends UserManager {
                         distanceConstraints.indexOf( distanceConstraint ) +
                         " min length must be less than max length" )
                 .collect( Collectors.toList() ) );
-        distanceErrors.addAll( checkTravelMeanEnum( new ArrayList<>( distanceConstraints ) ) );
+        distanceErrors.addAll( checkTravelMeanEnum( new ArrayList <>( distanceConstraints ) ) );
 
         return distanceErrors;
     }
 
-    private List< String > checkTravelMeanEnum( List< AddConstraintMessage > constraintMessages ) {
-        List< String > errors = new ArrayList<>();
+    private List < String > checkTravelMeanEnum ( List < AddConstraintMessage > constraintMessages ) {
+        List < String > errors = new ArrayList <>();
         errors.addAll( constraintMessages.stream()
                 .filter( constraint -> !TravelMeanEnum.isValid( constraint.getConcerns() ) )
                 .map( constraint -> constraint.getClass().getSimpleName() + " " +
@@ -142,10 +142,10 @@ public class PreferenceManager extends UserManager {
         return errors;
     }
 
-    private TypeOfEvent createTypeOfEvent( AddTypeOfEventMessage message ) {
+    private TypeOfEvent createTypeOfEvent ( AddTypeOfEventMessage message ) {
         TypeOfEvent typeOfEvent = new TypeOfEvent( message.getName(), message.getParamFirstPath() );
         typeOfEvent.setDeactivate( message.getDeactivate() );
-        ArrayList< Constraint > constraints = new ArrayList<>();
+        ArrayList < Constraint > constraints = new ArrayList <>();
 
         for ( AddDistanceConstraintMessage distanceLimit : message.getLimitedByDistance() ) {
             constraints.add( new DistanceConstraint( distanceLimit.getConcerns(),
@@ -163,12 +163,12 @@ public class PreferenceManager extends UserManager {
 
     //PREFERRED LOCATIONS
 
-    public List< UserLocation > getAllPreferredLocations() {
-        return new ArrayList< UserLocation >( currentUser.getPreferredLocations() );
+    public List < UserLocation > getAllPreferredLocations () {
+        return new ArrayList < UserLocation >( currentUser.getPreferredLocations() );
     }
 
-    public UserLocation getPreferredLocation( String name ) throws EntityNotFoundException {
-        List< UserLocation > preferredLocations = currentUser.getPreferredLocations();
+    public UserLocation getPreferredLocation ( String name ) throws EntityNotFoundException {
+        List < UserLocation > preferredLocations = currentUser.getPreferredLocations();
 
         UserLocation requested = preferredLocations.stream()
                 .filter( userLocation -> userLocation.getName().equals( name ) )
@@ -179,7 +179,7 @@ public class PreferenceManager extends UserManager {
         return requested;
     }
 
-    public void addPreferredLocation( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
+    public void addPreferredLocation ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
         checkLocationConsistency( locationMessage );
         Location location = new Location( locationMessage.getLatitude(), locationMessage.getLongitude(),
                 locationMessage.getAddress() );
@@ -188,8 +188,8 @@ public class PreferenceManager extends UserManager {
         currentUser.save();
     }
 
-    private void checkLocationConsistency( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
-        List< String > errors = new ArrayList<>();
+    private void checkLocationConsistency ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
+        List < String > errors = new ArrayList <>();
         if ( locationMessage.getName() == null ) {
             errors.add( "name" );
         }
@@ -203,7 +203,7 @@ public class PreferenceManager extends UserManager {
         }
     }
 
-    public void modifyPreferredLocation( PreferredLocationMessage locationMessage )
+    public void modifyPreferredLocation ( PreferredLocationMessage locationMessage )
             throws InvalidFieldException, EntityNotFoundException {
 
         checkLocationConsistency( locationMessage );
@@ -212,19 +212,19 @@ public class PreferenceManager extends UserManager {
         addPreferredLocation( locationMessage );
     }
 
-    public void deletePreferredLocation( String name ) throws EntityNotFoundException {
+    public void deletePreferredLocation ( String name ) throws EntityNotFoundException {
         UserLocation location = getPreferredLocation( name );
         currentUser.removeLocation( name );
         currentUser.save();
     }
 
-    public boolean checkConstraints( Travel travel, TypeOfEvent typeOfEvent ) {
+    public boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent ) {
         for ( TravelComponent travelComponent : travel.getMiniTravels() ) {
             TravelMeanEnum travelMean = travelComponent.getMeanUsed().getType();
             if ( typeOfEvent.isDeactivated( travelMean ) ) {
                 return false;
             }
-            ArrayList< Constraint > consList = typeOfEvent.getLimitedBy( travelMean );
+            ArrayList < Constraint > consList = typeOfEvent.getLimitedBy( travelMean );
             for ( Constraint constraint : consList ) {
                 if ( !constraint.respectConstraint( travelComponent ) ) {
                     return false;
@@ -234,7 +234,7 @@ public class PreferenceManager extends UserManager {
         return true;
     }
 
-    public PathCombination findBestpath( ArrayList< PathCombination > combs, TypeOfEvent typeOfEvent ) {
+    public PathCombination findBestpath ( ArrayList < PathCombination > combs, TypeOfEvent typeOfEvent ) {
         if ( typeOfEvent.getParamFirstPath() != null ) {
             switch ( typeOfEvent.getParamFirstPath() ) {
                 case MIN_LENGTH:
@@ -248,7 +248,7 @@ public class PreferenceManager extends UserManager {
             return combs.get( 0 );
     }
 
-    private PathCombination getPathsWithMinLength( ArrayList< PathCombination > combs ) {
+    private PathCombination getPathsWithMinLength ( ArrayList < PathCombination > combs ) {
         PathCombination best = ( combs != null ) ? combs.get( 0 ) : null;
         for ( PathCombination singleComb : combs )
             if ( singleComb.getTotalLength() < best.getTotalLength() )
@@ -256,7 +256,7 @@ public class PreferenceManager extends UserManager {
         return best;
     }
 
-    private PathCombination getPathsWithMinTime( ArrayList< PathCombination > combs ) {
+    private PathCombination getPathsWithMinTime ( ArrayList < PathCombination > combs ) {
         PathCombination best = ( combs != null ) ? combs.get( 0 ) : null;
         for ( PathCombination singleComb : combs )
             if ( singleComb.getTotalTime() < best.getTotalTime() )
@@ -264,15 +264,15 @@ public class PreferenceManager extends UserManager {
         return best;
     }
 
-    public ArrayList< TravelMeanEnum > getAllowedMeans( Event event, TravelMeanEnum[] list ) {
-        ArrayList< TravelMeanEnum > privateMeans = new ArrayList< TravelMeanEnum >();
+    public ArrayList < TravelMeanEnum > getAllowedMeans ( Event event, TravelMeanEnum[] list ) {
+        ArrayList < TravelMeanEnum > privateMeans = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : list )
             if ( isVehicleAllowed( event, mean ) )
                 privateMeans.add( mean );
         return privateMeans;
     }
 
-    protected boolean isVehicleAllowed( Event event, TravelMeanEnum vehicle ) {
+    protected boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle ) {
         return !event.getType().isDeactivated( vehicle );
     }
 

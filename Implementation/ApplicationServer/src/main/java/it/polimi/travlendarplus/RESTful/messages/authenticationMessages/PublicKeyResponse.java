@@ -12,18 +12,18 @@ public class PublicKeyResponse extends AuthenticationResponse {
 
     private PublicKey publicKey;
 
-    public PublicKeyResponse() {
+    public PublicKeyResponse () {
     }
 
-    public PublicKeyResponse( PublicKey publicKey ) {
+    public PublicKeyResponse ( PublicKey publicKey ) {
         this.publicKey = publicKey;
     }
 
-    public PublicKey getPublicKey() {
+    public PublicKey getPublicKey () {
         return publicKey;
     }
 
-    public void setPublicKey( PublicKey publicKey ) {
+    public void setPublicKey ( PublicKey publicKey ) {
         this.publicKey = publicKey;
     }
 }

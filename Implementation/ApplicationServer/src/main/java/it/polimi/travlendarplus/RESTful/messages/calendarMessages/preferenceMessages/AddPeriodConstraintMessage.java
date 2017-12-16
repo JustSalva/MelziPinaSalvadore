@@ -9,28 +9,28 @@ public class AddPeriodConstraintMessage extends AddConstraintMessage {
     private long minHour; //In seconds from 00.00 of the day
     private long maxHour; //max value = 24 h
 
-    public AddPeriodConstraintMessage() {
+    public AddPeriodConstraintMessage () {
     }
 
-    public AddPeriodConstraintMessage( TravelMeanEnum concerns, long minHour, long maxHour ) {
+    public AddPeriodConstraintMessage ( TravelMeanEnum concerns, long minHour, long maxHour ) {
         super( concerns );
         this.minHour = minHour;
         this.maxHour = maxHour;
     }
 
-    public long getMinHour() {
+    public long getMinHour () {
         return minHour;
     }
 
-    public void setMinHour( long minHour ) {
+    public void setMinHour ( long minHour ) {
         this.minHour = minHour;
     }
 
-    public long getMaxHour() {
+    public long getMaxHour () {
         return maxHour;
     }
 
-    public void setMaxHour( long maxHour ) {
+    public void setMaxHour ( long maxHour ) {
         this.maxHour = maxHour;
     }
 }

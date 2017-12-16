@@ -36,7 +36,7 @@ public class NewCredentialsAuthenticator {
     @PATCH
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
-    public Response askNewCredentials( EmailMessage emailMessage ) {
+    public Response askNewCredentials ( EmailMessage emailMessage ) {
         User user;
 
         try {

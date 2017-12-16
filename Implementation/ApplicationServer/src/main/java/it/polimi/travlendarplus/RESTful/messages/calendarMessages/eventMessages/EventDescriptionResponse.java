@@ -9,18 +9,18 @@ public class EventDescriptionResponse extends CalendarResponse {
 
     private Event event;
 
-    public EventDescriptionResponse() {
+    public EventDescriptionResponse () {
     }
 
-    public EventDescriptionResponse( Event event ) {
+    public EventDescriptionResponse ( Event event ) {
         this.event = event;
     }
 
-    public Event getEvent() {
+    public Event getEvent () {
         return event;
     }
 
-    public void setEvent( Event event ) {
+    public void setEvent ( Event event ) {
         this.event = event;
     }
 }

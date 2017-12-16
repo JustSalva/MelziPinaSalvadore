@@ -23,37 +23,37 @@ public class PeriodOfDayConstraint extends Constraint {
     @Column( name = "MAX_HOUR" )
     private long maxHour; //max value = 24 h
 
-    public PeriodOfDayConstraint( TravelMeanEnum concerns, long minHour, long maxHour ) {
+    public PeriodOfDayConstraint ( TravelMeanEnum concerns, long minHour, long maxHour ) {
         super( concerns );
         this.minHour = minHour;
         this.maxHour = maxHour;
     }
 
-    public PeriodOfDayConstraint() {
+    public PeriodOfDayConstraint () {
     }
 
-    public static PeriodOfDayConstraint load( long key ) throws EntityNotFoundException {
+    public static PeriodOfDayConstraint load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PeriodOfDayConstraint.class, key );
     }
 
-    public long getMinHour() {
+    public long getMinHour () {
         return minHour;
     }
 
-    public void setMinHour( long minHour ) {
+    public void setMinHour ( long minHour ) {
         this.minHour = minHour;
     }
 
-    public long getMaxHour() {
+    public long getMaxHour () {
         return maxHour;
     }
 
-    public void setMaxHour( long maxHour ) {
+    public void setMaxHour ( long maxHour ) {
         this.maxHour = maxHour;
     }
 
     @Override
-    public boolean respectConstraint( TravelComponent travelComponent ) {
+    public boolean respectConstraint ( TravelComponent travelComponent ) {
         long startingTimeInDay = travelComponent.getStartingTime().getEpochSecond() % ( SECONDS_IN_A_DAY );
         long endingTimeInDay = travelComponent.getEndingTime().getEpochSecond() % ( SECONDS_IN_A_DAY );
         return startingTimeInDay >= minHour &&

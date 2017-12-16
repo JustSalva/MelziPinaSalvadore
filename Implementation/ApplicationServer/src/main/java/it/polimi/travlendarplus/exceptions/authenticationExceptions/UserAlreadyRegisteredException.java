@@ -8,10 +8,10 @@ public class UserAlreadyRegisteredException extends AuthenticationException {
 
     private static final long serialVersionUID = -1255875692972274983L;
 
-    public UserAlreadyRegisteredException() {
+    public UserAlreadyRegisteredException () {
     }
 
-    public UserAlreadyRegisteredException( String message ) {
+    public UserAlreadyRegisteredException ( String message ) {
         super( message );
     }
 }

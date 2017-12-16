@@ -7,28 +7,28 @@ public class LoginResponse extends TokenResponse {
     private String name;
     private String surname;
 
-    public LoginResponse() {
+    public LoginResponse () {
     }
 
-    public LoginResponse( String token, String name, String surname ) {
+    public LoginResponse ( String token, String name, String surname ) {
         super( token );
         this.name = name;
         this.surname = surname;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName ( String name ) {
         this.name = name;
     }
 
-    public String getSurname() {
+    public String getSurname () {
         return surname;
     }
 
-    public void setSurname( String surname ) {
+    public void setSurname ( String surname ) {
         this.surname = surname;
     }
 }

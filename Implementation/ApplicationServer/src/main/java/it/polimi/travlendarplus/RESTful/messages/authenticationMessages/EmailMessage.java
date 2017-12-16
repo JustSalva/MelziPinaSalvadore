@@ -12,18 +12,18 @@ public class EmailMessage extends GenericMessage {
 
     private String email;
 
-    public EmailMessage() {
+    public EmailMessage () {
     }
 
-    public EmailMessage( String email ) {
+    public EmailMessage ( String email ) {
         this.email = email;
     }
 
-    public String getEmail() {
+    public String getEmail () {
         return email;
     }
 
-    public void setEmail( String email ) {
+    public void setEmail ( String email ) {
         this.email = email;
     }
 }

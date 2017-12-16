@@ -43,7 +43,7 @@ public class EventRESTful {
      * It will be executed before any request is actually performed
      */
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         eventManager.setCurrentUser( authenticatedUser );
     }
 
@@ -57,7 +57,7 @@ public class EventRESTful {
     @Path( "{idEvent}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getEventInformation( @PathParam( "idEvent" ) long id ) {
+    public Response getEventInformation ( @PathParam( "idEvent" ) long id ) {
         try {
             return HttpResponseBuilder.buildOkResponse( new EventDescriptionResponse(
                     eventManager.getEventInformation( id ) ) );
@@ -78,7 +78,7 @@ public class EventRESTful {
      */
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getEvents() {
+    public Response getEvents () {
         return HttpResponseBuilder.buildOkResponse(
                 new EventsListResponse( eventManager.getEvents() ) );
     }
@@ -93,7 +93,7 @@ public class EventRESTful {
     @Path( "/updateLocalDb/{timestampLocal}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getEventsUpdated( @PathParam( "timestampLocal" ) long timestamp ) {
+    public Response getEventsUpdated ( @PathParam( "timestampLocal" ) long timestamp ) {
         Instant timestampLocal = Instant.ofEpochSecond( timestamp );
         return HttpResponseBuilder.buildOkResponse(
                 new EventsListResponse(
@@ -110,7 +110,7 @@ public class EventRESTful {
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response addEvent( AddEventMessage eventMessage ) {
+    public Response addEvent ( AddEventMessage eventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( eventManager.addEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
@@ -128,7 +128,7 @@ public class EventRESTful {
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response modifyEvent( ModifyEventMessage eventMessage ) {
+    public Response modifyEvent ( ModifyEventMessage eventMessage ) {
         //
         try {
             eventManager.modifyEvent( eventMessage );
@@ -149,7 +149,7 @@ public class EventRESTful {
     @Path( "{idEvent}" )
     @DELETE
     @Produces( MediaType.APPLICATION_JSON )
-    public Response deleteEvent( @PathParam( "idEvent" ) long id ) {
+    public Response deleteEvent ( @PathParam( "idEvent" ) long id ) {
         try {
             eventManager.deleteEvent( id );
         } catch ( EntityNotFoundException e ) {
@@ -161,7 +161,7 @@ public class EventRESTful {
     @Path( "alternatives/{idEvent}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getAlternatives( @PathParam( "idEvent" ) int idEvent ) {
+    public Response getAlternatives ( @PathParam( "idEvent" ) int idEvent ) {
         //TODO
         return null;
     }
@@ -177,7 +177,7 @@ public class EventRESTful {
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response addBreakEvent( AddBreakEventMessage eventMessage ) {
+    public Response addBreakEvent ( AddBreakEventMessage eventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( eventManager.addBreakEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
@@ -196,7 +196,7 @@ public class EventRESTful {
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response modifyBreakEvent( ModifyBreakEventMessage eventMessage ) {
+    public Response modifyBreakEvent ( ModifyBreakEventMessage eventMessage ) {
         //
         try {
             eventManager.modifyBreakEvent( eventMessage );

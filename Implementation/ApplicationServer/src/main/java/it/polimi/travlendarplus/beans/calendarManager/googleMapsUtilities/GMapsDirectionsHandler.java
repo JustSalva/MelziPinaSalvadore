@@ -8,16 +8,16 @@ import java.util.List;
 public class GMapsDirectionsHandler {
     private StringBuilder callURL;
 
-    public GMapsDirectionsHandler() {
+    public GMapsDirectionsHandler () {
         callURL = new StringBuilder( "https://maps.googleapis.com/maps/api/directions/json?" );
         baseCall();
     }
 
-    public GMapsDirectionsHandler( String callURL ) {
+    public GMapsDirectionsHandler ( String callURL ) {
         this.callURL = new StringBuilder( callURL );
     }
 
-    public String getCallURL() {
+    public String getCallURL () {
         return callURL.toString();
     }
 
@@ -26,7 +26,7 @@ public class GMapsDirectionsHandler {
     // in this class.
 
     //it calculates eventual paths related to this event: the function requires the previous event
-    public String getBaseCallPreviousPath( Event event, Event previousEvent ) {
+    public String getBaseCallPreviousPath ( Event event, Event previousEvent ) {
         addParam( "origin", event.getDeparture().getLatitude() + "," +
                 event.getDeparture().getLongitude() );
         addParam( "destination", event.getEventLocation().getLatitude() + "," +
@@ -39,7 +39,7 @@ public class GMapsDirectionsHandler {
     }
 
     //it calculates eventual paths after this event: the function requires the following event
-    public String getBaseCallFollowingPath( Event event, Event followingEvent ) {
+    public String getBaseCallFollowingPath ( Event event, Event followingEvent ) {
         addParam( "origin", followingEvent.getDeparture().getLatitude() + "," +
                 followingEvent.getDeparture().getLongitude() );
         addParam( "destination", followingEvent.getEventLocation().getLatitude() + "," +
@@ -53,19 +53,19 @@ public class GMapsDirectionsHandler {
 
     //it calculates eventual paths given a departure location, an arrival location and a departure time;
     //locations are specified with address
-    public String getBaseCallLocationTime( double depLat, double depLng, double arrLat, double arrlLng,
-                                           long departureTime ) {
+    public String getBaseCallLocationTime ( double depLat, double depLng, double arrLat, double arrlLng,
+                                            long departureTime ) {
         addParam( "origin", depLat + "," + depLng );
         addParam( "destination", arrLat + "," + arrlLng );
         addParam( "departure_time", departureTime + "" );
         return callURL.toString();
     }
 
-    public String getCallWithNoTransit( String tempCall, TravelMeanEnum type ) {
+    public String getCallWithNoTransit ( String tempCall, TravelMeanEnum type ) {
         return tempCall + "&mode=" + type.getParam();
     }
 
-    public String getCallByTransit( String tempCall, List< TravelMeanEnum > transitMeans ) {
+    public String getCallByTransit ( String tempCall, List < TravelMeanEnum > transitMeans ) {
         StringBuilder callWithTravel = new StringBuilder( tempCall );
         if ( transitMeans.size() > 0 ) {
             callWithTravel.append( "&mode=transit" );
@@ -76,13 +76,13 @@ public class GMapsDirectionsHandler {
         return callWithTravel.toString();
     }
 
-    private void addParam( String param, String address ) {
+    private void addParam ( String param, String address ) {
         if ( callURL.charAt( getCallURL().length() - 1 ) != '?' )
             callURL.append( "&" );
         callURL.append( param ).append( "=" ).append( address );
     }
 
-    private void baseCall() {
+    private void baseCall () {
         addParam( "key", "AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y" );
         addParam( "alternatives", "true" );
         addParam( "units", "metric" );

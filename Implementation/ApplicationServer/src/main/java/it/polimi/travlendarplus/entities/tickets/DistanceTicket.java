@@ -18,23 +18,23 @@ public class DistanceTicket extends Ticket {
     @Column( name = "DISTANCE" )
     private int distance;
 
-    public DistanceTicket() {
+    public DistanceTicket () {
     }
 
-    public DistanceTicket( float cost, ArrayList< PublicTravelMean > relatedTo, int distance ) {
+    public DistanceTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, int distance ) {
         super( cost, relatedTo );
         this.distance = distance;
     }
 
-    public static DistanceTicket load( long key ) throws EntityNotFoundException {
+    public static DistanceTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( DistanceTicket.class, key );
     }
 
-    public int getDistance() {
+    public int getDistance () {
         return distance;
     }
 
-    public void setDistance( int distance ) {
+    public void setDistance ( int distance ) {
         this.distance = distance;
     }
 }

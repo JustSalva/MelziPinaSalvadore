@@ -5,7 +5,9 @@ import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import java.time.Instant;
 
 @Entity( name = "PERIOD" )
@@ -28,58 +30,58 @@ public class Period extends EntityWithLongKey {
     @Column( name = "LAST_PROPAGATED_EVENT" )
     private long lastPropagatedEvent;
 
-    public Period() {
+    public Period () {
         this.lastUpdate = new Timestamp();
     }
 
-    public Period( Instant startingDay, Instant endingDay, int deltaDays ) {
+    public Period ( Instant startingDay, Instant endingDay, int deltaDays ) {
         this.startingDay = startingDay;
         this.endingDay = endingDay;
         this.deltaDays = deltaDays;
         this.lastUpdate = new Timestamp();
     }
 
-    public static Period load( long key ) throws EntityNotFoundException {
+    public static Period load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( Period.class, key );
     }
 
-    public Instant getStartingDay() {
+    public Instant getStartingDay () {
         return startingDay;
     }
 
-    public void setStartingDay( Instant startingDay ) {
+    public void setStartingDay ( Instant startingDay ) {
         this.startingDay = startingDay;
     }
 
-    public Instant getEndingDay() {
+    public Instant getEndingDay () {
         return endingDay;
     }
 
-    public void setEndingDay( Instant endingDay ) {
+    public void setEndingDay ( Instant endingDay ) {
         this.endingDay = endingDay;
     }
 
-    public int getDeltaDays() {
+    public int getDeltaDays () {
         return deltaDays;
     }
 
-    public void setDeltaDays( int deltaDays ) {
+    public void setDeltaDays ( int deltaDays ) {
         this.deltaDays = deltaDays;
     }
 
-    public Timestamp getLastUpdate() {
+    public Timestamp getLastUpdate () {
         return lastUpdate;
     }
 
-    public void setLastUpdate( Timestamp lastUpdate ) {
+    public void setLastUpdate ( Timestamp lastUpdate ) {
         this.lastUpdate = lastUpdate;
     }
 
-    public long getLastPropagatedEvent() {
+    public long getLastPropagatedEvent () {
         return lastPropagatedEvent;
     }
 
-    public void setLastPropagatedEvent( long lastPropagatedEvent ) {
+    public void setLastPropagatedEvent ( long lastPropagatedEvent ) {
         this.lastPropagatedEvent = lastPropagatedEvent;
     }
 }

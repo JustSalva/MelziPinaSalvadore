@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class TravlendarRESTful extends ResourceConfig {
     //The method returns a non-empty collection with classes, that must be included in the published JAX-RS application
 
-    public TravlendarRESTful() {
+    public TravlendarRESTful () {
         // Register resources and providers using package-scanning.
         packages( "it.polimi.travlendarplus.RESTful" );
 

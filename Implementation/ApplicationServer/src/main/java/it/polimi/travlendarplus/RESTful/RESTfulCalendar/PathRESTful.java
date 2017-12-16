@@ -38,7 +38,7 @@ public class PathRESTful {
      * It will be executed before any request is actually performed
      */
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         pathManager.setCurrentUser( authenticatedUser );
     }
 
@@ -55,7 +55,7 @@ public class PathRESTful {
     @Path( "{idEvent}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getBestPathInfo( @PathParam( "idEvent" ) long idEvent ) {
+    public Response getBestPathInfo ( @PathParam( "idEvent" ) long idEvent ) {
         /*try {
             return HttpResponseBuilder.buildOkResponse( pathManager.getBestPathInfo( idEvent ) );
         } catch ( EntityNotFoundException e ) {
@@ -78,7 +78,7 @@ public class PathRESTful {
     @Path( "{idNewPath}" )
     @POST
     @Produces( MediaType.APPLICATION_JSON )
-    public Response changeBestPath( @PathParam( "idNewPath" ) long idNewPath ) {
+    public Response changeBestPath ( @PathParam( "idNewPath" ) long idNewPath ) {
         /*try {
             return HttpResponseBuilder.buildOkResponse( pathManager.changePath( idNewPath) );
         } catch ( EntityNotFoundException e ) {
@@ -97,7 +97,7 @@ public class PathRESTful {
     @Path( "changePath/{eventId}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response performAlternativeRequests( @PathParam( "eventId" ) long eventId ) {
+    public Response performAlternativeRequests ( @PathParam( "eventId" ) long eventId ) {
         /*try {
             return HttpResponseBuilder.buildOkResponse( pathManager.getAlternativesPaths( eventId ));
         } catch ( EntityNotFoundException e ) {
@@ -119,7 +119,7 @@ public class PathRESTful {
     @Path( "map/{idEvent}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getPathDrawingInfo( @PathParam( "idEvent" ) long idEvent ) {
+    public Response getPathDrawingInfo ( @PathParam( "idEvent" ) long idEvent ) {
         /*try {
             //NB this method must return only a polyline string, if not a response message must be defined
             return HttpResponseBuilder.buildOkResponse( pathManager.getDrawingPathInfo( idEvent ));

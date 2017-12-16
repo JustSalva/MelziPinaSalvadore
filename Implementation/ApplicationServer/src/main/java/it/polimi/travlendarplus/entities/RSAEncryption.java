@@ -4,12 +4,13 @@ import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryprionFailed
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.EncryprionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
+import javax.crypto.Cipher;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.security.*;
 import java.time.Instant;
 import java.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.persistence.*;
 
 @Entity( name = "Encryption_keys" )
 public class RSAEncryption extends GenericEntity {
@@ -28,10 +29,10 @@ public class RSAEncryption extends GenericEntity {
     @Column( name = "UNIX_TIMESTAMP" )
     private Instant timestamp;
 
-    public RSAEncryption() {
+    public RSAEncryption () {
     }
 
-    public RSAEncryption( String idDevice ) throws NoSuchAlgorithmException{
+    public RSAEncryption ( String idDevice ) throws NoSuchAlgorithmException {
         this.idDevice = idDevice;
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
         keyPairGenerator.initialize( 2048 );
@@ -42,7 +43,7 @@ public class RSAEncryption extends GenericEntity {
     }
 
     // Decrypt using RSA public key
-    private static String decryptPassword( String encryptedPassword, PublicKey publicKey ) throws DecryprionFailedException {
+    private static String decryptPassword ( String encryptedPassword, PublicKey publicKey ) throws DecryprionFailedException {
         try {
             Cipher cipher = setUpCypher( Cipher.DECRYPT_MODE, publicKey );
             return new String( cipher.doFinal( Base64.getDecoder().decode( encryptedPassword ) ) );
@@ -52,7 +53,7 @@ public class RSAEncryption extends GenericEntity {
     }
 
     // Encrypt using RSA private key
-    private static String encryptPassword( String plainPassword, PrivateKey privateKey ) throws EncryprionFailedException {
+    private static String encryptPassword ( String plainPassword, PrivateKey privateKey ) throws EncryprionFailedException {
         try {
             Cipher cipher = setUpCypher( Cipher.ENCRYPT_MODE, privateKey );
             return Base64.getEncoder().encodeToString( cipher.doFinal( plainPassword.getBytes() ) );
@@ -61,13 +62,13 @@ public class RSAEncryption extends GenericEntity {
         }
     }
 
-    private static Cipher setUpCypher( int cipherMode, Key key ) throws GeneralSecurityException {
+    private static Cipher setUpCypher ( int cipherMode, Key key ) throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance( "RSA" );
         cipher.init( cipherMode, key );
         return cipher;
     }
 
-    public static void main( String[] args ) throws Exception {
+    public static void main ( String[] args ) throws Exception {
         String plainText = "Hello World!";
 
         // Generate public and private keys using RSA
@@ -82,36 +83,36 @@ public class RSAEncryption extends GenericEntity {
 
     }
 
-    public String getIdDevice() {
-        return idDevice;
-    }
-
-    public void setIdDevice( String idDevice ) {
-        this.idDevice = idDevice;
-    }
-
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey( PublicKey publicKey ) {
-        this.publicKey = publicKey;
-    }
-
-    public PrivateKey getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey( PrivateKey privateKey ) {
-        this.privateKey = privateKey;
-    }
-
-    public static RSAEncryption load( String idDevice ) throws EntityNotFoundException {
+    public static RSAEncryption load ( String idDevice ) throws EntityNotFoundException {
         return GenericEntity.load( RSAEncryption.class, idDevice );
     }
 
+    public String getIdDevice () {
+        return idDevice;
+    }
+
+    public void setIdDevice ( String idDevice ) {
+        this.idDevice = idDevice;
+    }
+
+    public PublicKey getPublicKey () {
+        return publicKey;
+    }
+
+    public void setPublicKey ( PublicKey publicKey ) {
+        this.publicKey = publicKey;
+    }
+
+    public PrivateKey getPrivateKey () {
+        return privateKey;
+    }
+
+    public void setPrivateKey ( PrivateKey privateKey ) {
+        this.privateKey = privateKey;
+    }
+
     @Override
-    public boolean isAlreadyInDb() {
+    public boolean isAlreadyInDb () {
         try {
             load( idDevice );
         } catch ( EntityNotFoundException e ) {

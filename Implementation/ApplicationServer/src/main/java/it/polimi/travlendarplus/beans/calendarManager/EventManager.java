@@ -40,27 +40,27 @@ public class EventManager extends UserManager {
     @EJB
     private PathManager pathManager;
 
-    @Resource(name = "DefaultManagedExecutorService")
+    @Resource( name = "DefaultManagedExecutorService" )
     private ManagedExecutorService executor;
 
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct () {
         preferenceManager.setCurrentUser( currentUser );
         scheduleManager.setCurrentUser( currentUser );
         pathManager.setCurrentUser( currentUser );
     }
 
-    public Event getEventInformation( long id ) throws EntityNotFoundException {
-        List< GenericEvent > eventList = new ArrayList<>( currentUser.getEvents() );
+    public Event getEventInformation ( long id ) throws EntityNotFoundException {
+        List < GenericEvent > eventList = new ArrayList <>( currentUser.getEvents() );
         return ( Event ) findEvent( eventList, id );
     }
 
-    public BreakEvent getBreakEventInformation( long id ) throws EntityNotFoundException {
-        List< GenericEvent > eventList = new ArrayList<>( currentUser.getBreaks() );
+    public BreakEvent getBreakEventInformation ( long id ) throws EntityNotFoundException {
+        List < GenericEvent > eventList = new ArrayList <>( currentUser.getBreaks() );
         return ( BreakEvent ) findEvent( eventList, id );
     }
 
-    private GenericEvent findEvent( List< GenericEvent > eventList, long id ) throws EntityNotFoundException {
+    private GenericEvent findEvent ( List < GenericEvent > eventList, long id ) throws EntityNotFoundException {
         GenericEvent requestedEvent = eventList.stream()
                 .filter( event -> event.getId() == id ).findFirst().orElse( null );
         if ( requestedEvent == null )
@@ -68,8 +68,8 @@ public class EventManager extends UserManager {
         return requestedEvent;
     }
 
-    public List< GenericEvent > getEventsUpdated( Instant timestampLocal ) {
-        List< GenericEvent > updatedEvents = getEvents();
+    public List < GenericEvent > getEventsUpdated ( Instant timestampLocal ) {
+        List < GenericEvent > updatedEvents = getEvents();
 
         updatedEvents = updatedEvents.stream()
                 .filter( event -> event.getLastUpdate().getTimestamp().isAfter( timestampLocal ) )
@@ -77,18 +77,18 @@ public class EventManager extends UserManager {
         return updatedEvents;
     }
 
-    public List< GenericEvent > getEvents() {
-        List< GenericEvent > events = new ArrayList<>( currentUser.getEvents() );
+    public List < GenericEvent > getEvents () {
+        List < GenericEvent > events = new ArrayList <>( currentUser.getEvents() );
         events.addAll( currentUser.getBreaks() );
         return events;
     }
 
-    public List< Event > addEvent( AddEventMessage eventMessage ) throws InvalidFieldException {
+    public List < Event > addEvent ( AddEventMessage eventMessage ) throws InvalidFieldException {
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
         Event following = addEventAndModifyFollowingEvent( event );
-        List< Event > responseList = new ArrayList<>();
+        List < Event > responseList = new ArrayList <>();
         if ( following != null ) {
             following.save();
             responseList.add( following );
@@ -102,7 +102,7 @@ public class EventManager extends UserManager {
         return responseList;
     }
 
-    public Event addEventAndModifyFollowingEvent( Event event ) {
+    public Event addEventAndModifyFollowingEvent ( Event event ) {
         PathCombination feasiblePaths = null;
         Event followingEvent = null;
         if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
@@ -134,7 +134,7 @@ public class EventManager extends UserManager {
         return followingEvent;
     }
 
-    public void propagatePeriodicEvents( GenericEvent event ) {
+    public void propagatePeriodicEvents ( GenericEvent event ) {
 
         Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
         if ( !event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
@@ -154,7 +154,7 @@ public class EventManager extends UserManager {
         }
     }
 
-    private Location findLocation( LocationMessage locationMessage ) {
+    private Location findLocation ( LocationMessage locationMessage ) {
         //TODO check correctness?
         Location location;
         try {
@@ -163,21 +163,21 @@ public class EventManager extends UserManager {
             return location;
         } catch ( EntityNotFoundException e ) {
             location = new Location( locationMessage.getLatitude(),
-                    locationMessage.getLongitude(), locationMessage.getAddress());
+                    locationMessage.getLongitude(), locationMessage.getAddress() );
             location.save();
             return location;
         }
     }
 
-    private TypeOfEvent findTypeOfEvent( long name ) {
+    private TypeOfEvent findTypeOfEvent ( long name ) {
         return currentUser.getPreferences().stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == name )
                 .findFirst().get(); //NB his presence has to be already checked
     }
 
-    private Event createEvent( AddEventMessage eventMessage ) {
+    private Event createEvent ( AddEventMessage eventMessage ) {
         TypeOfEvent type;
-        if( eventMessage.getIdTypeOfEvent() == 0 ){
+        if ( eventMessage.getIdTypeOfEvent() == 0 ) {
             type = new TypeOfEvent();
             type.setName( "emptyTypeOfEvent" );
             type.setParamFirstPath( ParamFirstPath.MIN_TIME );
@@ -189,25 +189,25 @@ public class EventManager extends UserManager {
         if ( !eventMessage.isPrevLocChoice() ) {
             departure = findLocation( eventMessage.getDeparture() );
         }
-        Period  periodicity = createPeriodicity( eventMessage.getPeriodicity() );
+        Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, periodicity, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
                 eventMessage.isTravelAtLastChoice(), type, arrival, departure );
     }
 
-    private Period createPeriodicity( PeriodMessage periodMessage ){
+    private Period createPeriodicity ( PeriodMessage periodMessage ) {
         return new Period( periodMessage.getStartingDay(), periodMessage.getEndingDay(), periodMessage.getDeltaDays() );
     }
 
-    private void checkEventFields( AddEventMessage eventMessage ) throws InvalidFieldException {
-        List< String > errors = new ArrayList<>();
+    private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
+        List < String > errors = new ArrayList <>();
         errors.addAll( checkGenericEventFields( eventMessage ) );
         if ( eventMessage.isPrevLocChoice() &&
                 scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
             errors.add( "Not exists a previous location" );
         try {
-            if ( eventMessage.getIdTypeOfEvent() != 0 ){
+            if ( eventMessage.getIdTypeOfEvent() != 0 ) {
                 preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
             }
         } catch ( EntityNotFoundException e ) {
@@ -223,8 +223,8 @@ public class EventManager extends UserManager {
         }
     }
 
-    private List< String > checkGenericEventFields( AddGenericEventMessage eventMessage ) {
-        List< String > genericEventErrors = new ArrayList<>();
+    private List < String > checkGenericEventFields ( AddGenericEventMessage eventMessage ) {
+        List < String > genericEventErrors = new ArrayList <>();
         if ( eventMessage.getName() == null ) {
             genericEventErrors.add( " name" );
         }
@@ -236,8 +236,8 @@ public class EventManager extends UserManager {
         return genericEventErrors;
     }
 
-    private List< String > checkPeriodicity( PeriodMessage periodMessage ) {
-        List< String > periodicityErrors = new ArrayList<>();
+    private List < String > checkPeriodicity ( PeriodMessage periodMessage ) {
+        List < String > periodicityErrors = new ArrayList <>();
 
         if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
             periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
@@ -256,7 +256,7 @@ public class EventManager extends UserManager {
         return periodicityErrors;
     }
 
-    public Event modifyEvent( ModifyEventMessage eventMessage ) throws InvalidFieldException, EntityNotFoundException {
+    public Event modifyEvent ( ModifyEventMessage eventMessage ) throws InvalidFieldException, EntityNotFoundException {
         checkEventFields( eventMessage );
         Event event = getEventInformation( eventMessage.getEventId() );
         //TODO set all new attributes
@@ -272,7 +272,7 @@ public class EventManager extends UserManager {
     }
 
 
-    public void deleteEvent( long id ) throws EntityNotFoundException {
+    public void deleteEvent ( long id ) throws EntityNotFoundException {
         GenericEvent genericEvent;
         try {
             genericEvent = getEventInformation( id );
@@ -285,7 +285,7 @@ public class EventManager extends UserManager {
         genericEvent.remove();
     }
 
-    public BreakEvent addBreakEvent( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
+    public BreakEvent addBreakEvent ( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
         checkBreakEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
@@ -297,12 +297,12 @@ public class EventManager extends UserManager {
         return breakEvent;   //it handle periodic events
     }
 
-    public void addBreakEvent( BreakEvent breakEvent ) {
+    public void addBreakEvent ( BreakEvent breakEvent ) {
         breakEvent.setScheduled( scheduleManager.isBreakOverlapFreeIntoSchedule( breakEvent, false ) );
     }
 
-    private void checkBreakEventFields( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
-        List< String > errors = new ArrayList<>();
+    private void checkBreakEventFields ( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
+        List < String > errors = new ArrayList <>();
 
         errors.addAll( checkGenericEventFields( eventMessage ) );
 
@@ -315,12 +315,12 @@ public class EventManager extends UserManager {
         }
     }
 
-    private BreakEvent createBreakEvent( AddBreakEventMessage eventMessage ) {
+    private BreakEvent createBreakEvent ( AddBreakEventMessage eventMessage ) {
         return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, createPeriodicity( eventMessage.getPeriodicity() ), eventMessage.getMinimumTime() );
     }
 
-    public BreakEvent modifyBreakEvent( ModifyBreakEventMessage eventMessage )
+    public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
             throws InvalidFieldException, EntityNotFoundException {
 
         checkBreakEventFields( eventMessage );
@@ -334,15 +334,16 @@ public class EventManager extends UserManager {
         breakEvent.save();
         return breakEvent;
     }
-    private void startEventPropagatorThread( GenericEvent genericEvent){
-        if ( genericEvent.getPeriodicity() != null ){
-            PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this , genericEvent);
+
+    private void startEventPropagatorThread ( GenericEvent genericEvent ) {
+        if ( genericEvent.getPeriodicity() != null ) {
+            PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this, genericEvent );
             executor.submit( runnable );
         }
     }
 
     @Override
-    public void setCurrentUser( User currentUser ) {
+    public void setCurrentUser ( User currentUser ) {
         this.currentUser = currentUser;
         this.scheduleManager.setCurrentUser( currentUser );
         this.preferenceManager.setCurrentUser( currentUser );

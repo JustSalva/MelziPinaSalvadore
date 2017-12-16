@@ -50,12 +50,12 @@ public class Event extends GenericEvent {
     @JoinColumn( name = "LIMITED_BY" )
     private Travel feasiblePath;
 
-    public Event() {
+    public Event () {
     }
 
-    public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
-                  String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type,
-                  Location eventLocation, Location departure ) {
+    public Event ( String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
+                   String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type,
+                   Location eventLocation, Location departure ) {
         super( name, startingTime, endingTime, isScheduled, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -66,9 +66,9 @@ public class Event extends GenericEvent {
     }
 
     //constructor for generic event with no periodicity
-    public Event( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                  String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type, Location eventLocation,
-                  Location departure, Travel feasiblePath ) {
+    public Event ( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                   String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type, Location eventLocation,
+                   Location departure, Travel feasiblePath ) {
         super( name, startingTime, endingTime, isScheduled );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -79,67 +79,67 @@ public class Event extends GenericEvent {
         this.feasiblePath = feasiblePath;
     }
 
-    public static Event load( long key ) throws EntityNotFoundException {
+    public static Event load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( Event.class, key );
     }
 
-    public String getDescription() {
+    public String getDescription () {
         return description;
     }
 
-    public void setDescription( String description ) {
+    public void setDescription ( String description ) {
         this.description = description;
     }
 
-    public boolean isPrevLocChoice() {
+    public boolean isPrevLocChoice () {
         return prevLocChoice;
     }
 
-    public void setPrevLocChoice( boolean prevLocChoice ) {
+    public void setPrevLocChoice ( boolean prevLocChoice ) {
         this.prevLocChoice = prevLocChoice;
     }
 
-    public TypeOfEvent getType() {
+    public TypeOfEvent getType () {
         return type;
     }
 
-    public void setType( TypeOfEvent type ) {
+    public void setType ( TypeOfEvent type ) {
         this.type = type;
     }
 
-    public Location getEventLocation() {
+    public Location getEventLocation () {
         return eventLocation;
     }
 
-    public void setEventLocation( Location eventLocation ) {
+    public void setEventLocation ( Location eventLocation ) {
         this.eventLocation = eventLocation;
     }
 
-    public Location getDeparture() {
+    public Location getDeparture () {
         return departure;
     }
 
-    public void setDeparture( Location departure ) {
+    public void setDeparture ( Location departure ) {
         this.departure = departure;
     }
 
-    public Travel getFeasiblePath() {
+    public Travel getFeasiblePath () {
         return feasiblePath;
     }
 
-    public void setFeasiblePath( Travel feasiblePath ) {
+    public void setFeasiblePath ( Travel feasiblePath ) {
         this.feasiblePath = feasiblePath;
     }
 
-    public boolean isTravelAtLastChoice() {
+    public boolean isTravelAtLastChoice () {
         return travelAtLastChoice;
     }
 
-    public void setTravelAtLastChoice( boolean travelAtLastChoice ) {
+    public void setTravelAtLastChoice ( boolean travelAtLastChoice ) {
         this.travelAtLastChoice = travelAtLastChoice;
     }
 
-    public Event nextPeriodicEvent() {
+    public Event nextPeriodicEvent () {
         Instant startingTime = this.getStartingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
@@ -148,27 +148,27 @@ public class Event extends GenericEvent {
     }
 
     @Override
-    public boolean isOverlapFreeIntoSchedule( ScheduleManager scheduleManager ) {
+    public boolean isOverlapFreeIntoSchedule ( ScheduleManager scheduleManager ) {
         return scheduleManager.isEventOverlapFreeIntoSchedule( this, false );
     }
 
     @Override
-    public void addInUserList( User user ) {
+    public void addInUserList ( User user ) {
         user.addEvent( this );
     }
 
     @Override
-    public void addEventAndModifyFollowingEvent( EventManager eventManager ) {
+    public void addEventAndModifyFollowingEvent ( EventManager eventManager ) {
         eventManager.addEventAndModifyFollowingEvent( this );
     }
 
     @Override
-    public void removeFeasiblePath() {
+    public void removeFeasiblePath () {
         feasiblePath = null;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "Event{" + super.toString() +
                 "description='" + description + '\'' +
                 ", prevLocChoice=" + prevLocChoice +

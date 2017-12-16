@@ -18,23 +18,23 @@ public class GenericTicket extends Ticket {
     @Column( name = "LINE_NAME" )
     private String lineName;
 
-    public GenericTicket() {
+    public GenericTicket () {
     }
 
-    public GenericTicket( float cost, ArrayList< PublicTravelMean > relatedTo, String lineName ) {
+    public GenericTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, String lineName ) {
         super( cost, relatedTo );
         this.lineName = lineName;
     }
 
-    public static GenericTicket load( long key ) throws EntityNotFoundException {
+    public static GenericTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( GenericTicket.class, key );
     }
 
-    public String getLineName() {
+    public String getLineName () {
         return lineName;
     }
 
-    public void setLineName( String lineName ) {
+    public void setLineName ( String lineName ) {
         this.lineName = lineName;
     }
 }

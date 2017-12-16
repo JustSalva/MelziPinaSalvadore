@@ -13,45 +13,45 @@ public abstract class AddGenericEventMessage extends CalendarMessage {
     private Instant endingTime;
     private PeriodMessage periodicity;
 
-    public AddGenericEventMessage() {
+    public AddGenericEventMessage () {
     }
 
-    public AddGenericEventMessage( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity ) {
+    public AddGenericEventMessage ( String name, Instant startingTime, Instant endingTime, PeriodMessage periodicity ) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.periodicity = periodicity;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName ( String name ) {
         this.name = name;
     }
 
-    public Instant getStartingTime() {
+    public Instant getStartingTime () {
         return startingTime;
     }
 
-    public void setStartingTime( Instant startingTime ) {
+    public void setStartingTime ( Instant startingTime ) {
         this.startingTime = startingTime;
     }
 
-    public Instant getEndingTime() {
+    public Instant getEndingTime () {
         return endingTime;
     }
 
-    public void setEndingTime( Instant endingTime ) {
+    public void setEndingTime ( Instant endingTime ) {
         this.endingTime = endingTime;
     }
 
-    public PeriodMessage getPeriodicity() {
+    public PeriodMessage getPeriodicity () {
         return periodicity;
     }
 
-    public void setPeriodicity( PeriodMessage periodicity ) {
+    public void setPeriodicity ( PeriodMessage periodicity ) {
         this.periodicity = periodicity;
     }
 }

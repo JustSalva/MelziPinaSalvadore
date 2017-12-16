@@ -9,18 +9,18 @@ public class BreakEventDescriptionResponse extends CalendarResponse {
 
     private BreakEvent breakEvent;
 
-    public BreakEventDescriptionResponse() {
+    public BreakEventDescriptionResponse () {
     }
 
-    public BreakEventDescriptionResponse( BreakEvent breakEvent ) {
+    public BreakEventDescriptionResponse ( BreakEvent breakEvent ) {
         this.breakEvent = breakEvent;
     }
 
-    public BreakEvent getBreakEvent() {
+    public BreakEvent getBreakEvent () {
         return breakEvent;
     }
 
-    public void setBreakEvent( BreakEvent breakEvent ) {
+    public void setBreakEvent ( BreakEvent breakEvent ) {
         this.breakEvent = breakEvent;
     }
 }

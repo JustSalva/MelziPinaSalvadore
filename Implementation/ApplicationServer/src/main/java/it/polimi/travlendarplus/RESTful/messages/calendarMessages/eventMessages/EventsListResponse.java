@@ -9,17 +9,17 @@ public class EventsListResponse extends CalendarResponse {
 
     private static final long serialVersionUID = 8768153863882742282L;
 
-    private List< GenericEvent > updatedEvents;
+    private List < GenericEvent > updatedEvents;
 
-    public EventsListResponse( List< GenericEvent > updatedEvents ) {
+    public EventsListResponse ( List < GenericEvent > updatedEvents ) {
         this.updatedEvents = updatedEvents;
     }
 
-    public List< GenericEvent > getUpdatedEvents() {
+    public List < GenericEvent > getUpdatedEvents () {
         return updatedEvents;
     }
 
-    public void setUpdatedEvents( List< GenericEvent > updatedEvents ) {
+    public void setUpdatedEvents ( List < GenericEvent > updatedEvents ) {
         this.updatedEvents = updatedEvents;
     }
 }

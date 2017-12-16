@@ -25,10 +25,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     @AuthenticatedUser
-    Event< User > userAuthenticatedEvent;
+    Event < User > userAuthenticatedEvent;
 
     @Override
-    public void filter( ContainerRequestContext requestContext ) throws IOException {
+    public void filter ( ContainerRequestContext requestContext ) throws IOException {
 
         String authorizationHeader =
                 requestContext.getHeaderString( HttpHeaders.AUTHORIZATION );
@@ -51,7 +51,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
-    private boolean isTokenBasedAuthentication( String authorizationHeader ) {
+    private boolean isTokenBasedAuthentication ( String authorizationHeader ) {
         // Check if the Authorization header is valid
         // It must not be null and must be prefixed with "Bearer" plus a whitespace
         // The authentication scheme comparison must be case-insensitive
@@ -59,7 +59,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 .startsWith( AUTHENTICATION_SCHEME.toLowerCase() + " " );
     }
 
-    private void abortWithUnauthorized( ContainerRequestContext requestContext ) {
+    private void abortWithUnauthorized ( ContainerRequestContext requestContext ) {
         // Abort the filter chain with a 401 status code response
         // The WWW-Authenticate header is sent along with the response
         requestContext.abortWith(
@@ -69,7 +69,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .build() );
     }
 
-    private User validateToken( String token ) throws InvalidTokenException {
+    private User validateToken ( String token ) throws InvalidTokenException {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
         return UserDevice.findUserRelativeToToken( token );
