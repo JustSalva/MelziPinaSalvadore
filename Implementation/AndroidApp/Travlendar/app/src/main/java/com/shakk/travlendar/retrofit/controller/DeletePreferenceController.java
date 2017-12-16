@@ -12,17 +12,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DeleteLocationController implements Callback<Void> {
+public class DeletePreferenceController implements Callback<Void> {
 
     private Handler handler;
 
-    public DeleteLocationController(Handler handler) {
+    public DeletePreferenceController(Handler handler) {
         this.handler = handler;
     }
 
-    public void start(String authToken, String name) {
+    public void start(String authToken, int id) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Void> call = client.deleteLocation(name);
+        Call<Void> call = client.deletePreference(id);
         call.enqueue(this);
     }
     @Override

@@ -133,9 +133,11 @@ public class AccountActivity extends MenuActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         Toast.makeText(getBaseContext(), "Locations updated!", Toast.LENGTH_LONG).show();
-
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
                         String jsonLocations = bundle.getString("jsonLocations");
@@ -160,6 +162,9 @@ public class AccountActivity extends MenuActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         // Notify the user that the location has been added.
                         Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
@@ -184,6 +189,9 @@ public class AccountActivity extends MenuActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         // Notify the user that the location has been removed.
                         Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();

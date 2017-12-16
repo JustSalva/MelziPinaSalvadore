@@ -50,6 +50,8 @@ public class GetLocationsController implements Callback<List<Location>> {
 
     @Override
     public void onFailure(Call<List<Location>> call, Throwable t) {
-
+        Log.d("INTERNET_CONNECTION", "ABSENT");
+        Message msg = handler.obtainMessage(0);
+        msg.sendToTarget();
     }
 }

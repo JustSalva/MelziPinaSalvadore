@@ -95,6 +95,9 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();

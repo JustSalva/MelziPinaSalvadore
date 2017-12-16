@@ -27,6 +27,7 @@ import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.activity.fragment.TimePickerFragment;
 import com.shakk.travlendar.database.view_model.UserViewModel;
+import com.shakk.travlendar.retrofit.controller.DeletePreferenceController;
 import com.shakk.travlendar.retrofit.controller.GetPreferencesController;
 
 import org.json.JSONArray;
@@ -56,7 +57,10 @@ public class PreferencesActivity extends MenuActivity {
     private Preference selectedPreference = new Preference();
     private String selectedTravelMeanConstrained;
 
+    // Handlers for server responses.
     private Handler getterHandler;
+    private Handler adderHandler;
+    private Handler deleterHandler;
 
     private UserViewModel userViewModel;
 
@@ -126,6 +130,9 @@ public class PreferencesActivity extends MenuActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         Toast.makeText(getBaseContext(), "Preferences updated!", Toast.LENGTH_LONG).show();
 
@@ -142,6 +149,66 @@ public class PreferencesActivity extends MenuActivity {
                             preferencesMap.put(preference.getName(), preference);
                         }
                         populatePreferencesSpinner();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", msg.toString());
+                        break;
+                }
+                resumeNormalMode();
+            }
+        };
+
+        // TODO: Handle server responses.
+        adderHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 200:
+                        Toast.makeText(getBaseContext(), "Preferences updated!", Toast.LENGTH_LONG).show();
+
+                        // Retrieve data from bundle.
+                        Bundle bundle = msg.getData();
+                        String jsonPreferences = bundle.getString("jsonPreferences");
+                        List<Preference> preferences = new Gson()
+                                .fromJson(
+                                        jsonPreferences,
+                                        new TypeToken<List<Preference>>(){}.getType()
+                                );
+                        preferencesMap = new HashMap<>();
+                        for (Preference preference : preferences) {
+                            preferencesMap.put(preference.getName(), preference);
+                        }
+                        populatePreferencesSpinner();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", msg.toString());
+                        break;
+                }
+                resumeNormalMode();
+            }
+        };
+
+        // Handle server responses.
+        deleterHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 200:
+                        // Notify the user that the preference has been removed.
+                        Toast.makeText(getBaseContext(), "Preference removed!", Toast.LENGTH_LONG).show();
+                        // Remove preference from the list.
+                        preferencesMap.remove(selectedPreference.getName());
+                        break;
+                    case 400:
+                        Toast.makeText(getBaseContext(), "The specified profile does not exist", Toast.LENGTH_LONG).show();
                         break;
                     default:
                         Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
@@ -217,48 +284,10 @@ public class PreferencesActivity extends MenuActivity {
     }
 
     private void deletePreferenceFromServer() {
-        // Retrieve preference name to be deleted.
-        String idPreference = Integer.toString(preferencesMap.get(selectedPreference.getName()).getId());
-
-        //Send request to server.
-        TravlendarRestClient.deleteWithAuth("ApplicationServerArchive/preference/".concat(idPreference), univocalCode
-                , new JsonHttpResponseHandler() {
-                    @Override
-                    public void onStart() {
-                        //Makes UI unresponsive.
-                        waitForServerResponse();
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        // Notify the user that the preference has been removed.
-                        Toast.makeText(getBaseContext(), "Preference removed!", Toast.LENGTH_LONG).show();
-                        // Remove preference from the list.
-                        preferencesMap.remove(selectedPreference.getName());
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        // Request failed.
-                        // TODO: error messages.
-                        switch (statusCode) {
-                            case 400:
-                                Toast.makeText(getBaseContext(), "The preference specified does not exist!", Toast.LENGTH_LONG).show();
-                                Log.d("ERROR_RESPONSE", responseString);
-                                break;
-                            default:
-                                Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                                Log.d("ERROR_RESPONSE", responseString);
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        //Makes UI responsive again.
-                        resumeNormalMode();
-                    }
-                });
+        // Send request to server.
+        waitForServerResponse();
+        DeletePreferenceController deletePreferenceController = new DeletePreferenceController(deleterHandler);
+        deletePreferenceController.start(univocalCode, selectedPreference.getId());
     }
 
     /**

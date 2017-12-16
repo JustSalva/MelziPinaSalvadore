@@ -83,17 +83,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
                     case 200:
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
                         String name = bundle.getString("name");
                         String surname = bundle.getString("surname");
                         String token = bundle.getString("token");
-
                         // Insert new User into the local DB.
                         User user = new User(email, name, surname, token);
                         new InsertUserTask(getApplicationContext()).execute(user);
-
                         goToCalendarActivity();
                         break;
                     case 400:

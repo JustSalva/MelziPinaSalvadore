@@ -39,6 +39,8 @@ public class AddLocationController implements Callback<Void> {
 
     @Override
     public void onFailure(Call<Void> call, Throwable t) {
-
+        Log.d("INTERNET_CONNECTION", "ABSENT");
+        Message msg = handler.obtainMessage(0);
+        msg.sendToTarget();
     }
 }

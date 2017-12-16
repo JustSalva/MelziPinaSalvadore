@@ -47,6 +47,8 @@ public class RegisterController implements Callback<RegisterResponse> {
 
     @Override
     public void onFailure(Call<RegisterResponse> call, Throwable t) {
-
+        Log.d("INTERNET_CONNECTION", "ABSENT");
+        Message msg = handler.obtainMessage(0);
+        msg.sendToTarget();
     }
 }

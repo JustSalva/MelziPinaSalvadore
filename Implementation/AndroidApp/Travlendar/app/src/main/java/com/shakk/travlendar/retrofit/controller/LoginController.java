@@ -46,6 +46,8 @@ public class LoginController implements Callback<LoginResponse> {
 
     @Override
     public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+        Log.d("INTERNET_CONNECTION", "ABSENT");
+        Message msg = handler.obtainMessage(0);
+        msg.sendToTarget();
     }
 }

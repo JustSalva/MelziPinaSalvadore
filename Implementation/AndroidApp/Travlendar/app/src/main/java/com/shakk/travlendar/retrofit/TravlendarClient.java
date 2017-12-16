@@ -4,6 +4,7 @@ import com.shakk.travlendar.Location;
 import com.shakk.travlendar.Preference;
 import com.shakk.travlendar.retrofit.body.LocationBody;
 import com.shakk.travlendar.retrofit.body.LoginBody;
+import com.shakk.travlendar.retrofit.body.PreferenceBody;
 import com.shakk.travlendar.retrofit.body.RegisterBody;
 import com.shakk.travlendar.retrofit.response.LoginResponse;
 import com.shakk.travlendar.retrofit.response.RegisterResponse;
@@ -38,19 +39,19 @@ public interface TravlendarClient {
 
     @DELETE("preference/location/{name}")
     Call<Void> deleteLocation(
-        @Path("name") String name
+            @Path("name") String name
     );
 
     @GET("preference")
     Call<List<Preference>> getPreferences();
 
     @POST("preference")
-    Call addPreference(
-
+    Call<Preference> addPreference(
+            @Body PreferenceBody preferenceBody
     );
 
-    @DELETE("/preference/{id}")
-    Call deletePreference(
+    @DELETE("preference/{id}")
+    Call<Void> deletePreference(
         @Path("id") int id
     );
 }
