@@ -31,6 +31,7 @@ import com.shakk.travlendar.Location;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.database.view_model.UserViewModel;
+import com.shakk.travlendar.retrofit.controller.AddLocationController;
 import com.shakk.travlendar.retrofit.controller.GetLocationsController;
 
 import org.json.JSONArray;
@@ -77,6 +78,7 @@ public class AccountActivity extends MenuActivity {
     // Handler for server responses.
     private Handler getterHandler;
     private Handler senderHandler;
+    private Handler deleteHandler;
 
     // Store locations received by the server.
     private Map<String, Location> locationsMap;
@@ -171,21 +173,42 @@ public class AccountActivity extends MenuActivity {
             public void handleMessage(Message msg){
                 switch (msg.what){
                     case 200:
-                        Toast.makeText(getBaseContext(), "Locations updated!", Toast.LENGTH_LONG).show();
-
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String jsonLocations = bundle.getString("jsonLocations");
-                        List<Location> locations = new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
-                        locationsMap = new HashMap<>();
-                        for (Location location : locations) {
-                            locationsMap.put(location.getName(), location);
-                        }
+                        // Notify the user that the location has been added.
+                        Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
+                        // Add location to the list.
+                        Location location = new Location(locationName, new Location.Position(locationAddress));
+                        locationsMap.put(locationName, location);
                         populateLocationsSpinner();
+                        break;
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
                         break;
                     default:
                         Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
+                        break;
+                }
+                resumeNormalMode();
+            }
+        };
+
+        // Handle server responses.
+        deleteHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 200:
+                        // Notify the user that the location has been added.
+                        Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
+                        // Add location to the list.
+                        Location location = new Location(locationName, new Location.Position(locationAddress));
+                        locationsMap.put(locationName, location);
+                        populateLocationsSpinner();
+                        break;
+                    case 400:
+                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
                         break;
                 }
                 resumeNormalMode();
@@ -232,7 +255,7 @@ public class AccountActivity extends MenuActivity {
      * Sends the location entered by the user to the server.
      */
     private void sendLocationToServer() {
-        /* Store values at the time of the sending attempt.
+        // Store values at the time of the sending attempt.
         locationName = locationName_editText.getText().toString();
 
         if (!validate()) {
@@ -240,60 +263,16 @@ public class AccountActivity extends MenuActivity {
             return;
         }
 
-        // Build JSON to be sent to server.
-        JSONObject jsonParams = new JSONObject();
-        StringEntity entity = null;
-        try {
-            jsonParams.put("name", locationName);
-            jsonParams.put("address", locationAddress);
-            jsonParams.put("latitude", latitude);
-            jsonParams.put("longitude", longitude);
-            entity = new StringEntity(jsonParams.toString());
-            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        //Send JSON to server.
-        TravlendarRestClient.postWithAuth("ApplicationServerArchive/preference/location", univocalCode
-                , entity, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                //Makes UI unresponsive.
-                waitForServerResponse();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // Notify the user that the location has been added.
-                Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
-                // Add location to the list.
-                Location location = new Location(locationName, new Position(locationAddress));
-                locationsMap.put(locationName, location);
-                populateLocationsSpinner();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                //Sending failed.
-                switch (statusCode) {
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", responseString);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                //Makes UI responsive again.
-                resumeNormalMode();
-            }
-        });*/
+        // Send request to server.
+        waitForServerResponse();
+        AddLocationController addLocationController = new AddLocationController(senderHandler);
+        addLocationController.start(
+                univocalCode,
+                locationName,
+                locationAddress,
+                latitude,
+                longitude
+        );
     }
 
     /**
@@ -326,7 +305,12 @@ public class AccountActivity extends MenuActivity {
         // Retrieve location name to be deleted.
         String selectedLocation = locations_spinner.getSelectedItem().toString();
 
-        //Send request to server.
+        // Send request to server.
+        waitForServerResponse();
+        GetLocationsController getLocationsController = new GetLocationsController(getterHandler);
+        getLocationsController.start(univocalCode);
+
+        /*Send request to server.
         TravlendarRestClient.deleteWithAuth("ApplicationServerArchive/preference/location/".concat(selectedLocation), univocalCode
                 , new JsonHttpResponseHandler() {
                     @Override
@@ -363,7 +347,7 @@ public class AccountActivity extends MenuActivity {
                         //Makes UI responsive again.
                         resumeNormalMode();
                     }
-                });
+                });*/
     }
 
     private void populateLocationsSpinner() {

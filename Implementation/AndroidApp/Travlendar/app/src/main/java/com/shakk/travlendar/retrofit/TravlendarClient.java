@@ -31,12 +31,12 @@ public interface TravlendarClient {
     Call<List<Location>> getLocations();
 
     @POST("preference/location")
-    Call addLocation(
+    Call<Void> addLocation(
             @Body LocationBody locationBody
     );
 
     @DELETE("preference/location/{name}")
-    Call deleteLocation(
+    Call<Void> deleteLocation(
         @Path("name") String name
     );
 
