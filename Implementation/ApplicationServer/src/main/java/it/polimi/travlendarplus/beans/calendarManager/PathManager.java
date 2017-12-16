@@ -61,8 +61,12 @@ public class PathManager extends UserManager {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
-        if ( event.isPrevLocChoice() )
+        if ( event.isPrevLocChoice() && previous != null ) {
             event.setDeparture( previous.getEventLocation() );
+        }
+        else if(event.isPrevLocChoice() && previous == null) {
+            event.setDeparture( event.getEventLocation() );
+        }
         try {
             // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallPreviousPath( event, previous );
@@ -103,9 +107,7 @@ public class PathManager extends UserManager {
                                                       boolean sameLoc )
             throws GMapsGeneralException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
-        if ( !privateMeans.isEmpty() ) {
-            privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
-        }
+        privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
         if ( !publicMeans.isEmpty() ) {
             publicPathsHandler( possiblePaths, baseCall, eventA, eventB, publicMeans, sameLoc );
         }

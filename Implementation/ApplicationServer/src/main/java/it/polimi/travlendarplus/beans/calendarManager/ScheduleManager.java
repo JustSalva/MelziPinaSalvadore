@@ -28,7 +28,7 @@ public class ScheduleManager extends UserManager {
 
     // day is a long corresponding to the unix time at 12:00 of the day wanted.
     public ScheduleHolder getScheduleByDay ( long day ) {
-        setSchedule( Instant.ofEpochSecond( day ), 2 );
+        setSchedule( Instant.ofEpochSecond( day ), SECONDS_IN_A_DAY/2 );
         return schedule;
     }
 

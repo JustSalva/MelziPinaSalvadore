@@ -35,8 +35,8 @@ public class RESTfulTestSettings {
     private PathCombination combination = new PathCombination( null, null );
     private ArrayList < TravelMeanEnum > privateMeans;
     private ArrayList < TravelMeanEnum > publicMeans;
-    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/ { TravelMeanEnum.CAR };
-    private TravelMeanEnum[] pubM = /*{TravelMeanEnum.TRAIN, TravelMeanEnum.BUS}*/ new TravelMeanEnum[ 0 ];
+    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/ new TravelMeanEnum[ 0 ];
+    private TravelMeanEnum[] pubM = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS};
 
     public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel ) {
         baseCaseConfiguration( first, second, third, setTravel );
@@ -48,10 +48,10 @@ public class RESTfulTestSettings {
         baseCaseConfiguration( first, second, third, setTravel );
         //2018/01/20 h:12:00 - 13:00
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
-        e4 = setEvent( 4, 1516449600, 1516453200, true, null, abbadia, toe1 );
+        e4 = setEvent( 1516449600, 1516453200, true, null, abbadia, toe1 );
         //e4 is the event that I try to add
         //2018/01/20 h:9:00 - 14:00
-        be1 = setBreakEvent( 1516438800, 1516456800, minInt, true );
+        be1 = setBreakEvent(1516438800, 1516456800, minInt, true );
         user.addBreak( be1 );
         combination = pathManager.calculatePath( e4, privateMeans, publicMeans );
         return ( combination != null ) ? combination.toString() : "NO_FEASIBLE_PATHS";
@@ -70,7 +70,7 @@ public class RESTfulTestSettings {
     public String swapEvents ( long stTime, long endTime, boolean breakEvent ) {
         baseCaseConfiguration( true, true, true, true );
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
-        e4 = setEvent( 4, stTime, endTime, true, lecco, maggianico, toe1 );
+        e4 = setEvent( stTime, endTime, true, lecco, maggianico, toe1 );
         String msg = "";
         //2018/01/20 h:10:00 - 11:00
         if ( breakEvent ) {
@@ -87,11 +87,11 @@ public class RESTfulTestSettings {
         setBaseLocations();
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         //2018/01/20 h:8:00 - 10:00
-        e1 = setEvent( 1, 1516435200, 1516442400, false, mandello, mandello, toe1 );
+        e1 = setEvent( 1516435200, 1516442400, false, mandello, mandello, toe1 );
         //2018/01/20 h:14:00 - 15:00
-        e2 = setEvent( 2, 1516456800, 1516460400, true, mandello, lecco, toe1 );
+        e2 = setEvent( 1516456800, 1516460400, true, mandello, lecco, toe1 );
         //2018/01/20 h:18:00 - 20:00
-        e3 = setEvent( 3, 1516471200, 1516478400, true, mandello, como, toe1 );
+        e3 = setEvent( 1516471200, 1516478400, true, mandello, como, toe1 );
         setScheduleld( first, second, third );
         if ( setTravels )
             baseTravelsConfiguration();
@@ -106,10 +106,14 @@ public class RESTfulTestSettings {
 
     private BreakEvent setBreakEvent ( long stTime, long endTime, long minTime, boolean sch ) {
         BreakEvent br = new BreakEvent();
+        br.setName( "T+break" );
         br.setStartingTime( Instant.ofEpochSecond( stTime ) );
         br.setEndingTime( Instant.ofEpochSecond( endTime ) );
         br.setMinimumTime( minTime );
         br.setScheduled( sch );
+        setUser();
+        br.setUser( user );
+        user.save();
         br.save();
         return br;
     }
@@ -140,10 +144,9 @@ public class RESTfulTestSettings {
         return t;
     }
 
-    private Event setEvent ( long id, long stTime, long endTime, boolean prevLoc, Location dep, Location arr, TypeOfEvent toe ) {
+    private Event setEvent ( long stTime, long endTime, boolean prevLoc, Location dep, Location arr, TypeOfEvent toe ) {
         Event e = new Event();
         e.setName( "T+" );
-        e.setId( id );
         e.setStartingTime( Instant.ofEpochSecond( stTime ) );
         e.setEndingTime( Instant.ofEpochSecond( endTime ) );
         e.setPrevLocChoice( prevLoc );

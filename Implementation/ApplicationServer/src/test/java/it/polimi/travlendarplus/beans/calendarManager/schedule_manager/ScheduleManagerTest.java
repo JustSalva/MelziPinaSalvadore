@@ -1,9 +1,11 @@
 package it.polimi.travlendarplus.beans.calendarManager.schedule_manager;
 
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
+import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
+import it.polimi.travlendarplus.entities.travels.Travel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -50,8 +52,9 @@ public class ScheduleManagerTest {
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event1,false));
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event3, false));
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(event5, false));
+        setter.noBreakEvents( this );
         assertEquals(true, tester.isEventOverlapFreeIntoSchedule(shortEvent, false));
-        setter.settingOnlySetBreaks(this);
+        setter.settingOnlySetBreaks(this, 3);
         assertEquals(false, tester.isEventOverlapFreeIntoSchedule(shortEvent, false));
 
     }
@@ -103,20 +106,19 @@ public class ScheduleManagerTest {
         assertEquals(3, updList.size());
         assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
     }
-/*
+
     @Test
     public void getFeasiblePathCombinations() {
-        setter.settingOnlySetBreaks(this);
-        ArrayList<Travel> prev = setter.setPrevTravel();
+        setter.settingOnlySetBreaks(this, 2);
+        ArrayList<Travel > prev = setter.setPrevTravel();
         ArrayList<Travel> foll = setter.setFollTravel();
         Event event = new Event();
         event.setId(6);
         event.setStartingTime(Instant.ofEpochSecond(12));
         event.setEndingTime(Instant.ofEpochSecond(13));
-        ArrayList<PathCombination> combs = tester.getFeasiblePathCombinations(event, prev, foll);
+        ArrayList<PathCombination > combs = tester.getFeasiblePathCombinations(event, prev, foll);
         assertEquals(1, combs.size());
         assertEquals(11, combs.get(0).getPrevPath().getStartingTime().getEpochSecond());
-
     }
 
     @Test
@@ -135,5 +137,5 @@ public class ScheduleManagerTest {
         assertEquals(25, combs.get(1).getPrevPath().getEndingTime().getEpochSecond());
 
     }
-*/
+
 }
