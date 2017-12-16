@@ -16,14 +16,14 @@ import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFiel
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -40,8 +40,8 @@ public class EventManager extends UserManager {
     @EJB
     private PathManager pathManager;
 
-    @Resource( name = "DefaultManagedExecutorService" )
-    private ManagedExecutorService executor;
+    @Inject
+    private Executor executor;
 
     @PostConstruct
     public void postConstruct () {
@@ -136,13 +136,15 @@ public class EventManager extends UserManager {
 
     public void propagatePeriodicEvents ( GenericEvent event ) {
 
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
-        if ( !event.getPeriodicity().getEndingDay().isAfter( event.getStartingTime() )
-                && event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS )
-                .isBefore( upperbound ) ) {
+        Instant upperbound = Instant.now().plus( 365, ChronoUnit.DAYS );
+        boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
+        Instant nextStartingTime = event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        boolean condition2 = nextStartingTime.isBefore( upperbound );
+        if ( condition1 && condition2 ) {
             GenericEvent nextEvent;
             nextEvent = event.nextPeriodicEvent();
             nextEvent.addEventAndModifyFollowingEvent( this );
+            nextEvent.setUser( currentUser );
             nextEvent.save();
             nextEvent.addInUserList( currentUser );
             currentUser.save();
@@ -190,6 +192,7 @@ public class EventManager extends UserManager {
             departure = findLocation( eventMessage.getDeparture() );
         }
         Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
+        periodicity.save();
         Location arrival = findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, periodicity, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
@@ -316,8 +319,10 @@ public class EventManager extends UserManager {
     }
 
     private BreakEvent createBreakEvent ( AddBreakEventMessage eventMessage ) {
+        Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
+        periodicity.save();
         return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, createPeriodicity( eventMessage.getPeriodicity() ), eventMessage.getMinimumTime() );
+                false, periodicity, eventMessage.getMinimumTime() );
     }
 
     public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
@@ -337,8 +342,9 @@ public class EventManager extends UserManager {
 
     private void startEventPropagatorThread ( GenericEvent genericEvent ) {
         if ( genericEvent.getPeriodicity() != null ) {
-            PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this, genericEvent );
-            executor.submit( runnable );
+            /*PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this, genericEvent, currentUser );
+            executor.execute( runnable );*/
+            propagatePeriodicEvents( genericEvent );
         }
     }
 

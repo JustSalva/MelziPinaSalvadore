@@ -18,8 +18,6 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     private static final long serialVersionUID = -4348542805788613273L;
 
-    private final long SECONDS_IN_A_DAY = 24 * 60 * 60;
-
     @Column( nullable = false, name = "NAME" )
     private String name;
 
@@ -32,9 +30,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     @Column( name = "IS_SCHEDULED" )
     private boolean isScheduled;
 
-    @OneToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "PERIODICITY_ID" )
-    private Period periodicity;
+    private long periodicityId;
 
     private String userId;
 
@@ -50,7 +46,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
-        this.periodicity = periodicity;
+        this.periodicityId = periodicity.getId();
         this.lastUpdate = new Timestamp();
     }
 
@@ -60,7 +56,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.isScheduled = isScheduled;
-        this.periodicity = new Period( null, null, 0 );
+        this.periodicityId = 0;
         this.lastUpdate = new Timestamp();
     }
 
@@ -103,15 +99,16 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     }
 
     public Period getPeriodicity () {
-        return periodicity;
+        try {
+            return Period.load( periodicityId );
+        } catch ( EntityNotFoundException e ) {
+            //if is not found the id is equal to zero => no periodicity
+            return null;
+        }
     }
 
     public void setPeriodicity ( Period periodicity ) {
-        this.periodicity = periodicity;
-    }
-
-    public long getDayAtMidnight () {
-        return startingTime.getEpochSecond() - ( startingTime.getEpochSecond() % ( SECONDS_IN_A_DAY ) );
+        this.periodicityId = periodicity.getId();
     }
 
     public Timestamp getLastUpdate () {
@@ -166,7 +163,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
                 ", startingTime=" + startingTime +
                 ", endingTime=" + endingTime +
                 ", isScheduled=" + isScheduled +
-                ", periodicity=" + periodicity +
+                ", periodicityId=" + periodicityId +
                 ", userId=" + userId +
                 ", lastUpdate=" + lastUpdate +
                 '}';

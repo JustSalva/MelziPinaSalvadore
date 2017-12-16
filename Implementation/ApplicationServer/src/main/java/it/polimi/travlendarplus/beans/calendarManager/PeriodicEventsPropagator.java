@@ -44,7 +44,7 @@ public class PeriodicEventsPropagator {
         List < GenericEvent > periodicEvents = new ArrayList <>( performEventQuery( genericEventIds ) );
         List < GenericEvent > eventsToBePropagated = new ArrayList <>();
 
-        Instant upperbound = Instant.now().plus( 1, ChronoUnit.YEARS );
+        Instant upperbound = Instant.now().plus( 365, ChronoUnit.DAYS );
 
         //I keep only the events that needs to be propagated
         for ( GenericEvent event : periodicEvents ) {

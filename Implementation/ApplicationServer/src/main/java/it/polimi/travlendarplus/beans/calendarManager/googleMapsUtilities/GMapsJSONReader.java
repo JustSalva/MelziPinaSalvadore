@@ -229,7 +229,9 @@ public class GMapsJSONReader {
                             getSingleArrivalTimeInUnix( steps.getJSONObject( j ) ) );
                     float lengthInKm = ( ( float ) getSingleDistanceInMeters( steps.getJSONObject( j ) ) ) / 1000;
                     Location departureLoc = getSingleDepartureStop( steps.getJSONObject( j ) );
+                    departureLoc.save();
                     Location arrivalLoc = getSingleArrivalStop( steps.getJSONObject( j ) );
+                    arrivalLoc.save();
                     TravelMeanEnum meanEnum = getProperTravelMeanEnum(
                             getSingleVehicleType( steps.getJSONObject( j ) ) );
                     PublicTravelMean mean = new PublicTravelMean(
