@@ -148,7 +148,6 @@ public class EventRESTful {
      */
     @Path( "{idEvent}" )
     @DELETE
-    @Produces( MediaType.APPLICATION_JSON )
     public Response deleteEvent ( @PathParam( "idEvent" ) long id ) {
         try {
             eventManager.deleteEvent( id );

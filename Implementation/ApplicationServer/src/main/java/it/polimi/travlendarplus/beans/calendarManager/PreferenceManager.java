@@ -181,6 +181,7 @@ public class PreferenceManager extends UserManager {
 
     public void addPreferredLocation ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
         checkLocationConsistency( locationMessage );
+
         Location location = new Location( locationMessage.getLatitude(), locationMessage.getLongitude(),
                 locationMessage.getAddress() );
         location.save();

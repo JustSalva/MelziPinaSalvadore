@@ -52,7 +52,7 @@ public class PreferenceRESTful {
     /**
      * Allows the user to retrieve all preferences profile
      *
-     * @return an HTTP 200 OK success status response code and  all the preference profiles of the user
+     * @return an HTTP 200 OK success status response code and all the preference profiles of the user
      * ( in the message body )
      */
     @GET
@@ -89,6 +89,7 @@ public class PreferenceRESTful {
      */
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
     public Response addPreference ( AddTypeOfEventMessage typeOfEventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.addTypeOfEvent( typeOfEventMessage ) );
@@ -107,6 +108,7 @@ public class PreferenceRESTful {
      */
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
     public Response modifyPreference ( ModifyTypeOfEventMessage typeOfEventMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse( preferenceManager.modifyTypeOfEvent( typeOfEventMessage ) );
@@ -200,6 +202,7 @@ public class PreferenceRESTful {
     @Path( "/location" )
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
     public Response modifyPreferredLocation ( PreferredLocationMessage locationMessage ) {
         try {
             preferenceManager.modifyPreferredLocation( locationMessage );

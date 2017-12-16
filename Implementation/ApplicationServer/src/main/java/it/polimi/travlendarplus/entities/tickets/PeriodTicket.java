@@ -66,4 +66,12 @@ public class PeriodTicket extends Ticket {
     public void setEndingDate ( Instant endingDate ) {
         this.endingDate = endingDate;
     }
+
+    public Ticket getDecorator () {
+        return decorator;
+    }
+
+    public void setDecorator ( Ticket decorator ) {
+        this.decorator = decorator;
+    }
 }
