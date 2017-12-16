@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.entities;
 
-import it.polimi.travlendarplus.UserLocation;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.Constraint;
 import it.polimi.travlendarplus.entities.tickets.Ticket;

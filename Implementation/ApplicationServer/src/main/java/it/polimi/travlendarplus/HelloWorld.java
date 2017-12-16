@@ -1,30 +1,14 @@
 package it.polimi.travlendarplus;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
-import it.polimi.travlendarplus.RESTful.security.AuthenticatedUser;
-import it.polimi.travlendarplus.RESTful.security.Secured;
+import it.polimi.travlendarplus.RESTful.authenticationManager.AuthenticatedUser;
+import it.polimi.travlendarplus.RESTful.authenticationManager.Secured;
 import it.polimi.travlendarplus.entities.Location;
-import it.polimi.travlendarplus.entities.LocationId;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.preferences.DistanceConstraint;
-import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
-import it.polimi.travlendarplus.entities.preferences.PeriodOfDayConstraint;
-import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
-import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
-import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
-import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.AddEventMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.LocationMessage;
-import it.polimi.travlendarplus.messages.calendarMessages.eventMessages.PeriodMessage;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,9 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 
 // The Java class will be hosted at the URI path "/prova"
 @Path("/prova")

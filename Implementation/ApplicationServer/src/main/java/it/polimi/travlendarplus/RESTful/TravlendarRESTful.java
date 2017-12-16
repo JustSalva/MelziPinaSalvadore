@@ -10,23 +10,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 //Defines the base URI for all resource URIs.
-@ApplicationPath("/")
+@ApplicationPath( "/" )
 //The java class declares root resource and provider classes
-public class TravlendarRESTful extends ResourceConfig{
+public class TravlendarRESTful extends ResourceConfig {
     //The method returns a non-empty collection with classes, that must be included in the published JAX-RS application
 
-    public TravlendarRESTful(){
+    public TravlendarRESTful() {
         // Register resources and providers using package-scanning.
-        packages("it.polimi.travlendarplus.RESTful");
+        packages( "it.polimi.travlendarplus.RESTful" );
 
         // Register my custom provider - not needed if it's in my.package.
-        register(HelloWorld.class);
+        register( HelloWorld.class );
         // Register an instance of LoggingFilter.
-        register(new LoggingFeature( Logger.getLogger( "inbound" ),
-                Level.ALL, LoggingFeature.Verbosity.PAYLOAD_ANY,8192 ) );
+        register( new LoggingFeature( Logger.getLogger( "inbound" ),
+                Level.ALL, LoggingFeature.Verbosity.PAYLOAD_ANY, 8192 ) );
 
         // Enable Tracing support, to be removed before deploy.
-        property( ServerProperties.TRACING, "ALL");
+        property( ServerProperties.TRACING, "ALL" );
     }
 
 }

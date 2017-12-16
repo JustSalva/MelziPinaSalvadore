@@ -1,8 +1,8 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 
-import it.polimi.travlendarplus.beans.calendar_manager.EventManager;
-import it.polimi.travlendarplus.beans.calendar_manager.ScheduleManager;
+import it.polimi.travlendarplus.beans.calendarManager.EventManager;
+import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
