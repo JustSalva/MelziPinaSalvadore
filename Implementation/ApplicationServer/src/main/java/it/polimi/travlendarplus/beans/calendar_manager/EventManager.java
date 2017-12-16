@@ -94,9 +94,9 @@ public class EventManager extends UserManager {
             responseList.add( following );
         }
         event.setUser( currentUser );
-        responseList.add( event );
         currentUser.addEvent( event );
         currentUser.save();
+        responseList.add( event );
         startEventPropagatorThread( event );
         return responseList;
     }
@@ -229,7 +229,7 @@ public class EventManager extends UserManager {
             genericEventErrors.add( " starting time must be less than ending time" );
         }
         genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );
-
+        //TODO check if start and end time are in the past
         return genericEventErrors;
     }
 
@@ -273,9 +273,12 @@ public class EventManager extends UserManager {
         GenericEvent genericEvent;
         try {
             genericEvent = getEventInformation( id );
+            currentUser.removeEvent( id );
         } catch ( EntityNotFoundException e ) {
             genericEvent = getBreakEventInformation( id );
+            currentUser.removeBreakEvent( id );
         }
+        currentUser.save();
         genericEvent.remove();
     }
 

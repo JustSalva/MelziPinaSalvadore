@@ -179,6 +179,10 @@ public class User extends GenericEntity {
         this.breaks.add( event );
     }
 
+    public void removeBreakEvent( long id ) {
+        this.breaks.removeIf( event -> event.getId() == id );
+    }
+
     public List< Event > getEvents() {
         return Collections.unmodifiableList( events );
     }
@@ -189,6 +193,10 @@ public class User extends GenericEntity {
 
     public void addEvent( Event event ) {
         this.events.add( event );
+    }
+
+    public void removeEvent( long id ) {
+        this.events.removeIf( event -> event.getId() == id );
     }
 
     public List< Ticket > getHeldTickets() {

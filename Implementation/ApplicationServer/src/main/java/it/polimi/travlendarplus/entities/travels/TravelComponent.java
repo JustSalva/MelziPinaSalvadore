@@ -39,7 +39,7 @@ public class TravelComponent extends EntityWithLongKey{
     })
     private Location arrival;
 
-    @ManyToOne( fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @ManyToOne( fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="TRAVEL_MEAN_USED")
     private TravelMean meanUsed;
 
