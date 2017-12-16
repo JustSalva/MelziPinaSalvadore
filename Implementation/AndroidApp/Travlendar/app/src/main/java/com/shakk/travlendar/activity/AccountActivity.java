@@ -32,6 +32,7 @@ import com.shakk.travlendar.R;
 import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.database.view_model.UserViewModel;
 import com.shakk.travlendar.retrofit.controller.AddLocationController;
+import com.shakk.travlendar.retrofit.controller.DeleteLocationController;
 import com.shakk.travlendar.retrofit.controller.GetLocationsController;
 
 import org.json.JSONArray;
@@ -197,15 +198,14 @@ public class AccountActivity extends MenuActivity {
             public void handleMessage(Message msg){
                 switch (msg.what){
                     case 200:
-                        // Notify the user that the location has been added.
-                        Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
-                        // Add location to the list.
-                        Location location = new Location(locationName, new Location.Position(locationAddress));
-                        locationsMap.put(locationName, location);
+                        // Notify the user that the location has been removed.
+                        Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();
+                        // Remove location to the list.
+                        locationsMap.remove(selectedLocation.getName());
                         populateLocationsSpinner();
                         break;
                     case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "The location specified does not exist!", Toast.LENGTH_LONG).show();
                         break;
                     default:
                         Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
@@ -302,59 +302,19 @@ public class AccountActivity extends MenuActivity {
     }
 
     private void deleteLocationFromServer() {
-        // Retrieve location name to be deleted.
-        String selectedLocation = locations_spinner.getSelectedItem().toString();
-
         // Send request to server.
         waitForServerResponse();
-        GetLocationsController getLocationsController = new GetLocationsController(getterHandler);
-        getLocationsController.start(univocalCode);
-
-        /*Send request to server.
-        TravlendarRestClient.deleteWithAuth("ApplicationServerArchive/preference/location/".concat(selectedLocation), univocalCode
-                , new JsonHttpResponseHandler() {
-                    @Override
-                    public void onStart() {
-                        //Makes UI unresponsive.
-                        waitForServerResponse();
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        // Notify the user that the location has been removed.
-                        Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();
-                        // Remove location to the list.
-                        locationsMap.remove(locationName);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        // Request failed.
-                        switch (statusCode) {
-                            case 400:
-                                Toast.makeText(getBaseContext(), "The location specified does not exist!", Toast.LENGTH_LONG).show();
-                                Log.d("ERROR_RESPONSE", responseString);
-                                break;
-                            default:
-                                Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                                Log.d("ERROR_RESPONSE", responseString);
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        //Makes UI responsive again.
-                        resumeNormalMode();
-                    }
-                });*/
+        DeleteLocationController deleteLocationController = new DeleteLocationController(deleteHandler);
+        deleteLocationController.start(univocalCode, selectedLocation.getName());
     }
 
     private void populateLocationsSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext()
-                , android.R.layout.simple_spinner_item
-                , locationsMap.keySet().toArray(new String[locationsMap.size()]));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getApplicationContext(),
+                android.R.layout.simple_spinner_item,
+                locationsMap.keySet().toArray(new String[locationsMap.size()])
+        );
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
