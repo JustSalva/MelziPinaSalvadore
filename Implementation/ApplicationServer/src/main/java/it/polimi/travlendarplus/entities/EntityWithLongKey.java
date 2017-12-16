@@ -2,18 +2,16 @@ package it.polimi.travlendarplus.entities;
 
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 @MappedSuperclass
+@TableGenerator( name = "longKeyId", initialValue = 10 )
 public abstract class EntityWithLongKey extends GenericEntity {
 
     private static final long serialVersionUID = 973829971443943530L;
 
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @GeneratedValue( strategy = GenerationType.TABLE, generator = "longKeyId" )
     private long id;
 
     public long getId () {

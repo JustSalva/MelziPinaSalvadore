@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus.RESTful.messages.tripMessages;
 
 import it.polimi.travlendarplus.beans.tripManager.TripManager;
+import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
+import it.polimi.travlendarplus.entities.tickets.GenericTicket;
+import it.polimi.travlendarplus.entities.tickets.PathTicket;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 
@@ -14,18 +17,19 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
     private String name;
     private Instant startingDate;
     private Instant endingDate;
-    private AddTicketMessage decorator;
+    private AddDistanceTicketMessage distanceDecorator;
+    private AddGenericTicketMessage genericDecorator;
+    private AddPathTicketMessage pathDecorator;
 
     public AddPeriodTicketMessage () {
     }
 
     public AddPeriodTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo, String name,
-                                    Instant startingDate, Instant endingDate, AddTicketMessage decorator ) {
+                                    Instant startingDate, Instant endingDate ) {
         super( cost, relatedTo );
         this.name = name;
         this.startingDate = startingDate;
         this.endingDate = endingDate;
-        this.decorator = decorator;
     }
 
     public String getName () {
@@ -52,12 +56,67 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
         this.endingDate = endingDate;
     }
 
-    public AddTicketMessage getDecorator () {
-        return decorator;
+    public AddDistanceTicketMessage getDistanceDecorator () {
+        return distanceDecorator;
     }
 
-    public void setDecorator ( AddTicketMessage decorator ) {
-        this.decorator = decorator;
+    public AddGenericTicketMessage getGenericDecorator () {
+        return genericDecorator;
+    }
+
+    public AddPathTicketMessage getPathDecorator () {
+        return pathDecorator;
+    }
+
+    public boolean isDistanceDecorator () {
+        return ( distanceDecorator != null );
+    }
+
+    public void setDistanceDecorator ( AddDistanceTicketMessage distanceDecorator ) {
+        this.distanceDecorator = distanceDecorator;
+    }
+
+    public boolean isGenericDecorator () {
+        return ( genericDecorator != null );
+    }
+
+    public void setGenericDecorator ( AddGenericTicketMessage genericDecorator ) {
+        this.genericDecorator = genericDecorator;
+    }
+
+    public boolean isPathDecorator () {
+        return ( pathDecorator != null );
+    }
+
+    public void setPathDecorator ( AddPathTicketMessage pathDecorator ) {
+        this.pathDecorator = pathDecorator;
+    }
+
+    //The ticket is consistent if only one of the decorators is present
+    public boolean isConsistent () {
+        boolean xorBetweenFirstAndSecond = ( isDistanceDecorator() && !isGenericDecorator() ) ||
+                ( !isDistanceDecorator() && isGenericDecorator() );
+        //and now XOR between the first xor and the third value and case in which all three are = 1
+        boolean secondXor = ( isPathDecorator() && !xorBetweenFirstAndSecond ) ||
+                ( !isPathDecorator() && xorBetweenFirstAndSecond );
+        boolean allThreeTrue = isDistanceDecorator() && isGenericDecorator() && isPathDecorator();
+
+        return secondXor && !allThreeTrue;
+    }
+
+    public DistanceTicket retrieveDistanceTicket ( TripManager tripManager ) throws InvalidFieldException {
+        tripManager.checkDistanceTicketConsistency( distanceDecorator );
+        return tripManager.createDistanceTicket( distanceDecorator );
+    }
+
+    public GenericTicket retrieveGenericTicket ( TripManager tripManager ) throws InvalidFieldException {
+        tripManager.checkGenericTicketConsistency( genericDecorator );
+        return tripManager.createGenericTicket( genericDecorator );
+    }
+
+    public PathTicket retrievePathTicket ( TripManager tripManager ) throws InvalidFieldException {
+        tripManager.checkPathTicketConsistency( pathDecorator );
+        return tripManager.createPathTicket( pathDecorator );
     }
 
     @Override

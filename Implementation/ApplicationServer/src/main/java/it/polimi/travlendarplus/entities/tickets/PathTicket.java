@@ -31,7 +31,8 @@ public class PathTicket extends GenericTicket {
     public PathTicket () {
     }
 
-    public PathTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, String lineName, Location startingLocation, Location endingLocation ) {
+    public PathTicket ( float cost, ArrayList < PublicTravelMean > relatedTo, String lineName,
+                        Location startingLocation, Location endingLocation ) {
         super( cost, relatedTo, lineName );
         this.startingLocation = startingLocation;
         this.endingLocation = endingLocation;

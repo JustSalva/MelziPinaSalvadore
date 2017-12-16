@@ -210,6 +210,10 @@ public class User extends GenericEntity {
         this.heldTickets.add( ticket );
     }
 
+    public void deleteTicket ( long id ) {
+        this.heldTickets.removeIf( ticket -> ticket.getId() == id );
+    }
+
     public List < TypeOfEvent > getPreferences () {
         return Collections.unmodifiableList( preferences );
     }

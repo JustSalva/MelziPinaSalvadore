@@ -62,7 +62,6 @@ public class PreferenceManager extends UserManager {
         TypeOfEvent typeOfEvent = getPreferencesProfile( id );
         currentUser.removePreference( id );
         currentUser.save();
-        typeOfEvent.remove();
     }
 
     private void checkTypeOfEventConsistency ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
@@ -214,7 +213,7 @@ public class PreferenceManager extends UserManager {
     }
 
     public void deletePreferredLocation ( String name ) throws EntityNotFoundException {
-        UserLocation location = getPreferredLocation( name );
+        getPreferredLocation( name );
         currentUser.removeLocation( name );
         currentUser.save();
     }

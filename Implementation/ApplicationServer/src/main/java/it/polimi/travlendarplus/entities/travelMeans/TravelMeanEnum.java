@@ -20,16 +20,20 @@ public enum TravelMeanEnum {
     }
 
     public static boolean isValid ( TravelMeanEnum travelMean ) {
-        return ( travelMean == TravelMeanEnum.CAR ||
+        return ( isPublicTravelMean( travelMean ) ||
+                travelMean == TravelMeanEnum.CAR ||
                 travelMean == TravelMeanEnum.BIKE ||
-                travelMean == TravelMeanEnum.SUBWAY ||
-                travelMean == TravelMeanEnum.BUS ||
-                travelMean == TravelMeanEnum.TRAIN ||
-                travelMean == TravelMeanEnum.TRAM ||
                 travelMean == TravelMeanEnum.BY_FOOT ||
                 travelMean == TravelMeanEnum.SHARING_CAR ||
                 travelMean == TravelMeanEnum.SHARING_BIKE ||
                 travelMean == TravelMeanEnum.OTHER );
+    }
+
+    public static boolean isPublicTravelMean ( TravelMeanEnum travelMean ) {
+        return ( travelMean == TravelMeanEnum.SUBWAY ||
+                travelMean == TravelMeanEnum.BUS ||
+                travelMean == TravelMeanEnum.TRAIN ||
+                travelMean == TravelMeanEnum.TRAM );
     }
 
     public String getParam () {

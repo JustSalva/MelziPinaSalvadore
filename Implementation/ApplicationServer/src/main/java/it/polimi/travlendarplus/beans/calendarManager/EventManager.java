@@ -156,7 +156,7 @@ public class EventManager extends UserManager {
         }
     }
 
-    private Location findLocation ( LocationMessage locationMessage ) {
+    public static Location findLocation ( LocationMessage locationMessage ) {
         //TODO check correctness?
         Location location;
         try {
@@ -189,11 +189,11 @@ public class EventManager extends UserManager {
         }
         Location departure = null;
         if ( !eventMessage.isPrevLocChoice() ) {
-            departure = findLocation( eventMessage.getDeparture() );
+            departure = EventManager.findLocation( eventMessage.getDeparture() );
         }
         Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
         periodicity.save();
-        Location arrival = findLocation( eventMessage.getEventLocation() );
+        Location arrival = EventManager.findLocation( eventMessage.getEventLocation() );
         return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
                 false, periodicity, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
                 eventMessage.isTravelAtLastChoice(), type, arrival, departure );
@@ -231,7 +231,7 @@ public class EventManager extends UserManager {
         if ( eventMessage.getName() == null ) {
             genericEventErrors.add( " name" );
         }
-        if ( !eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
+        if ( ! eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
             genericEventErrors.add( " starting time must be less than ending time" );
         }
         genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );
@@ -277,6 +277,7 @@ public class EventManager extends UserManager {
 
     public void deleteEvent ( long id ) throws EntityNotFoundException {
         GenericEvent genericEvent;
+        //TODO path of the following?
         try {
             genericEvent = getEventInformation( id );
             currentUser.removeEvent( id );
