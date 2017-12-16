@@ -2,9 +2,9 @@ package com.shakk.travlendar.retrofit.response;
 
 public class RegisterResponse {
 
-    private String univocalCode;
+    private String token;
 
-    public String getUnivocalCode() {
-        return univocalCode;
+    public String getToken() {
+        return token;
     }
 }

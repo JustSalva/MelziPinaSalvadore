@@ -43,7 +43,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class RegistrationActivity extends AppCompatActivity {
 
     // Database reference and idDevice token.
-    private String token;
+    private String idDevice;
 
     // UI references.
     private EditText email_editText;
@@ -98,10 +98,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     case 200:
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
-                        String univocalCode = bundle.getString("univocalCode");
-
+                        String token = bundle.getString("token");
+                        Log.d("UNICODE", token);
                         // Insert new User into the local DB.
-                        User user = new User(email, name, surname, univocalCode);
+                        User user = new User(email, name, surname, token);
                         Log.d("INSERT_USER", user.toString());
                         new InsertUserTask(getApplicationContext()).execute(user);
 
@@ -144,12 +144,12 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         // Retrieve token representing device.
-        token = FirebaseInstanceId.getInstance().getToken();
+        idDevice = FirebaseInstanceId.getInstance().getToken();
 
         // Send request to server.
         waitForServerResponse();
         RegisterController registerController = new RegisterController(handler);
-        registerController.start(email, password1, token, name, surname);
+        registerController.start(email, password1, idDevice, name, surname);
     }
 
     /**

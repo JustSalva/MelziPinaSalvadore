@@ -8,12 +8,8 @@ import android.util.Log;
 
 import com.shakk.travlendar.retrofit.ServiceGenerator;
 import com.shakk.travlendar.retrofit.TravlendarClient;
-import com.shakk.travlendar.retrofit.body.LoginBody;
 import com.shakk.travlendar.retrofit.body.RegisterBody;
-import com.shakk.travlendar.retrofit.response.LoginResponse;
 import com.shakk.travlendar.retrofit.response.RegisterResponse;
-
-import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,11 +36,12 @@ public class RegisterController implements Callback<RegisterResponse> {
         Bundle bundle = new Bundle();
         if(response.isSuccessful()) {
             RegisterResponse registerResponse = response.body();
-            bundle.putString("univocalCode", registerResponse.getUnivocalCode());
+            bundle.putString("token", registerResponse.getToken());
         } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }
         Message msg = handler.obtainMessage(response.code());
+        msg.setData(bundle);
         msg.sendToTarget();
     }
 

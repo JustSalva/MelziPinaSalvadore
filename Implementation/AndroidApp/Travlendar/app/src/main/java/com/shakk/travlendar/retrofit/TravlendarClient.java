@@ -1,10 +1,13 @@
 package com.shakk.travlendar.retrofit;
 
-
+import com.shakk.travlendar.Location;
+import com.shakk.travlendar.retrofit.body.LocationBody;
 import com.shakk.travlendar.retrofit.body.LoginBody;
 import com.shakk.travlendar.retrofit.body.RegisterBody;
 import com.shakk.travlendar.retrofit.response.LoginResponse;
 import com.shakk.travlendar.retrofit.response.RegisterResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,13 +28,11 @@ public interface TravlendarClient {
     );
 
     @GET("preference/location")
-    Call getLocations(
-
-    );
+    Call<List<Location>> getLocations();
 
     @POST("preference/location")
     Call addLocation(
-
+            @Body LocationBody locationBody
     );
 
     @DELETE("preference/location/{name}")

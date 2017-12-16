@@ -35,11 +35,12 @@ public class LoginController implements Callback<LoginResponse> {
             LoginResponse loginResponse = response.body();
             bundle.putString("name", loginResponse.getName());
             bundle.putString("surname", loginResponse.getSurname());
-            bundle.putString("univocalCode", loginResponse.getUnivocalCode());
+            bundle.putString("token", loginResponse.getToken());
         } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }
         Message msg = handler.obtainMessage(response.code());
+        msg.setData(bundle);
         msg.sendToTarget();
     }
 

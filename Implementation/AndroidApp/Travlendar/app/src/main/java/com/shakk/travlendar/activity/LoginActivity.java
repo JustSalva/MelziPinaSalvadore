@@ -34,7 +34,7 @@ import com.shakk.travlendar.retrofit.controller.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
     // idDevice token.
-    private String token;
+    private String idDevice;
 
     // UI references.
     private EditText email_editText;
@@ -88,11 +88,10 @@ public class LoginActivity extends AppCompatActivity {
                         Bundle bundle = msg.getData();
                         String name = bundle.getString("name");
                         String surname = bundle.getString("surname");
-                        String univocalCode = bundle.getString("univocalCode");
+                        String token = bundle.getString("token");
 
                         // Insert new User into the local DB.
-                        User user = new User(email, name, surname, univocalCode);
-                        Log.d("INSERT USER", user.toString());
+                        User user = new User(email, name, surname, token);
                         new InsertUserTask(getApplicationContext()).execute(user);
 
                         goToCalendarActivity();
@@ -136,12 +135,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Retrieve token representing device.
-        token = FirebaseInstanceId.getInstance().getToken();
+        idDevice = FirebaseInstanceId.getInstance().getToken();
 
         // Send request to server.
         waitForServerResponse();
         LoginController loginController = new LoginController(handler);
-        loginController.start(email, password, token);
+        loginController.start(email, password, idDevice);
     }
 
     /**
