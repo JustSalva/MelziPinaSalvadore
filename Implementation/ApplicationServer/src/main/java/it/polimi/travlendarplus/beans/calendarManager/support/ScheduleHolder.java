@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 public class ScheduleHolder {
 
     private List < Event > events;
@@ -27,8 +29,13 @@ public class ScheduleHolder {
     }
 
     //the add of the event is only simulated: we use a copied ArrayList
-    public ArrayList < Event > getListWithNewEvent ( Event newEvent ) {
-        ArrayList < Event > newList = copyEventList();
+    public List < Event > getListWithNewEvent ( Event newEvent, boolean removeEvent ) {
+        List < Event > newList = copyEventList();
+        Event toRemove = null;
+        newList = newList.stream().filter( e -> e.getId() != newEvent.getId() ).collect( toList() );
+        if ( toRemove != null ) {
+            newList.remove( toRemove );
+        }
         newList.add( newEvent );
         Collections.sort( newList );
         return newList;
@@ -46,11 +53,11 @@ public class ScheduleHolder {
     }
 
     // It returns a list of events composed by the scheduled events, the new event and the new event-related paths.
-    public ArrayList < Event > getListWithNewEventPaths ( Travel prev, Travel foll, Event event ) {
+    public List < Event > getListWithNewEventPaths ( Travel prev, Travel foll, Event event ) {
         int i = 0;
         // The new event, with its related path, is added into the list of scheduled events.
         event.setFeasiblePath( prev );
-        ArrayList < Event > newList = getListWithNewEvent( event );
+        List < Event > newList = getListWithNewEvent( event, true );
         while ( newList.get( i ).getId() != event.getId() && i < newList.size() )
             i++;
         // The following event is identified and the related path is setted.

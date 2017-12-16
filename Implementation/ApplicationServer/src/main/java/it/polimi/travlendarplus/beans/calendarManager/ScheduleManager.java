@@ -28,7 +28,7 @@ public class ScheduleManager extends UserManager {
 
     // day is a long corresponding to the unix time at 12:00 of the day wanted.
     public ScheduleHolder getScheduleByDay ( long day ) {
-        setSchedule( Instant.ofEpochSecond( day ), SECONDS_IN_A_DAY/2 );
+        setSchedule( Instant.ofEpochSecond( day ), SECONDS_IN_A_DAY / 2 );
         return schedule;
     }
 
@@ -45,7 +45,7 @@ public class ScheduleManager extends UserManager {
         // Checking if existing breaks will be still feasible with the addition of the new event.
         for ( BreakEvent scheduledBreak : schedule.getBreaks() )
             if ( !scheduledBreak.isMinimumEnsuredNoPathRegard( getEventsIntoInterval(
-                    schedule.getListWithNewEvent( event ), scheduledBreak ) ) )
+                    schedule.getListWithNewEvent( event, false ), scheduledBreak ) ) )
                 return false;
         return true;
     }
@@ -175,7 +175,7 @@ public class ScheduleManager extends UserManager {
                 boolean combinationFeasible = true;
                 // Analyzing for each combination of prev/foll paths if it would be feasible with each scheduled break.
                 for ( BreakEvent breakEvent : schedule.getBreaks() ) {
-                    ArrayList < Event > simulList = schedule.getListWithNewEventPaths( prev, foll, event );
+                    List < Event > simulList = schedule.getListWithNewEventPaths( prev, foll, event );
                     ArrayList < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
                     // simulInvolved contains events that happen in breakEvent interval.
                     if ( !breakEvent.isMinimumEnsuredWithPathRegard( simulInvolved ) )
@@ -195,7 +195,7 @@ public class ScheduleManager extends UserManager {
             boolean combinationFeasible = true;
             // Analyzing for each prev path if it would be feasible with each scheduled break.
             for ( BreakEvent breakEvent : schedule.getBreaks() ) {
-                ArrayList < Event > simulList = schedule.getListWithNewEventPaths( prev, null, event );
+                List < Event > simulList = schedule.getListWithNewEventPaths( prev, null, event );
                 ArrayList < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
                 if ( !breakEvent.isMinimumEnsuredWithPathRegard( simulInvolved ) )
                     combinationFeasible = false;

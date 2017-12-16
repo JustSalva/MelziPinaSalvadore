@@ -63,8 +63,7 @@ public class PathManager extends UserManager {
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
         if ( event.isPrevLocChoice() && previous != null ) {
             event.setDeparture( previous.getEventLocation() );
-        }
-        else if(event.isPrevLocChoice() && previous == null) {
+        } else if ( event.isPrevLocChoice() && previous == null ) {
             event.setDeparture( event.getEventLocation() );
         }
         try {

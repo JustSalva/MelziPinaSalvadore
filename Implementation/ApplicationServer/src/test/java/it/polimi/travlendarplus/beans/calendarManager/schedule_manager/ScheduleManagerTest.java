@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -102,7 +103,7 @@ public class ScheduleManagerTest {
     public void getListWithNewEvent() {
         Event event = new Event();
         event.setStartingTime(Instant.ofEpochSecond(5));
-        ArrayList<Event> updList = tester.getSchedule().getListWithNewEvent(event);
+        List<Event> updList = tester.getSchedule().getListWithNewEvent(event, false);
         assertEquals(3, updList.size());
         assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
     }
