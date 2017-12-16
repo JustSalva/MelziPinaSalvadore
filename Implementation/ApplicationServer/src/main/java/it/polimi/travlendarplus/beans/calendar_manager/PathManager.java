@@ -153,6 +153,9 @@ public class PathManager extends UserManager{
     }
 
     private boolean travelFeasibleInTimeslot(Event eventA, Event eventB, Travel travel) {
+        if( eventA == null ) {
+            return true;
+        }
         return (!eventB.isTravelAtLastChoice() && !travel.getEndingTime().isAfter(eventB.getStartingTime())) ||
             (eventB.isTravelAtLastChoice() && !travel.getStartingTime().isBefore(eventA.getEndingTime()));
     }

@@ -95,6 +95,7 @@ public class EventManager extends UserManager {
         }
         event.setUser( currentUser );
         currentUser.addEvent( event );
+        event.save();
         currentUser.save();
         responseList.add( event );
         startEventPropagatorThread( event );
@@ -246,7 +247,7 @@ public class EventManager extends UserManager {
         long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
                 .until( periodMessage.getEndingDay(), ChronoUnit.DAYS );
 
-        if ( deltaBetweenStartAndEndingTime > periodMessage.getDeltaDays() ) {
+        if ( deltaBetweenStartAndEndingTime < periodMessage.getDeltaDays() ) {
             periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
         }
 

@@ -177,7 +177,6 @@ public class EventRESTful {
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response addBreakEvent( AddBreakEventMessage eventMessage ) {
-        //TODO periodicity not handled
         try {
             return HttpResponseBuilder.buildOkResponse( eventManager.addBreakEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
