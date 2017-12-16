@@ -26,29 +26,16 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.shakk.travlendar.Location;
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.TravlendarRestClient;
 import com.shakk.travlendar.database.view_model.UserViewModel;
 import com.shakk.travlendar.retrofit.controller.AddLocationController;
 import com.shakk.travlendar.retrofit.controller.DeleteLocationController;
 import com.shakk.travlendar.retrofit.controller.GetLocationsController;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class AccountActivity extends MenuActivity {
 
@@ -78,8 +65,8 @@ public class AccountActivity extends MenuActivity {
 
     // Handler for server responses.
     private Handler getterHandler;
-    private Handler senderHandler;
-    private Handler deleteHandler;
+    private Handler adderHandler;
+    private Handler deleterHandler;
 
     // Store locations received by the server.
     private Map<String, Location> locationsMap;
@@ -169,7 +156,7 @@ public class AccountActivity extends MenuActivity {
         };
 
         // Handle server responses.
-        senderHandler = new Handler(Looper.getMainLooper()) {
+        adderHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
@@ -193,7 +180,7 @@ public class AccountActivity extends MenuActivity {
         };
 
         // Handle server responses.
-        deleteHandler = new Handler(Looper.getMainLooper()) {
+        deleterHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
@@ -265,7 +252,7 @@ public class AccountActivity extends MenuActivity {
 
         // Send request to server.
         waitForServerResponse();
-        AddLocationController addLocationController = new AddLocationController(senderHandler);
+        AddLocationController addLocationController = new AddLocationController(adderHandler);
         addLocationController.start(
                 univocalCode,
                 locationName,
@@ -304,7 +291,7 @@ public class AccountActivity extends MenuActivity {
     private void deleteLocationFromServer() {
         // Send request to server.
         waitForServerResponse();
-        DeleteLocationController deleteLocationController = new DeleteLocationController(deleteHandler);
+        DeleteLocationController deleteLocationController = new DeleteLocationController(deleterHandler);
         deleteLocationController.start(univocalCode, selectedLocation.getName());
     }
 

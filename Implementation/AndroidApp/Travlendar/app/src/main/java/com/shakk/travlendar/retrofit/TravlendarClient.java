@@ -1,6 +1,7 @@
 package com.shakk.travlendar.retrofit;
 
 import com.shakk.travlendar.Location;
+import com.shakk.travlendar.Preference;
 import com.shakk.travlendar.retrofit.body.LocationBody;
 import com.shakk.travlendar.retrofit.body.LoginBody;
 import com.shakk.travlendar.retrofit.body.RegisterBody;
@@ -41,9 +42,7 @@ public interface TravlendarClient {
     );
 
     @GET("preference")
-    Call getPreferences(
-
-    );
+    Call<List<Preference>> getPreferences();
 
     @POST("preference")
     Call addPreference(
