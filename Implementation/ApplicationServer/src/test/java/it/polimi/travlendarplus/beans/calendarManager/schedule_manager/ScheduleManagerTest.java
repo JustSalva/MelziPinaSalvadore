@@ -62,8 +62,8 @@ public class ScheduleManagerTest {
 
     @Test
     public void getSchedule() {
-        assertEquals(0, tester.getScheduleByDay(0).getEvents().size());
-        assertEquals(1, tester.getScheduleByDay(13).getEvents().size());
+        assertEquals(2, tester.getScheduleByDay(0).getEvents().size());
+        assertEquals(2, tester.getScheduleByDay(13).getEvents().size());
     }
 
     @Test
