@@ -5,15 +5,18 @@ import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity( name = "PERIOD" )
-public class Period extends EntityWithLongKey {
+@TableGenerator( name = "periodId", initialValue = 10 )
+public class Period extends GenericEntity {
 
     private static final long serialVersionUID = -7420043997157726131L;
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.TABLE, generator = "periodId" )
+    private long id;
 
     @Column( name = "STARTING_DAY" )
     private Instant startingDay;
@@ -83,5 +86,23 @@ public class Period extends EntityWithLongKey {
 
     public void setLastPropagatedEvent ( long lastPropagatedEvent ) {
         this.lastPropagatedEvent = lastPropagatedEvent;
+    }
+
+    public long getId () {
+        return id;
+    }
+
+    public void setId ( long id ) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean isAlreadyInDb () {
+        try {
+            load( id );
+        } catch ( EntityNotFoundException e ) {
+            return false;
+        }
+        return true;
     }
 }

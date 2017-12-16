@@ -293,10 +293,11 @@ public class EventManager extends UserManager {
         //Create event, initially is not scheduled and non periodic
         BreakEvent breakEvent = createBreakEvent( eventMessage );
         addBreakEvent( breakEvent );
-        startEventPropagatorThread( breakEvent );
         breakEvent.setUser( currentUser );
         currentUser.addBreak( breakEvent );
+        breakEvent.save();
         currentUser.save();
+        startEventPropagatorThread( breakEvent );
         return breakEvent;   //it handle periodic events
     }
 

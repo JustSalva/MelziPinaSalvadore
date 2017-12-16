@@ -40,7 +40,7 @@ public class PreferenceRESTful {
     private User authenticatedUser;
 
     /**
-     * This method initialize the injected event manager with the user to be handled
+     * This method initialize the injected preference manager with the user to be handled
      * It will be executed before any request is actually performed
      */
     @PostConstruct

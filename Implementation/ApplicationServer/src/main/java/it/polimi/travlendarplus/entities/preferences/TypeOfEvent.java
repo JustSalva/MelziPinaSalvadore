@@ -18,14 +18,18 @@ public class TypeOfEvent extends GenericEntity {
     @Id
     @GeneratedValue( strategy = GenerationType.TABLE, generator = "typeOfEventId" )
     private long id;
+
     @Column( nullable = false, name = "NAME" )
     private String name;
+
     @Column( nullable = false, name = "PARAM_FIRST_PATH" )
     @Enumerated( EnumType.STRING )
     private ParamFirstPath paramFirstPath;
+
     @JoinTable( name = "LIMITED_BY" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List < Constraint > limitedBy;
+
     @ElementCollection( fetch = FetchType.LAZY )
     @CollectionTable
     @Enumerated( EnumType.STRING )
