@@ -27,7 +27,7 @@ public class BreakEventTest extends GenericEntityTest {
 
     public static BreakEvent getTestBreakEvent( int index ) {
         return new BreakEvent( "name" + index, Instant.ofEpochSecond( 10 * index ), Instant.ofEpochSecond( 60 * index ),
-                false, null, 23 * index );
+                false, 23 * index );
 
     }
 
@@ -36,7 +36,7 @@ public class BreakEventTest extends GenericEntityTest {
         User user = new User( "email", "name", "surname", "password" );
 
         testBreakEvent = new BreakEvent( "name", Instant.ofEpochSecond( 120 ), Instant.ofEpochSecond( 500 ),
-                false, null, 100 );
+                false, 100 );
         testBreakEvent.setUser( user );
 
         super.preparePersistenceTest();
@@ -72,7 +72,6 @@ public class BreakEventTest extends GenericEntityTest {
 
     @Override
     protected void loadTestData() {
-        entityManager.persist( testBreakEvent.getUser() );
         entityManager.persist( testBreakEvent );
     }
 

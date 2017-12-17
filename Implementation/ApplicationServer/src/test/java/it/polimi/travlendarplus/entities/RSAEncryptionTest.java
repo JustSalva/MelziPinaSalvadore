@@ -70,12 +70,4 @@ public class RSAEncryptionTest extends GenericEntityTest {
     public void tearDown() throws Exception {
         super.commitTransaction();
     }
-
-    @Test
-    public void load() {
-    }
-
-    @Test
-    public void isAlreadyInDb() {
-    }
 }

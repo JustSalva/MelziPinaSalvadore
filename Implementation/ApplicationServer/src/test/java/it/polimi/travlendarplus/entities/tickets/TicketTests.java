@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
 import it.polimi.travlendarplus.entities.GenericEntityTest;
+import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.LocationTest;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
@@ -21,6 +22,8 @@ import java.util.List;
 public class TicketTests extends GenericEntityTest{
 
     private List< Ticket > testTickets;
+    private Location testDeparture;
+    private Location testArrival;
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -39,11 +42,12 @@ public class TicketTests extends GenericEntityTest{
         publicTravelMeans.add( new PublicTravelMean( "name", TravelMeanEnum.BUS, 1544 ) );
 
         DistanceTicket distanceTicket = new DistanceTicket( 123, publicTravelMeans, 200 );
-
+        testDeparture = LocationTest.getTestLocation( 1 );
+        testArrival = LocationTest.getTestLocation( 2 );
         testTickets.add( distanceTicket );
         testTickets.add( new GenericTicket( 147, publicTravelMeans, "line_name1" ) );
         testTickets.add( new PathTicket( 789, publicTravelMeans, "line_name2",
-                LocationTest.getTestLocation( 1 ), LocationTest.getTestLocation( 2 ) ) );
+                testDeparture, testArrival) );
         testTickets.add( new PeriodTicket( 789, publicTravelMeans, "name",
                 Instant.ofEpochSecond( 100 ), Instant.ofEpochSecond( 200 ), distanceTicket) );
         super.preparePersistenceTest();
@@ -92,6 +96,8 @@ public class TicketTests extends GenericEntityTest{
 
     @Override
     protected void loadTestData(){
+        entityManager.persist( testDeparture );
+        entityManager.persist( testArrival );
         for ( Ticket Ticket : testTickets ){
             entityManager.persist( Ticket );
         }

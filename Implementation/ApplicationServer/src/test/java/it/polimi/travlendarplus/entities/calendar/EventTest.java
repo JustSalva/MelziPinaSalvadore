@@ -32,8 +32,8 @@ public class EventTest extends GenericEntityTest {
         Location arrival = LocationTest.getTestLocation( 67 * index );
 
         return new Event( "name" + index, Instant.ofEpochSecond( 120 * index ), Instant.ofEpochSecond( 500 * index ),
-                false, null, "description" + index, false,false, null,
-                arrival, departure );
+                false, "description" + index, false,false, null,
+                arrival, departure , null);
     }
 
     @Before
@@ -43,8 +43,8 @@ public class EventTest extends GenericEntityTest {
         User user = new User( "email", "name", "surname", "password" );
 
         testEvent = new Event( "name", Instant.ofEpochSecond( 120 ), Instant.ofEpochSecond( 500 ),
-                false, null, "description", false, false, null,
-                arrival, departure );
+                false, "description", false, false, null,
+                arrival, departure , null);
         testEvent.setUser( user );
 
         super.preparePersistenceTest();
@@ -84,7 +84,6 @@ public class EventTest extends GenericEntityTest {
 
     @Override
     protected void loadTestData() {
-        entityManager.persist( testEvent.getUser() );
         entityManager.persist( testEvent.getEventLocation() );
         entityManager.persist( testEvent.getDeparture() );
         entityManager.persist( testEvent );
