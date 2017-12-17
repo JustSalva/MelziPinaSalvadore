@@ -207,13 +207,4 @@ public class ScheduleManager extends UserManager {
         return feasibleComb;
     }
 
-    public ScheduleHolder swapEvents ( long idForcedEvent ) throws EntityNotFoundException, AlreadyScheduledException {
-        Event forced = Event.load( idForcedEvent ); //TODO forse qui è meglio chiamare la funzione di EventManager
-        if ( forced.isScheduled() ) {
-            throw new AlreadyScheduledException();
-        }
-        //TODO da DD non è da mettere qui?
-        return null;
-    }
-
 }

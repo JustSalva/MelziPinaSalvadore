@@ -1,9 +1,13 @@
 package it.polimi.travlendarplus.RESTful.RESTfulCalendar;
 
+import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
 import it.polimi.travlendarplus.RESTful.authenticationManager.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.authenticationManager.Secured;
 import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.NotScheduledException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -51,19 +55,39 @@ public class PathRESTful {
      * otherwise HTTP 200 OK success status response code and the information
      * of the requested path in the message body
      */
-    //it returns info on best path related to the specified event
     @Path( "{idEvent}" )
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     public Response getBestPathInfo ( @PathParam( "idEvent" ) long idEvent ) {
-        /*try {
+        try {
             return HttpResponseBuilder.buildOkResponse( pathManager.getBestPathInfo( idEvent ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         } catch ( NotScheduledException e1 ){
             return HttpResponseBuilder.conflict();
+        }
+    }
+
+    /**
+     * Allow the user to force in the schedule an event not scheduled
+     *
+     * @param id identifier of the event to be forced into the schedule
+     * @return an HTTP 400 Bad Request response status code if the identifier of the event does not exist
+     * or if the event is already scheduled, otherwise an HTTP 200 OK success status response code
+     * with the updated schedule in the message body
+     */
+    @Path( "{idEvent}" )
+    @PATCH
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response swapSchedule ( @PathParam( "idEvent" ) long id ) {
+        /*try { //TODO I don't know how to use the swap parameters
+            return HttpResponseBuilder.buildOkResponse( pathManager.swapEvents( id ) );
+        } catch ( EntityNotFoundException e ) {
+            return HttpResponseBuilder.badRequest();
+        } catch ( AlreadyScheduledException e ) {
+            return HttpResponseBuilder.buildAlreadyScheduledResponse( e );
         }*/
-        return null; //TODO
+        return null;
     }
 
     /**

@@ -3,10 +3,15 @@ package it.polimi.travlendarplus.RESTful;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.TypeOfEventResponse;
+import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HttpResponseBuilder {
 
@@ -35,6 +40,16 @@ public class HttpResponseBuilder {
         String jsonOutput = gson.toJson( responseMessage );
         return Response.ok( jsonOutput ).build();
     }
+
+    public static Response buildTypeOfEventResponse ( TypeOfEvent responseMessage ) {
+        return HttpResponseBuilder.buildOkResponse( new TypeOfEventResponse( responseMessage ) );
+    }
+    public static Response buildListOfTypeOfEventResponse ( List < TypeOfEvent > responseMessage ) {
+        return HttpResponseBuilder.buildOkResponse(
+                responseMessage.stream().map( TypeOfEventResponse::new )
+                        .collect( Collectors.toCollection( ArrayList::new ) ) );
+    }
+
 
     public static Response buildBadRequest ( String message ) {
         return Response.status( Response.Status.BAD_REQUEST ).entity( message ).build();

@@ -10,7 +10,9 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.NotScheduledException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -290,6 +292,20 @@ public class PathManager extends UserManager {
         if ( !copy.contains( TravelMeanEnum.BY_FOOT ) )
             copy.add( TravelMeanEnum.BY_FOOT );
         return copy;
+    }
+
+    public Travel getBestPathInfo( long pathId ) throws EntityNotFoundException, NotScheduledException {
+        Event requestedEvent = currentUser.getEvents()
+                .stream().filter( event -> event.getId() == pathId )
+                .findFirst().orElse( null );
+
+        if ( requestedEvent == null ) {
+            throw new EntityNotFoundException();
+        }
+        if ( ! requestedEvent.isScheduled() ) {
+            throw new NotScheduledException();
+        }
+        return requestedEvent.getFeasiblePath();
     }
 
     @Override

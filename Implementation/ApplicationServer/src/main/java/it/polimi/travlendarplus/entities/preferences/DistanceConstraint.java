@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.preferences;
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.TypeOfEventResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -51,5 +52,10 @@ public class DistanceConstraint extends Constraint {
     @Override
     public boolean respectConstraint ( TravelComponent travelComponent ) {
         return travelComponent.getLength() >= minLength && travelComponent.getLength() <= maxLength;
+    }
+
+    @Override
+    public void serializeResponse ( TypeOfEventResponse typeOfEventResponse ) {
+        typeOfEventResponse.addDistanceConstraint( this );
     }
 }

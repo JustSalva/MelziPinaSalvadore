@@ -59,26 +59,4 @@ public class ScheduleRESTful {
         return HttpResponseBuilder.buildOkResponse( scheduleManager.getScheduleByDay( day ) );
     }
 
-    /**
-     * Allow the user to force in the schedule an event not scheduled
-     *
-     * @param id identifier of the event to be forced into the schedule
-     * @return an HTTP 400 Bad Request response status code if the identifier of the event does not exist
-     * or if the event is already scheduled, otherwise an HTTP 200 OK success status response code
-     * with the updated schedule in the message body
-     */
-    @Path( "{idEvent}" )
-    @PATCH
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response swapSchedule ( @PathParam( "idEvent" ) long id ) {   //TODO
-        try {
-            return HttpResponseBuilder.buildOkResponse( scheduleManager.swapEvents( id ) );
-        } catch ( EntityNotFoundException e ) {
-            return HttpResponseBuilder.badRequest();
-        } catch ( AlreadyScheduledException e ) {
-            return HttpResponseBuilder.buildAlreadyScheduledResponse( e );
-        }
-    }
-
-
 }

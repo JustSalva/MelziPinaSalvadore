@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.preferences;
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.TypeOfEventResponse;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -33,4 +34,6 @@ public abstract class Constraint extends EntityWithLongKey {
     }
 
     public abstract boolean respectConstraint ( TravelComponent travelComponent );
+
+    public abstract void serializeResponse ( TypeOfEventResponse typeOfEventResponse );
 }

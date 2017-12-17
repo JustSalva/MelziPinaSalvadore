@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.preferences;
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.TypeOfEventResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -59,4 +60,10 @@ public class PeriodOfDayConstraint extends Constraint {
         return startingTimeInDay >= minHour &&
                 endingTimeInDay <= maxHour;
     }
+
+    @Override
+    public void serializeResponse ( TypeOfEventResponse typeOfEventResponse ) {
+        typeOfEventResponse.addPeriodOfDayConstraint( this );
+    }
+
 }

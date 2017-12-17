@@ -58,7 +58,7 @@ public class PreferenceRESTful {
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     public Response getPreferencesProfiles () {
-        return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferencesProfiles() );
+        return HttpResponseBuilder.buildListOfTypeOfEventResponse( preferenceManager.getPreferencesProfiles() );
     }
 
     /**
@@ -73,7 +73,7 @@ public class PreferenceRESTful {
     @Produces( MediaType.APPLICATION_JSON )
     public Response getPreferencesProfile ( @PathParam( "id" ) long id ) {
         try {
-            return HttpResponseBuilder.buildOkResponse( preferenceManager.getPreferencesProfile( id ) );
+            return HttpResponseBuilder.buildTypeOfEventResponse( preferenceManager.getPreferencesProfile( id ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         }
@@ -92,7 +92,7 @@ public class PreferenceRESTful {
     @Produces( MediaType.APPLICATION_JSON )
     public Response addPreference ( AddTypeOfEventMessage typeOfEventMessage ) {
         try {
-            return HttpResponseBuilder.buildOkResponse( preferenceManager.addTypeOfEvent( typeOfEventMessage ) );
+            return HttpResponseBuilder.buildTypeOfEventResponse( preferenceManager.addTypeOfEvent( typeOfEventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         }
@@ -111,7 +111,7 @@ public class PreferenceRESTful {
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyPreference ( ModifyTypeOfEventMessage typeOfEventMessage ) {
         try {
-            return HttpResponseBuilder.buildOkResponse( preferenceManager.modifyTypeOfEvent( typeOfEventMessage ) );
+            return HttpResponseBuilder.buildTypeOfEventResponse( preferenceManager.modifyTypeOfEvent( typeOfEventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
