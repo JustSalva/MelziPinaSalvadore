@@ -85,7 +85,6 @@ public abstract class Ticket extends EntityWithLongKey {
     }
 
     public void addLinkedTravel ( TravelComponent travelComponent ) throws IncompatibleTravelMeansException {
-        //TODO check that travel component is in public travel means
         PublicTravelMean toBeLinked = relatedTo.stream().filter( publicTravelMean -> publicTravelMean.getType()
                 .equals( travelComponent.getMeanUsed().getType() ) )
                 .findFirst().orElse( null );

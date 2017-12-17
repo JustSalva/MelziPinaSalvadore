@@ -51,6 +51,9 @@ public class EmailSender implements EmailInterface {
         }
     }
 
+    /**
+     * Sets up the travlendar's email properties
+     */
     @PostConstruct
     public void setUP () {
         mailServerProperties = System.getProperties();

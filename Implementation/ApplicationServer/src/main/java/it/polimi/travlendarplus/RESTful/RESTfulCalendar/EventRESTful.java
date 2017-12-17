@@ -129,15 +129,14 @@ public class EventRESTful {
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyEvent ( ModifyEventMessage eventMessage ) {
-        //
         try {
-            eventManager.modifyEvent( eventMessage );
+            return HttpResponseBuilder.buildOkResponse( eventManager.modifyEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         }
-        return HttpResponseBuilder.ok();
+
     }
 
     /**
@@ -196,15 +195,13 @@ public class EventRESTful {
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyBreakEvent ( ModifyBreakEventMessage eventMessage ) {
-        //
         try {
-            eventManager.modifyBreakEvent( eventMessage );
+            return HttpResponseBuilder.buildOkResponse( eventManager.modifyBreakEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         }
-        return HttpResponseBuilder.ok();
     }
 
 }

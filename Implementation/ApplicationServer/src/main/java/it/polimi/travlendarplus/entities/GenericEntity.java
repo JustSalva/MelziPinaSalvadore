@@ -16,8 +16,6 @@ public abstract class GenericEntity implements Serializable {
 
     private static final long serialVersionUID = -5052903462329369713L;
 
-    //TODO
-    //@PersistenceUnit(unitName="TravlendarDB")
     static private EntityManagerFactory entityManagerFactory;
 
     /**
@@ -41,6 +39,10 @@ public abstract class GenericEntity implements Serializable {
         return result;
     }
 
+    /**
+     * Starts a transaction with the persistence unit
+     * @return the entity manager which will handle the transaction
+     */
     private EntityManager startTransaction () {
         entityManagerFactory = Persistence.createEntityManagerFactory( "TravlendarDB" );
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -48,6 +50,10 @@ public abstract class GenericEntity implements Serializable {
         return entityManager;
     }
 
+    /**
+     * Commit and close a transaction
+     * @param entityManager the entity manager which is handling the transaction
+     */
     private void commitTransaction ( EntityManager entityManager ) {
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -67,8 +73,15 @@ public abstract class GenericEntity implements Serializable {
         commitTransaction( entityManager );
     }
 
+    /**
+     * Check if a specific entity is present in database
+     * @return true if it is present, false otherwise
+     */
     public abstract boolean isAlreadyInDb ();
 
+    /**
+     * Remove an entity form the database
+     */
     public void remove () {
         EntityManager entityManager = startTransaction();
         GenericEntity toBeRemoved = entityManager.merge( this );

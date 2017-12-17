@@ -49,17 +49,17 @@ public class PreferenceManager extends UserManager {
 
     public TypeOfEvent modifyTypeOfEvent ( ModifyTypeOfEventMessage typeOfEventMessage )
             throws InvalidFieldException, EntityNotFoundException {
-        //TODO call check on events that depends from it?
+        //checks the event existence
+        getPreferencesProfile( typeOfEventMessage.getId() );
         checkTypeOfEventConsistency( typeOfEventMessage );
-        TypeOfEvent typeOfEvent = createTypeOfEvent( typeOfEventMessage );
-        typeOfEvent.setId( typeOfEventMessage.getId() );
-        typeOfEvent.save();
-        return typeOfEvent;
+        deleteTypeOfEvent( typeOfEventMessage.getId() );
+        return addTypeOfEvent( typeOfEventMessage );
+
     }
 
     public void deleteTypeOfEvent ( long id ) throws EntityNotFoundException {
-        //TODO what about event dependencies? remain relation only with events?
-        TypeOfEvent typeOfEvent = getPreferencesProfile( id );
+        // NB if the type of event is still used in some events it will remain saved into them
+        getPreferencesProfile( id );
         currentUser.removePreference( id );
         currentUser.save();
     }
@@ -196,7 +196,6 @@ public class PreferenceManager extends UserManager {
         if ( locationMessage.getAddress() == null ) {
             errors.add( "address" );
         }
-        //TODO ask to external service if address is correct?
 
         if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
@@ -272,7 +271,7 @@ public class PreferenceManager extends UserManager {
         return privateMeans;
     }
 
-    protected boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle ) {
+    private boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle ) {
         return !event.getType().isDeactivated( vehicle );
     }
 

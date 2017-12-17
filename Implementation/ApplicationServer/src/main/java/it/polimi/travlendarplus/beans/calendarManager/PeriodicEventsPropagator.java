@@ -17,6 +17,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Startup
 @Singleton
@@ -28,7 +30,6 @@ public class PeriodicEventsPropagator {
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
-    //TODO uncomment when periodic events propagation is done
     @Schedule( hour = "23", minute = "55", second = "00" )
     public void propagatePeriodicEvents () {
         List < GenericEvent > eventsToBePropagated = getEventsToBePropagated();
@@ -89,7 +90,8 @@ public class PeriodicEventsPropagator {
                     periodicEvents.add( genericEvent );
                 } catch ( EntityNotFoundException e1 ) {
                     // if the pointer does not exist it will be not propagated, exceptional case
-                    //TODO notify admin?
+                    Logger.getLogger( PeriodicEventsPropagator.class.getName() )
+                            .log( Level.SEVERE, "failure during event propagation - entity not found", e );
                 }
             }
         }
