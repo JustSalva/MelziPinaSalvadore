@@ -141,7 +141,11 @@ public class GMapsJSONReader {
         } catch ( JSONException e ) {
             return "WALKING";
         }
-        return transitDetails.getJSONObject( "line" ).getJSONObject( "vehicle" ).getString( "type" );
+        try {
+            return transitDetails.getJSONObject( "line" ).getJSONObject( "vehicle" ).getString( "type" );
+        } catch ( JSONException e ) {
+            return "";
+        }
     }
 
     private static TravelMeanEnum getProperTravelMeanEnum ( String vehicleType ) {

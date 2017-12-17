@@ -22,4 +22,23 @@ public class GMapsGeocoder {
             return "";
         }
     }
+
+    public static Location getLocationByString ( String address ) {
+        address = address.replace( " ", "+" );
+        Location retLoc = new Location();
+        String call = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +
+                "&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y";
+        try {
+            JSONObject response = HTMLCallAndResponse.performCall( call );
+            JSONObject obj = response.getJSONArray( "results" ).getJSONObject( 0 );
+            retLoc.setAddress( obj.getString( "formatted_address" ) );
+            JSONObject geometry = obj.getJSONObject( "geometry" );
+            JSONObject location = geometry.getJSONObject( "location" );
+            retLoc.setLatitude( location.getDouble( "lat" ) );
+            retLoc.setLongitude( location.getDouble( "lng" ) );
+        } catch ( JSONException e ) {
+            e.printStackTrace();
+        }
+        return retLoc;
+    }
 }
