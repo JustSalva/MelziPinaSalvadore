@@ -21,10 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Stateless
 public class PathManager extends UserManager {
+
+    final static float MAX_LENGTH = 2.5f;
 
     @EJB
     ScheduleManager scheduleManager;
@@ -45,9 +48,9 @@ public class PathManager extends UserManager {
         List < Travel > followingPaths = getFollowingTravels( event, privateMeans, publicMeans );
         // Filtering obtained paths according to constraints defined
         previousPaths = previousPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
-                .collect( Collectors.toList() );
+                .collect( toList() );
         followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
-                .collect( Collectors.toList() );
+                .collect( toList() );
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         ArrayList < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
                 previousPaths, followingPaths );
@@ -143,6 +146,18 @@ public class PathManager extends UserManager {
                 if ( travelFeasibleInTimeslot( eventA, eventB, travel ) )
                     possiblePaths.add( travel );
         }
+        // Deleting long walking path...if there are alternatives
+        possiblePaths = removeLongWalkingPath( possiblePaths );
+    }
+
+    public List < Travel > removeLongWalkingPath ( List < Travel > possiblePaths ) {
+        // Checking if long walking paths are not the only feasible...
+        if ( possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
+                equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() ).size() > 0 )
+            // In the case they are not, removing long walking paths
+            return possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
+                    equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() );
+        return possiblePaths;
     }
 
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
@@ -191,9 +206,9 @@ public class PathManager extends UserManager {
             List < Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
-                    .collect( Collectors.toList() );
+                    .collect( toList() );
             foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
-                    .collect( Collectors.toList() );
+                    .collect( toList() );
             // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if ( !prev.isEmpty() && ( !foll.isEmpty() || scheduleManager.getPossibleFollowingEvent(
                     forcedEvent.getStartingTime() ) == null ) ) {
