@@ -85,6 +85,8 @@ public class TripManager extends UserManager {
 
         checkPathTicketConsistency( pathTicketMessage );
         PathTicket pathTicket = createPathTicket( pathTicketMessage );
+        pathTicket.getStartingLocation().save();
+        pathTicket.getEndingLocation().save();
         addTicketToUserAndSave( pathTicket );
         return pathTicket;
     }
@@ -134,13 +136,13 @@ public class TripManager extends UserManager {
         //Checks travel component existence, throw exception if not
         retrieveUsersTravelComponent( travelComponentId );
 
-        ticket.removeLinkedTravel( ticketId );
+        ticket.removeLinkedTravel( travelComponentId );
         ticket.save();
     }
 
     private TravelComponent retrieveUsersTravelComponent ( long travelComponentId ) throws EntityNotFoundException {
         TravelComponent userSingleTravel = currentUser.getEvents()
-                .stream()
+                .stream().filter( event -> event.getFeasiblePath() != null )
                 .map( Event::getFeasiblePath )
                 .flatMap( travel -> travel.getMiniTravels().stream() )
                 .filter( travelComponent -> travelComponent.getId() == travelComponentId )

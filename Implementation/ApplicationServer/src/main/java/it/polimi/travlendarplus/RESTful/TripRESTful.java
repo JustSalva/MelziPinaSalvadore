@@ -162,7 +162,6 @@ public class TripRESTful {
      */
     @Path( "/selectTicket/{ticketId}/{travelComponentId}" )
     @PATCH
-    @Consumes( MediaType.APPLICATION_JSON )
     public Response selectTicket ( @PathParam( "ticketId" ) long ticketId,
                                    @PathParam( "travelComponentId" ) long travelComponentId ) {
 

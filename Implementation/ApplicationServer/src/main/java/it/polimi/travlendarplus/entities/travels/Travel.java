@@ -26,11 +26,12 @@ public class Travel extends EntityWithLongKey {
 
     public Travel () {
         this.lastUpdate = new Timestamp();
+        this.miniTravels = new ArrayList <>();
     }
 
     public Travel ( ArrayList < TravelComponent > miniTravels ) {
+        this();
         this.miniTravels = miniTravels;
-        this.lastUpdate = new Timestamp();
     }
 
     public static Travel load ( long key ) throws EntityNotFoundException {

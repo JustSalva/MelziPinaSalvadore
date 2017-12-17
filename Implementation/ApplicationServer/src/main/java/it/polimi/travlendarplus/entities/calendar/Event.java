@@ -47,7 +47,7 @@ public class Event extends GenericEvent {
     private Location departure;
 
     @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL )
-    @JoinColumn( name = "LIMITED_BY" )
+    @JoinColumn( name = "LIMITED_BY" ) //TODO change name
     private Travel feasiblePath;
 
     public Event () {
