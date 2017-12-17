@@ -36,7 +36,7 @@ public class PublicKeyAuthenticator {
         try {
             encryption = new RSAEncryption( idDevice );
         } catch ( NoSuchAlgorithmException e ) {
-            return HttpResponseBuilder.notAvaiable();
+            return HttpResponseBuilder.notAvailable();
         }
         encryption.save();
         PublicKey publicKey = encryption.getPublicKey();

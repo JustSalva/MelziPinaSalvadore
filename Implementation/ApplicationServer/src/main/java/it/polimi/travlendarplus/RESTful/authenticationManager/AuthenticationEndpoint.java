@@ -10,6 +10,7 @@ import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.mail.internet.AddressException;
@@ -20,34 +21,29 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This restful class manage the authentication process
+ */
 @Path( "/" )
 public class AuthenticationEndpoint {
-    //TODO encryption of the messages!!!
-
-    protected static User loadUser ( String email ) throws UserNotRegisteredException {
-        User user;
-        try {
-            user = User.load( email );
-        } catch ( EntityNotFoundException e ) {
-            throw new UserNotRegisteredException();
-        }
-        return user;
-    }
 
     /**
      * Allows the user to register himself into the system
      *
      * @param registrationForm message containing all required info to register an user
      * @return an HTTP 200 OK success status response code if the request is fulfilled ( and a token in the body )
-     * or an an HTTP 401 Unauthorized response status code if the user is already registered
+     * or an HTTP 401 Unauthorized response status code if the user is already registered
+     * or an HTTP 408 Request Timeout response status code if the key requested before is expired
      * or otherwise an HTTP 400 Bad Request response status code
-     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     * ( that means there are invalid fields, the wrong ones are specified in the message body, if the body
+     * is empty the decryption of the password has failed )
      */
     @Path( "/register" )
     @POST
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
     public Response register ( RegistrationForm registrationForm ) {
+
         User userToBeRegistered;
         try {
             checkRegistrationForm( registrationForm );
@@ -55,11 +51,16 @@ public class AuthenticationEndpoint {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         }
         try {
-            userToBeRegistered = loadUser( registrationForm.getEmail() );
+            loadUser( registrationForm.getEmail() );
         } catch ( UserNotRegisteredException e ) {
-            //TODO checks on fields consistency?
-            userToBeRegistered = new User( registrationForm.getEmail(), registrationForm.getName(),
-                    registrationForm.getSurname(), registrationForm.getPassword() );
+            try {
+                userToBeRegistered = new User( registrationForm.getEmail(), registrationForm.getName(),
+                        registrationForm.getSurname(), registrationForm.getPassword() );
+            } catch ( EntityNotFoundException e1 ) {
+                return HttpResponseBuilder.requestTimeout();
+            } catch ( DecryptionFailedException e2 ) {
+                return HttpResponseBuilder.badRequest();
+            }
 
             String token = issueToken( userToBeRegistered, registrationForm.getIdDevice() );
             // Return the token on the response
@@ -77,8 +78,10 @@ public class AuthenticationEndpoint {
      * ( in the body name and surname of the user and a token)
      * or an an HTTP 401 Unauthorized response status code if the user is not registered
      * or an HTTP 403 Forbidden response status code if the credential are incorrect,
+     * or an HTTP 408 Request Timeout response status code if the key requested before is expired
      * or an HTTP 400 Bad Request response status code
-     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     * ( that means there are invalid fields, the wrong ones are specified in the message body, if the body
+     * is empty the decryption of the password has failed)
      */
     @Path( "/login" )
     @POST
@@ -95,10 +98,13 @@ public class AuthenticationEndpoint {
             // Authenticate the user using the credentials provided
             user = authenticate( credentials.getEmail(), credentials.getPassword() );
         } catch ( InvalidCredentialsException e1 ) {
-            //TODO to be tested
             return HttpResponseBuilder.forbidden();
         } catch ( UserNotRegisteredException e2 ) {
             return HttpResponseBuilder.unauthorized();
+        } catch ( EntityNotFoundException e3 ) {
+            return HttpResponseBuilder.requestTimeout();
+        } catch ( DecryptionFailedException e4 ) {
+            return HttpResponseBuilder.badRequest();
         }
         // Issue a token for the user
         String token = issueToken( user, credentials.getIdDevice() );
@@ -114,7 +120,8 @@ public class AuthenticationEndpoint {
      * or an an HTTP 401 Unauthorized response status code if the credential are incorrect
      * or an HTTP 400 Bad Request response status code if hte specified user is not registered,
      * or an HTTP 400 Bad Request response status code with a body not empty
-     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     * ( that means there are invalid fields, the wrong ones are specified in the message body , if the body
+     * is empty the decryption of the password has failed)
      */
     @Path( "/manage-user" )
     @PATCH
@@ -133,8 +140,14 @@ public class AuthenticationEndpoint {
             return HttpResponseBuilder.badRequest();
         }
 
-        if ( !user.getPassword().equals( updatedUserInfo.getPassword() ) ) {
-            return HttpResponseBuilder.unauthorized();
+        try {
+            if ( !user.getPassword().equals( updatedUserInfo.getPassword() ) ) {
+                return HttpResponseBuilder.unauthorized();
+            }
+        } catch ( EntityNotFoundException e1 ) {
+            return HttpResponseBuilder.requestTimeout();
+        } catch ( DecryptionFailedException e2 ) {
+            return HttpResponseBuilder.badRequest();
         }
         user.setName( updatedUserInfo.getName() );
         user.setSurname( updatedUserInfo.getSurname() );
@@ -145,7 +158,7 @@ public class AuthenticationEndpoint {
     /**
      * Allows the user to delete his account
      *
-     * @param email    email address of the user
+     * @param email email address of the user
      * @param password user's password
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or an an HTTP 401 Unauthorized response status code if the credential are incorrect
@@ -155,7 +168,6 @@ public class AuthenticationEndpoint {
     @DELETE
     public Response deleteProfile ( @PathParam( "email" ) String email, @PathParam( "pws" ) String password ) {
         //TODO timeout of tot days or email confirm?
-        //TODO password decrypt
         User user;
         try {
             user = loadUser( email );
@@ -174,22 +186,27 @@ public class AuthenticationEndpoint {
     /**
      * Find out if exist a user with the specified credentials
      *
-     * @param email    username of the user
+     * @param email username of the user
      * @param password password of the user
      * @throws InvalidCredentialsException if not exist an user with the specified credentials
      * @throws UserNotRegisteredException  if the user credential specified are not registered in the system
      */
     private User authenticate ( String email, String password ) throws InvalidCredentialsException, UserNotRegisteredException {
         User userToBeAuthenticated = loadUser( email );
+
         authenticate( userToBeAuthenticated, password );
         return userToBeAuthenticated;
     }
 
+    /**
+     * Issue a token ( random String ), if a token already exists it replaces it
+     *
+     * @param user     user who identify himself with the token
+     * @param idDevice device identifier at which the token is associated with
+     * @return the issued token
+     */
     private String issueToken ( User user, String idDevice ) {
-        // Issue a token (can be a random String persisted to a database or a JWT token)
-        // The issued token must be associated to a user
-        // Return the issued token
-        //if a token already exists it replaces it
+
         UserDevice userDevice;
         try {
             userDevice = UserDevice.load( idDevice );
@@ -206,20 +223,46 @@ public class AuthenticationEndpoint {
         return user.getUserDevice( idDevice ).getUnivocalCode();
     }
 
+    /**
+     * Build a token response
+     *
+     * @param token to be inserted in the response body
+     * @return the response requested
+     */
     private Response buildResponseToken ( String token ) {
         return HttpResponseBuilder.buildOkResponse( new TokenResponse( token ) );
     }
 
+    /**
+     * Build a token response to an user login
+     *
+     * @param token token to be inserted in the response body
+     * @param user  who is logging in
+     * @return the response requested
+     */
     private Response buildLoginTokenResponse ( String token, User user ) {
         return HttpResponseBuilder.buildOkResponse( new LoginResponse( token, user.getName(), user.getSurname() ) );
     }
 
+    /**
+     * Checks if the inserted credentials are correct
+     *
+     * @param userToBeAuthenticated user whose credentials are to be checked
+     * @param password to be validated
+     * @throws InvalidCredentialsException if the password is wrong
+     */
     private void authenticate ( User userToBeAuthenticated, String password ) throws InvalidCredentialsException {
         if ( !userToBeAuthenticated.getPassword().equals( password ) ) {
             throw new InvalidCredentialsException();
         }
     }
 
+    /**
+     * Checks that the registration form fields are consistent
+     *
+     * @param registrationForm form to be checked
+     * @throws InvalidFieldException if some fields are invalid ( which one is written into the error message )
+     */
     private void checkRegistrationForm ( RegistrationForm registrationForm ) throws InvalidFieldException {
         List < String > registrationErrors = new ArrayList <>();
         if ( registrationForm.getName() == null ) {
@@ -239,6 +282,12 @@ public class AuthenticationEndpoint {
         }
     }
 
+    /**
+     * Checks that the user credentials are consistent
+     *
+     * @param credentials credentials to be checked
+     * @throws InvalidFieldException if some fields are invalid ( which one is written into the error message )
+     */
     private void checkCredentials ( Credentials credentials ) throws InvalidFieldException {
         List < String > credentialErrors = new ArrayList <>();
         try {
@@ -249,7 +298,7 @@ public class AuthenticationEndpoint {
         } catch ( AddressException e ) {
             credentialErrors.add( "email" );
         }
-        if ( credentials.getPassword() == null ) {
+        if ( !credentials.isPasswordConsistent() ) {
             credentialErrors.add( "password" );
         }
         if ( credentials.getIdDevice() == null ) { //TODO ask to GMS
@@ -258,5 +307,22 @@ public class AuthenticationEndpoint {
         if ( credentialErrors.size() > 0 ) {
             throw new InvalidFieldException( credentialErrors );
         }
+    }
+
+    /**
+     * Load the user's class instance of an user
+     *
+     * @param email identifier of the user
+     * @return the loaded user
+     * @throws UserNotRegisteredException if the user in not present in database, so he's not registered
+     */
+    protected static User loadUser ( String email ) throws UserNotRegisteredException {
+        User user;
+        try {
+            user = User.load( email );
+        } catch ( EntityNotFoundException e ) {
+            throw new UserNotRegisteredException();
+        }
+        return user;
     }
 }

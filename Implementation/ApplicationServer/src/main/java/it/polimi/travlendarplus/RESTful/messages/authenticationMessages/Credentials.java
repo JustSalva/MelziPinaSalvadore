@@ -1,5 +1,9 @@
 package it.polimi.travlendarplus.RESTful.messages.authenticationMessages;
 
+import it.polimi.travlendarplus.entities.RSAEncryption;
+import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+
 /**
  * Message to be sent by a client to perform a login
  */
@@ -7,7 +11,6 @@ public class Credentials extends AuthenticationMessage {
 
     private static final long serialVersionUID = 4386269294697577939L;
 
-    //TODO encryption!!!
     private String email;
     private String password;
     private String idDevice;
@@ -29,12 +32,17 @@ public class Credentials extends AuthenticationMessage {
         this.email = email;
     }
 
-    public String getPassword () {
-        return password;
+    public String getPassword () throws EntityNotFoundException, DecryptionFailedException {
+        RSAEncryption encryption = RSAEncryption.load( idDevice );
+        return encryption.decryptPassword( password );
     }
 
     public void setPassword ( String password ) {
         this.password = password;
+    }
+
+    public boolean isPasswordConsistent () {
+        return password != null;
     }
 
     public String getIdDevice () {

@@ -16,23 +16,27 @@ import java.util.stream.Collectors;
 public class HttpResponseBuilder {
 
     public static Response unauthorized () {
-        return Response.status( Response.Status.UNAUTHORIZED ).build();
+        return responseBuilder( Response.Status.UNAUTHORIZED );
     }
 
     public static Response forbidden () {
-        return Response.status( Response.Status.FORBIDDEN ).build();
+        return responseBuilder( Response.Status.FORBIDDEN );
     }
 
     public static Response badRequest () {
-        return Response.status( Response.Status.BAD_REQUEST ).build();
+        return responseBuilder( Response.Status.BAD_REQUEST );
     }
 
     public static Response conflict () {
-        return Response.status( Response.Status.CONFLICT ).build();
+        return responseBuilder( Response.Status.CONFLICT );
     }
 
-    public static Response notAvaiable () {
-        return Response.status( Response.Status.SERVICE_UNAVAILABLE ).build();
+    public static Response notAvailable () {
+        return responseBuilder( Response.Status.SERVICE_UNAVAILABLE );
+    }
+
+    public static Response requestTimeout () {
+        return responseBuilder( Response.Status.REQUEST_TIMEOUT );
     }
 
     public static Response buildOkResponse ( Object responseMessage ) {
@@ -44,27 +48,35 @@ public class HttpResponseBuilder {
     public static Response buildTypeOfEventResponse ( TypeOfEvent responseMessage ) {
         return HttpResponseBuilder.buildOkResponse( new TypeOfEventResponse( responseMessage ) );
     }
+
     public static Response buildListOfTypeOfEventResponse ( List < TypeOfEvent > responseMessage ) {
         return HttpResponseBuilder.buildOkResponse(
                 responseMessage.stream().map( TypeOfEventResponse::new )
                         .collect( Collectors.toCollection( ArrayList::new ) ) );
     }
 
-
     public static Response buildBadRequest ( String message ) {
-        return Response.status( Response.Status.BAD_REQUEST ).entity( message ).build();
+        return responseBuilder( Response.Status.BAD_REQUEST, message );
     }
 
     public static Response buildInvalidFieldResponse ( InvalidFieldException e ) {
-        return Response.status( Response.Status.BAD_REQUEST ).entity( e.getInvalidFields() ).build();
+        return responseBuilder( Response.Status.BAD_REQUEST, e.getInvalidFields() );
     }
 
     public static Response buildAlreadyScheduledResponse ( AlreadyScheduledException e ) {
-        return Response.status( Response.Status.BAD_REQUEST ).entity( e.getMessage() ).build();
+        return responseBuilder( Response.Status.BAD_REQUEST, e.getMessage() );
     }
-
 
     public static Response ok () {
         return Response.ok().build();
     }
+
+    private static Response responseBuilder ( Response.Status status ) {
+        return Response.status( status ).build();
+    }
+
+    private static Response responseBuilder ( Response.Status status, Object message ) {
+        return Response.status( status ).entity( message ).build();
+    }
+
 }

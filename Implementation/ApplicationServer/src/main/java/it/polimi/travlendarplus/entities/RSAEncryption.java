@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.entities;
 
-import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryprionFailedException;
+import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.EncryprionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
@@ -42,20 +42,24 @@ public class RSAEncryption extends GenericEntity {
         this.timestamp = Instant.now();
     }
 
+    public String decryptPassword( String encryptedPassword ) throws DecryptionFailedException {
+        return decryptPassword( encryptedPassword, privateKey );
+    }
+
     // Decrypt using RSA public key
-    private static String decryptPassword ( String encryptedPassword, PublicKey publicKey ) throws DecryprionFailedException {
+    private String decryptPassword ( String encryptedPassword, PrivateKey privateKey ) throws DecryptionFailedException {
         try {
-            Cipher cipher = setUpCypher( Cipher.DECRYPT_MODE, publicKey );
+            Cipher cipher = setUpCypher( Cipher.DECRYPT_MODE, privateKey );
             return new String( cipher.doFinal( Base64.getDecoder().decode( encryptedPassword ) ) );
         } catch ( GeneralSecurityException e ) {
-            throw new DecryprionFailedException();
+            throw new DecryptionFailedException();
         }
     }
 
     // Encrypt using RSA private key
-    private static String encryptPassword ( String plainPassword, PrivateKey privateKey ) throws EncryprionFailedException {
+    private static String encryptPassword ( String plainPassword, PublicKey publicKey ) throws EncryprionFailedException {
         try {
-            Cipher cipher = setUpCypher( Cipher.ENCRYPT_MODE, privateKey );
+            Cipher cipher = setUpCypher( Cipher.ENCRYPT_MODE, publicKey );
             return Base64.getEncoder().encodeToString( cipher.doFinal( plainPassword.getBytes() ) );
         } catch ( GeneralSecurityException e ) {
             throw new EncryprionFailedException();
@@ -66,21 +70,6 @@ public class RSAEncryption extends GenericEntity {
         Cipher cipher = Cipher.getInstance( "RSA" );
         cipher.init( cipherMode, key );
         return cipher;
-    }
-
-    public static void main ( String[] args ) throws Exception {
-        String plainText = "Hello World!";
-
-        // Generate public and private keys using RSA
-        RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
-
-        String encryptedText = encryptPassword( plainText, rsaEncryption.privateKey );
-        String descryptedText = decryptPassword( encryptedText, rsaEncryption.publicKey );
-
-        System.out.println( "input:" + plainText );
-        System.out.println( "encrypted:" + encryptedText );
-        System.out.println( "decrypted:" + descryptedText );
-
     }
 
     public static RSAEncryption load ( String idDevice ) throws EntityNotFoundException {
@@ -119,5 +108,22 @@ public class RSAEncryption extends GenericEntity {
             return false;
         }
         return true;
+    }
+
+
+    public static void main ( String[] args ) throws Exception {
+        String plainText = "password";
+
+        // Generate public and private keys using RSA
+        //RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
+        RSAEncryption rsaEncryption = RSAEncryption.load( "idDevice" );
+
+        String encryptedText = encryptPassword( plainText, rsaEncryption.publicKey );
+        String decryptedText = rsaEncryption.decryptPassword( encryptedText );
+
+        System.out.println( "input:" + plainText );
+        System.out.println( "encrypted:" + encryptedText );
+        System.out.println( "decrypted:" + decryptedText );
+
     }
 }
