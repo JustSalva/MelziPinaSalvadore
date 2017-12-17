@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -53,5 +54,10 @@ public interface TravlendarClient {
     @DELETE("preference/{id}")
     Call<Void> deletePreference(
         @Path("id") int id
+    );
+
+    @PATCH("preference")
+    Call<Preference> modifyPreference(
+            @Body PreferenceBody preferenceBody
     );
 }

@@ -50,7 +50,6 @@ public class AccountActivity extends MenuActivity {
     private EditText locationName_editText;
     private Button selectLocation_button;
     private Button addLocation_button;
-    private ProgressBar progressBar;
 
     private final int PLACE_PICKER_REQUEST = 1;
     private String univocalCode;
@@ -89,7 +88,6 @@ public class AccountActivity extends MenuActivity {
         locationAddress_textView = findViewById(R.id.locationAddress_textView);
         selectLocation_button = findViewById(R.id.selectLocation_button);
         addLocation_button = findViewById(R.id.addLocation_button);
-        progressBar = findViewById(R.id.progressBar);
 
         // Create a ViewModel the first time the system calls an activity's onCreate() method.
         // Re-created activity receive the same MyViewModel instance created by the first activity.
@@ -323,7 +321,7 @@ public class AccountActivity extends MenuActivity {
         addLocation_button.setEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -332,6 +330,6 @@ public class AccountActivity extends MenuActivity {
     private void resumeNormalMode() {
         addLocation_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 }

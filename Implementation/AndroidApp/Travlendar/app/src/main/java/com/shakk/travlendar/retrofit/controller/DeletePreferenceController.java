@@ -21,9 +21,15 @@ public class DeletePreferenceController implements Callback<Void> {
     }
 
     public void start(String authToken, int id) {
-        TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Void> call = client.deletePreference(id);
-        call.enqueue(this);
+        if (id != 0) {
+            TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
+            Call<Void> call = client.deletePreference(id);
+            call.enqueue(this);
+        } else {
+            // User is trying to delete the normal event.
+            Message msg = handler.obtainMessage(1);
+            msg.sendToTarget();
+        }
     }
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {

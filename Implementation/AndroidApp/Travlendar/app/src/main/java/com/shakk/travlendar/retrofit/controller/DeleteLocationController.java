@@ -25,6 +25,7 @@ public class DeleteLocationController implements Callback<Void> {
         Call<Void> call = client.deleteLocation(name);
         call.enqueue(this);
     }
+
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {
         if(!response.isSuccessful()) {

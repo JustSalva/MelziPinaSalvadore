@@ -128,25 +128,37 @@
                             android:layout_weight="1"
                             android:entries="@array/travelMeans_array"/>
 
-                        <AutoCompleteTextView
-                            android:id="@+id/minimum_distance"
+                        <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:hint="@string/minimum_distance"
-                            android:inputType="number"
-                            android:maxLines="1"
-                            android:singleLine="true" />
+                            android:layout_weight="1">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/maximum_distance"
+                            <AutoCompleteTextView
+                                android:id="@+id/minDistance_editText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/minimum_distance"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:hint="@string/maximum_distance"
-                            android:inputType="number"
-                            android:maxLines="1"
-                            android:singleLine="true" />
+                            android:layout_weight="1">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/maxDistance_editText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/maximum_distance"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                        </android.support.design.widget.TextInputLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -196,10 +208,41 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/editPreference_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/save"/>
+                    android:text="@string/edit"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/newPreferenceName_textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name_of_new_preference"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/addNewPreference_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/add_new"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

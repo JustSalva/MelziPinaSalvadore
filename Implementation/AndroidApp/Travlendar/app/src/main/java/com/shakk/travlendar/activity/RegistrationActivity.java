@@ -22,20 +22,10 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shakk.travlendar.R;
-import com.shakk.travlendar.TravlendarRestClient;
 
-import org.json.*;
-import com.loopj.android.http.*;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.retrofit.controller.RegisterController;
-
-import java.io.UnsupportedEncodingException;
-
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
  * A registration screen that offers registration to the server.

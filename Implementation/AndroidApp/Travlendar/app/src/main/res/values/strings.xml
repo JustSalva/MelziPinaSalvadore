@@ -115,18 +115,21 @@
     <string name="deletePreference_imageDescription">Trash bin to delete preference</string>
     <string name="subway">Subway</string>
     <string name="bus">Bus</string>
+    <string name="edit">Edit</string>
+    <string name="add_new">Add new</string>
+    <string name="name_of_new_preference">Name of new preference</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
-        <item>Bicycle</item>
+        <item>Bike</item>
         <item>Bus</item>
-        <item>By foot</item>
+        <item>By Foot</item>
         <item>Car</item>
         <item>Subway</item>
         <item>Train</item>
         <item>Tram</item>
-        <item>Bike Sharing</item>
-        <item>Car Sharing</item>
+        <item>Sharing Bike</item>
+        <item>Sharing Car</item>
     </string-array>
 
     <string-array name="preferredPath_array">

@@ -8,14 +8,16 @@ public class Preference {
     private int id;
     private String name;
     private ParamFirstPath paramFirstPath;
-    private List<Constraint> limitedBy;
+    private List<PeriodConstraint> periodOfDayConstraints;
+    private List<DistanceConstraint> distanceConstraints;
     private List<TravelMeanEnum> deactivate;
 
     public Preference() {
         this.id = 0;
         this.name = "Normal";
         this.paramFirstPath = ParamFirstPath.MIN_TIME;
-        this.limitedBy = new ArrayList<>();
+        this.periodOfDayConstraints = new ArrayList<>();
+        this.distanceConstraints = new ArrayList<>();
         this.deactivate = new ArrayList<>();
     }
 
@@ -31,27 +33,56 @@ public class Preference {
         return paramFirstPath;
     }
 
-    public List<Constraint> getLimitedBy(String travelMean) {
-        List<Constraint> constraints = new ArrayList<>();
-        for (Constraint constraint : limitedBy) {
-            if (constraint.concerns.getTravelMean().equals(travelMean)) {
-                constraints.add(constraint);
+    public void setParamFirstPath(ParamFirstPath paramFirstPath) {
+        this.paramFirstPath = paramFirstPath;
+    }
+
+    public List<PeriodConstraint> getPeriodOfDayConstraints() {
+        return periodOfDayConstraints;
+    }
+
+    public PeriodConstraint getPeriodOfDayConstraint(String travelMean) {
+        for (PeriodConstraint constraint : periodOfDayConstraints) {
+            if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
+                return constraint;
             }
         }
-        return constraints;
+        return null;
+    }
+
+    public List<DistanceConstraint> getDistanceConstraints() {
+        return distanceConstraints;
+    }
+
+    public DistanceConstraint getDistanceConstraint(String travelMean) {
+        for (DistanceConstraint constraint : distanceConstraints) {
+            if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
+                return constraint;
+            }
+        }
+        return null;
     }
 
     public boolean isActivated(TravelMeanEnum travelMean) {
         return !deactivate.contains(travelMean);
     }
 
-    public static class Constraint {
+    public List<TravelMeanEnum> getDeactivate() {
+        return deactivate;
+    }
+
+    public static class PeriodConstraint {
         private int id;
         private TravelMeanEnum concerns;
         private int minHour;
         private int maxHour;
-        private int minLength;
-        private int maxLength;
+
+        public PeriodConstraint(int id, TravelMeanEnum concerns, int minHour, int maxHour) {
+            this.id = id;
+            this.concerns = concerns;
+            this.minHour = minHour;
+            this.maxHour = maxHour;
+        }
 
         public int getId() {
             return id;
@@ -65,16 +96,54 @@ public class Preference {
             return minHour;
         }
 
+        public void setMinHour(int minHour) {
+            this.minHour = minHour;
+        }
+
         public int getMaxHour() {
             return maxHour;
+        }
+
+        public void setMaxHour(int maxHour) {
+            this.maxHour = maxHour;
+        }
+    }
+
+    public static class DistanceConstraint {
+        private int id;
+        private TravelMeanEnum concerns;
+        private int minLength;
+        private int maxLength;
+
+        public DistanceConstraint(int id, TravelMeanEnum concerns, int minLength, int maxLength) {
+            this.id = id;
+            this.concerns = concerns;
+            this.minLength = minLength;
+            this.maxLength = maxLength;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public TravelMeanEnum getConcerns() {
+            return concerns;
         }
 
         public int getMinLength() {
             return minLength;
         }
 
+        public void setMinLength(int minLength) {
+            this.minLength = minLength;
+        }
+
         public int getMaxLength() {
             return maxLength;
+        }
+
+        public void setMaxLength(int maxLength) {
+            this.maxLength = maxLength;
         }
     }
 
@@ -92,6 +161,19 @@ public class Preference {
 
         public String getText() {
             return text;
+        }
+
+        public static ParamFirstPath getEnumFromString(String text) {
+            switch (text) {
+                case "Minimum cost":
+                    return MIN_COST;
+                case "Minimum length":
+                    return MIN_LENGTH;
+                case "Minimum time":
+                    return MIN_TIME;
+                default:
+                    return ECO_PATH;
+            }
         }
     }
 
@@ -114,6 +196,29 @@ public class Preference {
 
         public String getTravelMean() {
             return travelMean;
+        }
+
+        public static TravelMeanEnum getEnumFromString(String text) {
+            switch (text) {
+                case "Bike":
+                    return BIKE;
+                case "Bus":
+                    return BUS;
+                case "By Foot":
+                    return BY_FOOT;
+                case "Car":
+                    return CAR;
+                case "Subway":
+                    return SUBWAY;
+                case "Train":
+                    return TRAIN;
+                case "Tram":
+                    return TRAM;
+                case "Sharing Bike":
+                    return SHARING_BIKE;
+                default:
+                    return SHARING_CAR;
+            }
         }
     }
 }
