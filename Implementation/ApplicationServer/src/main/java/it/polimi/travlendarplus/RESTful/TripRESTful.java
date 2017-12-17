@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.beans.tripManager.TripManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -164,6 +165,7 @@ public class TripRESTful {
     @Consumes( MediaType.APPLICATION_JSON )
     public Response selectTicket ( @PathParam( "ticketId" ) long ticketId,
                                    @PathParam( "travelComponentId" ) long travelComponentId ) {
+
         return handleTicketSelection( ticketId, travelComponentId, true );
     }
 
@@ -181,13 +183,19 @@ public class TripRESTful {
     @Consumes( MediaType.APPLICATION_JSON )
     public Response deselectTicket ( @PathParam( "ticketId" ) long ticketId,
                                      @PathParam( "travelComponentId" ) long travelComponentId ) {
+
         return handleTicketSelection( ticketId, travelComponentId, false );
     }
 
     private Response handleTicketSelection ( long ticketId, long travelComponentId, boolean isSelection ) {
+
         try {
             if ( isSelection ) {
-                tripManager.selectTicket( ticketId, travelComponentId );
+                try {
+                    tripManager.selectTicket( ticketId, travelComponentId );
+                }catch ( IncompatibleTravelMeansException e ) {
+                    return HttpResponseBuilder.buildBadRequest( e.getMessage() );
+                }
             } else {
                 tripManager.deselectTicket( ticketId, travelComponentId );
             }
@@ -197,13 +205,111 @@ public class TripRESTful {
         return HttpResponseBuilder.ok();
     }
 
-    /*
- modifyTicket(ticket, unicode): it modifies a ticket contained in the user personal tickets list
-(PATCH method);
- buyTicket(path, unicode): it allows the user to obtain the specific URLs where he can buy
-the tickets needed for a travel (GET method);
- getNearSharingVehicles(location, unicode): it allows the user to retrieve the location of the
-near (to him) sharing vehicles selected in his travel (GET method).
+    /**
+     * Allows the user to modify a distance ticket
+     *
+     * @param distanceTicketMessage message containing the info of the distance ticket to be modified
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body
+     *      if the body is empty the ticket does not exist)
+     */
+    @Path( "/distanceTicket/{ticketId}" )
+    @PATCH
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response modifyDistanceTicketMessage ( AddDistanceTicketMessage distanceTicketMessage,
+                                                  @PathParam( "ticketId" ) long ticketId ) {
+
+        return modifyTicketMessage( distanceTicketMessage, ticketId );
+    }
+
+    /**
+     * Allows the user to modify a generic ticket
+     *
+     * @param genericTicketMessage message containing the info of the generic ticket to be modified
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body
+     *      if the body is empty the ticket does not exist)
+     */
+    @Path( "/genericTicket/{ticketId}" )
+    @PATCH
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response modifyGenericTicketMessage ( AddGenericTicketMessage genericTicketMessage,
+                                              @PathParam( "ticketId" ) long ticketId ) {
+        return modifyTicketMessage( genericTicketMessage, ticketId );
+    }
+
+    /**
+     * Allows the user to modify a path ticket
+     *
+     * @param pathTicketMessage message containing the info of the path ticket to be modified
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body
+     *      if the body is empty the ticket does not exist)
+     *
+     */
+    @Path( "/pathTicket/{ticketId}" )
+    @PATCH
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response modifyPathTicketMessage ( AddPathTicketMessage pathTicketMessage,
+                                           @PathParam( "ticketId" ) long ticketId ) {
+        return modifyTicketMessage( pathTicketMessage, ticketId );
+    }
+
+    /**
+     * Allows the user to modify a period ticket
+     *
+     * @param periodTicketMessage message containing the info of the period ticket to be modified
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body
+     *      if the body is empty the ticket does not exist)
+     */
+    @Path( "/periodTicket/{ticketId}" )
+    @PATCH
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response modifyPeriodTicketMessage ( AddPeriodTicketMessage periodTicketMessage,
+                                             @PathParam( "ticketId" ) long ticketId  ) {
+        return modifyTicketMessage( periodTicketMessage, ticketId );
+    }
+
+    private Response modifyTicketMessage ( AddTicketMessage ticketMessage, long ticketId ) {
+        try {
+            return HttpResponseBuilder.buildOkResponse(
+                    ticketMessage.modifyTicket( tripManager, ticketId ) );
+        } catch ( InvalidFieldException e ) {
+            return HttpResponseBuilder.buildInvalidFieldResponse( e );
+        } catch ( EntityNotFoundException e ) {
+            return HttpResponseBuilder.badRequest();
+        } catch ( IncompatibleTravelMeansException e ) {
+            return HttpResponseBuilder.buildBadRequest( e.getMessage() );
+        }
+    }
+
+    /**
+     * It allows the user to obtain the specific URLs where he can buy
+     * the tickets needed for a travel
+     *
+     * @return an HTTP 200 OK success status response code and the requested URL
+     * or HTTP 400 Bad Request response status code if the URL is not available
+     */
+    @Path( "/buyTicket" )
+    @GET
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response buyTicket () {
+        //TODO
+        return null;
+    }
+
+    /* TODO
+    getNearSharingVehicles( location ): it allows the user to retrieve the location of the
+    near (to him) sharing vehicles selected in his travel (GET method).
      */
 
 }

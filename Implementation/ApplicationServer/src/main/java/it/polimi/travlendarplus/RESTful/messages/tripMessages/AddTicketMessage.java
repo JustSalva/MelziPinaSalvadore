@@ -3,6 +3,8 @@ package it.polimi.travlendarplus.RESTful.messages.tripMessages;
 import it.polimi.travlendarplus.beans.tripManager.TripManager;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,4 +45,7 @@ public abstract class AddTicketMessage extends TripMessage {
 
     public abstract Ticket addTicket ( TripManager tripManager )
             throws InvalidFieldException;
+
+    public abstract Ticket modifyTicket ( TripManager tripManager, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException;
 }

@@ -4,11 +4,14 @@ import it.polimi.travlendarplus.RESTful.messages.tripMessages.*;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
 import it.polimi.travlendarplus.beans.calendarManager.UserManager;
 import it.polimi.travlendarplus.entities.Location;
+import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.tickets.*;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
 import javax.ejb.Stateless;
 import java.util.ArrayList;
@@ -20,6 +23,17 @@ public class TripManager extends UserManager {
 
     public List < Ticket > getTickets () {
         return currentUser.getHeldTickets();
+    }
+
+    public Ticket getTicket ( long ticketId ) throws EntityNotFoundException {
+        List < Ticket > heldTickets = getTickets();
+        Ticket requested = heldTickets.stream()
+                .filter( ticket -> ticket.getId() == ticketId )
+                .findFirst().orElse( null );
+        if ( requested == null ) {
+            throw new EntityNotFoundException( "the ticket doesn't exists" );
+        }
+        return requested;
     }
 
     public DistanceTicket addDistanceTicket ( AddDistanceTicketMessage distanceTicketMessage )
@@ -100,16 +114,41 @@ public class TripManager extends UserManager {
     }
 
     public void deleteTicket ( long ticketId ) throws EntityNotFoundException {
+        Ticket ticket = getTicket( ticketId );
         currentUser.deleteTicket( ticketId );
         currentUser.save();
+        ticket.remove();
     }
 
-    public void selectTicket ( long ticketId, long travelComponentId ) throws EntityNotFoundException {
-        //TODO
+    public void selectTicket ( long ticketId, long travelComponentId )
+            throws EntityNotFoundException, IncompatibleTravelMeansException {
+        TravelComponent travelComponent = retrieveUsersTravelComponent( travelComponentId );
+        Ticket selectedTicket = getTicket( ticketId );
+        selectedTicket.addLinkedTravel( travelComponent );
+        selectedTicket.save();
     }
 
     public void deselectTicket ( long ticketId, long travelComponentId ) throws EntityNotFoundException {
-        //TODO
+        Ticket ticket = getTicket( ticketId );
+
+        //Checks travel component existence, throw exception if not
+        retrieveUsersTravelComponent( travelComponentId );
+
+        ticket.removeLinkedTravel( ticketId );
+        ticket.save();
+    }
+
+    private TravelComponent retrieveUsersTravelComponent ( long travelComponentId ) throws EntityNotFoundException {
+        TravelComponent userSingleTravel = currentUser.getEvents()
+                .stream()
+                .map( Event::getFeasiblePath )
+                .flatMap( travel -> travel.getMiniTravels().stream() )
+                .filter( travelComponent -> travelComponent.getId() == travelComponentId )
+                .findFirst().orElse( null );
+        if ( userSingleTravel == null ) {
+            throw new EntityNotFoundException( "the travel doesn't exists" );
+        }
+        return userSingleTravel;
     }
 
     public void checkDistanceTicketConsistency ( AddDistanceTicketMessage distanceTicketMessage )
@@ -200,6 +239,60 @@ public class TripManager extends UserManager {
         if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
         }
+    }
+
+    public DistanceTicket modifyDistanceTicket ( AddDistanceTicketMessage distanceTicketMessage, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+
+        List < TravelComponent > linkedTravels = retrieveTravelsLinked( ticketId );
+        DistanceTicket newDistanceTicket = addDistanceTicket( distanceTicketMessage );
+        addLinkedTravel( linkedTravels, newDistanceTicket );
+        deleteTicket( ticketId );
+        return newDistanceTicket;
+    }
+
+    public GenericTicket modifyGenericTicket ( AddGenericTicketMessage genericTicketMessage, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+
+        List < TravelComponent > linkedTravels = retrieveTravelsLinked( ticketId );
+        GenericTicket newGenericTicket = addGenericTicket( genericTicketMessage );
+        addLinkedTravel( linkedTravels, newGenericTicket );
+        deleteTicket( ticketId );
+        return newGenericTicket;
+    }
+
+    public PathTicket modifyPathTicket ( AddPathTicketMessage pathTicketMessage, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+
+        List < TravelComponent > linkedTravels = retrieveTravelsLinked( ticketId );
+        PathTicket newPathTicket = addPathTicket( pathTicketMessage );
+        addLinkedTravel( linkedTravels, newPathTicket );
+        deleteTicket( ticketId );
+        return newPathTicket;
+    }
+
+    public PeriodTicket modifyPeriodTicket ( AddPeriodTicketMessage periodTicketMessage, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+
+        List < TravelComponent > linkedTravels = retrieveTravelsLinked( ticketId );
+        PeriodTicket newPeriodTicket = addPeriodTicket( periodTicketMessage );
+        addLinkedTravel( linkedTravels, newPeriodTicket );
+        deleteTicket( ticketId );
+        return newPeriodTicket;
+    }
+
+    private List < TravelComponent > retrieveTravelsLinked ( long ticketId ) throws EntityNotFoundException {
+        Ticket oldTicket = getTicket( ticketId );
+        return oldTicket.getLinkedTravels();
+    }
+
+    private void addLinkedTravel ( List < TravelComponent > linkedTravels, Ticket ticket )
+            throws IncompatibleTravelMeansException {
+
+        for ( TravelComponent travelComponent : linkedTravels ) {
+            ticket.addLinkedTravel( travelComponent );
+        }
+        ticket.save();
     }
 
 }

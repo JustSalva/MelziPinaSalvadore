@@ -3,8 +3,8 @@ package it.polimi.travlendarplus.RESTful.messages.tripMessages;
 import it.polimi.travlendarplus.beans.tripManager.TripManager;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
 import java.util.List;
 
@@ -14,15 +14,12 @@ public class AddDistanceTicketMessage extends AddTicketMessage {
 
     private int distance;
 
-    @JsonCreator
-    public AddDistanceTicketMessage ( @JsonProperty( "cost" ) float cost,
-                                      @JsonProperty( "relatedTo" ) List < AddPublicTravelMeanMessage > relatedTo,
-                                      @JsonProperty( "distance" ) int distance ) {
-        super( cost, relatedTo );
-        this.distance = distance;
+    public AddDistanceTicketMessage () {
     }
 
-    public AddDistanceTicketMessage () {
+    public AddDistanceTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo, int distance ) {
+        super( cost, relatedTo );
+        this.distance = distance;
     }
 
     public int getDistance () {
@@ -36,5 +33,11 @@ public class AddDistanceTicketMessage extends AddTicketMessage {
     @Override
     public Ticket addTicket ( TripManager tripManager ) throws InvalidFieldException {
         return tripManager.addDistanceTicket( this );
+    }
+
+    @Override
+    public Ticket modifyTicket ( TripManager tripManager, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+        return tripManager.modifyDistanceTicket( this, ticketId );
     }
 }

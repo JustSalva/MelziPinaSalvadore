@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 @Stateless
 public class EventManager extends UserManager {
 
-    static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
-    static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
+    private static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
+    private static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
             TravelMeanEnum.SUBWAY };
 
     @EJB
@@ -42,6 +42,21 @@ public class EventManager extends UserManager {
 
     @Inject
     private Executor executor;
+
+    public static Location findLocation ( LocationMessage locationMessage ) {
+        //TODO check correctness?
+        Location location;
+        try {
+            location = Location.load(
+                    new LocationId( locationMessage.getLatitude(), locationMessage.getLongitude() ) );
+            return location;
+        } catch ( EntityNotFoundException e ) {
+            location = new Location( locationMessage.getLatitude(),
+                    locationMessage.getLongitude(), locationMessage.getAddress() );
+            location.save();
+            return location;
+        }
+    }
 
     @PostConstruct
     public void postConstruct () {
@@ -156,21 +171,6 @@ public class EventManager extends UserManager {
         }
     }
 
-    public static Location findLocation ( LocationMessage locationMessage ) {
-        //TODO check correctness?
-        Location location;
-        try {
-            location = Location.load(
-                    new LocationId( locationMessage.getLatitude(), locationMessage.getLongitude() ) );
-            return location;
-        } catch ( EntityNotFoundException e ) {
-            location = new Location( locationMessage.getLatitude(),
-                    locationMessage.getLongitude(), locationMessage.getAddress() );
-            location.save();
-            return location;
-        }
-    }
-
     private TypeOfEvent findTypeOfEvent ( long name ) {
         return currentUser.getPreferences().stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == name )
@@ -231,7 +231,7 @@ public class EventManager extends UserManager {
         if ( eventMessage.getName() == null ) {
             genericEventErrors.add( " name" );
         }
-        if ( ! eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
+        if ( !eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
             genericEventErrors.add( " starting time must be less than ending time" );
         }
         genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );

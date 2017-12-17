@@ -6,6 +6,8 @@ import it.polimi.travlendarplus.entities.tickets.GenericTicket;
 import it.polimi.travlendarplus.entities.tickets.PathTicket;
 import it.polimi.travlendarplus.entities.tickets.Ticket;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
 import java.time.Instant;
 import java.util.List;
@@ -122,5 +124,11 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
     @Override
     public Ticket addTicket ( TripManager tripManager ) throws InvalidFieldException {
         return tripManager.addPeriodTicket( this );
+    }
+
+    @Override
+    public Ticket modifyTicket ( TripManager tripManager, long ticketId )
+            throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+        return tripManager.modifyPeriodTicket( this, ticketId );
     }
 }
