@@ -33,8 +33,10 @@ public class Credentials extends AuthenticationMessage {
     }
 
     public String getPassword () throws EntityNotFoundException, DecryptionFailedException {
-        RSAEncryption encryption = RSAEncryption.load( idDevice );
-        return encryption.decryptPassword( password );
+        //TODO uncomment when Pina will handle the RSA algorithm
+        /* RSAEncryption encryption = RSAEncryption.load( idDevice );
+        return encryption.decryptPassword( password );*/
+        return password;
     }
 
     public void setPassword ( String password ) {
