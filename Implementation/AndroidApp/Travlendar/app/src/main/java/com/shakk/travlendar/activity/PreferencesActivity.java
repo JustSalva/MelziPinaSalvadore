@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -148,6 +149,8 @@ public class PreferencesActivity extends MenuActivity {
 
         // Setup button listeners.
         deletePreference_imageView.setOnClickListener(view -> deletePreferenceFromServer());
+        findViewById(R.id.editPreference_button).setOnClickListener(view -> modifyPreferenceToServer());
+        findViewById(R.id.addNewPreference_button).setOnClickListener(view -> addPreferenceToServer());
 
         // Handle server responses.
         setupGetterHandler();
@@ -191,7 +194,6 @@ public class PreferencesActivity extends MenuActivity {
         };
     }
 
-    //TODO
     private void setupAdderHandler() {
         adderHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -201,20 +203,13 @@ public class PreferencesActivity extends MenuActivity {
                         Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
                         break;
                     case 200:
-                        Toast.makeText(getBaseContext(), "Preferences updated!", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getBaseContext(), "Preference added!", Toast.LENGTH_LONG).show();
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
-                        String jsonPreferences = bundle.getString("jsonPreferences");
-                        List<Preference> preferences = new Gson()
-                                .fromJson(
-                                        jsonPreferences,
-                                        new TypeToken<List<Preference>>(){}.getType()
-                                );
-                        preferencesMap = new HashMap<>();
-                        for (Preference preference : preferences) {
-                            preferencesMap.put(preference.getName(), preference);
-                        }
+                        String jsonPreference = bundle.getString("jsonPreference");
+                        Preference preference = new Gson()
+                                .fromJson(jsonPreference, Preference.class);
+                        preferencesMap.put(preference.getName(), preference);
                         populatePreferencesSpinner();
                         break;
                     case 400:
@@ -240,20 +235,13 @@ public class PreferencesActivity extends MenuActivity {
                         Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
                         break;
                     case 200:
-                        Toast.makeText(getBaseContext(), "Preferences modified!", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getBaseContext(), "Preference edited!", Toast.LENGTH_LONG).show();
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
-                        String jsonPreferences = bundle.getString("jsonPreferences");
-                        List<Preference> preferences = new Gson()
-                                .fromJson(
-                                        jsonPreferences,
-                                        new TypeToken<List<Preference>>(){}.getType()
-                                );
-                        preferencesMap = new HashMap<>();
-                        for (Preference preference : preferences) {
-                            preferencesMap.put(preference.getName(), preference);
-                        }
+                        String jsonPreference = bundle.getString("jsonPreference");
+                        Preference preference = new Gson()
+                                .fromJson(jsonPreference, Preference.class);
+                        preferencesMap.put(preference.getName(), preference);
                         populatePreferencesSpinner();
                         break;
                     default:
@@ -433,6 +421,14 @@ public class PreferencesActivity extends MenuActivity {
         // Save inserted name for the new preference.
         String newPreferenceName = ((TextView) findViewById(R.id.newPreferenceName_textView))
                 .getText().toString();
+
+        if (!validate()) {
+            Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Save last edited constraints.
+        saveEditedConstraints();
         // Send request to server.
         waitForServerResponse();
         AddPreferenceController addPreferenceController = new AddPreferenceController(adderHandler);
@@ -446,7 +442,36 @@ public class PreferencesActivity extends MenuActivity {
         addPreferenceController.start(token, preferenceBody);
     }
 
+    /**
+     * Checks if the user inputs are correct.
+     * @return true if correct, false otherwise.
+     */
+    private boolean validate() {
+        TextView newPreferenceName_textView = findViewById(R.id.newPreferenceName_textView);
+        // Reset errors.
+        newPreferenceName_textView.setError(null);
+
+        boolean valid = true;
+        View focusView = null;
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(newPreferenceName_textView.getText().toString())) {
+            newPreferenceName_textView.setError(getString(R.string.error_field_required));
+            focusView = newPreferenceName_textView;
+            valid = false;
+        }
+
+        if (!valid) {
+            // There was an error; focus the first form field with an error.
+            focusView.requestFocus();
+        }
+
+        return valid;
+    }
+
     private void modifyPreferenceToServer() {
+        // Save edited constraints.
+        saveEditedConstraints();
         // Send request to server.
         waitForServerResponse();
         ModifyPreferenceController modifyPreferenceController = new ModifyPreferenceController(editorHandler);

@@ -100,8 +100,7 @@
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/preferred_path"
                             android:textStyle="bold"/>
@@ -109,14 +108,12 @@
                         <Spinner
                             android:id="@+id/preferredPath_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:entries="@array/preferredPath_array" />
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/constraints_on"
                             android:textStyle="bold"/>
@@ -124,14 +121,12 @@
                         <Spinner
                             android:id="@+id/travelMeanConstrained_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:entries="@array/travelMeans_array"/>
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1">
+                            android:layout_height="wrap_content">
 
                             <AutoCompleteTextView
                                 android:id="@+id/minDistance_editText"
@@ -146,8 +141,7 @@
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1">
+                            android:layout_height="wrap_content">
 
                             <AutoCompleteTextView
                                 android:id="@+id/maxDistance_editText"
@@ -162,8 +156,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
@@ -184,8 +177,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
