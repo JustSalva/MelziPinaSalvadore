@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.entities.calendar;
 
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
@@ -157,6 +158,8 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
     public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager );
 
     public abstract void removeFeasiblePath ();
+
+    public abstract void serializeResponse ( EventsListResponse eventsListResponse );
 
     @Override
     public String toString () {

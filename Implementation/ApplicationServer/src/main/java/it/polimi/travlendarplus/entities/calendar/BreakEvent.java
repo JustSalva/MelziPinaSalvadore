@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
@@ -25,7 +26,6 @@ public class BreakEvent extends GenericEvent {
     private long minimumTime; // in seconds
 
     public BreakEvent () {
-
     }
 
     public BreakEvent ( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
@@ -126,6 +126,11 @@ public class BreakEvent extends GenericEvent {
     @Override
     public void addInUserList ( User user ) {
         user.addBreak( this );
+    }
+
+    @Override
+    public void serializeResponse ( EventsListResponse eventsListResponse ) {
+        eventsListResponse.addUpdatedBreakEvents( this );
     }
 
     @Override

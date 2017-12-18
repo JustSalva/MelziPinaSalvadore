@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.entities.calendar;
 
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
@@ -160,6 +161,11 @@ public class Event extends GenericEvent {
     @Override
     public void addEventAndModifyFollowingEvent ( EventManager eventManager ) {
         eventManager.addEventAndModifyFollowingEvent( this );
+    }
+
+    @Override
+    public void serializeResponse ( EventsListResponse eventsListResponse ) {
+        eventsListResponse.addUpdatedEvent( this );
     }
 
     @Override

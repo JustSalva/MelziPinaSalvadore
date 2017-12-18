@@ -192,11 +192,9 @@ public class EventManager extends UserManager {
      */
     public void propagatePeriodicEvents ( GenericEvent event ) {
 
-        Instant upperbound = Instant.now().plus( 365, ChronoUnit.DAYS );
-        boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
-        Instant nextStartingTime = event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
-        boolean condition2 = nextStartingTime.isBefore( upperbound );
-        if ( condition1 && condition2 ) {
+        Instant upperBound = Instant.now().plus( 365, ChronoUnit.DAYS );
+
+        if ( checkPropagationConditions( event, upperBound ) ) {
             GenericEvent nextEvent;
             nextEvent = event.nextPeriodicEvent();
             nextEvent.addEventAndModifyFollowingEvent( this );
@@ -210,6 +208,20 @@ public class EventManager extends UserManager {
             event.getPeriodicity().setLastPropagatedEvent( event.getId() );
             event.getPeriodicity().save();
         }
+    }
+
+    /**
+     * Checks if an event is to be propagated in time
+     *
+     * @param event event to be propagated
+     * @param upperBound time upper bound until which the event is to be propagated
+     * @return true if the event is to be propagated, false otherwise
+     */
+    private boolean checkPropagationConditions( GenericEvent event, Instant upperBound ){
+        boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
+        Instant nextStartingTime = event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        boolean condition2 = nextStartingTime.isBefore( upperBound );
+        return condition1 && condition2;
     }
 
     /**
