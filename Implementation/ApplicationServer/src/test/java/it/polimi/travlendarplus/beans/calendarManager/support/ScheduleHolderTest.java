@@ -61,13 +61,13 @@ class ScheduleHolderTest {
         Event e4 = new Event( "e3", Instant.ofEpochSecond( 500 ), Instant.ofEpochSecond( 550 ), true,
                 "", true, true, null, null, null, null );
         e4.setId( 4 );
-        List<Event> list1 = schHold.getListWithNewEvent( e4, false );
+        List<Event> list1 = schHold.getListWithNewEvent( e4 );
         assertEquals( 4, list1.size() );
         assertEquals( 100, list1.get( 0 ).getStartingTime().getEpochSecond() );
         assertEquals( 300, list1.get( 1 ).getStartingTime().getEpochSecond() );
         assertEquals( 500, list1.get( 2 ).getStartingTime().getEpochSecond() );
         assertEquals( 600, list1.get( 3 ).getStartingTime().getEpochSecond() );
-        List<Event> list2 = schHold.getListWithNewEvent( e3, true );
+        List<Event> list2 = schHold.getListWithNewEvent( e3 );
         assertEquals( 3, list2.size() );
         assertEquals( 100, list2.get( 0 ).getStartingTime().getEpochSecond() );
         assertEquals( 300, list2.get( 1 ).getStartingTime().getEpochSecond() );
@@ -113,6 +113,10 @@ class ScheduleHolderTest {
         assertTrue( list3.get( 0 ).getFeasiblePath() == null );
         assertTrue( list3.get( 1 ).getFeasiblePath() == null );
         assertFalse( list3.get( 2 ).getFeasiblePath() == null );
+
+        assertEquals( 3, list3.size() );
+        list3 = schHold.getListWithNewEventPaths( null, null, new Event() );
+        assertEquals( 4, list3.size() );
     }
 
     @Test

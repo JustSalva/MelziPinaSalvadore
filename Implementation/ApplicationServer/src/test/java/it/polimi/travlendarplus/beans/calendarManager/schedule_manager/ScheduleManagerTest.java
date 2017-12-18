@@ -103,7 +103,7 @@ public class ScheduleManagerTest {
     public void getListWithNewEvent() {
         Event event = new Event();
         event.setStartingTime(Instant.ofEpochSecond(5));
-        List<Event> updList = tester.getSchedule().getListWithNewEvent(event, false);
+        List<Event> updList = tester.getSchedule().getListWithNewEvent(event);
         assertEquals(3, updList.size());
         assertEquals(5, updList.get(1).getStartingTime().getEpochSecond());
     }

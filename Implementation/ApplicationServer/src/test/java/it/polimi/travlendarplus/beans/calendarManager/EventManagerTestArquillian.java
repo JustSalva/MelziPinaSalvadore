@@ -16,7 +16,7 @@ import javax.transaction.UserTransaction;
 import static org.junit.Assert.*;
 
 @RunWith( Arquillian.class )
-public class EventManagerTest {
+public class EventManagerTestArquillian {
 
     @PersistenceContext
     EntityManager em;

@@ -35,8 +35,8 @@ public class RESTfulTestSettings {
     private PathCombination combination = new PathCombination( null, null );
     private ArrayList < TravelMeanEnum > privateMeans;
     private ArrayList < TravelMeanEnum > publicMeans;
-    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/ new TravelMeanEnum[ 0 ];
-    private TravelMeanEnum[] pubM = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS};
+    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/{ TravelMeanEnum.CAR };
+    private TravelMeanEnum[] pubM = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS };
 
     public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel ) {
         baseCaseConfiguration( first, second, third, setTravel );
@@ -51,7 +51,7 @@ public class RESTfulTestSettings {
         e4 = setEvent( 1516449600, 1516453200, true, null, abbadia, toe1 );
         //e4 is the event that I try to add
         //2018/01/20 h:9:00 - 14:00
-        be1 = setBreakEvent(1516438800, 1516456800, minInt, true );
+        be1 = setBreakEvent( 1516438800, 1516456800, minInt, true );
         user.addBreak( be1 );
         combination = pathManager.calculatePath( e4, privateMeans, publicMeans );
         return ( combination != null ) ? combination.toString() : "NO_FEASIBLE_PATHS";
@@ -83,7 +83,7 @@ public class RESTfulTestSettings {
         return msg;
     }
 
-    private void baseCaseConfiguration ( boolean first, boolean second, boolean third, boolean setTravels ) {
+    public void baseCaseConfiguration ( boolean first, boolean second, boolean third, boolean setTravels ) {
         setBaseLocations();
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         //2018/01/20 h:8:00 - 10:00
@@ -104,7 +104,7 @@ public class RESTfulTestSettings {
         setMeans( getMeansAL( privM ), getMeansAL( pubM ) );
     }
 
-    private BreakEvent setBreakEvent ( long stTime, long endTime, long minTime, boolean sch ) {
+    public BreakEvent setBreakEvent ( long stTime, long endTime, long minTime, boolean sch ) {
         BreakEvent br = new BreakEvent();
         br.setName( "T+break" );
         br.setStartingTime( Instant.ofEpochSecond( stTime ) );
@@ -118,7 +118,7 @@ public class RESTfulTestSettings {
         return br;
     }
 
-    private void baseTravelsConfiguration () {
+    public void baseTravelsConfiguration () {
         //2018/01/20 h:4:00 - 5:00
         t1 = setTravel( 1516420800, 1516424400 );
         //t1.setRelatedEvent(e1);
@@ -133,7 +133,7 @@ public class RESTfulTestSettings {
         e3.setFeasiblePath( t3 );
     }
 
-    private Travel setTravel ( long stTime, long endTime ) {
+    public Travel setTravel ( long stTime, long endTime ) {
         Travel t = new Travel();
         ArrayList < TravelComponent > compList = new ArrayList < TravelComponent >();
         TravelComponent comp = new TravelComponent();
@@ -144,7 +144,7 @@ public class RESTfulTestSettings {
         return t;
     }
 
-    private Event setEvent ( long stTime, long endTime, boolean prevLoc, Location dep, Location arr, TypeOfEvent toe ) {
+    public Event setEvent ( long stTime, long endTime, boolean prevLoc, Location dep, Location arr, TypeOfEvent toe ) {
         Event e = new Event();
         e.setName( "T+" );
         e.setStartingTime( Instant.ofEpochSecond( stTime ) );
@@ -160,21 +160,21 @@ public class RESTfulTestSettings {
         return e;
     }
 
-    private void setUser () {
+    public void setUser () {
         user.setEmail( "test" );
     }
 
-    private void setScheduleld ( boolean first, boolean second, boolean third ) {
+    public void setScheduleld ( boolean first, boolean second, boolean third ) {
         e1.setScheduled( first );
         e2.setScheduled( second );
         e3.setScheduled( third );
     }
 
-    private Location setLocation ( double lat, double lng ) {
+    public Location setLocation ( double lat, double lng ) {
         return GMapsGeocoder.getLocationObject( lat, lng );
     }
 
-    private void setBaseLocations () {
+    public void setBaseLocations () {
         lecco = setLocation( 45.8565698, 9.397670399999999 );
         mandello = setLocation( 45.91386989999999, 9.317738499999999 );
         como = setLocation( 45.8080597, 9.085176499999999 );
@@ -192,7 +192,7 @@ public class RESTfulTestSettings {
         abbadia.save();
     }
 
-    private TypeOfEvent setTypeOfEvent ( String name, ParamFirstPath param ) {
+    public TypeOfEvent setTypeOfEvent ( String name, ParamFirstPath param ) {
         TypeOfEvent toe = new TypeOfEvent();
         toe.setName( name );
         toe.setParamFirstPath( param );
@@ -200,14 +200,14 @@ public class RESTfulTestSettings {
         return toe;
     }
 
-    private ArrayList < TravelMeanEnum > getMeansAL ( TravelMeanEnum[] list ) {
+    public ArrayList < TravelMeanEnum > getMeansAL ( TravelMeanEnum[] list ) {
         ArrayList < TravelMeanEnum > tme = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : list )
             tme.add( mean );
         return tme;
     }
 
-    private void setMeans ( ArrayList < TravelMeanEnum > privM, ArrayList < TravelMeanEnum > pubM ) {
+    public void setMeans ( ArrayList < TravelMeanEnum > privM, ArrayList < TravelMeanEnum > pubM ) {
         privateMeans = new ArrayList < TravelMeanEnum >( privM );
         publicMeans = new ArrayList < TravelMeanEnum >( pubM );
     }
