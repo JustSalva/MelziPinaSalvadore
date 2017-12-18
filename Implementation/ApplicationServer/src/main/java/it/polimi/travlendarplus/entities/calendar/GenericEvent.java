@@ -62,6 +62,8 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     @Override
     public int compareTo ( GenericEvent gEvent ) {
+        if ( startingTime == null || gEvent.startingTime == null )
+            return -1;
         return startingTime.isAfter( gEvent.startingTime ) ? 1 :
                 startingTime.isBefore( gEvent.startingTime ) ? -1 : 0;
     }

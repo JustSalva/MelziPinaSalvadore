@@ -149,17 +149,16 @@ public class PathManager extends UserManager {
                     possiblePaths.add( travel );
         }
         // Deleting long walking path...if there are alternatives
-        possiblePaths = removeLongWalkingPath( possiblePaths );
+        removeLongWalkingPath( possiblePaths );
     }
 
-    public List < Travel > removeLongWalkingPath ( List < Travel > possiblePaths ) {
+    private void removeLongWalkingPath ( List < Travel > possiblePaths ) {
         // Checking if long walking paths are not the only feasible...
         if ( possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
                 equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() ).size() > 0 )
             // In the case they are not, removing long walking paths
-            return possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
+            possiblePaths = possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
                     equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() );
-        return possiblePaths;
     }
 
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
@@ -294,7 +293,7 @@ public class PathManager extends UserManager {
         return copy;
     }
 
-    public Travel getBestPathInfo( long pathId ) throws EntityNotFoundException, NotScheduledException {
+    public Travel getBestPathInfo ( long pathId ) throws EntityNotFoundException, NotScheduledException {
         Event requestedEvent = currentUser.getEvents()
                 .stream().filter( event -> event.getId() == pathId )
                 .findFirst().orElse( null );
@@ -302,7 +301,7 @@ public class PathManager extends UserManager {
         if ( requestedEvent == null ) {
             throw new EntityNotFoundException();
         }
-        if ( ! requestedEvent.isScheduled() ) {
+        if ( !requestedEvent.isScheduled() ) {
             throw new NotScheduledException();
         }
         return requestedEvent.getFeasiblePath();

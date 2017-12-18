@@ -6,8 +6,6 @@ import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
-import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
-import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.Stateless;
 import java.time.Instant;
@@ -45,7 +43,7 @@ public class ScheduleManager extends UserManager {
         // Checking if existing breaks will be still feasible with the addition of the new event.
         for ( BreakEvent scheduledBreak : schedule.getBreaks() )
             if ( !scheduledBreak.isMinimumEnsuredNoPathRegard( getEventsIntoInterval(
-                    schedule.getListWithNewEvent( event, false ), scheduledBreak ) ) )
+                    schedule.getListWithNewEvent( event ), scheduledBreak ) ) )
                 return false;
         return true;
     }

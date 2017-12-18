@@ -29,13 +29,9 @@ public class ScheduleHolder {
     }
 
     //the add of the event is only simulated: we use a copied ArrayList
-    public List < Event > getListWithNewEvent ( Event newEvent, boolean removeEvent ) {
+    public List < Event > getListWithNewEvent ( Event newEvent ) {
         List < Event > newList = copyEventList();
-        Event toRemove = null;
         newList = newList.stream().filter( e -> e.getId() != newEvent.getId() ).collect( toList() );
-        if ( toRemove != null ) {
-            newList.remove( toRemove );
-        }
         newList.add( newEvent );
         Collections.sort( newList );
         return newList;
@@ -57,7 +53,7 @@ public class ScheduleHolder {
         int i = 0;
         // The new event, with its related path, is added into the list of scheduled events.
         event.setFeasiblePath( prev );
-        List < Event > newList = getListWithNewEvent( event, true );
+        List < Event > newList = getListWithNewEvent( event );
         while ( newList.get( i ).getId() != event.getId() && i < newList.size() )
             i++;
         // The following event is identified and the related path is setted.
