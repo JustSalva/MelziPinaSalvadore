@@ -16,6 +16,7 @@ import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFiel
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -43,8 +44,8 @@ public class EventManager extends UserManager {
     @EJB
     private PathManager pathManager;
 
-    @Inject
-    private Executor executor;
+    @EJB
+    private PeriodicEventsExecutor periodicEventsExecutor;
 
     /**
      * Initialize all the nested java beans with the current user
@@ -202,7 +203,7 @@ public class EventManager extends UserManager {
             nextEvent.save();
             nextEvent.addInUserList( currentUser );
             currentUser.save();
-            propagatePeriodicEvents( nextEvent );
+            startEventPropagatorThread( nextEvent );
         } else {
             //If the event is the last propagated one this knowledge is saved into the periodicity class
             event.getPeriodicity().setLastPropagatedEvent( event.getId() );
@@ -256,12 +257,19 @@ public class EventManager extends UserManager {
         if ( !eventMessage.isPrevLocChoice() ) {
             departure = EventManager.findLocation( eventMessage.getDeparture() );
         }
-        Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
-        periodicity.save();
         Location arrival = EventManager.findLocation( eventMessage.getEventLocation() );
-        return new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, periodicity, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
-                eventMessage.isTravelAtLastChoice(), type, arrival, departure );
+
+        Event event = new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
+                false, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
+                eventMessage.isTravelAtLastChoice(), type, arrival, departure, null );
+
+
+        if ( eventMessage.getPeriodicity() != null) {
+            Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
+            periodicity.save();
+            event.setPeriodicity( periodicity );
+        }
+        return event;
     }
 
     /**
@@ -326,21 +334,21 @@ public class EventManager extends UserManager {
      */
     private List < String > checkPeriodicity ( PeriodMessage periodMessage ) {
         List < String > periodicityErrors = new ArrayList <>();
+        if ( periodMessage != null){
+            if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
+                periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
+            }
+            if ( periodMessage.getDeltaDays() < 0 ) {
+                periodicityErrors.add( "deltaDays must be greater than zero" );
+            }
 
-        if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
-            periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
+            long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
+                    .until( periodMessage.getEndingDay(), ChronoUnit.DAYS );
+
+            if ( deltaBetweenStartAndEndingTime < periodMessage.getDeltaDays() ) {
+                periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
+            }
         }
-        if ( periodMessage.getDeltaDays() < 0 ) {
-            periodicityErrors.add( "deltaDays must be greater than zero" );
-        }
-
-        long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
-                .until( periodMessage.getEndingDay(), ChronoUnit.DAYS );
-
-        if ( deltaBetweenStartAndEndingTime < periodMessage.getDeltaDays() ) {
-            periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
-        }
-
         return periodicityErrors;
     }
 
@@ -472,16 +480,13 @@ public class EventManager extends UserManager {
 
     /**
      * Starts a separate thread that will create all the periodic events up to an year
-     * ( done in a separate thread due to heavy workload, especially with daily events
+     * ( done in a separate thread due to heavy workload, especially with daily events )
      *
      * @param genericEvent event to be propagated in the calendar
      */
     private void startEventPropagatorThread ( GenericEvent genericEvent ) {
         if ( genericEvent.getPeriodicity() != null ) {
-            //TODO thread
-            /*PeriodicEventsRunnable runnable = new PeriodicEventsRunnable( this, genericEvent, currentUser );
-            executor.execute( runnable );*/
-            propagatePeriodicEvents( genericEvent );
+            periodicEventsExecutor.startEventPropagatorThread( genericEvent.getId(), currentUser.getEmail() );
         }
     }
 
