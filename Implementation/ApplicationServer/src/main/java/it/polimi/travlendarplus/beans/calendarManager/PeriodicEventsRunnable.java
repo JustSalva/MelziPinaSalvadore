@@ -3,12 +3,11 @@ package it.polimi.travlendarplus.beans.calendarManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-
+/**
+ * Runnable used to propagate a periodic event within the year asynchronously
+ */
 public class PeriodicEventsRunnable implements Runnable {
 
-    @EJB
     private EventManager eventManager;
     private GenericEvent genericEvent;
     private User user;
@@ -17,11 +16,6 @@ public class PeriodicEventsRunnable implements Runnable {
         this.eventManager = eventManager;
         this.genericEvent = genericEvent;
         this.user = user;
-    }
-
-    @PostConstruct
-    public void postConstruct () {
-        eventManager.setCurrentUser( user );
     }
 
     @Override
