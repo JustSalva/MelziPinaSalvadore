@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @Stateless
 public class PreferenceManager extends UserManager {
 
+    private final float MAX_WALKING_LENGTH_ALWAYS_ACCEPTED = 0.5f;
+
     /**
      * Provides all preferences profiles of the authenticated user
      *
@@ -323,7 +325,11 @@ public class PreferenceManager extends UserManager {
     public boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent ) {
         for ( TravelComponent travelComponent : travel.getMiniTravels() ) {
             TravelMeanEnum travelMean = travelComponent.getMeanUsed().getType();
-            if ( typeOfEvent.isDeactivated( travelMean ) ) {
+            if ( travelMean.getParam().equals( "walking" ) && travelComponent.getLength() <=
+                    MAX_WALKING_LENGTH_ALWAYS_ACCEPTED ) {
+                // A walking-component with a short distance cannot cause the exclusion of a path,
+                // also if BY_FOOT is deactivated.
+            } else if ( typeOfEvent.isDeactivated( travelMean ) ) {
                 return false;
             }
             ArrayList < Constraint > consList = typeOfEvent.getLimitedBy( travelMean );
