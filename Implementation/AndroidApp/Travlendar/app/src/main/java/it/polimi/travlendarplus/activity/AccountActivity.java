@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -23,18 +21,17 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 import it.polimi.travlendarplus.Location;
-import it.polimi.travlendarplus.Position;
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.handler.AddLocationHandler;
+import it.polimi.travlendarplus.activity.handler.DeleteLocationHandler;
+import it.polimi.travlendarplus.activity.handler.GetLocationsHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.controller.AddLocationController;
 import it.polimi.travlendarplus.retrofit.controller.DeleteLocationController;
 import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AccountActivity extends MenuActivity {
@@ -63,9 +60,9 @@ public class AccountActivity extends MenuActivity {
     private String longitude;
 
     // Handler for server responses.
-    private Handler getterHandler;
-    private Handler adderHandler;
-    private Handler deleterHandler;
+    private Handler getLocationsHandler;
+    private Handler addLocationHandler;
+    private Handler deleteLocationHandler;
 
     // Store locations received by the server.
     private Map<String, Location> locationsMap;
@@ -117,7 +114,7 @@ public class AccountActivity extends MenuActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                // Nothing happens.
+                locationsAddressViewer_textView.setText("");
             }
         });
 
@@ -127,92 +124,15 @@ public class AccountActivity extends MenuActivity {
         addLocation_button.setOnClickListener(view -> sendLocationToServer());
 
         // Handle server responses.
-        getterHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        Toast.makeText(getBaseContext(), "Locations updated!", Toast.LENGTH_LONG).show();
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String jsonLocations = bundle.getString("jsonLocations");
-                        List<Location> locations = new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
-                        locationsMap = new HashMap<>();
-                        for (Location location : locations) {
-                            locationsMap.put(location.getName(), location);
-                        }
-                        populateLocationsSpinner();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
-
-        // Handle server responses.
-        adderHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        // Notify the user that the location has been added.
-                        Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
-                        // Add location to the list.
-                        Location location = new Location(locationName, new Position(locationAddress));
-                        locationsMap.put(locationName, location);
-                        populateLocationsSpinner();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
-
-        // Handle server responses.
-        deleterHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        // Notify the user that the location has been removed.
-                        Toast.makeText(getBaseContext(), "Location removed!", Toast.LENGTH_LONG).show();
-                        // Remove location to the list.
-                        locationsMap.remove(selectedLocation.getName());
-                        populateLocationsSpinner();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "The location specified does not exist!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
+        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        addLocationHandler = new AddLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     private void loadLocationsFromServer() {
         // Send request to server.
         waitForServerResponse();
-        GetLocationsController getLocationsController = new GetLocationsController(getterHandler);
+        GetLocationsController getLocationsController = new GetLocationsController(getLocationsHandler);
         getLocationsController.start(token);
     }
 
@@ -258,7 +178,7 @@ public class AccountActivity extends MenuActivity {
 
         // Send request to server.
         waitForServerResponse();
-        AddLocationController addLocationController = new AddLocationController(adderHandler);
+        AddLocationController addLocationController = new AddLocationController(addLocationHandler);
         addLocationController.start(
                 token,
                 locationName,
@@ -297,11 +217,11 @@ public class AccountActivity extends MenuActivity {
     private void deleteLocationFromServer() {
         // Send request to server.
         waitForServerResponse();
-        DeleteLocationController deleteLocationController = new DeleteLocationController(deleterHandler);
+        DeleteLocationController deleteLocationController = new DeleteLocationController(deleteLocationHandler);
         deleteLocationController.start(token, selectedLocation.getName());
     }
 
-    private void populateLocationsSpinner() {
+    public void populateLocationsSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
@@ -327,9 +247,29 @@ public class AccountActivity extends MenuActivity {
     /**
      * Enables user input fields.
      */
-    private void resumeNormalMode() {
+    public void resumeNormalMode() {
         addLocation_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
+    }
+
+    public Map<String, Location> getLocationsMap() {
+        return locationsMap;
+    }
+
+    public void setLocationsMap(Map<String, Location> locationsMap) {
+        this.locationsMap = locationsMap;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public Location getSelectedLocation() {
+        return selectedLocation;
     }
 }
