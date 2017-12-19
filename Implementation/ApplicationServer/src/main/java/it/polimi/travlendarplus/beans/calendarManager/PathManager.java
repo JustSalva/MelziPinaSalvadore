@@ -55,9 +55,9 @@ public class PathManager extends UserManager {
     /**
      * Compute a the best path relative to a given event
      *
-     * @param event event that need a feasible path
+     * @param event        event that need a feasible path
      * @param privateMeans allowed private travel means according to event preferences
-     * @param publicMeans allowed public travel means according to event preferences
+     * @param publicMeans  allowed public travel means according to event preferences
      * @return the requested path if available, null otherwise
      */
     public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
@@ -80,7 +80,7 @@ public class PathManager extends UserManager {
     }
 
     private List < Travel > getPreviousTravels ( Event event, List < TravelMeanEnum > privateMeans,
-                                                      List < TravelMeanEnum > publicMeans ) {
+                                                 List < TravelMeanEnum > publicMeans ) {
         List < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
@@ -102,7 +102,7 @@ public class PathManager extends UserManager {
     }
 
     private List < Travel > getFollowingTravels ( Event event, List < TravelMeanEnum > privateMeans,
-                                                       List < TravelMeanEnum > publicMeans ) {
+                                                  List < TravelMeanEnum > publicMeans ) {
         List < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event following = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
@@ -125,8 +125,8 @@ public class PathManager extends UserManager {
     }
 
     private List < Travel > possiblePathsAdder ( String baseCall, List < TravelMeanEnum > privateMeans,
-                                                      List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
-                                                      boolean sameLoc )
+                                                 List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
+                                                 boolean sameLoc )
             throws GMapsGeneralException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
@@ -214,15 +214,15 @@ public class PathManager extends UserManager {
     }
 
     public List < GenericEvent > swapEvents ( Event forcedEvent, List < TravelMeanEnum > privateMeans,
-                                                   List < TravelMeanEnum > publicMeans ) {
+                                              List < TravelMeanEnum > publicMeans ) {
         scheduleManager.setSchedule( forcedEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         List < GenericEvent > swapOutEvents = new ArrayList < GenericEvent >();
         List < PathCombination > combs = new ArrayList < PathCombination >();
         firstSwapPhase( forcedEvent, swapOutEvents );
         // Calculating prev/foll path for the forcedEvent.
         boolean complete = false;
-        while ( !complete && (!scheduleManager.getSchedule().getEvents().isEmpty() ||
-                !scheduleManager.getSchedule().getBreaks().isEmpty())) {
+        while ( !complete && ( !scheduleManager.getSchedule().getEvents().isEmpty() ||
+                !scheduleManager.getSchedule().getBreaks().isEmpty() ) ) {
             List < Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
@@ -258,7 +258,7 @@ public class PathManager extends UserManager {
     }
 
     private List < GenericEvent > conclusionForSwap ( PathCombination best, Event forcedEvent,
-                                                           List < GenericEvent > swapOut ) {
+                                                      List < GenericEvent > swapOut ) {
         ArrayList < GenericEvent > response = new ArrayList < GenericEvent >();
         // Updating swap out events into DB removing scheduled param and path.
         for ( GenericEvent genEv : swapOut ) {
@@ -338,9 +338,9 @@ public class PathManager extends UserManager {
      *
      * @param eventId identifier of the event to be forced into the schedule
      * @return a list of generic events, modified during the swap
-     * @throws EntityNotFoundException if the event to be swapped does not exist
+     * @throws EntityNotFoundException   if the event to be swapped does not exist
      * @throws AlreadyScheduledException if the event is already in the schedule,
-     * and so it can't be forced into it
+     *                                   and so it can't be forced into it
      */
     public List < GenericEvent > swapEvents ( long eventId )
             throws EntityNotFoundException, AlreadyScheduledException {
