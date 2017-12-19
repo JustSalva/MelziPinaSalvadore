@@ -13,8 +13,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.database.AppDatabase;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,20 +101,20 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Performs an User input operation in the DB on a separated thread.
+     * Disables user input fields.
      */
-    private static class RemoveUserTask extends AsyncTask<Void, Void, Void> {
+    public void waitForServerResponse() {
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
 
-        private AppDatabase database;
-
-        RemoveUserTask(Context context) {
-            this.database = AppDatabase.getInstance(context);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            database.userDao().delete();
-            return null;
-        }
+    /**
+     * Enables user input fields.
+     */
+    public void resumeNormalMode() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 }

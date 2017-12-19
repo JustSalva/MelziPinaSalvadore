@@ -72,12 +72,12 @@ public interface TravlendarClient {
     );
 
     @POST("event")
-    Call<EventResponse> addEvent(
+    Call<Void> addEvent(
             @Body EventBody eventBody
     );
 
     @POST("event/breakEvent")
-    Call<BreakEventResponse> addbreakEvent(
+    Call<Void> addBreakEvent(
             @Body BreakEventBody breakEventBody
     );
 }

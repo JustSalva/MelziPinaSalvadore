@@ -297,7 +297,6 @@ public class PreferencesActivity extends MenuActivity {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
-
         // Save last edited constraints.
         saveEditedConstraints();
         // Send request to server.
@@ -331,7 +330,6 @@ public class PreferencesActivity extends MenuActivity {
             focusView = newPreferenceName_textView;
             valid = false;
         }
-
         if (!valid) {
             // There was an error; focus the first form field with an error.
             focusView.requestFocus();
@@ -362,24 +360,6 @@ public class PreferencesActivity extends MenuActivity {
         waitForServerResponse();
         DeletePreferenceController deletePreferenceController = new DeletePreferenceController(deletePreferenceHandler);
         deletePreferenceController.start(token, selectedPreference.getId());
-    }
-
-    /**
-     * Disables user input fields.
-     */
-    private void waitForServerResponse() {
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Enables user input fields.
-     */
-    public void resumeNormalMode() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
     public void showTimePickerDialog(View view) {

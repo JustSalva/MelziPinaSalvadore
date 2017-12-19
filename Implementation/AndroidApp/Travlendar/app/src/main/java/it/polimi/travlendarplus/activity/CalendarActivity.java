@@ -158,7 +158,7 @@ public class CalendarActivity extends MenuActivity {
     /**
      * Disables user input fields.
      */
-    private void waitForServerResponse() {
+    public void waitForServerResponse() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);

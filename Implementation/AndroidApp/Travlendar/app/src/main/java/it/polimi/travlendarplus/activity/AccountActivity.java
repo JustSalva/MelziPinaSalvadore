@@ -26,7 +26,7 @@ import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.handler.AddLocationHandler;
 import it.polimi.travlendarplus.activity.handler.DeleteLocationHandler;
-import it.polimi.travlendarplus.activity.handler.GetLocationsHandler;
+import it.polimi.travlendarplus.activity.handler.GetAccountLocationsHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.controller.AddLocationController;
 import it.polimi.travlendarplus.retrofit.controller.DeleteLocationController;
@@ -124,7 +124,7 @@ public class AccountActivity extends MenuActivity {
         addLocation_button.setOnClickListener(view -> sendLocationToServer());
 
         // Handle server responses.
-        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getLocationsHandler = new GetAccountLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
         addLocationHandler = new AddLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
         deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
@@ -237,7 +237,7 @@ public class AccountActivity extends MenuActivity {
     /**
      * Disables user input fields.
      */
-    private void waitForServerResponse() {
+    public void waitForServerResponse() {
         addLocation_button.setEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

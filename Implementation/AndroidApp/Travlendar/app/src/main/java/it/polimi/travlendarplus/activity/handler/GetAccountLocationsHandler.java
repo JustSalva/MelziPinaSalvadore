@@ -18,12 +18,12 @@ import java.util.List;
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.AccountActivity;
 
-public class GetLocationsHandler extends Handler {
+public class GetAccountLocationsHandler extends Handler {
 
     private Context context;
     private AccountActivity accountActivity;
 
-    public GetLocationsHandler(Looper looper, Context context, AccountActivity accountActivity) {
+    public GetAccountLocationsHandler(Looper looper, Context context, AccountActivity accountActivity) {
         super(looper);
         this.context = context;
         this.accountActivity = accountActivity;
