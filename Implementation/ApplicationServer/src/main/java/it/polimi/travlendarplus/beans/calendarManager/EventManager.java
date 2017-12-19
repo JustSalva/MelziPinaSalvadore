@@ -11,31 +11,23 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.calendar.Period;
 import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
-import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /**
- * This class provide all methods related to handle the users events
+ * This class provide all methods related to handle the user's events
  */
 @Stateless
 public class EventManager extends UserManager {
-
-    private static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
-    private static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
-            TravelMeanEnum.SUBWAY };
 
     @EJB
     private PreferenceManager preferenceManager;
@@ -90,11 +82,7 @@ public class EventManager extends UserManager {
      * @throws EntityNotFoundException if the break event does not exist
      */
     private GenericEvent findEvent ( List < GenericEvent > eventList, long id ) throws EntityNotFoundException {
-        GenericEvent requestedEvent = eventList.stream()
-                .filter( event -> event.getId() == id ).findFirst().orElse( null );
-        if ( requestedEvent == null )
-            throw new EntityNotFoundException();
-        return requestedEvent;
+        return EventManager.extractEvent( eventList, id );
     }
 
     /**
@@ -160,8 +148,8 @@ public class EventManager extends UserManager {
         if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
             // CalculatePaths check feasibility into the schedule with regard of TIMETABLE
             // and CONSTRAINTS defined by the user
-            feasiblePaths = pathManager.calculatePath( event, preferenceManager.getAllowedMeans( event, privateList ),
-                    preferenceManager.getAllowedMeans( event, publicList ) );
+            feasiblePaths = pathManager.calculatePath( event, preferenceManager.getAllowedMeans( event, PathManager.privateList ),
+                    preferenceManager.getAllowedMeans( event, PathManager.publicList ) );
             // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
             if ( feasiblePaths != null ) {
                 // Setting previous location if prevLocChoice boolean param is true.
@@ -214,11 +202,11 @@ public class EventManager extends UserManager {
     /**
      * Checks if an event is to be propagated in time
      *
-     * @param event event to be propagated
+     * @param event      event to be propagated
      * @param upperBound time upper bound until which the event is to be propagated
      * @return true if the event is to be propagated, false otherwise
      */
-    private boolean checkPropagationConditions( GenericEvent event, Instant upperBound ){
+    private boolean checkPropagationConditions ( GenericEvent event, Instant upperBound ) {
         boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
         Instant nextStartingTime = event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         boolean condition2 = nextStartingTime.isBefore( upperBound );
@@ -264,7 +252,7 @@ public class EventManager extends UserManager {
                 eventMessage.isTravelAtLastChoice(), type, arrival, departure, null );
 
 
-        if ( eventMessage.getPeriodicity() != null) {
+        if ( eventMessage.getPeriodicity() != null ) {
             Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
             periodicity.save();
             event.setPeriodicity( periodicity );
@@ -334,7 +322,7 @@ public class EventManager extends UserManager {
      */
     private List < String > checkPeriodicity ( PeriodMessage periodMessage ) {
         List < String > periodicityErrors = new ArrayList <>();
-        if ( periodMessage != null){
+        if ( periodMessage != null ) {
             if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
                 periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
             }
@@ -522,6 +510,22 @@ public class EventManager extends UserManager {
             location.save();
             return location;
         }
+    }
+
+    /**
+     * Find an event from a list of generic events, given his identifier
+     *
+     * @param eventList list of events to be scanned
+     * @param id        identifier of the event that have to be found
+     * @return the requested event
+     * @throws EntityNotFoundException if the requested event does not exists
+     */
+    public static GenericEvent extractEvent ( List < GenericEvent > eventList, long id ) throws EntityNotFoundException {
+        GenericEvent requestedEvent = eventList.stream()
+                .filter( event -> event.getId() == id ).findFirst().orElse( null );
+        if ( requestedEvent == null )
+            throw new EntityNotFoundException();
+        return requestedEvent;
     }
 
 }

@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 import java.time.Instant;
 
 /**
- * This class provide all RESTful methods related to handle the users events
+ * This class provide all RESTful methods related to handle the user events
  * This RESTful resource will be hosted at the relative URI path "/event"
  */
 @Path( "/event" )
@@ -154,14 +154,6 @@ public class EventRESTful {
             return HttpResponseBuilder.badRequest();
         }
         return HttpResponseBuilder.ok();
-    }
-
-    @Path( "alternatives/{idEvent}" )
-    @GET
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response getAlternatives ( @PathParam( "idEvent" ) int idEvent ) {
-        //TODO
-        return null;
     }
 
     /**

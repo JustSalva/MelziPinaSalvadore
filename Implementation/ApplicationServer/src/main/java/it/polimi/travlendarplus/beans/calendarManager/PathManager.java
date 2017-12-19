@@ -10,6 +10,7 @@ import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.NotScheduledException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
@@ -31,6 +32,9 @@ public class PathManager extends UserManager {
 
     final static float MAX_LENGTH = 2.5f;
 
+    protected static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
+    protected static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
+            TravelMeanEnum.SUBWAY };
     @EJB
     ScheduleManager scheduleManager;
     @EJB
@@ -235,7 +239,7 @@ public class PathManager extends UserManager {
             }
         }
         PathCombination best = ( complete ) ? preferenceManager.findBestpath( combs, forcedEvent.getType() ) : null;
-        return best != null ? conclusionForSwap( best, forcedEvent, swapOutEvents ) : null;
+        return best != null ? conclusionForSwap( best, forcedEvent, swapOutEvents ) : new ArrayList <>();
     }
 
     private ArrayList < GenericEvent > conclusionForSwap ( PathCombination best, Event forcedEvent,
@@ -312,6 +316,28 @@ public class PathManager extends UserManager {
         this.currentUser = currentUser;
         this.scheduleManager.setCurrentUser( currentUser );
         this.preferenceManager.setCurrentUser( currentUser );
+    }
+
+    /**
+     * Force an event into the schedule, removing all the events that overlaps with it
+     *
+     * @param eventId identifier of the event to be forced into the schedule
+     * @return a list of generic events, modified during the swap
+     * @throws EntityNotFoundException if the event to be swapped does not exist
+     * @throws AlreadyScheduledException if the event is already in the schedule,
+     * and so it can't be forced into it
+     */
+    public List < GenericEvent > swapEvents ( long eventId )
+            throws EntityNotFoundException, AlreadyScheduledException {
+
+        ArrayList < GenericEvent > genericEvents = new ArrayList <>( currentUser.getEvents() );
+        //NB the swap in the first release is available only for events and not break events!
+        Event event = ( Event ) EventManager.extractEvent( genericEvents, eventId );
+        if ( event.isScheduled() ) {
+            throw new AlreadyScheduledException();
+        }
+        return swapEvents( event, preferenceManager.getAllowedMeans( event, privateList ),
+                preferenceManager.getAllowedMeans( event, publicList ) );
     }
 
 }

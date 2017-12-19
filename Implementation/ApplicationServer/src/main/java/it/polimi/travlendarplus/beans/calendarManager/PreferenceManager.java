@@ -20,9 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class provide all methods related to handle the user preferences
+ */
 @Stateless
 public class PreferenceManager extends UserManager {
 
+    /**
+     * Provides all preferences profiles of the authenticated user
+     *
+     * @return the requested profiles
+     */
     public List < TypeOfEvent > getPreferencesProfiles () {
         return currentUser.getPreferences();
     }
@@ -38,6 +46,13 @@ public class PreferenceManager extends UserManager {
         return requested;
     }
 
+    /**
+     * Adds a preference profile into the users account
+     *
+     * @param typeOfEventMessage message representing the user's profile to be added
+     * @return the added preference profile, comprehensive of his id
+     * @throws InvalidFieldException if some fields of the message are wrong, which one is specified inside the error
+     */
     public TypeOfEvent addTypeOfEvent ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
         checkTypeOfEventConsistency( typeOfEventMessage );
         TypeOfEvent typeOfEvent = createTypeOfEvent( typeOfEventMessage );
@@ -47,6 +62,14 @@ public class PreferenceManager extends UserManager {
         return typeOfEvent;
     }
 
+    /**
+     * Modifies an already existent preference profile
+     *
+     * @param typeOfEventMessage message representing how the user's profile is to be modified
+     * @return the modified preference profile, comprehensive of his new id
+     * @throws InvalidFieldException if some fields of the message are wrong, which one is specified inside the error
+     * @throws EntityNotFoundException if the profile to be modified does not exists
+     */
     public TypeOfEvent modifyTypeOfEvent ( ModifyTypeOfEventMessage typeOfEventMessage )
             throws InvalidFieldException, EntityNotFoundException {
         //checks the event existence
@@ -57,6 +80,12 @@ public class PreferenceManager extends UserManager {
 
     }
 
+    /**
+     * Deletes an already existent preference profile
+     *
+     * @param id identifier of the preference profile
+     * @throws EntityNotFoundException if the profile to be modified does not exists
+     */
     public void deleteTypeOfEvent ( long id ) throws EntityNotFoundException {
         // NB if the type of event is still used in some events it will remain saved into them
         getPreferencesProfile( id );
@@ -64,6 +93,12 @@ public class PreferenceManager extends UserManager {
         currentUser.save();
     }
 
+    /**
+     * Checks that a type of event message info are correct
+     *
+     * @param typeOfEventMessage message representing a type of event
+     * @throws InvalidFieldException if some fields of the message are wrong, which one is specified inside the error
+     */
     private void checkTypeOfEventConsistency ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>();
         if ( typeOfEventMessage.getName() == null ) {
@@ -81,6 +116,12 @@ public class PreferenceManager extends UserManager {
         }
     }
 
+    /**
+     * Checks that the period constraints info inside a list of period constraint messages are correct
+     *
+     * @param periodConstraints message representing a period constraints
+     * @return a list of wrong fields if there are some, an empty list otherwise
+     */
     private List < String > checkPeriodConstraints ( List < AddPeriodConstraintMessage > periodConstraints ) {
         List < String > periodErrors = new ArrayList <>();
         //checks that min < max hour
@@ -109,6 +150,12 @@ public class PreferenceManager extends UserManager {
         return periodErrors;
     }
 
+    /**
+     * Checks that the distance constraint info inside a list of distance constraint messages
+     *
+     * @param distanceConstraints message representing a period constraints
+     * @return a list of wrong fields if there are some, an empty list otherwise
+     */
     private List < String > checkDistanceConstraints ( List < AddDistanceConstraintMessage > distanceConstraints ) {
         List < String > distanceErrors = new ArrayList <>();
         //checks that min length >= 0
@@ -130,6 +177,12 @@ public class PreferenceManager extends UserManager {
         return distanceErrors;
     }
 
+    /**
+     * Checks the consistency of a travel mean enum list inside a list of constraint messages
+     *
+     * @param constraintMessages list of messages containing the constraints whose travel mean enum is to be checked
+     * @return a list of wrong fields if there are some, an empty list otherwise
+     */
     private List < String > checkTravelMeanEnum ( List < AddConstraintMessage > constraintMessages ) {
         List < String > errors = new ArrayList <>();
         errors.addAll( constraintMessages.stream()
@@ -141,6 +194,12 @@ public class PreferenceManager extends UserManager {
         return errors;
     }
 
+    /**
+     * Creates an instance of type of event, given his relative message
+     *
+     * @param message contains all info to be saved into a new type of event
+     * @return the requested type of event
+     */
     private TypeOfEvent createTypeOfEvent ( AddTypeOfEventMessage message ) {
         TypeOfEvent typeOfEvent = new TypeOfEvent( message.getName(), message.getParamFirstPath() );
         typeOfEvent.setDeactivate( message.getDeactivate() );

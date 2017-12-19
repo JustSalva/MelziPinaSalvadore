@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.RESTful.RESTfulCalendar;
 import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
 import it.polimi.travlendarplus.RESTful.authenticationManager.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.authenticationManager.Secured;
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * This class provide all RESTful methods related to handle the users travel-paths
+ * This class provide all RESTful methods related to handle the user's travel-paths
  * This RESTful resource will be hosted at the relative URI path "/path"
  */
 @Path( "/path" )
@@ -63,7 +64,7 @@ public class PathRESTful {
             return HttpResponseBuilder.buildOkResponse( pathManager.getBestPathInfo( idEvent ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
-        } catch ( NotScheduledException e1 ){
+        } catch ( NotScheduledException e1 ) {
             return HttpResponseBuilder.conflict();
         }
     }
@@ -80,14 +81,13 @@ public class PathRESTful {
     @PATCH
     @Produces( MediaType.APPLICATION_JSON )
     public Response swapSchedule ( @PathParam( "idEvent" ) long id ) {
-        /*try { //TODO I don't know how to use the swap parameters
-            return HttpResponseBuilder.buildOkResponse( pathManager.swapEvents( id ) );
+        try {
+            return HttpResponseBuilder.buildOkResponse( new EventsListResponse( pathManager.swapEvents( id ) ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         } catch ( AlreadyScheduledException e ) {
             return HttpResponseBuilder.buildAlreadyScheduledResponse( e );
-        }*/
-        return null;
+        }
     }
 
     /**

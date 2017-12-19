@@ -52,7 +52,7 @@ public class EmailSender implements EmailInterface {
     }
 
     /**
-     * Sets up the travlendar's email properties
+     * Sets up the Travlendar's email properties
      */
     @PostConstruct
     public void setUP () {

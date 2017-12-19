@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * This class provide all RESTful methods related to handle the users preferences
+ * This class provide all RESTful methods related to handle the user's preferences
  * This RESTful resource will be hosted at the relative URI path "/preference"
  */
 @Path( "/preference" )
