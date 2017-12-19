@@ -23,6 +23,9 @@ public interface UserDao {
     @Query("SELECT * FROM user")
     LiveData<User> getUser();
 
+    @Query("UPDATE user SET timestamp = :timestamp")
+    void setTimestamp(long timestamp);
+
     @Query("SELECT COUNT(*) FROM user")
     int countUsers();
 }

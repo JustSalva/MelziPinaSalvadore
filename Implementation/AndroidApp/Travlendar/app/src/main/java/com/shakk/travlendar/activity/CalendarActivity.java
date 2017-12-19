@@ -29,6 +29,7 @@ import com.shakk.travlendar.DateUtility;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.activity.fragment.DatePickerFragment;
 import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.database.entity.event.BreakEvent;
 import com.shakk.travlendar.database.entity.event.Event;
 import com.shakk.travlendar.database.entity.event.GenericEvent;
@@ -54,6 +55,8 @@ public class CalendarActivity extends MenuActivity {
     private UserViewModel userViewModel;
     private String token;
     private long timestamp;
+    // Variable to check if the events have already been downloaded.
+    private boolean eventsDownloaded = false;
 
     private Calendar calendar = new GregorianCalendar();
 
@@ -76,8 +79,9 @@ public class CalendarActivity extends MenuActivity {
             token = user != null ? user.getToken() : "";
             timestamp = user != null ? user.getTimestamp() : 0;
             // To be called only on the first onCreate().
-            if (savedInstanceState == null) {
+            if (! eventsDownloaded) {
                 loadEventsFromServer();
+                eventsDownloaded = true;
             }
         });
         // Observe events available in the selected date.
@@ -154,9 +158,11 @@ public class CalendarActivity extends MenuActivity {
                                 new TypeToken<List<BreakEventResponse>>(){}.getType()
                         );
                         // Write new events into DB.
-                        //new InsertEventsTask(getApplicationContext(), events).execute();
+                        new InsertEventsTask(getApplicationContext(), events).execute();
                         // Write new break events into DB.
-                        //new InsertBreakEventsTask(getApplicationContext(), breakEvents).execute();
+                        new InsertBreakEventsTask(getApplicationContext(), breakEvents).execute();
+                        // Update timestamp in DB.
+                        //new UpdateTimestampTask(getApplicationContext()).execute();
                         break;
                     default:
                         Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
@@ -305,6 +311,7 @@ public class CalendarActivity extends MenuActivity {
                 genericEvent.setEvent(event);
                 database.calendarDao().insert(genericEvent);
             }
+            database.userDao().setTimestamp(System.currentTimeMillis());
             return null;
         }
     }
@@ -335,6 +342,21 @@ public class CalendarActivity extends MenuActivity {
                 genericEvent.setBreakEvent(breakEvent);
                 database.calendarDao().insert(genericEvent);
             }
+            database.userDao().setTimestamp(System.currentTimeMillis());
+            return null;
+        }
+    }
+
+    private static class UpdateTimestampTask extends AsyncTask<Void, Void, Void> {
+
+        private AppDatabase database;
+
+        UpdateTimestampTask(Context context) {
+            this.database = AppDatabase.getInstance(context);
+        }
+
+        protected Void doInBackground(Void... voids) {
+
             return null;
         }
     }
