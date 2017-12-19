@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cc28bfbea1e3f1520c22d31398599c1e",
+    "identityHash": "9e44226069cd37923d9109181fde1950",
     "entities": [
       {
         "tableName": "User",
@@ -252,7 +252,7 @@
       },
       {
         "tableName": "travel_component",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `start_time` TEXT, `end_time` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`ticket_id`) REFERENCES `Ticket`(`id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `length` REAL NOT NULL, `event_id` INTEGER NOT NULL, `ticket_id` INTEGER NOT NULL, `travel_mean` TEXT, `departure_location` TEXT, `arrival_location` TEXT, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`event_id`) REFERENCES `generic_event`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -299,14 +299,14 @@
           {
             "fieldPath": "startTime",
             "columnName": "start_time",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "endTime",
             "columnName": "end_time",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -327,24 +327,13 @@
             "referencedColumns": [
               "id"
             ]
-          },
-          {
-            "table": "Ticket",
-            "onDelete": "SET NULL",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "ticket_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cc28bfbea1e3f1520c22d31398599c1e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9e44226069cd37923d9109181fde1950\")"
     ]
   }
 }

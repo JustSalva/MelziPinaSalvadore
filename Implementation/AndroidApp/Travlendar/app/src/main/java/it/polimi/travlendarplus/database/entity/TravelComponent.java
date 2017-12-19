@@ -18,13 +18,6 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
                 childColumns = "event_id",
                 onUpdate = CASCADE,
                 onDelete = CASCADE
-        ),
-        @ForeignKey(
-                entity = Ticket.class,
-                parentColumns = "id",
-                childColumns = "ticket_id",
-                onUpdate = CASCADE,
-                onDelete = SET_NULL
         )
 }, tableName = "travel_component")
 public class TravelComponent {
@@ -34,10 +27,10 @@ public class TravelComponent {
 
     private float length;
     @ColumnInfo(name = "event_id")
-    private int eventId;
+    private long eventId;
 
     @ColumnInfo(name = "ticket_id")
-    private int ticketId;
+    private long ticketId;
 
     @ColumnInfo(name = "travel_mean")
     private String travelMean;
@@ -48,17 +41,17 @@ public class TravelComponent {
     private String arrivalLocation;
 
     @ColumnInfo(name = "start_time")
-    private String startTime;
+    private long startTime;
     @ColumnInfo(name = "end_time")
-    private String endTime;
+    private long endTime;
 
-    public TravelComponent(long id, float length, int eventId, int ticketId, String travelMean,
+    public TravelComponent(long id, float length, long eventId, String travelMean,
                            String departureLocation, String arrivalLocation,
-                           String startTime, String endTime) {
+                           long startTime, long endTime) {
         this.id = id;
         this.length = length;
         this.eventId = eventId;
-        this.ticketId = ticketId;
+        this.ticketId = 0;
         this.travelMean = travelMean;
         this.departureLocation = departureLocation;
         this.arrivalLocation = arrivalLocation;
@@ -82,19 +75,19 @@ public class TravelComponent {
         this.length = length;
     }
 
-    public int getEventId() {
+    public long getEventId() {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public void setEventId(long eventId) {
         this.eventId = eventId;
     }
 
-    public int getTicketId() {
+    public long getTicketId() {
         return ticketId;
     }
 
-    public void setTicketId(int ticketId) {
+    public void setTicketId(long ticketId) {
         this.ticketId = ticketId;
     }
 
@@ -122,19 +115,19 @@ public class TravelComponent {
         this.arrivalLocation = arrivalLocation;
     }
 
-    public String getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 }

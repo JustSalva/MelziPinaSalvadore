@@ -142,12 +142,14 @@ public class CalendarActivity extends MenuActivity {
                         // Retrieve data from bundle.
                         Bundle bundle = msg.getData();
                         Log.d("EVENTS_JSON", bundle.getString("jsonEvents"));
+                        // Save events from JSON.
                         String jsonEvents = bundle.getString("jsonEvents");
                         List<EventResponse> events = new Gson().fromJson(
                                 jsonEvents,
                                 new TypeToken<List<EventResponse>>(){}.getType()
                         );
                         Log.d("BREAK_EVENTS_JSON", bundle.getString("jsonBreakEvents"));
+                        // Save break events from JSON.
                         String jsonBreakEvents = bundle.getString("jsonBreakEvents");
                         List<BreakEventResponse> breakEvents = new Gson().fromJson(
                                 jsonBreakEvents,

@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.retrofit.response;
 
+import it.polimi.travlendarplus.FeasiblePath;
 import it.polimi.travlendarplus.Position;
 import it.polimi.travlendarplus.Timestamp;
 
@@ -11,6 +12,7 @@ public class EventResponse {
     private EventType type;
     private Position eventLocation;
     private Position departure;
+    private FeasiblePath feasiblePath;
     private Timestamp startingTime;
     private Timestamp endingTime;
     private boolean isScheduled;
@@ -39,6 +41,10 @@ public class EventResponse {
 
     public Position getDeparture() {
         return departure;
+    }
+
+    public FeasiblePath getFeasiblePath() {
+        return feasiblePath;
     }
 
     public Timestamp getStartingTime() {
