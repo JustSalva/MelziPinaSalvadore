@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.PreferenceManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
+import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
@@ -32,13 +33,6 @@ public class PathManagerTest {
     PathManager pathManager;
     ScheduleManager scheduleManager;
     PreferenceManager preferenceManager;
-    Event event;
-    RESTfulTestSettings testSettings = new RESTfulTestSettings();
-    User user = new User();
-    TravelMeanEnum[] privM = {TravelMeanEnum.TRAIN, TravelMeanEnum.BUS};
-    TravelMeanEnum[] pubM = {};
-    private ArrayList < TravelMeanEnum > privateMeans;
-    private ArrayList < TravelMeanEnum > publicMeans;
     Random rdm = new Random();
 
     @Parameterized.Parameters(name
@@ -110,11 +104,7 @@ public class PathManagerTest {
         } );
 
         if ( first && !second && third ) {
-            PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e2 );
-            assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
-            assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e3.getStartingTime() ) );
-            assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
-            assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e2.getEndingTime() ) );
+            centralEvent();
         } else if ( !first && second ) {
             PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e1 );
             assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
@@ -133,6 +123,40 @@ public class PathManagerTest {
             assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e4.getEndingTime() ) );
         }
 
+    }
+
+    private boolean areSameLocations( Location l1, Location l2) {
+        return l1.getLatitude() - l2.getLatitude() < 0.001 && l1.getLongitude() - l2.getLongitude() < 0.001;
+    }
+
+    private void centralEvent() {
+        PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e2 );
+        assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
+        assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e3.getStartingTime() ) );
+        assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
+        assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e2.getEndingTime() ) );
+        if(PathManagerSettingsTest.e2.isPrevLocChoice()) {
+            assertTrue( areSameLocations( PathManagerSettingsTest.e1.getEventLocation(),
+                            comb.getPrevPath().getMiniTravels().get( 0 ).getDeparture() ) );
+            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+                            comb.getPrevPath().getMiniTravels().get( comb.getPrevPath().getMiniTravels().size() - 1 ).getArrival() ) );
+        } else {
+            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getDeparture(),
+                            comb.getPrevPath().getMiniTravels().get( 0 ).getDeparture() ) );
+            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+                            comb.getPrevPath().getMiniTravels().get( comb.getPrevPath().getMiniTravels().size() - 1 ).getArrival() ) );
+        }
+        if(PathManagerSettingsTest.e3.isPrevLocChoice()) {
+            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+                            comb.getFollPath().getMiniTravels().get( 0 ).getDeparture() ) );
+            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getEventLocation(),
+                            comb.getFollPath().getMiniTravels().get( comb.getFollPath().getMiniTravels().size() - 1 ).getArrival() ) );
+        } else {
+            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getDeparture(),
+                            comb.getFollPath().getMiniTravels().get( 0 ).getDeparture() ) );
+            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getEventLocation(),
+                            comb.getFollPath().getMiniTravels().get( comb.getFollPath().getMiniTravels().size() - 1 ).getArrival() ) );
+        }
     }
 
 
