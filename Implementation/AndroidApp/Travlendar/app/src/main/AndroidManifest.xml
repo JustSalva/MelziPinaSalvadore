@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shakk.travlendar">
+    package="it.polimi.travlendarplus">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name=".activity.MainActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,39 +28,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="it.polimi.travlendarplus.activity.LoginActivity"
             android:label="@string/login">
         </activity>
         <activity
-            android:name=".activity.RegistrationActivity"
+            android:name="it.polimi.travlendarplus.activity.RegistrationActivity"
             android:label="@string/title_activity_registration"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.LoginActivity" />
+                android:value="it.polimi.travlendarplus.activity.LoginActivity" />
         </activity>
-        <activity android:name=".activity.CalendarActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.CalendarActivity"
             android:label="@string/calendar"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.MapsActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".activity.AccountActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.AccountActivity"
             android:label="@string/my_account"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.PreferencesActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.PreferencesActivity"
             android:label="@string/preferences"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.TicketEditorActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.TicketEditorActivity"
             android:label="@string/edit_ticket"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.EventEditorActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.EventEditorActivity"
             android:label="@string/edit_event"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.EventViewerActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.EventViewerActivity"
             android:label="@string/view_event"/>
-        <activity android:name=".activity.ArrangeTripActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.ArrangeTripActivity"
             android:label="@string/arrange_trip"/>
-        <activity android:name=".activity.TicketsViewerActivity"
+        <activity android:name="it.polimi.travlendarplus.activity.TicketsViewerActivity"
             android:label="@string/tickets_viewer"/>
 
         <!--

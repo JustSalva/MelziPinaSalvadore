@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.shakk.travlendar.activity.MainActivity">
+    tools:context="it.polimi.travlendarplus.activity.MainActivity">
 
     <ProgressBar
         android:id="@+id/progressBar"
