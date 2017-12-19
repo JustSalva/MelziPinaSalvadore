@@ -4,9 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,12 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.TimePickerFragment;
+import it.polimi.travlendarplus.activity.handler.AddPreferenceHandler;
+import it.polimi.travlendarplus.activity.handler.DeletePreferenceHandler;
+import it.polimi.travlendarplus.activity.handler.GetPreferencesHandler;
+import it.polimi.travlendarplus.activity.handler.ModifyPreferenceHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.body.PreferenceBody;
 import it.polimi.travlendarplus.retrofit.controller.AddPreferenceController;
@@ -34,7 +34,6 @@ import it.polimi.travlendarplus.retrofit.controller.GetPreferencesController;
 import it.polimi.travlendarplus.retrofit.controller.ModifyPreferenceController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PreferencesActivity extends MenuActivity {
@@ -56,10 +55,10 @@ public class PreferencesActivity extends MenuActivity {
     private String selectedTravelMean;
 
     // Handlers for server responses.
-    private Handler getterHandler;
-    private Handler adderHandler;
-    private Handler editorHandler;
-    private Handler deleterHandler;
+    private Handler getPreferencesHandler;
+    private Handler addPreferenceHandler;
+    private Handler modifyPreferenceHandler;
+    private Handler deletePreferenceHandler;
 
     private UserViewModel userViewModel;
 
@@ -150,135 +149,10 @@ public class PreferencesActivity extends MenuActivity {
         findViewById(R.id.addNewPreference_button).setOnClickListener(view -> addPreferenceToServer());
 
         // Handle server responses.
-        setupGetterHandler();
-        setupAdderHandler();
-        setupEditorHandler();
-        setupDeleterHandler();
-    }
-
-    private void setupGetterHandler() {
-        getterHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        Toast.makeText(getBaseContext(), "Preferences updated!", Toast.LENGTH_LONG).show();
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String jsonPreferences = bundle.getString("jsonPreferences");
-                        List<Preference> preferences = new Gson()
-                                .fromJson(
-                                        jsonPreferences,
-                                        new TypeToken<List<Preference>>(){}.getType()
-                                );
-                        // Fill map of preferences.
-                        for (Preference preference : preferences) {
-                            preferencesMap.put(preference.getName(), preference);
-                        }
-                        // Update preferences spinner.
-                        populatePreferencesSpinner();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
-    }
-
-    private void setupAdderHandler() {
-        adderHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        Toast.makeText(getBaseContext(), "Preference added!", Toast.LENGTH_LONG).show();
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String jsonPreference = bundle.getString("jsonPreference");
-                        Preference preference = new Gson()
-                                .fromJson(jsonPreference, Preference.class);
-                        preferencesMap.put(preference.getName(), preference);
-                        populatePreferencesSpinner();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
-    }
-
-    //TODO
-    private void setupEditorHandler() {
-        editorHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        Toast.makeText(getBaseContext(), "Preference edited!", Toast.LENGTH_LONG).show();
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String jsonPreference = bundle.getString("jsonPreference");
-                        Preference preference = new Gson()
-                                .fromJson(jsonPreference, Preference.class);
-                        preferencesMap.put(preference.getName(), preference);
-                        populatePreferencesSpinner();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
-    }
-
-    private void setupDeleterHandler() {
-        deleterHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 1:
-                        Toast.makeText(getBaseContext(), "The normal type of event cannot be deleted!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        // Notify the user that the preference has been removed.
-                        Toast.makeText(getBaseContext(), "Preference removed!", Toast.LENGTH_LONG).show();
-                        // Remove preference from the list.
-                        preferencesMap.remove(selectedPreference.getName());
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "The specified profile does not exist!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
+        getPreferencesHandler = new GetPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        addPreferenceHandler = new AddPreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        modifyPreferenceHandler = new ModifyPreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        deletePreferenceHandler = new DeletePreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     private void loadPreferencesFromServer() {
@@ -287,11 +161,11 @@ public class PreferencesActivity extends MenuActivity {
         preferencesMap.put("Normal", new Preference());
         // Send request to server.
         waitForServerResponse();
-        GetPreferencesController getPreferencesController = new GetPreferencesController(getterHandler);
+        GetPreferencesController getPreferencesController = new GetPreferencesController(getPreferencesHandler);
         getPreferencesController.start(token);
     }
 
-    private void populatePreferencesSpinner() {
+    public void populatePreferencesSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
@@ -428,7 +302,7 @@ public class PreferencesActivity extends MenuActivity {
         saveEditedConstraints();
         // Send request to server.
         waitForServerResponse();
-        AddPreferenceController addPreferenceController = new AddPreferenceController(adderHandler);
+        AddPreferenceController addPreferenceController = new AddPreferenceController(addPreferenceHandler);
         PreferenceBody preferenceBody = new PreferenceBody(
                 newPreferenceName,
                 selectedPreference.getParamFirstPath(),
@@ -471,7 +345,7 @@ public class PreferencesActivity extends MenuActivity {
         saveEditedConstraints();
         // Send request to server.
         waitForServerResponse();
-        ModifyPreferenceController modifyPreferenceController = new ModifyPreferenceController(editorHandler);
+        ModifyPreferenceController modifyPreferenceController = new ModifyPreferenceController(modifyPreferenceHandler);
         PreferenceBody preferenceBody = new PreferenceBody(
                 selectedPreference.getName(),
                 selectedPreference.getParamFirstPath(),
@@ -486,7 +360,7 @@ public class PreferencesActivity extends MenuActivity {
     private void deletePreferenceFromServer() {
         // Send request to server.
         waitForServerResponse();
-        DeletePreferenceController deletePreferenceController = new DeletePreferenceController(deleterHandler);
+        DeletePreferenceController deletePreferenceController = new DeletePreferenceController(deletePreferenceHandler);
         deletePreferenceController.start(token, selectedPreference.getId());
     }
 
@@ -503,7 +377,7 @@ public class PreferencesActivity extends MenuActivity {
     /**
      * Enables user input fields.
      */
-    private void resumeNormalMode() {
+    public void resumeNormalMode() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
@@ -516,5 +390,17 @@ public class PreferencesActivity extends MenuActivity {
             newFragment.setTextView(findViewById(R.id.maxTime_textView));
         }
         newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    public Map<String, Preference> getPreferencesMap() {
+        return preferencesMap;
+    }
+
+    public void setPreferencesMap(Map<String, Preference> preferencesMap) {
+        this.preferencesMap = preferencesMap;
+    }
+
+    public Preference getSelectedPreference() {
+        return selectedPreference;
     }
 }

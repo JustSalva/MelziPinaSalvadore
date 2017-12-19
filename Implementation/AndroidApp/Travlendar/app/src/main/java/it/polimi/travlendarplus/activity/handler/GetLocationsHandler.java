@@ -14,7 +14,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.AccountActivity;
