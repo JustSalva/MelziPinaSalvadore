@@ -221,7 +221,8 @@ public class PathManager extends UserManager {
         firstSwapPhase( forcedEvent, swapOutEvents );
         // Calculating prev/foll path for the forcedEvent.
         boolean complete = false;
-        while ( !complete && !scheduleManager.getSchedule().getEvents().isEmpty() ) {
+        while ( !complete && (!scheduleManager.getSchedule().getEvents().isEmpty() ||
+                !scheduleManager.getSchedule().getBreaks().isEmpty())) {
             List < Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
@@ -295,7 +296,7 @@ public class PathManager extends UserManager {
     // Removing events that overlap with forcedEvent
     private void firstSwapPhase ( Event forcedEvent, List < GenericEvent > swapOutEvents ) {
         for ( Event event : scheduleManager.getSchedule().getEvents() )
-            if ( !scheduleManager.areEventsOverlapFree( event, forcedEvent ) )
+            if ( !scheduleManager.areEventsOverlapFree( forcedEvent, event ) )
                 swapOutEvents.add( event );
         for ( GenericEvent event : swapOutEvents )
             scheduleManager.getSchedule().removeSpecEvent( ( Event ) event );
