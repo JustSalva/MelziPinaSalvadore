@@ -28,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import com.shakk.travlendar.DateUtility;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.activity.fragment.DatePickerFragment;
+import com.shakk.travlendar.activity.tasks.InsertBreakEventsTask;
+import com.shakk.travlendar.activity.tasks.InsertEventsTask;
 import com.shakk.travlendar.database.AppDatabase;
 import com.shakk.travlendar.database.entity.User;
 import com.shakk.travlendar.database.entity.event.BreakEvent;
@@ -277,87 +279,6 @@ public class CalendarActivity extends MenuActivity {
                     break;
             }
             return true;
-        }
-    }
-
-    private static class InsertEventsTask extends AsyncTask<Void, Void, Void> {
-
-        private AppDatabase database;
-        private List<EventResponse> events;
-
-        InsertEventsTask(Context context, List<EventResponse> events) {
-            this.database = AppDatabase.getInstance(context);
-            this.events = events;
-        }
-
-        protected Void doInBackground(Void... voids) {
-            for (EventResponse eventResponse : events) {
-                GenericEvent genericEvent = new GenericEvent(
-                        eventResponse.getId(),
-                        eventResponse.getName(),
-                        eventResponse.getStartingTime().getSeconds(),
-                        eventResponse.getEndingTime().getSeconds(),
-                        eventResponse.isScheduled()
-                );
-                Event event = new Event(
-                        eventResponse.getDescription(),
-                        eventResponse.getType().getId(),
-                        eventResponse.getEventLocation().getAddress(),
-                        eventResponse.isPrevLocChoice(),
-                        eventResponse.isTravelAtLastChoice(),
-                        eventResponse.getDeparture().getAddress()
-                );
-                genericEvent.setType(GenericEvent.EventType.EVENT);
-                genericEvent.setEvent(event);
-                database.calendarDao().insert(genericEvent);
-            }
-            database.userDao().setTimestamp(System.currentTimeMillis());
-            return null;
-        }
-    }
-
-    private static class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
-
-        private AppDatabase database;
-        private List<BreakEventResponse> breakEvents;
-
-        InsertBreakEventsTask(Context context, List<BreakEventResponse> breakEvents) {
-            this.database = AppDatabase.getInstance(context);
-            this.breakEvents = breakEvents;
-        }
-
-        protected Void doInBackground(Void... voids) {
-            for (BreakEventResponse breakEventResponse : breakEvents) {
-                GenericEvent genericEvent = new GenericEvent(
-                        breakEventResponse.getId(),
-                        breakEventResponse.getName(),
-                        breakEventResponse.getStartingTime().getSeconds(),
-                        breakEventResponse.getEndingTime().getSeconds(),
-                        breakEventResponse.isScheduled()
-                );
-                BreakEvent breakEvent = new BreakEvent(
-                        breakEventResponse.getMinimumTime()
-                );
-                genericEvent.setType(GenericEvent.EventType.BREAK);
-                genericEvent.setBreakEvent(breakEvent);
-                database.calendarDao().insert(genericEvent);
-            }
-            database.userDao().setTimestamp(System.currentTimeMillis());
-            return null;
-        }
-    }
-
-    private static class UpdateTimestampTask extends AsyncTask<Void, Void, Void> {
-
-        private AppDatabase database;
-
-        UpdateTimestampTask(Context context) {
-            this.database = AppDatabase.getInstance(context);
-        }
-
-        protected Void doInBackground(Void... voids) {
-
-            return null;
         }
     }
 }
