@@ -7,10 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,21 +17,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
-import it.polimi.travlendarplus.activity.tasks.InsertBreakEventsTask;
-import it.polimi.travlendarplus.activity.tasks.InsertEventsTask;
+import it.polimi.travlendarplus.activity.handler.GetEventsHandler;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.controller.GetEventsController;
-import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
-import it.polimi.travlendarplus.retrofit.response.EventResponse;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -56,7 +48,7 @@ public class CalendarActivity extends MenuActivity {
 
     private Calendar calendar = new GregorianCalendar();
 
-    private Handler getterHandler;
+    private Handler getEventsHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +59,9 @@ public class CalendarActivity extends MenuActivity {
         // Saves UI references.
         date_textView = findViewById(R.id.date_textView);
         events_relativeLayout = findViewById(R.id.events_relativeLayout);
-        findViewById(R.id.addEvent_button).setOnClickListener(click -> goToEventCreation());
+        findViewById(R.id.addEvent_button).setOnClickListener(
+                click -> startActivity(new Intent(this, EventEditorActivity.class))
+        );
 
         // Observe token and timestamp values.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
@@ -117,59 +111,14 @@ public class CalendarActivity extends MenuActivity {
 
         // Set as drop recipient for drag action.
         events_relativeLayout.setOnDragListener(new MyDragListener());
-
-        setupGetterHandler();
+        getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     private void loadEventsFromServer() {
         // Send request to server.
         waitForServerResponse();
-        GetEventsController getEventsController = new GetEventsController(getterHandler);
+        GetEventsController getEventsController = new GetEventsController(getEventsHandler);
         getEventsController.start(token, timestamp);
-    }
-
-    private void setupGetterHandler() {
-        // Handle server responses.
-        getterHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        Toast.makeText(getBaseContext(), "Events updated!", Toast.LENGTH_LONG).show();
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        Log.d("EVENTS_JSON", bundle.getString("jsonEvents"));
-                        // Save events from JSON.
-                        String jsonEvents = bundle.getString("jsonEvents");
-                        List<EventResponse> events = new Gson().fromJson(
-                                jsonEvents,
-                                new TypeToken<List<EventResponse>>(){}.getType()
-                        );
-                        Log.d("BREAK_EVENTS_JSON", bundle.getString("jsonBreakEvents"));
-                        // Save break events from JSON.
-                        String jsonBreakEvents = bundle.getString("jsonBreakEvents");
-                        List<BreakEventResponse> breakEvents = new Gson().fromJson(
-                                jsonBreakEvents,
-                                new TypeToken<List<BreakEventResponse>>(){}.getType()
-                        );
-                        // Write new events into DB.
-                        new InsertEventsTask(getApplicationContext(), events).execute();
-                        // Write new break events into DB.
-                        new InsertBreakEventsTask(getApplicationContext(), breakEvents).execute();
-                        // Update timestamp in DB.
-                        //new UpdateTimestampTask(getApplicationContext()).execute();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
     }
 
     //TODO
@@ -195,11 +144,6 @@ public class CalendarActivity extends MenuActivity {
         return textView;
     }
 
-    public void goToEventCreation() {
-        Intent intent = new Intent(this, EventEditorActivity.class);
-        startActivity(intent);
-    }
-
     public void goToEventViewer(View view) {
         Intent intent = new Intent(this, EventViewerActivity.class);
         startActivity(intent);
@@ -223,7 +167,7 @@ public class CalendarActivity extends MenuActivity {
     /**
      * Enables user input fields.
      */
-    private void resumeNormalMode() {
+    public void resumeNormalMode() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
     }

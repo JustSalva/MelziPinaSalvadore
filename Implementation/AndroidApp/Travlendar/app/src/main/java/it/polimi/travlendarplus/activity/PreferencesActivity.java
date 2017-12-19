@@ -396,10 +396,6 @@ public class PreferencesActivity extends MenuActivity {
         return preferencesMap;
     }
 
-    public void setPreferencesMap(Map<String, Preference> preferencesMap) {
-        this.preferencesMap = preferencesMap;
-    }
-
     public Preference getSelectedPreference() {
         return selectedPreference;
     }
