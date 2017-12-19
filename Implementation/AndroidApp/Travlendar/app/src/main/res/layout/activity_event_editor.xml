@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
-                        android:id="@+id/name"
+                        android:id="@+id/eventName_editText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/name"
@@ -212,12 +212,32 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/location_name"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/eventLocation_spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <AutoCompleteTextView
-                            android:id="@+id/description"
+                            android:id="@+id/description_editText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/description"
@@ -227,20 +247,25 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/event_location"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="@string/event_location"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/start_traveling_at"
+                            android:textStyle="bold" />
 
-                    </android.support.design.widget.TextInputLayout>
+                        <Spinner
+                            android:id="@+id/startTravelingAt_spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -262,22 +287,26 @@
 
                     </LinearLayout>
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/previous_location_textInputLayout"
+                    <LinearLayout
+                        android:id="@+id/previousLocation_linearLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone">
+                        android:layout_height="wrap_content">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/previous_location"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="@string/previous_location"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/previous_location"
+                            android:textStyle="bold" />
 
-                    </android.support.design.widget.TextInputLayout>
+                        <Spinner
+                            android:id="@+id/previousLocation_spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -292,7 +321,7 @@
                         android:layout_height="wrap_content">
 
                         <AutoCompleteTextView
-                            android:id="@+id/minimum_time"
+                            android:id="@+id/minimumTime_editText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/minimum_type"
