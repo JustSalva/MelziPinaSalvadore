@@ -20,19 +20,36 @@ public class Event extends GenericEvent {
 
     private static final long serialVersionUID = 8421808089635462963L;
 
+    /**
+     * Description given to the event by the user
+     */
     @Column( name = "DESCRIPTION" )
     private String description;
 
+    /**
+     * Flag that is true if the previous location is the one that belongs to the first event before this in time,
+     * false if the previous location is fixed
+     */
     @Column( name = "PREV_LOCATION_CHOICE" )
     private boolean prevLocChoice;
 
+    /**
+     * Flag that is true if the travel of this event must start right before this event,
+     * or false if it must start right after the previous event in time
+     */
     @Column( name = "TRAVEL_AT_LAST_CHOICE" )
     private boolean travelAtLastChoice;
 
+    /**
+     * Relative type of event containing all user preferences relative to this event
+     */
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "TYPE_OF_EVENT" )
     private TypeOfEvent type;
 
+    /**
+     * Location at which the event will occur
+     */
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns( {
             @JoinColumn( name = "EVENT_LATITUDE", referencedColumnName = "latitude" ),
@@ -40,6 +57,9 @@ public class Event extends GenericEvent {
     } )
     private Location eventLocation;
 
+    /**
+     * Departure location from which the travel to reach teh event will start
+     */
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns( {
             @JoinColumn( name = "DEPARTURE_LATITUDE", referencedColumnName = "latitude" ),
@@ -47,6 +67,9 @@ public class Event extends GenericEvent {
     } )
     private Location departure;
 
+    /**
+     * Best feasible path that will enable the user to reach the event
+     */
     @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL )
     @JoinColumn( name = "FEASIBLE_TRAVEL" )
     private Travel feasiblePath;
@@ -80,6 +103,13 @@ public class Event extends GenericEvent {
         this.feasiblePath = feasiblePath;
     }
 
+    /**
+     * Allows to load a Event class from the database
+     *
+     * @param key primary key of the event tuple
+     * @return the requested tuple as a Event class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static Event load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( Event.class, key );
     }
@@ -140,6 +170,10 @@ public class Event extends GenericEvent {
         this.travelAtLastChoice = travelAtLastChoice;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Event nextPeriodicEvent () {
         Instant startingTime = this.getStartingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
         Instant endingTime = this.getEndingTime().plus( this.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
@@ -148,11 +182,17 @@ public class Event extends GenericEvent {
                 this.type, this.eventLocation, this.departure );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isOverlapFreeIntoSchedule ( ScheduleManager scheduleManager ) {
         return scheduleManager.isEventOverlapFreeIntoSchedule( this, false );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addInUserList ( User user ) {
         user.addEvent( this );
@@ -163,11 +203,17 @@ public class Event extends GenericEvent {
         eventManager.addEventAndModifyFollowingEvent( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void serializeResponse ( EventsListResponse eventsListResponse ) {
         eventsListResponse.addUpdatedEvent( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeFeasiblePath () {
         feasiblePath = null;

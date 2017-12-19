@@ -12,6 +12,9 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.*;
 import java.time.Instant;
 
+/**
+ * This JPA class represent a generic event structure, it is to be implemented by both event and break event classes
+ */
 @Entity( name = "GENERIC_EVENT" )
 @Inheritance( strategy = InheritanceType.JOINED )
 @DiscriminatorColumn( name = "EVENT_TYPE" )
@@ -19,21 +22,41 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     private static final long serialVersionUID = -4348542805788613273L;
 
+    /**
+     * Name given to the event by the user
+     */
     @Column( nullable = false, name = "NAME" )
     private String name;
 
+    /**
+     * Unix time at which the event starts
+     */
     @Column( name = "STARTING_TIME" )
     private Instant startingTime;
 
+    /**
+     * Unix time at which the event ends
+     */
     @Column( name = "ENDING_TIME" )
     private Instant endingTime;
 
+    /**
+     * Flag that state if an event is scheduled or not
+     */
     @Column( name = "IS_SCHEDULED" )
     private boolean isScheduled;
 
+    /**
+     * Identifier of the tuple in period table tat represent the event's periodicity,
+     * it is equal to zero if the event doesn'y have a periodicity
+     */
     private long periodicityId;
 
+    /**
+     * Identifier of the user that owns the event
+     */
     private String userId;
+
 
     @Embedded
     private Timestamp lastUpdate;
@@ -101,6 +124,11 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         isScheduled = scheduled;
     }
 
+    /**
+     * Loads the period class relative to the event
+     *
+     * @return the period class if present, null otherwise
+     */
     public Period getPeriodicity () {
         try {
             return Period.load( periodicityId );
@@ -130,6 +158,11 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         this.userId = userId;
     }
 
+    /**
+     * Loads the user class that owns the event
+     *
+     * @return the user class if present, null otherwise
+     */
     public User getUser () {
         try {
             return User.load( this.userId );
@@ -149,16 +182,49 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
         return getId() == ( ( GenericEvent ) event ).getId();
     }
 
+    /**
+     * Provide the instance of the next periodic event to be propagated in time
+     *
+     * @return teh instance of the next periodic event
+     */
     public abstract GenericEvent nextPeriodicEvent ();
 
+
+    /**
+     * Visitor method used during the scheduling computation process of an event, it is used to check
+     * if the event overlaps with other events
+     *
+     * @param scheduleManager manager which is handling the scheduling process of the event
+     * @return true if the event does not overlap with other events, false otherwise
+     */
     public abstract boolean isOverlapFreeIntoSchedule ( ScheduleManager scheduleManager );
 
+    /**
+     * Visitor method used to add an event in the right list of the user class
+     *
+     * @param user owner of the event
+     */
     public abstract void addInUserList ( User user );
 
+    /**
+     * Visitor method used in order to add an event into the schedule and modify the path
+     * that will leads to teh following event
+     *
+     * @param eventManager manager which is handling the event
+     */
     public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager );
 
+    /**
+     * Removes the feasible path of an event, used when the event is put into the non scheduled list
+     */
     public abstract void removeFeasiblePath ();
 
+    /**
+     * Visitor method used to serialize a correct response to the client,
+     * useful in order to handle all events in the same way
+     *
+     * @param eventsListResponse message that is to be sent to the client
+     */
     public abstract void serializeResponse ( EventsListResponse eventsListResponse );
 
     @Override

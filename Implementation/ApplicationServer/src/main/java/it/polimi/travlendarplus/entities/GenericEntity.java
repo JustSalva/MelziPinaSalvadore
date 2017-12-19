@@ -19,7 +19,7 @@ public abstract class GenericEntity implements Serializable {
     static private EntityManagerFactory entityManagerFactory;
 
     /**
-     * This method allow to load any entity from the database
+     * This method allows to load any entity from the database
      *
      * @param entityClass the class to be read
      * @param key         his primary key
@@ -51,7 +51,7 @@ public abstract class GenericEntity implements Serializable {
     }
 
     /**
-     * Commit and close a transaction
+     * Commits and close a transaction
      * @param entityManager the entity manager which is handling the transaction
      */
     private void commitTransaction ( EntityManager entityManager ) {
@@ -74,13 +74,13 @@ public abstract class GenericEntity implements Serializable {
     }
 
     /**
-     * Check if a specific entity is present in database
+     * Checks if a specific entity is present in database
      * @return true if it is present, false otherwise
      */
     public abstract boolean isAlreadyInDb ();
 
     /**
-     * Remove an entity form the database
+     * Removes an entity form the database
      */
     public void remove () {
         EntityManager entityManager = startTransaction();

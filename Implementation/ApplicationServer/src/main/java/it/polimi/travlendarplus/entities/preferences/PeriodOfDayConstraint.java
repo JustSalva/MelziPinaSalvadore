@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * This JPA class represent a constraint on the time of the day at which a travel mean should occur
+ */
 @Entity( name = "PERIOD_OF_DAY_CONSTRAINT" )
 @DiscriminatorValue( "PERIOD_OF_DAY" )
 public class PeriodOfDayConstraint extends Constraint {
@@ -18,11 +21,20 @@ public class PeriodOfDayConstraint extends Constraint {
 
     private static final long SECONDS_IN_A_DAY = 24 * 60 * 60;
 
+    /**
+     * Minimum value (in seconds) from 00.00 of the day at which a travel mean can be used
+     * (max value = 86400)
+     */
     @Column( name = "MIN_HOUR" )
-    private long minHour; //In seconds from 00.00 of the day
+    private long minHour;
 
+    /**
+     * Maximum value (in seconds) from 00.00 of the day at which a travel mean can be used
+     * (max value = 86400)
+     * @see
+     */
     @Column( name = "MAX_HOUR" )
-    private long maxHour; //max value = 24 h
+    private long maxHour;
 
     public PeriodOfDayConstraint ( TravelMeanEnum concerns, long minHour, long maxHour ) {
         super( concerns );
@@ -53,6 +65,9 @@ public class PeriodOfDayConstraint extends Constraint {
         this.maxHour = maxHour;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean respectConstraint ( TravelComponent travelComponent ) {
         long startingTimeInDay = travelComponent.getStartingTime().getEpochSecond() % ( SECONDS_IN_A_DAY );
@@ -61,6 +76,9 @@ public class PeriodOfDayConstraint extends Constraint {
                 endingTimeInDay <= maxHour;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void serializeResponse ( TypeOfEventResponse typeOfEventResponse ) {
         typeOfEventResponse.addPeriodOfDayConstraint( this );

@@ -16,12 +16,18 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * This JPA class represent a break event
+ */
 @Entity( name = "BREAK_EVENT" )
 @DiscriminatorValue( "BREAK_EVENT" )
 public class BreakEvent extends GenericEvent {
 
     private static final long serialVersionUID = -38523370993953035L;
 
+    /**
+     * Minimum amount of "free time" that has to be satisfied in order to guarantee that the break event is scheduled
+     */
     @Column( name = "MINIMUM_TIME" )
     private long minimumTime; // in seconds
 
@@ -40,6 +46,13 @@ public class BreakEvent extends GenericEvent {
         this.minimumTime = minimumTime;
     }
 
+    /**
+     * Allows to load a BreakEvent class from the database
+     *
+     * @param key primary key of the breakEvent tuple
+     * @return the requested tuple as a BreakEvent class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static BreakEvent load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( BreakEvent.class, key );
     }
@@ -52,9 +65,14 @@ public class BreakEvent extends GenericEvent {
         this.minimumTime = minimumTime;
     }
 
-    // Events overlapping with break event are passed as param.
-    // This function checks if, with these events, is possible to ensure the minimum amount of time for the break event.
-    // No path is taken into account in this function.
+    /**
+     * This method checks if is possible, with the provided events, to ensure
+     * the minimum amount of time for the break event.
+     * No event's paths are taken into account in this method.
+     *
+     * @param events Events overlapping with this breakEvent instance
+     * @return true if the minimum time is guaranteed, false otherwise
+     */
     public boolean isMinimumEnsuredNoPathRegard ( List < Event > events ) {
         if ( events.size() == 0 )
             return true;
@@ -71,7 +89,15 @@ public class BreakEvent extends GenericEvent {
                 getEndingTime() ).getSeconds();
     }
 
-    public boolean isMinimumEnsuredWithPathRegard ( List< Event > events ) {
+    /**
+     * This method checks if is possible, with the provided events, to ensure
+     * the minimum amount of time for the break event.
+     * Event's paths are taken into account in this method.
+     *
+     * @param events Events overlapping with this breakEvent instance
+     * @return true if the minimum time is guaranteed, false otherwise
+     */
+    public boolean isMinimumEnsuredWithPathRegard ( List < Event > events ) {
         if ( events.size() == 0 )
             return true;
         // Checking if there is enough time between the first event and its path or before the first event.
@@ -94,6 +120,13 @@ public class BreakEvent extends GenericEvent {
         return enoughTimeWithLastEvent( events.get( events.size() - 1 ) );
     }
 
+    /**
+     * Checks if the minimum time is guaranteed considering only the first event ( in time )
+     * that overlaps with the break event
+     *
+     * @param event the first event that overlaps in time
+     * @return true if the minimum time is guaranteed, false otherwise
+     */
     private boolean enoughTimeBeforeFirstEvent ( Event event ) {
         Travel path = event.getFeasiblePath();
         return minimumTime <= Duration.between( getStartingTime(), path.getStartingTime() ).getSeconds() ||
@@ -101,6 +134,13 @@ public class BreakEvent extends GenericEvent {
                         Math.max( path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond() );
     }
 
+    /**
+     * Checks if the minimum time is guaranteed considering only the last event ( in time )
+     * that overlaps with the break event
+     *
+     * @param event the first event that overlaps in time
+     * @return true if the minimum time is guaranteed, false otherwise
+     */
     private boolean enoughTimeWithLastEvent ( Event event ) {
         Travel path = event.getFeasiblePath();
         return minimumTime <= Math.min( getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond() ) -
@@ -108,11 +148,17 @@ public class BreakEvent extends GenericEvent {
                 minimumTime <= Duration.between( event.getEndingTime(), getEndingTime() ).getSeconds();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isOverlapFreeIntoSchedule ( ScheduleManager scheduleManager ) {
         return scheduleManager.isBreakOverlapFreeIntoSchedule( this, false );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BreakEvent nextPeriodicEvent () {
         Instant startingTime = this.getStartingTime()
@@ -123,21 +169,34 @@ public class BreakEvent extends GenericEvent {
                 this.getPeriodicity(), this.minimumTime );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addInUserList ( User user ) {
         user.addBreak( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void serializeResponse ( EventsListResponse eventsListResponse ) {
         eventsListResponse.addUpdatedBreakEvents( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addEventAndModifyFollowingEvent ( EventManager eventManager ) {
         eventManager.addBreakEvent( this );
     }
 
+    /**
+     * {@inheritDoc}
+     * Obviously, since break events doesn't have feasible paths, this method simply do nothing
+     */
     @Override
     public void removeFeasiblePath () {
     }
