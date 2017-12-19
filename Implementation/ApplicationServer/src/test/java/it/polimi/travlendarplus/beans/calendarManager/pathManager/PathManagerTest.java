@@ -8,7 +8,6 @@ import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
-import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
@@ -102,7 +101,7 @@ public class PathManagerTest {
                 return combs;
             }
         } );
-        when(preferenceManager.findBestpath( any(ArrayList.class), any(TypeOfEvent.class) )).thenAnswer( new Answer<PathCombination>() {
+        when(preferenceManager.findBestPath( any(ArrayList.class), any(TypeOfEvent.class) )).thenAnswer( new Answer<PathCombination>() {
             @Override
             public PathCombination answer( InvocationOnMock invocation) throws Throwable {
                 ArrayList<PathCombination> combs = (ArrayList<PathCombination>) invocation.getArguments()[0];

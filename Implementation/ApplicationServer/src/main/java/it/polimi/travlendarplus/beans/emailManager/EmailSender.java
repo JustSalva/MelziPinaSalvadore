@@ -42,15 +42,6 @@ public class EmailSender implements EmailInterface {
 
     private static Properties mailServerProperties;
 
-    public static void main ( String[] args ) {
-        EmailSender emailSender = new EmailSender();
-        try {
-            emailSender.sendNewPasswordEmail( "password", "matteo.salvadore@gmail.com" );
-        } catch ( MessagingException e ) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Sets up the Travlendar's email properties
      */
@@ -106,5 +97,14 @@ public class EmailSender implements EmailInterface {
         }
 
         user.save();
+    }
+
+    public static void main ( String[] args ) {
+        EmailSender emailSender = new EmailSender();
+        try {
+            emailSender.sendNewPasswordEmail( "newPassword", "matteo.salvadore@gmail.com" );
+        } catch ( MessagingException e ) {
+            e.printStackTrace();
+        }
     }
 }

@@ -14,7 +14,7 @@ import javax.persistence.Entity;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity( name = "BREAK_EVENT" )
 @DiscriminatorValue( "BREAK_EVENT" )
@@ -55,7 +55,7 @@ public class BreakEvent extends GenericEvent {
     // Events overlapping with break event are passed as param.
     // This function checks if, with these events, is possible to ensure the minimum amount of time for the break event.
     // No path is taken into account in this function.
-    public boolean isMinimumEnsuredNoPathRegard ( ArrayList < Event > events ) {
+    public boolean isMinimumEnsuredNoPathRegard ( List < Event > events ) {
         if ( events.size() == 0 )
             return true;
         // Checking if there is enough time before the first event.
@@ -71,7 +71,7 @@ public class BreakEvent extends GenericEvent {
                 getEndingTime() ).getSeconds();
     }
 
-    public boolean isMinimumEnsuredWithPathRegard ( ArrayList < Event > events ) {
+    public boolean isMinimumEnsuredWithPathRegard ( List< Event > events ) {
         if ( events.size() == 0 )
             return true;
         // Checking if there is enough time between the first event and its path or before the first event.

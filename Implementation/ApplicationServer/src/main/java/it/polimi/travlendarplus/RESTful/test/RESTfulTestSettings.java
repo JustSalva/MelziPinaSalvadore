@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class RESTfulTestSettings {
@@ -77,7 +78,7 @@ public class RESTfulTestSettings {
             be1 = setBreakEvent( 1516442400, 1516446000, 30 * 60, true );
             user.addBreak( be1 );
         }
-        ArrayList < GenericEvent > swapResponse = pathManager.swapEvents( e4, privateMeans, publicMeans );
+        List< GenericEvent > swapResponse = pathManager.swapEvents( e4, privateMeans, publicMeans );
         for ( GenericEvent event : swapResponse )
             msg += event.toString() + "\n";
         return msg;

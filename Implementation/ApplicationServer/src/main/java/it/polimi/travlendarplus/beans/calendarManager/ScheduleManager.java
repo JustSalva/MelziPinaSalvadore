@@ -57,7 +57,7 @@ public class ScheduleManager extends UserManager {
             if ( !areEventsOverlapFree( breakEvent, scheduledBreak ) )
                 return false;
         // Events and paths are taken into account in order to check if the minimum duration of a breakEvent can be ensured.
-        ArrayList < Event > involvedEvents = getEventsIntoIntervalWithPathRegard( schedule.getEvents(), breakEvent );
+        List < Event > involvedEvents = getEventsIntoIntervalWithPathRegard( schedule.getEvents(), breakEvent );
         return breakEvent.isMinimumEnsuredWithPathRegard( involvedEvents );
     }
 
@@ -139,8 +139,8 @@ public class ScheduleManager extends UserManager {
 
     // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
     // Possible paths are not taken into account.
-    private ArrayList < Event > getEventsIntoInterval ( List < Event > events, GenericEvent intervalEvent ) {
-        ArrayList < Event > involvedEvents = new ArrayList < Event >();
+    private List < Event > getEventsIntoInterval ( List < Event > events, GenericEvent intervalEvent ) {
+        List < Event > involvedEvents = new ArrayList < Event >();
         for ( Event event : events )
             if ( event.getEndingTime().isAfter( intervalEvent.getStartingTime() ) &&
                     event.getStartingTime().isBefore( intervalEvent.getEndingTime() ) )
@@ -150,8 +150,8 @@ public class ScheduleManager extends UserManager {
 
     // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
     // It considers also the event-related paths. The ArrayList passed as a param must be ordered.
-    private ArrayList < Event > getEventsIntoIntervalWithPathRegard ( List < Event > events, GenericEvent intervalEvent ) {
-        ArrayList < Event > involvedEvents = new ArrayList < Event >();
+    private List < Event > getEventsIntoIntervalWithPathRegard ( List < Event > events, GenericEvent intervalEvent ) {
+        List < Event > involvedEvents = new ArrayList < Event >();
         // Event-related paths are taken into account in order to check if there is an overlap.
         for ( Event event : events )
             if ( event.getEndingTime().isAfter( intervalEvent.getStartingTime() ) &&
@@ -163,9 +163,9 @@ public class ScheduleManager extends UserManager {
     // This function is called after that all feasible previous and following paths are calculated.
     // The two ArrayList passed as params contain possible travels that don't overlap with prev/foll events.
     // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
-    public ArrayList < PathCombination > getFeasiblePathCombinations ( Event event, List < Travel > previous,
+    public List < PathCombination > getFeasiblePathCombinations ( Event event, List < Travel > previous,
                                                                        List < Travel > following ) {
-        ArrayList < PathCombination > feasibleComb = new ArrayList < PathCombination >();
+        List < PathCombination > feasibleComb = new ArrayList < PathCombination >();
         if ( getPossibleFollowingEvent( event.getStartingTime() ) == null )
             return getFeasiblePathCombinationsLastEventCase( event, previous );
         for ( Travel prev : previous ) {
@@ -174,7 +174,7 @@ public class ScheduleManager extends UserManager {
                 // Analyzing for each combination of prev/foll paths if it would be feasible with each scheduled break.
                 for ( BreakEvent breakEvent : schedule.getBreaks() ) {
                     List < Event > simulList = schedule.getListWithNewEventPaths( prev, foll, event );
-                    ArrayList < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
+                    List < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
                     // simulInvolved contains events that happen in breakEvent interval.
                     if ( !breakEvent.isMinimumEnsuredWithPathRegard( simulInvolved ) )
                         combinationFeasible = false;
@@ -187,14 +187,14 @@ public class ScheduleManager extends UserManager {
     }
 
     // It is used when the event to be added into the schedule would be the last: it doesn't have a following path.
-    private ArrayList < PathCombination > getFeasiblePathCombinationsLastEventCase ( Event event, List < Travel > previous ) {
-        ArrayList < PathCombination > feasibleComb = new ArrayList < PathCombination >();
+    private List < PathCombination > getFeasiblePathCombinationsLastEventCase ( Event event, List < Travel > previous ) {
+        List < PathCombination > feasibleComb = new ArrayList < PathCombination >();
         for ( Travel prev : previous ) {
             boolean combinationFeasible = true;
             // Analyzing for each prev path if it would be feasible with each scheduled break.
             for ( BreakEvent breakEvent : schedule.getBreaks() ) {
                 List < Event > simulList = schedule.getListWithNewEventPaths( prev, null, event );
-                ArrayList < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
+                List < Event > simulInvolved = getEventsIntoIntervalWithPathRegard( simulList, breakEvent );
                 if ( !breakEvent.isMinimumEnsuredWithPathRegard( simulInvolved ) )
                     combinationFeasible = false;
             }

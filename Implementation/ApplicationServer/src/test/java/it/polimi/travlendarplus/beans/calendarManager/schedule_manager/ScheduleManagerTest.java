@@ -117,7 +117,7 @@ public class ScheduleManagerTest {
         event.setId(6);
         event.setStartingTime(Instant.ofEpochSecond(12));
         event.setEndingTime(Instant.ofEpochSecond(13));
-        ArrayList<PathCombination > combs = tester.getFeasiblePathCombinations(event, prev, foll);
+        List<PathCombination > combs = tester.getFeasiblePathCombinations(event, prev, foll);
         assertEquals(1, combs.size());
         assertEquals(11, combs.get(0).getPrevPath().getStartingTime().getEpochSecond());
     }
@@ -130,7 +130,7 @@ public class ScheduleManagerTest {
         event.setId(6);
         event.setStartingTime(Instant.ofEpochSecond(25));
         event.setEndingTime(Instant.ofEpochSecond(26));
-        ArrayList<PathCombination> combs = tester.getFeasiblePathCombinations(event, prev, null);
+        List<PathCombination> combs = tester.getFeasiblePathCombinations(event, prev, null);
         assertEquals(2, combs.size());
         assertEquals(22, combs.get(0).getPrevPath().getStartingTime().getEpochSecond());
         assertEquals(24, combs.get(0).getPrevPath().getEndingTime().getEpochSecond());

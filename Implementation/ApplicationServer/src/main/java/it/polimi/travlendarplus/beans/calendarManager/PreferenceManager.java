@@ -67,7 +67,7 @@ public class PreferenceManager extends UserManager {
      *
      * @param typeOfEventMessage message representing how the user's profile is to be modified
      * @return the modified preference profile, comprehensive of his new id
-     * @throws InvalidFieldException if some fields of the message are wrong, which one is specified inside the error
+     * @throws InvalidFieldException   if some fields of the message are wrong, which one is specified inside the error
      * @throws EntityNotFoundException if the profile to be modified does not exists
      */
     public TypeOfEvent modifyTypeOfEvent ( ModifyTypeOfEventMessage typeOfEventMessage )
@@ -221,10 +221,22 @@ public class PreferenceManager extends UserManager {
 
     //PREFERRED LOCATIONS
 
+    /**
+     * Allows to retrieve all the preferred locations of the authenticated user
+     *
+     * @return the requested locations
+     */
     public List < UserLocation > getAllPreferredLocations () {
         return new ArrayList < UserLocation >( currentUser.getPreferredLocations() );
     }
 
+    /**
+     * Allows to retrieve a specific location of the authenticated user
+     *
+     * @param name identifier of the requested location
+     * @return the requested location
+     * @throws EntityNotFoundException if the location does not exists in the user's profile
+     */
     public UserLocation getPreferredLocation ( String name ) throws EntityNotFoundException {
         List < UserLocation > preferredLocations = currentUser.getPreferredLocations();
 
@@ -237,6 +249,12 @@ public class PreferenceManager extends UserManager {
         return requested;
     }
 
+    /**
+     * Adds a preferred location into the user's profile
+     *
+     * @param locationMessage message containing info about the location to be added
+     * @throws InvalidFieldException if some message's fields are inconsistent
+     */
     public void addPreferredLocation ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
         checkLocationConsistency( locationMessage );
 
@@ -247,6 +265,12 @@ public class PreferenceManager extends UserManager {
         currentUser.save();
     }
 
+    /**
+     * Checks that the location message fields are consistent
+     *
+     * @param locationMessage message containing info about the location to be added
+     * @throws InvalidFieldException if some message's fields are inconsistent
+     */
     private void checkLocationConsistency ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>();
         if ( locationMessage.getName() == null ) {
@@ -261,6 +285,13 @@ public class PreferenceManager extends UserManager {
         }
     }
 
+    /**
+     * Modifies a user's preferred location
+     *
+     * @param locationMessage message containing info about the location to be modified
+     * @throws InvalidFieldException   if some message's fields are inconsistent
+     * @throws EntityNotFoundException if the location, whose change is requested, does not exist
+     */
     public void modifyPreferredLocation ( PreferredLocationMessage locationMessage )
             throws InvalidFieldException, EntityNotFoundException {
 
@@ -270,12 +301,25 @@ public class PreferenceManager extends UserManager {
         addPreferredLocation( locationMessage );
     }
 
+    /**
+     * Deletes a preferred location from the user's profile
+     *
+     * @param name identifier of the requested location
+     * @throws EntityNotFoundException if the location, whose delete operation is requested, does not exist
+     */
     public void deletePreferredLocation ( String name ) throws EntityNotFoundException {
         getPreferredLocation( name );
         currentUser.removeLocation( name );
         currentUser.save();
     }
 
+    /**
+     * Checks that that a travel respect the constraints of a type of event
+     *
+     * @param travel      instance of the travel to be checked
+     * @param typeOfEvent instance of the type of event on which the control is to be performed
+     * @return true if the travel respect those constraints, false otherwise
+     */
     public boolean checkConstraints ( Travel travel, TypeOfEvent typeOfEvent ) {
         for ( TravelComponent travelComponent : travel.getMiniTravels() ) {
             TravelMeanEnum travelMean = travelComponent.getMeanUsed().getType();
@@ -292,21 +336,39 @@ public class PreferenceManager extends UserManager {
         return true;
     }
 
-    public PathCombination findBestpath ( ArrayList < PathCombination > combs, TypeOfEvent typeOfEvent ) {
+    /**
+     * Selects from a list of proposed travel paths the best one according to the user's preferences
+     *
+     * @param combs       list of proposed travel paths
+     * @param typeOfEvent user preference that will determine which path is the best
+     * @return the best path from the ones in the provided list
+     */
+    public PathCombination findBestPath ( List < PathCombination > combs, TypeOfEvent typeOfEvent ) {
         if ( typeOfEvent.getParamFirstPath() != null ) {
             switch ( typeOfEvent.getParamFirstPath() ) {
                 case MIN_LENGTH:
                     return getPathsWithMinLength( combs );
                 case MIN_TIME:
                     return getPathsWithMinTime( combs );
+                //TODO cost and eco cases in successive release
+                /*case MIN_COST:
+                    return getPathsWithMinTime( combs );
+                case ECO_PATH:
+                    return getPathsWithMinTime( combs );*/
                 default:
-                    return combs.get( 0 ); //TODO cost and eco cases
+                    return combs.get( 0 );
             }
         } else
             return combs.get( 0 );
     }
 
-    private PathCombination getPathsWithMinLength ( ArrayList < PathCombination > combs ) {
+    /**
+     * Retrieve the travel path with less distance traveled from those in the provided list
+     *
+     * @param combs list of travel paths
+     * @return the travel path with less distance traveled
+     */
+    private PathCombination getPathsWithMinLength ( List < PathCombination > combs ) {
         PathCombination best = ( combs != null ) ? combs.get( 0 ) : null;
         for ( PathCombination singleComb : combs )
             if ( singleComb.getTotalLength() < best.getTotalLength() )
@@ -314,7 +376,13 @@ public class PreferenceManager extends UserManager {
         return best;
     }
 
-    private PathCombination getPathsWithMinTime ( ArrayList < PathCombination > combs ) {
+    /**
+     * Retrieve the travel path with less travel time from those in the provided list
+     *
+     * @param combs list of travel paths
+     * @return the travel path with less travel time
+     */
+    private PathCombination getPathsWithMinTime ( List < PathCombination > combs ) {
         PathCombination best = ( combs != null ) ? combs.get( 0 ) : null;
         for ( PathCombination singleComb : combs )
             if ( singleComb.getTotalTime() < best.getTotalTime() )
@@ -322,7 +390,15 @@ public class PreferenceManager extends UserManager {
         return best;
     }
 
-    public ArrayList < TravelMeanEnum > getAllowedMeans ( Event event, TravelMeanEnum[] list ) {
+    /**
+     * Provide the travel means, from those contained in the specified list,
+     * that are allowed in the event's preferences
+     *
+     * @param event event whose preferences are to be checked
+     * @param list  travel means that are to be checked
+     * @return a list of allowed travel means
+     */
+    public List < TravelMeanEnum > getAllowedMeans ( Event event, TravelMeanEnum[] list ) {
         ArrayList < TravelMeanEnum > privateMeans = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : list )
             if ( isVehicleAllowed( event, mean ) )
@@ -330,6 +406,13 @@ public class PreferenceManager extends UserManager {
         return privateMeans;
     }
 
+    /**
+     * Checks if a travel mean is allowed according to an event preferences
+     *
+     * @param event   event whose preferences are to be checked
+     * @param vehicle travel means to be checked
+     * @return true if the specified travel mean is allowed, false otherwise
+     */
     private boolean isVehicleAllowed ( Event event, TravelMeanEnum vehicle ) {
         return !event.getType().isDeactivated( vehicle );
     }
