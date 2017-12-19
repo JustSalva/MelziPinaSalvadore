@@ -208,6 +208,7 @@ public class TripRESTful {
      * Allows the user to modify a distance ticket
      *
      * @param distanceTicketMessage message containing the info of the distance ticket to be modified
+     * @param ticketId identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
@@ -227,6 +228,7 @@ public class TripRESTful {
      * Allows the user to modify a generic ticket
      *
      * @param genericTicketMessage message containing the info of the generic ticket to be modified
+     * @param ticketId identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
@@ -245,6 +247,7 @@ public class TripRESTful {
      * Allows the user to modify a path ticket
      *
      * @param pathTicketMessage message containing the info of the path ticket to be modified
+     * @param ticketId identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
@@ -264,6 +267,7 @@ public class TripRESTful {
      * Allows the user to modify a period ticket
      *
      * @param periodTicketMessage message containing the info of the period ticket to be modified
+     * @param ticketId identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body

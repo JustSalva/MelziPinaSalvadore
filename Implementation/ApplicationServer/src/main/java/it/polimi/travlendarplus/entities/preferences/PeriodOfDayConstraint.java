@@ -31,7 +31,6 @@ public class PeriodOfDayConstraint extends Constraint {
     /**
      * Maximum value (in seconds) from 00.00 of the day at which a travel mean can be used
      * (max value = 86400)
-     * @see
      */
     @Column( name = "MAX_HOUR" )
     private long maxHour;

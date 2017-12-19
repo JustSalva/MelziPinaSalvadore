@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.exceptions.googleMapsExceptions;
 
+/**
+ * This exception is thrown when the specified location values are inconsistent
+ */
 public class LocationNotFoundException extends GMapsGeneralException {
 
     private static final long serialVersionUID = -6359585524936093709L;
