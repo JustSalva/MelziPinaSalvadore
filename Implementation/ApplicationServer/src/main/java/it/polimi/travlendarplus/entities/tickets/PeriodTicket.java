@@ -8,21 +8,38 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 
+/**
+ * This JPA class represent a ticket whose validity is related to a period of time
+ * ( es. monthly ). It decorate any other type of ticket,
+ * in order to represent their validity in time
+ */
 @Entity( name = "PERIOD_TICKET" )
 @DiscriminatorValue( "PERIOD" )
 public class PeriodTicket extends Ticket {
 
     private static final long serialVersionUID = -7003608973530344312L;
 
+    /**
+     * Name of the periodic ticket
+     */
     @Column( name = "NAME" )
     private String name;
 
+    /**
+     * Instant when the ticket validity starts
+     */
     @Column( name = "STARTING_DATE_OF_CALENDAR" )
     private Instant startingDate;
 
+    /**
+     * Instant when the ticket validity ends
+     */
     @Column( name = "ENDING_DATE_OF_CALENDAR" )
     private Instant endingDate;
 
+    /**
+     * Ticket whose validity is extended in time
+     */
     @OneToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JoinColumn( name = "PERIODICAL_TICKET" )
     private Ticket decorator;
@@ -39,6 +56,13 @@ public class PeriodTicket extends Ticket {
         this.decorator = decorator;
     }
 
+    /**
+     * Allows to load a PeriodTicket class from the database
+     *
+     * @param key primary key of the periodTicket tuple
+     * @return the requested tuple as a PeriodTicket class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static PeriodTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PeriodTicket.class, key );
     }

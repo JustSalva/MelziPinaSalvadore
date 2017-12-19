@@ -46,6 +46,7 @@ public class Period extends GenericEntity {
 
     /**
      * Identifier of the last propagated event, used to propagate the events with this periodicity in time
+     *
      * @see it.polimi.travlendarplus.beans.calendarManager.PeriodicEventsPropagator
      */
     @Column( name = "LAST_PROPAGATED_EVENT" )
@@ -122,7 +123,8 @@ public class Period extends GenericEntity {
     }
 
     /**
-     * Checks if a period instance is already present in teh database
+     * Checks if a period instance is already present in the database
+     *
      * @return true if present, false otherwise
      */
     @Override

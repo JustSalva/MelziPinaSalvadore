@@ -41,6 +41,7 @@ public abstract class GenericEntity implements Serializable {
 
     /**
      * Starts a transaction with the persistence unit
+     *
      * @return the entity manager which will handle the transaction
      */
     private EntityManager startTransaction () {
@@ -52,6 +53,7 @@ public abstract class GenericEntity implements Serializable {
 
     /**
      * Commits and close a transaction
+     *
      * @param entityManager the entity manager which is handling the transaction
      */
     private void commitTransaction ( EntityManager entityManager ) {
@@ -75,6 +77,7 @@ public abstract class GenericEntity implements Serializable {
 
     /**
      * Checks if a specific entity is present in database
+     *
      * @return true if it is present, false otherwise
      */
     public abstract boolean isAlreadyInDb ();

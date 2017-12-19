@@ -57,7 +57,9 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
      */
     private String userId;
 
-
+    /**
+     * Timestamp in Unix time that memorize the last update of an event
+     */
     @Embedded
     private Timestamp lastUpdate;
 

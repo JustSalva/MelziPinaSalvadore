@@ -6,6 +6,10 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * This JPA class represent a public travel mean, that is any travel mean which is shared by many individuals
+ * and provided by a transport service provider (ex. bus, train , subway ...)
+ */
 @Entity( name = "PUBLIC_TRAVEL_MEAN" )
 @DiscriminatorValue( "PUBLIC" )
 public class PublicTravelMean extends TravelMean {
@@ -23,6 +27,13 @@ public class PublicTravelMean extends TravelMean {
         super( name, type, eco );
     }
 
+    /**
+     * Allows to load a PublicTravelMean class from the database
+     *
+     * @param key primary key of the publicTravelMean tuple
+     * @return the requested tuple as a PublicTravelMean class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static PublicTravelMean load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PublicTravelMean.class, key );
     }

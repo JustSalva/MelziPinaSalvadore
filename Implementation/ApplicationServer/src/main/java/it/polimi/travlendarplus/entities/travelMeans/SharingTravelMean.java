@@ -6,6 +6,9 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * This JPA class represent a travel mean offered in sharing
+ */
 @Entity( name = "SHARING_TRAVEL_MEAN" )
 @DiscriminatorValue( "SHARING" )
 public class SharingTravelMean extends TravelMean {
@@ -22,6 +25,13 @@ public class SharingTravelMean extends TravelMean {
         this.costOnTime = costOnTime;
     }
 
+    /**
+     * Allows to load a SharingTravelMean class from the database
+     *
+     * @param key primary key of the sharingTravelMean tuple
+     * @return the requested tuple as a SharingTravelMean class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static SharingTravelMean load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( SharingTravelMean.class, key );
     }

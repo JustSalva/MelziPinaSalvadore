@@ -12,15 +12,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This JPA class represent a travel that is attached to a scheduled event
+ */
 @Entity( name = "TRAVEL" )
 public class Travel extends EntityWithLongKey {
 
     private static final long serialVersionUID = 3515840069172744899L;
 
+    /**
+     * List of travel segment that compose the overall travel
+     */
     @JoinTable( name = "TRAVEL_COMPONENTS" )
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List < TravelComponent > miniTravels;
 
+    /**
+     * Timestamp in Unix time that memorize the last update of an event
+     */
     @Embedded
     private Timestamp lastUpdate;
 
@@ -34,6 +43,13 @@ public class Travel extends EntityWithLongKey {
         this.miniTravels = miniTravels;
     }
 
+    /**
+     * Allows to load a Travel class from the database
+     *
+     * @param key primary key of the travel tuple
+     * @return the requested tuple as a Travel class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static Travel load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( Travel.class, key );
     }
@@ -42,15 +58,19 @@ public class Travel extends EntityWithLongKey {
         return Collections.unmodifiableList( miniTravels );
     }
 
-    public void setMiniTravels ( List < TravelComponent > miniTravels ) {
-        this.miniTravels = miniTravels;
-    }
-
     public void setMiniTravels ( ArrayList < TravelComponent > miniTravels ) {
         this.miniTravels = miniTravels;
     }
 
-    // Amount of time (in seconds) spent on travel.
+    public void setMiniTravels ( List < TravelComponent > miniTravels ) {
+        this.miniTravels = miniTravels;
+    }
+
+    /**
+     * Provide the amount of time (in seconds) that are to be spent to perform a travel
+     *
+     * @return the requested travel time
+     */
     public long getTravelTime () {
         long totalSeconds = 0;
         for ( TravelComponent component : miniTravels )
@@ -58,12 +78,20 @@ public class Travel extends EntityWithLongKey {
         return totalSeconds;
     }
 
-    // Amount of time in seconds between departure and arrival time
+    /**
+     * Provide the overall amount of time (in seconds) between departure and arrival time
+     *
+     * @return the requested travel time
+     */
     public long getTotalTime () {
         return getEndingTime().getEpochSecond() - getStartingTime().getEpochSecond();
     }
 
-    // Total length in Km
+    /**
+     * Provide the total length ot a travel
+     *
+     * @return the total length in Km
+     */
     public float getTotalLength () {
         float length = 0;
         for ( TravelComponent comp : miniTravels )
@@ -72,8 +100,9 @@ public class Travel extends EntityWithLongKey {
     }
 
     public Instant getStartingTime () {
-        return ( miniTravels.get( 0 ).getStartingTime().getEpochSecond() > 0 ) ? miniTravels.get( 0 ).getStartingTime() :
-                correctStartingTime();
+        return ( miniTravels.get( 0 ).getStartingTime().getEpochSecond() > 0 )
+                ? miniTravels.get( 0 ).getStartingTime()
+                : correctStartingTime();
     }
 
     private Instant correctStartingTime () {

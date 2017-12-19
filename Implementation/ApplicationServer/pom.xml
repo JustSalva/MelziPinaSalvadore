@@ -7,7 +7,6 @@
     <groupId>it.polimi</groupId>
     <artifactId>travlendarplus</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
 
     <build>
         <plugins>

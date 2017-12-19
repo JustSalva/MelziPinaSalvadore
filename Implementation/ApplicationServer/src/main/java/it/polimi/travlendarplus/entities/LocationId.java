@@ -2,7 +2,15 @@ package it.polimi.travlendarplus.entities;
 
 import java.io.Serializable;
 
+/**
+ * Support class used to provide a key to Location class, since JPA needs
+ * that a key is represented either by a primitive data type or by a class
+ *
+ * @see Location
+ */
 public class LocationId implements Serializable {
+
+    private static final long serialVersionUID = -6220268034665635816L;
 
     private double latitude;
     private double longitude;

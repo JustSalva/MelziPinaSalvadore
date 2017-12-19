@@ -6,6 +6,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.Instant;
 
+/**
+ * This Embeddable class is used to provide the record of the time when
+ * the last update is performed to all JPA class that needs such functionality
+ */
 @Embeddable
 public class Timestamp {
 
@@ -16,6 +20,10 @@ public class Timestamp {
         this.timestamp = Instant.now();
     }
 
+    /**
+     * Every time a class that contains the Timestamp attribute is either
+     * updated or persisted for the first time in Database the timestamp is automatically updated
+     */
     @PreUpdate
     @PrePersist
     public void updateTimeStamps () {

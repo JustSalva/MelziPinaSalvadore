@@ -8,12 +8,19 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.*;
 import java.util.ArrayList;
 
+/**
+ * This JPA class represent a ticket whose validity is related to a specific path
+ * ( from a departure to an arrival location )
+ */
 @Entity( name = "PATH_TICKET" )
 @DiscriminatorValue( "PATH" )
 public class PathTicket extends GenericTicket {
 
     private static final long serialVersionUID = 958692352206870450L;
 
+    /**
+     * Location where the ticket validity starts from
+     */
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns( {
             @JoinColumn( name = "DEPARTURE_LATITUDE", referencedColumnName = "latitude" ),
@@ -21,6 +28,9 @@ public class PathTicket extends GenericTicket {
     } )
     private Location startingLocation;
 
+    /**
+     * Location where the ticket validity ends
+     */
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumns( {
             @JoinColumn( name = "ARRIVAL_LATITUDE", referencedColumnName = "latitude" ),
@@ -38,6 +48,13 @@ public class PathTicket extends GenericTicket {
         this.endingLocation = endingLocation;
     }
 
+    /**
+     * Allows to load a PathTicket class from the database
+     *
+     * @param key primary key of the pathTicket tuple
+     * @return the requested tuple as a PathTicket class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static PathTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PathTicket.class, key );
     }

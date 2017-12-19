@@ -9,12 +9,18 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
 
+/**
+ * This JPA class represent a ticket whose validity is related to the travel length
+ */
 @Entity( name = "DISTANCE_TICKET" )
 @DiscriminatorValue( "DISTANCE" )
 public class DistanceTicket extends Ticket {
 
     private static final long serialVersionUID = 2628317705098639359L;
 
+    /**
+     * Maximum travel distance allowed usin this ticket
+     */
     @Column( name = "DISTANCE" )
     private int distance;
 
@@ -26,6 +32,13 @@ public class DistanceTicket extends Ticket {
         this.distance = distance;
     }
 
+    /**
+     * Allows to load a DistanceTicket class from the database
+     *
+     * @param key primary key of the distanceTicket tuple
+     * @return the requested tuple as a DistanceTicket class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static DistanceTicket load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( DistanceTicket.class, key );
     }

@@ -26,7 +26,8 @@ public class BreakEvent extends GenericEvent {
     private static final long serialVersionUID = -38523370993953035L;
 
     /**
-     * Minimum amount of "free time" that has to be satisfied in order to guarantee that the break event is scheduled
+     * Minimum amount of "free time" that has to be satisfied in order to
+     * guarantee that the break event is scheduled
      */
     @Column( name = "MINIMUM_TIME" )
     private long minimumTime; // in seconds
@@ -34,14 +35,15 @@ public class BreakEvent extends GenericEvent {
     public BreakEvent () {
     }
 
-    public BreakEvent ( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                        Period periodicity, long minimumTime ) {
+    public BreakEvent ( String name, Instant startingTime, Instant endingTime,
+                        boolean isScheduled, Period periodicity, long minimumTime ) {
         super( name, startingTime, endingTime, isScheduled, periodicity );
         this.minimumTime = minimumTime;
     }
 
     //constructor for generic event with no periodicity
-    public BreakEvent ( String name, Instant startingTime, Instant endingTime, boolean isScheduled, long minimumTime ) {
+    public BreakEvent ( String name, Instant startingTime, Instant endingTime,
+                        boolean isScheduled, long minimumTime ) {
         super( name, startingTime, endingTime, isScheduled );
         this.minimumTime = minimumTime;
     }
@@ -77,7 +79,8 @@ public class BreakEvent extends GenericEvent {
         if ( events.size() == 0 )
             return true;
         // Checking if there is enough time before the first event.
-        if ( minimumTime <= Duration.between( getStartingTime(), events.get( 0 ).getStartingTime() ).getSeconds() )
+        if ( minimumTime <= Duration.between( getStartingTime(),
+                events.get( 0 ).getStartingTime() ).getSeconds() )
             return true;
         // Checking if there is enough time between two events.
         for ( int i = 0; i < events.size() - 1; i++ )
@@ -85,7 +88,8 @@ public class BreakEvent extends GenericEvent {
                     events.get( i + 1 ).getStartingTime() ).getSeconds() )
                 return true;
         //checking if there is enough time after the last event
-        return minimumTime <= Duration.between( events.get( events.size() - 1 ).getEndingTime(),
+        return minimumTime <= Duration.between(
+                events.get( events.size() - 1 ).getEndingTime(),
                 getEndingTime() ).getSeconds();
     }
 
@@ -100,7 +104,9 @@ public class BreakEvent extends GenericEvent {
     public boolean isMinimumEnsuredWithPathRegard ( List < Event > events ) {
         if ( events.size() == 0 )
             return true;
-        // Checking if there is enough time between the first event and its path or before the first event.
+        /* Checking if there is enough time between the first event and its
+        path or before the first event.
+         */
         if ( enoughTimeBeforeFirstEvent( events.get( 0 ) ) )
             return true;
         if ( events.size() > 1 ) {
@@ -110,9 +116,10 @@ public class BreakEvent extends GenericEvent {
                 return true;
             // Checking if there is enough time between an event and the previous/following paths.
             for ( int i = 1; i < events.size() - 1; i++ ) {
-                if ( minimumTime <= Duration.between( events.get( i ).getFeasiblePath().getEndingTime(), events.get( i ).
-                        getStartingTime() ).getSeconds() || minimumTime <= Duration.between( events.get( i ).
-                        getEndingTime(), events.get( i + 1 ).getFeasiblePath().getStartingTime() ).getSeconds() )
+                if ( minimumTime <= Duration.between( events.get( i ).getFeasiblePath().getEndingTime(),
+                        events.get( i ).getStartingTime() ).getSeconds() ||
+                        minimumTime <= Duration.between( events.get( i ).getEndingTime(),
+                                events.get( i + 1 ).getFeasiblePath().getStartingTime() ).getSeconds() )
                     return true;
             }
         }

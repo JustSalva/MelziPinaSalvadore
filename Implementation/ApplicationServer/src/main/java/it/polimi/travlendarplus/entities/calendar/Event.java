@@ -14,6 +14,9 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * This JPA class represent a standard event
+ */
 @Entity( name = "EVENT" )
 @DiscriminatorValue( "EVENT" )
 public class Event extends GenericEvent {
@@ -27,8 +30,9 @@ public class Event extends GenericEvent {
     private String description;
 
     /**
-     * Flag that is true if the previous location is the one that belongs to the first event before this in time,
-     * false if the previous location is fixed
+     * Flag that is true if the previous location is the one that belongs
+     * to the first event before this in time, false if the previous location
+     * is fixed
      */
     @Column( name = "PREV_LOCATION_CHOICE" )
     private boolean prevLocChoice;
@@ -77,9 +81,10 @@ public class Event extends GenericEvent {
     public Event () {
     }
 
-    public Event ( String name, Instant startingTime, Instant endingTime, boolean isScheduled, Period periodicity,
-                   String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type,
-                   Location eventLocation, Location departure ) {
+    public Event ( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
+                   Period periodicity, String description, boolean prevLocChoice,
+                   boolean travelAtLastChoice, TypeOfEvent type, Location eventLocation,
+                   Location departure ) {
         super( name, startingTime, endingTime, isScheduled, periodicity );
         this.description = description;
         this.prevLocChoice = prevLocChoice;
@@ -91,8 +96,8 @@ public class Event extends GenericEvent {
 
     //constructor for generic event with no periodicity
     public Event ( String name, Instant startingTime, Instant endingTime, boolean isScheduled,
-                   String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type, Location eventLocation,
-                   Location departure, Travel feasiblePath ) {
+                   String description, boolean prevLocChoice, boolean travelAtLastChoice, TypeOfEvent type,
+                   Location eventLocation, Location departure, Travel feasiblePath ) {
         super( name, startingTime, endingTime, isScheduled );
         this.description = description;
         this.prevLocChoice = prevLocChoice;

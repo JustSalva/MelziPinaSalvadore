@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
+/**
+ * This JPA class represent a location ( geographic coordinates of a specific point on the earth surface)
+ */
 @Entity( name = "LOCATION" )
 @IdClass( LocationId.class )
 public class Location extends GenericEntity {
@@ -18,6 +21,13 @@ public class Location extends GenericEntity {
     @Id
     private double longitude;
 
+    /**
+     * Specific address relative to the specified geographic coordinates,
+     * Addresses are written in order from most specific to general,
+     * i.e. finest to coarsest information, starting with the addressee
+     * and ending with the largest geographical unit.
+     * (ex.Name - Company name - Street - City area/District - City/Town/Village - County - Postal code - Country )
+     */
     @Column( name = "ADDRESS" )
     private String address;
 
@@ -35,6 +45,13 @@ public class Location extends GenericEntity {
         this.address = address;
     }
 
+    /**
+     * Allows to load a Location class from the database
+     *
+     * @param key primary key of the location tuple
+     * @return the requested tuple as a Location class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static Location load ( LocationId key ) throws EntityNotFoundException {
         return GenericEntity.load( Location.class, key );
     }
@@ -72,6 +89,11 @@ public class Location extends GenericEntity {
                 '}';
     }
 
+    /**
+     * Checks if a location instance is already present in the database
+     *
+     * @return true if present, false otherwise
+     */
     @Override
     public boolean isAlreadyInDb () {
         try {

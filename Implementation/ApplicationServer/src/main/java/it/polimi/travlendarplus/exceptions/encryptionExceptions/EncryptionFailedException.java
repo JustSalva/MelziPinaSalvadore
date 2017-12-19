@@ -2,14 +2,14 @@ package it.polimi.travlendarplus.exceptions.encryptionExceptions;
 
 import it.polimi.travlendarplus.exceptions.TravlendarPlusException;
 
-public class EncryprionFailedException extends TravlendarPlusException {
+public class EncryptionFailedException extends TravlendarPlusException {
 
     private static final long serialVersionUID = 4761687530528543428L;
 
-    public EncryprionFailedException () {
+    public EncryptionFailedException () {
     }
 
-    public EncryprionFailedException ( String message ) {
+    public EncryptionFailedException ( String message ) {
         super( message );
     }
 }

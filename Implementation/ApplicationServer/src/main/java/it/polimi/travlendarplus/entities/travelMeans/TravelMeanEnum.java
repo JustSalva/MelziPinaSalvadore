@@ -1,7 +1,7 @@
 package it.polimi.travlendarplus.entities.travelMeans;
 
 /**
- * Enum that represent all supported travel means in Travlendar+
+ * Enum that represent all supported travel means in Travlendar+ application
  */
 public enum TravelMeanEnum {
     CAR( "driving" ),
@@ -23,6 +23,7 @@ public enum TravelMeanEnum {
 
     /**
      * Check the consistency of a travel mean
+     *
      * @param travelMean mean to be checked
      * @return true if consistent, false otherwise
      */
@@ -38,6 +39,7 @@ public enum TravelMeanEnum {
 
     /**
      * Check if a travel mean is public
+     *
      * @param travelMean mean to be checked
      * @return true if a public travel mean, false otherwise
      */

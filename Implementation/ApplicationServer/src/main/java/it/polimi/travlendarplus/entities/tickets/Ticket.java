@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This JPA abstract class represent a generic ticket, to be implemented by all ticket's classes
+ */
 @Entity( name = "ABSTRACT_TICKET" )
 @Inheritance( strategy = InheritanceType.JOINED )
 @DiscriminatorColumn( name = "TICKET_TYPE" )
@@ -18,17 +21,29 @@ public abstract class Ticket extends EntityWithLongKey {
 
     private static final long serialVersionUID = 8914735050811003828L;
 
+    /**
+     * Cost of the ticket
+     */
     @Column( name = "COST" )
     private float cost;
 
+    /**
+     * List of travel means the ticket is applicable to
+     */
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     @JoinColumn( name = "RELATED_TO" )
     private List < PublicTravelMean > relatedTo;
 
+    /**
+     * list of travel components in which the ticket is selected as used
+     */
     @JoinTable( name = "LINKED_PATHS" )
     @OneToMany( fetch = FetchType.LAZY )
     private List < TravelComponent > linkedTravels;
 
+    /**
+     * Timestamp in Unix time that memorize the last update of an event
+     */
     @Embedded
     private Timestamp lastUpdate;
 
@@ -64,6 +79,11 @@ public abstract class Ticket extends EntityWithLongKey {
         this.relatedTo = relatedTo;
     }
 
+    /**
+     * Adds a travel mean into the list of travel means the ticket is applicable to
+     *
+     * @param travelMean travel mean to be added
+     */
     public void addTravelMean ( PublicTravelMean travelMean ) {
         this.relatedTo.add( travelMean );
     }
@@ -84,16 +104,31 @@ public abstract class Ticket extends EntityWithLongKey {
         this.linkedTravels = linkedTravels;
     }
 
-    public void addLinkedTravel ( TravelComponent travelComponent ) throws IncompatibleTravelMeansException {
-        PublicTravelMean toBeLinked = relatedTo.stream().filter( publicTravelMean -> publicTravelMean.getType()
-                .equals( travelComponent.getMeanUsed().getType() ) )
-                .findFirst().orElse( null );
+    /**
+     * Adds a travel component in the list of travels for which the user will use this ticket
+     *
+     * @param travelComponent travel component for which the ticket will be used
+     * @throws IncompatibleTravelMeansException if the travel component is not applicable to a ticket
+     */
+    public void addLinkedTravel ( TravelComponent travelComponent )
+            throws IncompatibleTravelMeansException {
+
+        PublicTravelMean toBeLinked =
+                relatedTo.stream()
+                        .filter( publicTravelMean -> publicTravelMean.getType()
+                                .equals( travelComponent.getMeanUsed().getType() ) )
+                        .findFirst().orElse( null );
         if ( toBeLinked == null ) {
             throw new IncompatibleTravelMeansException();
         }
         linkedTravels.add( travelComponent );
     }
 
+    /**
+     * Removes a travel component from the list of travels connected to this ticket, if present
+     *
+     * @param travelId identifier of the travel component to be removed
+     */
     public void removeLinkedTravel ( long travelId ) {
         linkedTravels.removeIf( travelComponent -> travelComponent.getId() == travelId );
     }
