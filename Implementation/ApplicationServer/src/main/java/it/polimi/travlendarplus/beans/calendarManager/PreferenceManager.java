@@ -369,7 +369,7 @@ public class PreferenceManager extends UserManager {
      * @return the travel path with less distance traveled
      */
     private PathCombination getPathsWithMinLength ( List < PathCombination > combs ) {
-        if(combs == null)
+        if ( combs == null )
             return null;
         PathCombination best = combs.get( 0 );
         for ( PathCombination singleComb : combs )
@@ -385,7 +385,7 @@ public class PreferenceManager extends UserManager {
      * @return the travel path with less travel time
      */
     private PathCombination getPathsWithMinTime ( List < PathCombination > combs ) {
-        if (combs == null)
+        if ( combs == null )
             return null;
         PathCombination best = combs.get( 0 );
         for ( PathCombination singleComb : combs )
