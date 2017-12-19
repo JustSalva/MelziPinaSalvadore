@@ -1,6 +1,5 @@
 package com.shakk.travlendar.activity;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Context;
@@ -8,42 +7,57 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridLayout;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shakk.travlendar.DateUtility;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.activity.fragment.DatePickerFragment;
 import com.shakk.travlendar.database.AppDatabase;
+import com.shakk.travlendar.database.entity.event.BreakEvent;
 import com.shakk.travlendar.database.entity.event.Event;
 import com.shakk.travlendar.database.entity.event.GenericEvent;
 import com.shakk.travlendar.database.view_model.CalendarViewModel;
+import com.shakk.travlendar.database.view_model.UserViewModel;
+import com.shakk.travlendar.retrofit.controller.GetEventsController;
+import com.shakk.travlendar.retrofit.response.BreakEventResponse;
+import com.shakk.travlendar.retrofit.response.EventResponse;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class CalendarActivity extends MenuActivity {
 
     private TextView date_textView;
-    private Button addEvent_button;
     private RelativeLayout events_relativeLayout;
 
     private CalendarViewModel calendarViewModel;
+    private UserViewModel userViewModel;
+    private String token;
+    private long timestamp;
 
-    private long dateOfCalendar;
+    private Calendar calendar = new GregorianCalendar();
+
+    private Handler getterHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +67,105 @@ public class CalendarActivity extends MenuActivity {
 
         // Saves UI references.
         date_textView = findViewById(R.id.date_textView);
-        addEvent_button = findViewById(R.id.addEvent_button);
         events_relativeLayout = findViewById(R.id.events_relativeLayout);
+        findViewById(R.id.addEvent_button).setOnClickListener(click -> goToEventCreation());
 
-        // TODO: to be removed when downloaded events from server.
-        new InsertEventsTask(getApplicationContext()).execute();
+        // Observe token and timestamp values.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getUser().observe(this, user -> {
+            token = user != null ? user.getToken() : "";
+            timestamp = user != null ? user.getTimestamp() : 0;
+            // To be called only on the first onCreate().
+            if (savedInstanceState == null) {
+                loadEventsFromServer();
+            }
+        });
+        // Observe events available in the selected date.
+        calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
+        calendarViewModel.getScheduledEvents(calendar.getTime().getTime())
+                .observe(this, scheduledEvents -> {
+                    fillEventsRelativeLayout(scheduledEvents);
+                });
 
         //overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
 
-        // TODO: set date calendar right
+        // Check if the date is already set.
+        if (date_textView.getText().length() == 0) {
+            // Set today's date as date.
+            calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+            String dateString = DateUtility.getStringFromCalendar(calendar);
+            date_textView.setText(dateString);
+        }
+
+        date_textView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Nothing happens.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Nothing happens.
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Update calendar.
+                calendar = DateUtility.getCalendarFromString(date_textView.getText().toString());
+            }
+        });
+
         // Set as drop recipient for drag action.
         events_relativeLayout.setOnDragListener(new MyDragListener());
 
-        // Set today's date in the title.
-        date_textView.setText(DateUtility.getStringFromDate(new Date()));
-        //dateOfCalendar = new Instant;
+        setupGetterHandler();
+    }
 
-        calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
-        calendarViewModel.getScheduledEvents(dateOfCalendar)
-                .observe(this, scheduledEvents -> {
-            fillEventsRelativeLayout(scheduledEvents);
-        });
+    private void loadEventsFromServer() {
+        // Send request to server.
+        waitForServerResponse();
+        GetEventsController getEventsController = new GetEventsController(getterHandler);
+        getEventsController.start(token, timestamp);
+    }
 
-        addEvent_button.setOnClickListener(click -> goToEventCreation());
+    private void setupGetterHandler() {
+        // Handle server responses.
+        getterHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 0:
+                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
+                        break;
+                    case 200:
+                        Toast.makeText(getBaseContext(), "Events updated!", Toast.LENGTH_LONG).show();
+                        // Retrieve data from bundle.
+                        Bundle bundle = msg.getData();
+                        Log.d("EVENTS_JSON", bundle.getString("jsonEvents"));
+                        String jsonEvents = bundle.getString("jsonEvents");
+                        List<EventResponse> events = new Gson().fromJson(
+                                jsonEvents,
+                                new TypeToken<List<EventResponse>>(){}.getType()
+                        );
+                        Log.d("BREAK_EVENTS_JSON", bundle.getString("jsonBreakEvents"));
+                        String jsonBreakEvents = bundle.getString("jsonBreakEvents");
+                        List<BreakEventResponse> breakEvents = new Gson().fromJson(
+                                jsonBreakEvents,
+                                new TypeToken<List<BreakEventResponse>>(){}.getType()
+                        );
+                        // Write new events into DB.
+                        //new InsertEventsTask(getApplicationContext(), events).execute();
+                        // Write new break events into DB.
+                        //new InsertBreakEventsTask(getApplicationContext(), breakEvents).execute();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
+                        Log.d("ERROR_RESPONSE", msg.toString());
+                        break;
+                }
+                resumeNormalMode();
+            }
+        };
     }
 
     //TODO
@@ -115,6 +205,23 @@ public class CalendarActivity extends MenuActivity {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setTextView(findViewById(R.id.date_textView));
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    /**
+     * Disables user input fields.
+     */
+    private void waitForServerResponse() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Enables user input fields.
+     */
+    private void resumeNormalMode() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
     private final class MyTouchListener implements View.OnTouchListener {
@@ -170,20 +277,64 @@ public class CalendarActivity extends MenuActivity {
     private static class InsertEventsTask extends AsyncTask<Void, Void, Void> {
 
         private AppDatabase database;
+        private List<EventResponse> events;
 
-        InsertEventsTask(Context context) {
+        InsertEventsTask(Context context, List<EventResponse> events) {
             this.database = AppDatabase.getInstance(context);
+            this.events = events;
         }
 
-        protected Void doInBackground(Void... users) {
-            database.calendarDao().deleteAll();
-            GenericEvent genericEvent = new GenericEvent(1, "name",
-                    DateUtility.getDateFromString("2017-12-11"), 1100, 1200, true);
-            Event event = new Event("de", "meeting", "qua",
-                    false, null);
-            genericEvent.setType(GenericEvent.EventType.EVENT);
-            genericEvent.setEvent(event);
-            database.calendarDao().insert(genericEvent);
+        protected Void doInBackground(Void... voids) {
+            for (EventResponse eventResponse : events) {
+                GenericEvent genericEvent = new GenericEvent(
+                        eventResponse.getId(),
+                        eventResponse.getName(),
+                        eventResponse.getStartingTime().getSeconds(),
+                        eventResponse.getEndingTime().getSeconds(),
+                        eventResponse.isScheduled()
+                );
+                Event event = new Event(
+                        eventResponse.getDescription(),
+                        eventResponse.getType().getId(),
+                        eventResponse.getEventLocation().getAddress(),
+                        eventResponse.isPrevLocChoice(),
+                        eventResponse.isTravelAtLastChoice(),
+                        eventResponse.getDeparture().getAddress()
+                );
+                genericEvent.setType(GenericEvent.EventType.EVENT);
+                genericEvent.setEvent(event);
+                database.calendarDao().insert(genericEvent);
+            }
+            return null;
+        }
+    }
+
+    private static class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
+
+        private AppDatabase database;
+        private List<BreakEventResponse> breakEvents;
+
+        InsertBreakEventsTask(Context context, List<BreakEventResponse> breakEvents) {
+            this.database = AppDatabase.getInstance(context);
+            this.breakEvents = breakEvents;
+        }
+
+        protected Void doInBackground(Void... voids) {
+            for (BreakEventResponse breakEventResponse : breakEvents) {
+                GenericEvent genericEvent = new GenericEvent(
+                        breakEventResponse.getId(),
+                        breakEventResponse.getName(),
+                        breakEventResponse.getStartingTime().getSeconds(),
+                        breakEventResponse.getEndingTime().getSeconds(),
+                        breakEventResponse.isScheduled()
+                );
+                BreakEvent breakEvent = new BreakEvent(
+                        breakEventResponse.getMinimumTime()
+                );
+                genericEvent.setType(GenericEvent.EventType.BREAK);
+                genericEvent.setBreakEvent(breakEvent);
+                database.calendarDao().insert(genericEvent);
+            }
             return null;
         }
     }

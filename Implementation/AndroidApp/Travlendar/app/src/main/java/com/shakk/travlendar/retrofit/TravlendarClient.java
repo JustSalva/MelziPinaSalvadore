@@ -2,10 +2,15 @@ package com.shakk.travlendar.retrofit;
 
 import com.shakk.travlendar.Location;
 import com.shakk.travlendar.Preference;
+import com.shakk.travlendar.retrofit.body.BreakEventBody;
+import com.shakk.travlendar.retrofit.body.EventBody;
 import com.shakk.travlendar.retrofit.body.LocationBody;
 import com.shakk.travlendar.retrofit.body.LoginBody;
 import com.shakk.travlendar.retrofit.body.PreferenceBody;
 import com.shakk.travlendar.retrofit.body.RegisterBody;
+import com.shakk.travlendar.retrofit.response.BreakEventResponse;
+import com.shakk.travlendar.retrofit.response.EventResponse;
+import com.shakk.travlendar.retrofit.response.GenericEventsResponse;
 import com.shakk.travlendar.retrofit.response.LoginResponse;
 import com.shakk.travlendar.retrofit.response.RegisterResponse;
 
@@ -53,11 +58,26 @@ public interface TravlendarClient {
 
     @DELETE("preference/{id}")
     Call<Void> deletePreference(
-        @Path("id") int id
+        @Path("id") long id
     );
 
     @PATCH("preference")
     Call<Preference> modifyPreference(
             @Body PreferenceBody preferenceBody
+    );
+
+    @GET("event/updateLocalDb/{timestamp}")
+    Call<GenericEventsResponse> getEvents(
+            @Path("timestamp") long timestamp
+    );
+
+    @POST("event")
+    Call<EventResponse> addEvent(
+            @Body EventBody eventBody
+    );
+
+    @POST("event/breakEvent")
+    Call<BreakEventResponse> addbreakEvent(
+            @Body BreakEventBody breakEventBody
     );
 }

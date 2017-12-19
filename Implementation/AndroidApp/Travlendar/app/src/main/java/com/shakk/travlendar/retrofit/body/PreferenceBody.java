@@ -5,7 +5,7 @@ import com.shakk.travlendar.Preference;
 import java.util.List;
 
 public class PreferenceBody {
-    private int id;
+    private long id;
     private String name;
     private Preference.ParamFirstPath paramFirstPath;
     private List<Preference.PeriodConstraint> limitedByPeriod;
@@ -25,7 +25,7 @@ public class PreferenceBody {
         this.deactivate = deactivate;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

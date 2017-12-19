@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1a7464a8fd9d45be2b82d554160cdfd8",
+    "identityHash": "cc28bfbea1e3f1520c22d31398599c1e",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT, `name` TEXT, `surname` TEXT, `univocal_code` TEXT, `timestamp` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT, `name` TEXT, `surname` TEXT, `token` TEXT, `timestamp` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -33,16 +33,16 @@
             "notNull": false
           },
           {
-            "fieldPath": "univocalCode",
-            "columnName": "univocal_code",
+            "fieldPath": "token",
+            "columnName": "token",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -130,7 +130,7 @@
       },
       {
         "tableName": "generic_event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `scheduled` INTEGER NOT NULL, `type` TEXT, `periodical` INTEGER NOT NULL, `description` TEXT, `type_of_event` TEXT, `event_location` TEXT, `previous_location_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `date` INTEGER NOT NULL, `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `scheduled` INTEGER NOT NULL, `type` TEXT, `periodical` INTEGER NOT NULL, `description` TEXT, `type_of_event_id` INTEGER, `event_location` TEXT, `previous_location_choice` INTEGER, `travel_at_last_choice` INTEGER, `departure_location` TEXT, `minimum_time` INTEGER, `start_date` INTEGER, `end_date` INTEGER, `delta_days` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -187,9 +187,9 @@
             "notNull": false
           },
           {
-            "fieldPath": "event.typeOfEvent",
-            "columnName": "type_of_event",
-            "affinity": "TEXT",
+            "fieldPath": "event.typeOfEventId",
+            "columnName": "type_of_event_id",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -201,6 +201,12 @@
           {
             "fieldPath": "event.previousLocationChoice",
             "columnName": "previous_location_choice",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "event.travelAtLastChoice",
+            "columnName": "travel_at_last_choice",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -338,7 +344,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1a7464a8fd9d45be2b82d554160cdfd8\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cc28bfbea1e3f1520c22d31398599c1e\")"
     ]
   }
 }

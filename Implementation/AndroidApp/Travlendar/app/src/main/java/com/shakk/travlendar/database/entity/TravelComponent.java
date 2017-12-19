@@ -30,7 +30,7 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
 public class TravelComponent {
 
     @PrimaryKey
-    private int id;
+    private long id;
 
     private float length;
     @ColumnInfo(name = "event_id")
@@ -52,7 +52,7 @@ public class TravelComponent {
     @ColumnInfo(name = "end_time")
     private String endTime;
 
-    public TravelComponent(int id, float length, int eventId, int ticketId, String travelMean,
+    public TravelComponent(long id, float length, int eventId, int ticketId, String travelMean,
                            String departureLocation, String arrivalLocation,
                            String startTime, String endTime) {
         this.id = id;
@@ -66,11 +66,11 @@ public class TravelComponent {
         this.endTime = endTime;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -89,7 +89,7 @@ public class PreferencesActivity extends MenuActivity {
         // Re-created activity receive the same MyViewModel instance created by the first activity.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
-            token = user != null ? user.getUnivocalCode() : "";
+            token = user != null ? user.getToken() : "";
             // To be called only on the first onCreate().
             if (savedInstanceState == null) {
                 selectedPreference = new Preference();

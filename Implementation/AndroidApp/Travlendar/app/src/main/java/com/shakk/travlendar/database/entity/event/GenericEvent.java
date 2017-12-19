@@ -11,7 +11,7 @@ import com.shakk.travlendar.database.converters.EventTypeConverters;
 @Entity(tableName = "generic_event")
 public class GenericEvent {
     @PrimaryKey
-    private int id;
+    private long id;
 
     private String name;
     private long date;
@@ -34,21 +34,21 @@ public class GenericEvent {
     @Embedded
     private Period period;
 
-    public GenericEvent(int id, String name, long date, long startTime, long endTime,
+    public GenericEvent(long id, String name, long startTime, long endTime,
                         boolean scheduled) {
         this.id = id;
         this.name = name;
-        this.date = date;
+        this.date = startTime / 86400;
         this.startTime = startTime;
         this.endTime = endTime;
         this.scheduled = scheduled;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

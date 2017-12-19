@@ -27,6 +27,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shakk.travlendar.Location;
+import com.shakk.travlendar.Position;
 import com.shakk.travlendar.R;
 import com.shakk.travlendar.database.view_model.UserViewModel;
 import com.shakk.travlendar.retrofit.controller.AddLocationController;
@@ -52,7 +53,7 @@ public class AccountActivity extends MenuActivity {
     private Button addLocation_button;
 
     private final int PLACE_PICKER_REQUEST = 1;
-    private String univocalCode;
+    private String token;
 
     private UserViewModel userViewModel;
 
@@ -99,7 +100,7 @@ public class AccountActivity extends MenuActivity {
             surname_textView.setText(surname);
             String email = user != null ? user.getEmail() : "";
             email_textView.setText(email);
-            univocalCode = user != null ? user.getUnivocalCode() : "";
+            token = user != null ? user.getToken() : "";
             // To be called only on the first onCreate().
             if (savedInstanceState == null) {
                 loadLocationsFromServer();
@@ -167,7 +168,7 @@ public class AccountActivity extends MenuActivity {
                         // Notify the user that the location has been added.
                         Toast.makeText(getBaseContext(), "Location added!", Toast.LENGTH_LONG).show();
                         // Add location to the list.
-                        Location location = new Location(locationName, new Location.Position(locationAddress));
+                        Location location = new Location(locationName, new Position(locationAddress));
                         locationsMap.put(locationName, location);
                         populateLocationsSpinner();
                         break;
@@ -213,7 +214,7 @@ public class AccountActivity extends MenuActivity {
         // Send request to server.
         waitForServerResponse();
         GetLocationsController getLocationsController = new GetLocationsController(getterHandler);
-        getLocationsController.start(univocalCode);
+        getLocationsController.start(token);
     }
 
     /**
@@ -260,7 +261,7 @@ public class AccountActivity extends MenuActivity {
         waitForServerResponse();
         AddLocationController addLocationController = new AddLocationController(adderHandler);
         addLocationController.start(
-                univocalCode,
+                token,
                 locationName,
                 locationAddress,
                 latitude,
@@ -298,7 +299,7 @@ public class AccountActivity extends MenuActivity {
         // Send request to server.
         waitForServerResponse();
         DeleteLocationController deleteLocationController = new DeleteLocationController(deleterHandler);
-        deleteLocationController.start(univocalCode, selectedLocation.getName());
+        deleteLocationController.start(token, selectedLocation.getName());
     }
 
     private void populateLocationsSpinner() {

@@ -20,7 +20,7 @@ public class DeletePreferenceController implements Callback<Void> {
         this.handler = handler;
     }
 
-    public void start(String authToken, int id) {
+    public void start(String authToken, long id) {
         if (id != 0) {
             TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
             Call<Void> call = client.deletePreference(id);

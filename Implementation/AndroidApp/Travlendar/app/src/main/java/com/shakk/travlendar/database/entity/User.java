@@ -1,33 +1,32 @@
 package com.shakk.travlendar.database.entity;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
 public class User {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     private String email;
     private String name;
     private String surname;
-    @ColumnInfo(name = "univocal_code")
-    private String univocalCode;
-    private String timestamp;
+    private String token;
+    private long timestamp;
 
-    public User(String email, String name, String surname, String univocalCode) {
+    public User(String email, String name, String surname, String token) {
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.univocalCode = univocalCode;
+        this.token = token;
+        this.timestamp = 0;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -55,19 +54,19 @@ public class User {
         this.surname = surname;
     }
 
-    public String getUnivocalCode() {
-        return univocalCode;
+    public String getToken() {
+        return token;
     }
 
-    public void setUnivocalCode(String univocalCode) {
-        this.univocalCode = univocalCode;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Preference {
-    private int id;
+    private long id;
     private String name;
     private ParamFirstPath paramFirstPath;
     private List<PeriodConstraint> periodOfDayConstraints;
@@ -21,7 +21,7 @@ public class Preference {
         this.deactivate = new ArrayList<>();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -72,19 +72,19 @@ public class Preference {
     }
 
     public static class PeriodConstraint {
-        private int id;
+        private long id;
         private TravelMeanEnum concerns;
         private int minHour;
         private int maxHour;
 
-        public PeriodConstraint(int id, TravelMeanEnum concerns, int minHour, int maxHour) {
+        public PeriodConstraint(long id, TravelMeanEnum concerns, int minHour, int maxHour) {
             this.id = id;
             this.concerns = concerns;
             this.minHour = minHour;
             this.maxHour = maxHour;
         }
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
@@ -110,19 +110,19 @@ public class Preference {
     }
 
     public static class DistanceConstraint {
-        private int id;
+        private long id;
         private TravelMeanEnum concerns;
         private int minLength;
         private int maxLength;
 
-        public DistanceConstraint(int id, TravelMeanEnum concerns, int minLength, int maxLength) {
+        public DistanceConstraint(long id, TravelMeanEnum concerns, int minLength, int maxLength) {
             this.id = id;
             this.concerns = concerns;
             this.minLength = minLength;
             this.maxLength = maxLength;
         }
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
