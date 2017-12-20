@@ -38,7 +38,7 @@ public class RESTfulTestSettings {
     private PathCombination combination = new PathCombination( null, null );
     private ArrayList < TravelMeanEnum > privateMeans;
     private ArrayList < TravelMeanEnum > publicMeans;
-    private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/{ TravelMeanEnum.CAR };
+    private TravelMeanEnum[] privM = { TravelMeanEnum.CAR };
     private TravelMeanEnum[] pubM = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS };
 
     public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel )
@@ -133,8 +133,8 @@ public class RESTfulTestSettings {
         br.setScheduled( sch );
         setUser();
         br.setUser( user );
-        user.save();
-        br.save();
+        //user.save();
+        //br.save();
         return br;
     }
 
@@ -175,8 +175,8 @@ public class RESTfulTestSettings {
         e.setType( toe );
         setUser();
         e.setUser( user );
-        user.save();
-        e.save();
+        //user.save();
+        //e.save();
         return e;
     }
 
@@ -205,18 +205,18 @@ public class RESTfulTestSettings {
         como = setLocation(51.502079, -0.174816);
         maggianico = setLocation(51.507857, -0.087833);
         abbadia = setLocation(51.503040, -0.137823);*/
-        lecco.save();
+        /*lecco.save();
         mandello.save();
         como.save();
         maggianico.save();
-        abbadia.save();
+        abbadia.save();*/
     }
 
     public TypeOfEvent setTypeOfEvent ( String name, ParamFirstPath param ) {
         TypeOfEvent toe = new TypeOfEvent();
         toe.setName( name );
         toe.setParamFirstPath( param );
-        toe.save();
+        //toe.save();
         return toe;
     }
 

@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus.beans.calendarManager.support;
 
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
+
+import java.util.List;
 
 public class PathCombination {
     private Travel prevPath;
@@ -37,5 +40,19 @@ public class PathCombination {
         long prev = ( prevPath != null ) ? prevPath.getTotalTime() : 0;
         long foll = ( follPath != null ) ? follPath.getTotalTime() : 0;
         return prev + foll;
+    }
+
+    public void saveLocationsOnDB () {
+        if ( prevPath != null )
+            saveTravelLocations( prevPath.getMiniTravels() );
+        if ( follPath != null )
+            saveTravelLocations( follPath.getMiniTravels() );
+    }
+
+    private void saveTravelLocations ( List < TravelComponent > travel ) {
+        for ( TravelComponent comb : travel ) {
+            comb.getDeparture().save();
+            comb.getArrival().save();
+        }
     }
 }

@@ -135,7 +135,7 @@ public class EventManager extends UserManager {
      *
      * @param eventMessage representation of the event to be added
      * @return the added event, and the modified ones
-     *         ( path can change after an event insertion)
+     * ( path can change after an event insertion)
      * @throws InvalidFieldException if some fields of the message are invalid
      * @throws GMapsGeneralException if something has gone wrong during the communication with GMaps-API
      */
@@ -222,7 +222,8 @@ public class EventManager extends UserManager {
             }
         }
         event.setScheduled( feasiblePaths != null );
-
+        if ( feasiblePaths != null )
+            feasiblePaths.saveLocationsOnDB();
         return followingEvent;
     }
 
@@ -534,8 +535,8 @@ public class EventManager extends UserManager {
      *
      * @param eventMessage message representing the break event to be modified
      * @return the modified break event
-     * @throws InvalidFieldException if some fields are wrong
-     *                               ( which one is written inside the exception class)
+     * @throws InvalidFieldException   if some fields are wrong
+     *                                 ( which one is written inside the exception class)
      * @throws EntityNotFoundException if the break event does not exist
      */
     public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )

@@ -141,13 +141,13 @@ public class PathManager extends UserManager {
     private void privatePathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
                                        List < TravelMeanEnum > privateMeans, boolean sameLoc )
             throws GMapsGeneralException {
-        GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( sameLoc )
             privateMeans = privateMeansSameLoc( privateMeans );
         for ( TravelMeanEnum mean : privateMeans ) {
             ArrayList < Travel > privatePaths = new ArrayList < Travel >();
             try {
+                GMapsJSONReader reader = new GMapsJSONReader();
                 JSONObject privatePathJSON = HTMLCallAndResponse.performCall(
                         directionsHandler.getCallWithNoTransit( baseCall, mean ) );
                 /*Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case
@@ -184,12 +184,12 @@ public class PathManager extends UserManager {
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
                                       List < TravelMeanEnum > publicMeans, boolean sameLoc )
             throws GMapsGeneralException {
-        GMapsJSONReader reader = new GMapsJSONReader();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( !sameLoc ) { // If departure location is the same of arrival location, the path can be done only
             // with private means.
             ArrayList < Travel > publicPaths = new ArrayList < Travel >();
             try {
+                GMapsJSONReader reader = new GMapsJSONReader();
                 JSONObject publicPathsJSON = HTMLCallAndResponse.performCall(
                         directionsHandler.getCallByTransit( baseCall, publicMeans ) );
                 publicPaths = reader.getTravelWithTransitMeans( publicPathsJSON );
@@ -211,8 +211,8 @@ public class PathManager extends UserManager {
     }
 
     private boolean isBetweenSameLocations ( Event event ) {
-        return event.getDeparture().getLatitude() == event.getEventLocation().getLatitude() &&
-                event.getDeparture().getLongitude() == event.getEventLocation().getLongitude();
+        return event.getDeparture().getLatitude() - event.getEventLocation().getLatitude() < 0.001 &&
+                event.getDeparture().getLongitude() - event.getEventLocation().getLongitude() < 0.001;
     }
 
     public List < GenericEvent > swapEvents ( Event forcedEvent, List < TravelMeanEnum > privateMeans,
