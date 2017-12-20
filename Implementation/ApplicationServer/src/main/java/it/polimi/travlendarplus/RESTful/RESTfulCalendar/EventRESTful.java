@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -115,6 +116,8 @@ public class EventRESTful {
             return HttpResponseBuilder.buildOkResponse( eventManager.addEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
+        } catch ( GMapsGeneralException e1 ){
+            return HttpResponseBuilder.notAvailable();
         }
     }
 
@@ -135,6 +138,8 @@ public class EventRESTful {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
+        } catch ( GMapsGeneralException e1 ){
+            return HttpResponseBuilder.notAvailable();
         }
 
     }

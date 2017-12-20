@@ -14,6 +14,8 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -39,13 +41,20 @@ public class RESTfulTestSettings {
     private TravelMeanEnum[] privM = /*{TravelMeanEnum.CAR, TravelMeanEnum.BIKE}*/{ TravelMeanEnum.CAR };
     private TravelMeanEnum[] pubM = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS };
 
-    public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel ) {
+    public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel )
+            throws GMapsUnavailableException {
         baseCaseConfiguration( first, second, third, setTravel );
-        combination = pathManager.calculatePath( ( !second ) ? e2 : ( !first ) ? e1 : e3, privateMeans, publicMeans );
+        try {
+            combination = pathManager.calculatePath(
+                    ( !second ) ? e2 : ( !first ) ? e1 : e3, privateMeans, publicMeans );
+        } catch ( GMapsGeneralException e ) {
+            e.printStackTrace();
+        }
         return combination.toString();
     }
 
-    public String addEventWithBreak ( boolean first, boolean second, boolean third, boolean setTravel, long minInt ) {
+    public String addEventWithBreak ( boolean first, boolean second, boolean third, boolean setTravel, long minInt )
+            throws GMapsUnavailableException {
         baseCaseConfiguration( first, second, third, setTravel );
         //2018/01/20 h:12:00 - 13:00
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
@@ -54,11 +63,15 @@ public class RESTfulTestSettings {
         //2018/01/20 h:9:00 - 14:00
         be1 = setBreakEvent( 1516438800, 1516456800, minInt, true );
         user.addBreak( be1 );
-        combination = pathManager.calculatePath( e4, privateMeans, publicMeans );
+        try {
+            combination = pathManager.calculatePath( e4, privateMeans, publicMeans );
+        } catch ( GMapsGeneralException e ) {
+            e.printStackTrace();
+        }
         return ( combination != null ) ? combination.toString() : "NO_FEASIBLE_PATHS";
     }
 
-    public String addBreakEvent ( long stTime, long endTime, long minInt ) {
+    public String addBreakEvent ( long stTime, long endTime, long minInt ) throws GMapsUnavailableException {
         baseCaseConfiguration( true, true, true, true );
         //2018/01/20 h:10:00 - 11:00
         be1 = setBreakEvent( 1516442400, 1516446000, 30 * 60, true );
@@ -68,7 +81,7 @@ public class RESTfulTestSettings {
         return ( scheduleManager.isBreakOverlapFreeIntoSchedule( be2, false ) ) ? "OK" : "NO";
     }
 
-    public String swapEvents ( long stTime, long endTime, boolean breakEvent ) {
+    public String swapEvents ( long stTime, long endTime, boolean breakEvent ) throws GMapsUnavailableException {
         baseCaseConfiguration( true, true, true, true );
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         e4 = setEvent( stTime, endTime, true, lecco, maggianico, toe1 );
@@ -78,13 +91,19 @@ public class RESTfulTestSettings {
             be1 = setBreakEvent( 1516442400, 1516446000, 30 * 60, true );
             user.addBreak( be1 );
         }
-        List< GenericEvent > swapResponse = pathManager.swapEvents( e4, privateMeans, publicMeans );
+        List< GenericEvent > swapResponse = null;
+        try {
+            swapResponse = pathManager.swapEvents( e4, privateMeans, publicMeans );
+        } catch ( GMapsGeneralException e ) {
+            e.printStackTrace();
+        }
         for ( GenericEvent event : swapResponse )
             msg += event.toString() + "\n";
         return msg;
     }
 
-    public void baseCaseConfiguration ( boolean first, boolean second, boolean third, boolean setTravels ) {
+    public void baseCaseConfiguration ( boolean first, boolean second, boolean third, boolean setTravels )
+            throws GMapsUnavailableException {
         setBaseLocations();
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         //2018/01/20 h:8:00 - 10:00
@@ -171,11 +190,11 @@ public class RESTfulTestSettings {
         e3.setScheduled( third );
     }
 
-    public Location setLocation ( double lat, double lng ) {
+    public Location setLocation ( double lat, double lng ) throws GMapsUnavailableException {
         return GMapsGeocoder.getLocationObject( lat, lng );
     }
 
-    public void setBaseLocations () {
+    public void setBaseLocations () throws GMapsUnavailableException {
         lecco = setLocation( 45.8565698, 9.397670399999999 );
         mandello = setLocation( 45.91386989999999, 9.317738499999999 );
         como = setLocation( 45.8080597, 9.085176499999999 );

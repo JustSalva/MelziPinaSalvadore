@@ -8,6 +8,7 @@ import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.NotScheduledException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -87,6 +88,9 @@ public class PathRESTful {
             return HttpResponseBuilder.badRequest();
         } catch ( AlreadyScheduledException e ) {
             return HttpResponseBuilder.buildAlreadyScheduledResponse( e );
+        } catch ( GMapsGeneralException e ) {
+            // Server offline
+            return HttpResponseBuilder.notAvailable();
         }
     }
 

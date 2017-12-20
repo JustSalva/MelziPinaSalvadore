@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.beans.calendarManager.googleMapsUtilities;
 
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -8,10 +9,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HTMLCallAndResponse {
 
-    public static JSONObject performCall ( String urlString ) {
+    public static JSONObject performCall ( String urlString ) throws GMapsUnavailableException {
         String html = "";
 
         try {
@@ -26,9 +29,9 @@ public class HTMLCallAndResponse {
             read.close();
 
         } catch ( MalformedURLException e ) {
-            e.printStackTrace();
+            Logger.getLogger( HTMLCallAndResponse.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
         } catch ( IOException e ) {
-            e.printStackTrace();
+            throw new GMapsUnavailableException( );
         }
 
         return new JSONObject( html );

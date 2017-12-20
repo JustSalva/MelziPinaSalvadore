@@ -13,6 +13,7 @@ import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -136,12 +137,14 @@ public class EventManager extends UserManager {
      * @return the added event, and the modified ones
      *         ( path can change after an event insertion)
      * @throws InvalidFieldException if some fields of the message are invalid
+     * @throws GMapsGeneralException if something has gone wrong during the communication with GMaps-API
      */
-    public List < Event > addEvent ( AddEventMessage eventMessage ) throws InvalidFieldException {
+    public List < Event > addEvent ( AddEventMessage eventMessage ) throws InvalidFieldException, GMapsGeneralException {
         checkEventFields( eventMessage );
         //Create event, initially is not scheduled and non periodic
         Event event = createEvent( eventMessage );
-        Event following = addEventAndModifyFollowingEvent( event );
+        Event following = null;
+        following = addEventAndModifyFollowingEvent( event );
         List < Event > responseList = new ArrayList <>();
         if ( following != null ) {
             following.save();
@@ -161,7 +164,7 @@ public class EventManager extends UserManager {
      *
      * @param event previous periodic event
      */
-    public void propagatePeriodicEvents ( GenericEvent event ) {
+    public void propagatePeriodicEvents ( GenericEvent event ) throws GMapsGeneralException {
 
         Instant upperBound = Instant.now().plus( 365, ChronoUnit.DAYS );
 
@@ -190,7 +193,7 @@ public class EventManager extends UserManager {
      * @param event event to be added
      * @return the following event, if modified, null otherwise
      */
-    public Event addEventAndModifyFollowingEvent ( Event event ) {
+    public Event addEventAndModifyFollowingEvent ( Event event ) throws GMapsGeneralException {
         PathCombination feasiblePaths = null;
         Event followingEvent = null;
         if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
@@ -417,13 +420,12 @@ public class EventManager extends UserManager {
      * @throws EntityNotFoundException if the event to be modified does not exists
      */
     public List < Event > modifyEvent ( ModifyEventMessage eventMessage )
-            throws InvalidFieldException, EntityNotFoundException {
+            throws InvalidFieldException, EntityNotFoundException, GMapsGeneralException {
 
         checkEventFields( eventMessage );
         Event event = getEventInformation( eventMessage.getEventId() );
         deleteEvent( event.getId() );
         List < Event > eventsModified = addEvent( eventMessage );
-
         if ( eventMessage.isPropagateToPeriodicEvents() ) {
             //TODO handle periodic events
             //feature not included in the first release due to time-related issues

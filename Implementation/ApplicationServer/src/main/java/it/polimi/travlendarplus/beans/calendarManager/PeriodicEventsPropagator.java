@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.beans.calendarManager;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.EJB;
@@ -42,7 +43,7 @@ public class PeriodicEventsPropagator {
      * Every day at midnight this method is invoked to propagate periodic events
      */
     @Schedule( hour = "23", minute = "55", second = "00" )
-    public void propagatePeriodicEvents () {
+    public void propagatePeriodicEvents () throws GMapsGeneralException {
         List < GenericEvent > eventsToBePropagated = getEventsToBePropagated();
         for ( GenericEvent genericEvent : eventsToBePropagated ) {
             addNextPeriodicEvent( genericEvent );
@@ -148,7 +149,7 @@ public class PeriodicEventsPropagator {
      *
      * @param event event to be added into the user's calendar
      */
-    private void addNextPeriodicEvent ( GenericEvent event ) {
+    private void addNextPeriodicEvent ( GenericEvent event ) throws GMapsGeneralException {
         GenericEvent genericEvent = event.nextPeriodicEvent(); //NB by default they are not scheduled
         eventManager.setCurrentUser( genericEvent.getUser() );
         eventManager.propagatePeriodicEvents( genericEvent );

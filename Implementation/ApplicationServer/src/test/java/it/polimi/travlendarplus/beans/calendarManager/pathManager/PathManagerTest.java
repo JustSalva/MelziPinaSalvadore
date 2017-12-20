@@ -9,6 +9,7 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +69,7 @@ public class PathManagerTest {
     }
 
     @Test
-    public void calculatePathsTest () {
+    public void calculatePathsTest () throws GMapsGeneralException {
         PathManagerSettingsTest.baseConfiguration( first, second, third );
 
         when( scheduleManager.getPossiblePreviousEvent( PathManagerSettingsTest.e1.getStartingTime() ) ).thenReturn( null );
@@ -126,7 +127,7 @@ public class PathManagerTest {
         return l1.getLatitude() - l2.getLatitude() < 0.001 && l1.getLongitude() - l2.getLongitude() < 0.001;
     }
 
-    private void centralEvent () {
+    private void centralEvent () throws GMapsGeneralException {
         PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e2 );
         assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
         assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e3.getStartingTime() ) );

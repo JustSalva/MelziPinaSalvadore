@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.User;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
@@ -214,7 +215,7 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
      *
      * @param eventManager manager which is handling the event
      */
-    public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager );
+    public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager ) throws GMapsGeneralException;
 
     /**
      * Removes the feasible path of an event, used when the event is put into the non scheduled list

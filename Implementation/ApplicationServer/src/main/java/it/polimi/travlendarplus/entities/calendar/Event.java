@@ -8,6 +8,7 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.*;
@@ -204,7 +205,7 @@ public class Event extends GenericEvent {
     }
 
     @Override
-    public void addEventAndModifyFollowingEvent ( EventManager eventManager ) {
+    public void addEventAndModifyFollowingEvent ( EventManager eventManager ) throws GMapsGeneralException {
         eventManager.addEventAndModifyFollowingEvent( this );
     }
 

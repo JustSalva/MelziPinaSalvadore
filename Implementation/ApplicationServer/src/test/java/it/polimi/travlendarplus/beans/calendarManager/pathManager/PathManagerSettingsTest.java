@@ -13,6 +13,7 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class PathManagerSettingsTest {
         toe1 = testSettings.setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
     }
 
-    public static PathCombination getPathCombinationTest ( PathManager pm, Event ev ) {
+    public static PathCombination getPathCombinationTest ( PathManager pm, Event ev ) throws GMapsGeneralException {
         pm.setCurrentUser( user );
         privateMeans = new ArrayList < TravelMeanEnum >();
         publicMeans = new ArrayList < TravelMeanEnum >();

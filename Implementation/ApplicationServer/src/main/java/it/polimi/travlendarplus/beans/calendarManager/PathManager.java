@@ -61,7 +61,7 @@ public class PathManager extends UserManager {
      * @return the requested path if available, null otherwise
      */
     public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
-                                           List < TravelMeanEnum > publicMeans ) {
+                                           List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         scheduleManager.setSchedule( event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         // Obtaining possible paths that don't overlap with previous and following scheduled events.
         List < Travel > previousPaths = getPreviousTravels( event, privateMeans, publicMeans );
@@ -80,7 +80,7 @@ public class PathManager extends UserManager {
     }
 
     private List < Travel > getPreviousTravels ( Event event, List < TravelMeanEnum > privateMeans,
-                                                 List < TravelMeanEnum > publicMeans ) {
+                                                 List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         List < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
@@ -95,14 +95,15 @@ public class PathManager extends UserManager {
             boolean sameLoc = isBetweenSameLocations( event );
             // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, previous, event, sameLoc );
-        } catch ( GMapsGeneralException err ) {
-            Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, err.getMessage(), err );
+        } catch ( GMapsGeneralException e ) {
+            Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
+            throw e;
         }
         return possiblePaths;
     }
 
     private List < Travel > getFollowingTravels ( Event event, List < TravelMeanEnum > privateMeans,
-                                                  List < TravelMeanEnum > publicMeans ) {
+                                                  List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         List < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event following = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
@@ -118,8 +119,9 @@ public class PathManager extends UserManager {
             boolean sameLoc = isBetweenSameLocations( following );
             // Obtaining possible paths for the specified means.
             possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, event, following, sameLoc );
-        } catch ( GMapsGeneralException err ) {
-            Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, err.getMessage(), err );
+        } catch ( GMapsGeneralException e ) {
+            Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
+            throw e;
         }
         return possiblePaths;
     }
@@ -214,7 +216,7 @@ public class PathManager extends UserManager {
     }
 
     public List < GenericEvent > swapEvents ( Event forcedEvent, List < TravelMeanEnum > privateMeans,
-                                              List < TravelMeanEnum > publicMeans ) {
+                                              List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         scheduleManager.setSchedule( forcedEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         List < GenericEvent > swapOutEvents = new ArrayList < GenericEvent >();
         List < PathCombination > combs = new ArrayList < PathCombination >();
@@ -343,7 +345,7 @@ public class PathManager extends UserManager {
      *                                   and so it can't be forced into it
      */
     public List < GenericEvent > swapEvents ( long eventId )
-            throws EntityNotFoundException, AlreadyScheduledException {
+            throws EntityNotFoundException, AlreadyScheduledException, GMapsGeneralException {
 
         ArrayList < GenericEvent > genericEvents = new ArrayList <>( currentUser.getEvents() );
         //NB the swap in the first release is available only for events and not break events!

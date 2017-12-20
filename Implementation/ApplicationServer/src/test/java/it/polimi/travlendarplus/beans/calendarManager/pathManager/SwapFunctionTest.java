@@ -11,6 +11,7 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +53,7 @@ public class SwapFunctionTest {
     }
 
     @Test
-    public void swapEventsTest () {
+    public void swapEventsTest () throws GMapsGeneralException {
         //2018/01/20 h:14:30 - 15:30
         Event eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516458600, 1516462200, true, false,
                 PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );

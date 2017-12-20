@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.beans.calendarManager;
 
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.Asynchronous;
@@ -32,9 +33,13 @@ public class PeriodicEventsExecutor {
             eventManager.setCurrentUser( user );
             GenericEvent genericEvent = eventManager.getEventInformation( eventId );
             eventManager.propagatePeriodicEvents( genericEvent );
-        } catch ( EntityNotFoundException e ) {
-            /*no action here the user certainly exists since we are propagating one of his events,
+        } catch ( EntityNotFoundException |  GMapsGeneralException e ) {
+            /* if it is an EntityNotFoundException no action here the user certainly
+            exists since we are propagating one of his events,
             the consideration is valid also for the generic event*/
+            /* if it is an GMapsGeneralException the propagation will simply stop
+             * and it will restarts when the PeriodicEventPropagator singleton
+              * will check the periodic events to be propagated ( it runs periodically )*/
             Logger.getLogger( PeriodicEventsExecutor.class.getName() )
                     .log( Level.SEVERE, e.getMessage(), e );
         }

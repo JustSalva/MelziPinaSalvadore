@@ -175,6 +175,14 @@ public class RSAEncryption extends GenericEntity {
         this.privateKey = privateKey;
     }
 
+    public Instant getTimestamp () {
+        return timestamp;
+    }
+
+    public void setTimestamp ( Instant timestamp ) {
+        this.timestamp = timestamp;
+    }
+
     /**
      * Checks if a RSAEncryption instance is already present in the database
      *

@@ -8,6 +8,7 @@ import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.BadRequestException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.LocationNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +67,7 @@ public class GMapsJSONReader {
         return singleStep.getJSONObject( "transit_details" );
     }
 
-    private static Location getSingleArrivalStop ( JSONObject singleStep ) {
+    private static Location getSingleArrivalStop ( JSONObject singleStep ) throws GMapsUnavailableException {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -81,7 +82,7 @@ public class GMapsJSONReader {
                 forName.getString( "name" ) );
     }
 
-    private static Location getSingleDepartureStop ( JSONObject singleStep ) {
+    private static Location getSingleDepartureStop ( JSONObject singleStep ) throws GMapsUnavailableException {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
