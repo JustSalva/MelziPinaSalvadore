@@ -7,7 +7,6 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.BadRequestException;
-import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.LocationNotFoundException;
 import org.json.JSONArray;
@@ -82,9 +81,12 @@ public class GMapsJSONReader {
      *
      * @param singleStep the travel to be analyzed
      * @return a Json object containing the requested details
-     * @throws GMapsUnavailableException if Google maps services are unavailable
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException if the request sent contains syntactical errors
      */
-    private static Location getSingleArrivalStop ( JSONObject singleStep ) throws GMapsUnavailableException {
+    private static Location getSingleArrivalStop ( JSONObject singleStep )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -104,9 +106,12 @@ public class GMapsJSONReader {
      *
      * @param singleStep the travel to be analyzed
      * @return a Json object containing the requested details
-     * @throws GMapsUnavailableException if Google maps services are unavailable
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException if the request sent contains syntactical errors
      */
-    private static Location getSingleDepartureStop ( JSONObject singleStep ) throws GMapsUnavailableException {
+    private static Location getSingleDepartureStop ( JSONObject singleStep )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         JSONObject transitDetails;
         try {
             transitDetails = getTransitDetails( singleStep );
@@ -337,7 +342,7 @@ public class GMapsJSONReader {
      * @throws GMapsUnavailableException if google APIs services are not available
      * @throws BadRequestException if the request sent contains syntactical errors
      */
-    private void checkErrorInStatusCode ( JSONObject response )
+    protected static void checkErrorInStatusCode ( JSONObject response )
             throws LocationNotFoundException, GMapsUnavailableException, BadRequestException {
         switch ( getStatus( response ) ) {
             case "OK":
@@ -349,6 +354,7 @@ public class GMapsJSONReader {
             case "UNKNOWN_ERROR":
             case "OVER_QUERY_LIMIT":
                 throw new GMapsUnavailableException();
+            case "INVALID_REQUEST":
             default:
                 throw new BadRequestException();
         }

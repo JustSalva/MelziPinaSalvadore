@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.RESTful.test;
 
 import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ public class RESTfulTest {
     public String baseTest () {
         try {
             return set.addEventBaseCaseTest( true, false, true, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -31,7 +32,7 @@ public class RESTfulTest {
     public String firstPathTest () {
         try {
             return set.addEventBaseCaseTest( false, true, true, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -42,7 +43,7 @@ public class RESTfulTest {
     public String lastPathTest () {
         try {
             return set.addEventBaseCaseTest( true, true, false, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -53,7 +54,7 @@ public class RESTfulTest {
     public String addEventBreakOk () {
         try {
             return set.addEventWithBreak( true, true, true, true, 1 * 60 * 60 );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -64,7 +65,7 @@ public class RESTfulTest {
     public String addEventBreakErr () {
         try {
             return set.addEventWithBreak( true, true, true, true, 2 * 60 * 60 );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -76,7 +77,7 @@ public class RESTfulTest {
         //2018/01/20 h:10:30 - 11:30
         try {
             return set.addBreakEvent( 1516444200, 1516447800, 1 );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -88,7 +89,7 @@ public class RESTfulTest {
         //2018/01/20 h:11:00 - 13:00
         try {
             return set.addBreakEvent( 1516446000, 1516453200, 3600 + 1 );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -100,7 +101,7 @@ public class RESTfulTest {
         //2018/01/20 h:11:00 - 13:00
         try {
             return set.addBreakEvent( 1516446000, 1516453200, 3600 );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -112,7 +113,7 @@ public class RESTfulTest {
         //2018/01/20 h:16:00 - 17:00
         try {
             return set.swapEvents( 1516464000, 1516467600, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -124,7 +125,7 @@ public class RESTfulTest {
         //2018/01/20 h:15:00 - 17:00
         try {
             return set.swapEvents( 1516460400 + 1, 1516467600, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -136,7 +137,7 @@ public class RESTfulTest {
         //2018/01/20 h:14:30 - 18:00
         try {
             return set.swapEvents( 1516458600, 1516471200 - 1, false );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -148,7 +149,7 @@ public class RESTfulTest {
         //2018/01/20 h:10:55 - 12:00
         try {
             return set.swapEvents( 1516444200 + 25 * 60, 1516449600, true );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }
@@ -160,7 +161,7 @@ public class RESTfulTest {
         //2018/01/20 h:10:30 - 12:00
         try {
             return set.swapEvents( 1516444200, 1516449600, true );
-        } catch ( GMapsUnavailableException e ) {
+        } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
     }

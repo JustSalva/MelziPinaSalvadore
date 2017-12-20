@@ -214,8 +214,10 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
      * that will leads to teh following event
      *
      * @param eventManager manager which is handling the event
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
-    public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager ) throws GMapsGeneralException;
+    public abstract void addEventAndModifyFollowingEvent ( EventManager eventManager )
+            throws GMapsGeneralException;
 
     /**
      * Removes the feasible path of an event, used when the event is put into the non scheduled list

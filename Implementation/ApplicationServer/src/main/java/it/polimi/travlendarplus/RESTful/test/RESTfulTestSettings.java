@@ -14,8 +14,10 @@ import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.BadRequestException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.LocationNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -42,7 +44,7 @@ public class RESTfulTestSettings {
     private TravelMeanEnum[] pubM = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS };
 
     public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel )
-            throws GMapsUnavailableException {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         baseCaseConfiguration( first, second, third, setTravel );
         try {
             combination = pathManager.calculatePath(
@@ -54,7 +56,7 @@ public class RESTfulTestSettings {
     }
 
     public String addEventWithBreak ( boolean first, boolean second, boolean third, boolean setTravel, long minInt )
-            throws GMapsUnavailableException {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         baseCaseConfiguration( first, second, third, setTravel );
         //2018/01/20 h:12:00 - 13:00
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
@@ -71,7 +73,8 @@ public class RESTfulTestSettings {
         return ( combination != null ) ? combination.toString() : "NO_FEASIBLE_PATHS";
     }
 
-    public String addBreakEvent ( long stTime, long endTime, long minInt ) throws GMapsUnavailableException {
+    public String addBreakEvent ( long stTime, long endTime, long minInt )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         baseCaseConfiguration( true, true, true, true );
         //2018/01/20 h:10:00 - 11:00
         be1 = setBreakEvent( 1516442400, 1516446000, 30 * 60, true );
@@ -81,7 +84,8 @@ public class RESTfulTestSettings {
         return ( scheduleManager.isBreakOverlapFreeIntoSchedule( be2, false ) ) ? "OK" : "NO";
     }
 
-    public String swapEvents ( long stTime, long endTime, boolean breakEvent ) throws GMapsUnavailableException {
+    public String swapEvents ( long stTime, long endTime, boolean breakEvent )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         baseCaseConfiguration( true, true, true, true );
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         e4 = setEvent( stTime, endTime, true, lecco, maggianico, toe1 );
@@ -103,7 +107,7 @@ public class RESTfulTestSettings {
     }
 
     public void baseCaseConfiguration ( boolean first, boolean second, boolean third, boolean setTravels )
-            throws GMapsUnavailableException {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         setBaseLocations();
         toe1 = setTypeOfEvent( "test", ParamFirstPath.MIN_TIME );
         //2018/01/20 h:8:00 - 10:00
@@ -190,11 +194,12 @@ public class RESTfulTestSettings {
         e3.setScheduled( third );
     }
 
-    public Location setLocation ( double lat, double lng ) throws GMapsUnavailableException {
+    public Location setLocation ( double lat, double lng )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         return GMapsGeocoder.getLocationObject( lat, lng );
     }
 
-    public void setBaseLocations () throws GMapsUnavailableException {
+    public void setBaseLocations () throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         lecco = setLocation( 45.8565698, 9.397670399999999 );
         mandello = setLocation( 45.91386989999999, 9.317738499999999 );
         como = setLocation( 45.8080597, 9.085176499999999 );

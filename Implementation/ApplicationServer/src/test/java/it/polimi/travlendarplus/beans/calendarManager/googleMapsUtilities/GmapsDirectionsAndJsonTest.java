@@ -4,8 +4,10 @@ import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.BadRequestException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.LocationNotFoundException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +37,7 @@ public class GmapsDirectionsAndJsonTest {
     Event ev, prev, foll;
 
     @Before
-    public void init () throws GMapsUnavailableException {
+    public void init () throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         for ( String name : locations )
             loc.add( GMapsGeocoder.getLocationByString( name ) );
         for ( long time : times )

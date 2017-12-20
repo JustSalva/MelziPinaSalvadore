@@ -204,6 +204,9 @@ public class Event extends GenericEvent {
         user.addEvent( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addEventAndModifyFollowingEvent ( EventManager eventManager ) throws GMapsGeneralException {
         eventManager.addEventAndModifyFollowingEvent( this );

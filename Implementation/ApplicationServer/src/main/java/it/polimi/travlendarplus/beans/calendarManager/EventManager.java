@@ -163,6 +163,7 @@ public class EventManager extends UserManager {
      * Create all periodic events after an insertion of a periodic event ( recursively up to an year )
      *
      * @param event previous periodic event
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
     public void propagatePeriodicEvents ( GenericEvent event ) throws GMapsGeneralException {
 
@@ -192,6 +193,7 @@ public class EventManager extends UserManager {
      *
      * @param event event to be added
      * @return the following event, if modified, null otherwise
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
     public Event addEventAndModifyFollowingEvent ( Event event ) throws GMapsGeneralException {
         PathCombination feasiblePaths = null;

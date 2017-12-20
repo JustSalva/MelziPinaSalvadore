@@ -12,8 +12,18 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class provide methods to perform HTML requests
+ */
 public class HTMLCallAndResponse {
 
+    /**
+     * Performs a request to Google Maps APIs
+     *
+     * @param urlString url at which the request must be performed
+     * @return a Json object containing all the info received after the request
+     * @throws GMapsUnavailableException if Google Maps APIs are unavailable
+     */
     public static JSONObject performCall ( String urlString ) throws GMapsUnavailableException {
         String html = "";
 

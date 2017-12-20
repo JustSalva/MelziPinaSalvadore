@@ -41,6 +41,8 @@ public class PeriodicEventsPropagator {
 
     /**
      * Every day at midnight this method is invoked to propagate periodic events
+     *
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
     @Schedule( hour = "23", minute = "55", second = "00" )
     public void propagatePeriodicEvents () throws GMapsGeneralException {
@@ -148,6 +150,7 @@ public class PeriodicEventsPropagator {
      * Insert a specified event into a user's calendar
      *
      * @param event event to be added into the user's calendar
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
     private void addNextPeriodicEvent ( GenericEvent event ) throws GMapsGeneralException {
         GenericEvent genericEvent = event.nextPeriodicEvent(); //NB by default they are not scheduled

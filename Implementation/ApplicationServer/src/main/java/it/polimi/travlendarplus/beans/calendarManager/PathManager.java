@@ -62,6 +62,7 @@ public class PathManager extends UserManager {
      * @param privateMeans allowed private travel means according to event preferences
      * @param publicMeans  allowed public travel means according to event preferences
      * @return the requested path if available, null otherwise
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
     public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
                                            List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
@@ -214,8 +215,8 @@ public class PathManager extends UserManager {
     }
 
     private boolean isBetweenSameLocations ( Event event ) {
-        return event.getDeparture().getLatitude() - event.getEventLocation().getLatitude() < 0.001 &&
-                event.getDeparture().getLongitude() - event.getEventLocation().getLongitude() < 0.001;
+        return Math.abs( event.getDeparture().getLatitude() - event.getEventLocation().getLatitude() ) < 0.001 &&
+                Math.abs( event.getDeparture().getLongitude() - event.getEventLocation().getLongitude() ) < 0.001;
     }
 
     public List < GenericEvent > swapEvents ( Event forcedEvent, List < TravelMeanEnum > privateMeans,
@@ -312,7 +313,7 @@ public class PathManager extends UserManager {
                 copy.add( mean );
         if ( !copy.contains( TravelMeanEnum.BY_FOOT ) )
             copy.add( TravelMeanEnum.BY_FOOT );
-        return copy;
+        return privateMeans;
     }
 
     public Travel getBestPathInfo ( long pathId ) throws EntityNotFoundException, NotScheduledException {
