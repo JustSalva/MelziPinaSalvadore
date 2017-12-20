@@ -17,6 +17,9 @@ import org.json.JSONObject;
 import java.time.Instant;
 import java.util.ArrayList;
 
+/**
+ * Helper class that is to be used to read the Google Maps direction responses
+ */
 public class GMapsJSONReader {
 
     public static String getStatus ( JSONObject response ) {
@@ -32,7 +35,7 @@ public class GMapsJSONReader {
         return singleRoute.getJSONArray( "legs" ).getJSONObject( 0 );
     }
 
-    private static String getOverviewPoliline ( JSONObject singleRoute ) {
+    private static String getOverviewPoliLine ( JSONObject singleRoute ) {
         return singleRoute.getString( "overview_polyline" );
     }
 
@@ -60,13 +63,27 @@ public class GMapsJSONReader {
         return singleStep.getJSONObject( "distance" ).getInt( "value" );
     }
 
-    //getTransitDetails() is called in case of TRANSIT call.
-    //The only case in which no "transit_details" are given is when there is a WALKING step
-    //in this case a JSONException is thrown.
-    private static JSONObject getTransitDetails ( JSONObject singleStep ) {
+
+    /**
+     * This method is to be called in case of TRANSIT call to obtain detailed
+     * info about the travel means to be taken.
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     * @throws JSONException when no "transit_details" are given
+     *                      ( this happen when there is a WALKING step )
+     */
+    private static JSONObject getTransitDetails ( JSONObject singleStep ) throws JSONException {
         return singleStep.getJSONObject( "transit_details" );
     }
 
+    /**
+     * Provide the ending location of a travel step
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     * @throws GMapsUnavailableException if Google maps services are unavailable
+     */
     private static Location getSingleArrivalStop ( JSONObject singleStep ) throws GMapsUnavailableException {
         JSONObject transitDetails;
         try {
@@ -82,6 +99,13 @@ public class GMapsJSONReader {
                 forName.getString( "name" ) );
     }
 
+    /**
+     * Provide the ending location of a travel step
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     * @throws GMapsUnavailableException if Google maps services are unavailable
+     */
     private static Location getSingleDepartureStop ( JSONObject singleStep ) throws GMapsUnavailableException {
         JSONObject transitDetails;
         try {
@@ -101,6 +125,12 @@ public class GMapsJSONReader {
     // due to getTransitDetails() function, the parameters are taken from a different position in JSONObject.
     // The only difference is that departure time is setted to 0 and arrival time contains the duration in time!!!
 
+    /**
+     * Provide the arrival time of a single travel
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     */
     private static long getSingleArrivalTimeInUnix ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
@@ -111,6 +141,12 @@ public class GMapsJSONReader {
         return transitDetails.getJSONObject( "arrival_time" ).getLong( "value" );
     }
 
+    /**
+     * Provide the departure time of a single travel
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     */
     private static long getSingleDepartureTimeInUnix ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
@@ -121,6 +157,13 @@ public class GMapsJSONReader {
         return transitDetails.getJSONObject( "departure_time" ).getLong( "value" );
     }
 
+    /**
+     * Provide the name of the public transportation service line
+     * related to the specified travel
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     */
     private static String getSingleLineName ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
@@ -135,6 +178,12 @@ public class GMapsJSONReader {
         }
     }
 
+    /**
+     * Retrieve the name of the vehicle used in a specified travel
+     *
+     * @param singleStep the travel to be analyzed
+     * @return a Json object containing the requested details
+     */
     private static String getSingleVehicleType ( JSONObject singleStep ) {
         JSONObject transitDetails;
         try {
@@ -149,6 +198,12 @@ public class GMapsJSONReader {
         }
     }
 
+    /**
+     * Given a String that represent a vehicle it returns his relative category
+     *
+     * @param vehicleType string that describe the vehicle to be converted
+     * @return the relative travelMean enum type
+     */
     private static TravelMeanEnum getProperTravelMeanEnum ( String vehicleType ) {
         switch ( vehicleType ) {
             case "RAIL":
@@ -173,90 +228,132 @@ public class GMapsJSONReader {
         }
     }
 
-    // It creates a Travel with only one TravelComponent, related to NO_TRANSIT and NO_SHARING TravelMean of the specified type.
-    // Boolean departure is used to specify if travelTime refers to departure: if FALSE it refers to arrival.
+    /**
+     * It creates a Travel with only one TravelComponent, related to NO_TRANSIT
+     * and NO_SHARING TravelMean of the specified type.
+     *
+     * @param response Json returned by Google Maps APIs as response
+     * @param type category of the travel mean that is connected to a travel
+     * @param travelTime travel duration
+     * @param departure is used to specify if travelTime refers to departure:
+     *                  if FALSE it refers to arrival.
+     * @param depLoc location at which the travel starts
+     * @param arrLoc location at which the travel ends
+     * @return a list of feasible travels
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException if the request sent contains syntactical errors
+     */
     public ArrayList < Travel > getTravelNoTransitMeans ( JSONObject response, TravelMeanEnum type,
                                                           long travelTime, boolean departure,
                                                           Location depLoc, Location arrLoc )
-            throws GMapsGeneralException {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
 
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
 
-        if ( getStatus( response ).equals( "OK" ) || getStatus( response ).equals( "ZERO_RESULTS" ) ) {
-            JSONArray routes = getRoutes( response );
+        checkErrorInStatusCode( response ); //throws an exception if the response is different from OK
 
-            for ( int i = 0; i < routes.length(); i++ ) {
-                Instant startingTime, endingTime;
-                if ( departure ) {
-                    startingTime = Instant.ofEpochSecond( travelTime );
-                    endingTime = Instant.ofEpochSecond( travelTime +
-                            getTotDurationInSeconds( routes.getJSONObject( i ) ) );
-                } else {
-                    startingTime = Instant.ofEpochSecond( travelTime -
-                            getTotDurationInSeconds( routes.getJSONObject( i ) ) );
-                    endingTime = Instant.ofEpochSecond( travelTime );
-                }
-                float lengthInKm = ( ( float ) getTotDistanceInMeters( routes.getJSONObject( i ) ) ) / 1000;
-                PrivateTravelMean mean = new PrivateTravelMean( type.toString(), type, 0 );
+        JSONArray routes = getRoutes( response );
 
-                TravelComponent component = new TravelComponent( startingTime, endingTime,
-                        lengthInKm, depLoc, arrLoc, mean );
-                ArrayList < TravelComponent > listTC = new ArrayList < TravelComponent >();
-                listTC.add( component );
-
-                Travel travel = new Travel( listTC );
-                possiblePaths.add( travel );
+        for ( int i = 0; i < routes.length(); i++ ) {
+            Instant startingTime, endingTime;
+            if ( departure ) {
+                startingTime = Instant.ofEpochSecond( travelTime );
+                endingTime = Instant.ofEpochSecond( travelTime +
+                        getTotDurationInSeconds( routes.getJSONObject( i ) ) );
+            } else {
+                startingTime = Instant.ofEpochSecond( travelTime -
+                        getTotDurationInSeconds( routes.getJSONObject( i ) ) );
+                endingTime = Instant.ofEpochSecond( travelTime );
             }
-            return possiblePaths;
-        } else if ( getStatus( response ).equals( "NOT_FOUND" ) )
-            throw new LocationNotFoundException();
+            float lengthInKm = ( ( float ) getTotDistanceInMeters( routes.getJSONObject( i ) ) ) / 1000;
+            PrivateTravelMean mean = new PrivateTravelMean( type.toString(), type, 0 );
 
-        else
-            throw new BadRequestException();
+            TravelComponent component = new TravelComponent( startingTime, endingTime,
+                    lengthInKm, depLoc, arrLoc, mean );
+            ArrayList < TravelComponent > listTC = new ArrayList < TravelComponent >();
+            listTC.add( component );
+
+            Travel travel = new Travel( listTC );
+            possiblePaths.add( travel );
+        }
+
+        return possiblePaths;
 
     }
 
-    //it creates a Travel composed by one or more components, related to TRANSIT TravelMeans
-    public ArrayList < Travel > getTravelWithTransitMeans ( JSONObject response ) throws GMapsGeneralException {
+    /**
+     * It creates a Travel composed by one or more components, related to TRANSIT TravelMeans
+     *
+     * @param response Json returned by Google Maps APIs as response
+     * @return a list of feasible travels
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException if the request sent contains syntactical errors
+     */
+    public ArrayList < Travel > getTravelWithTransitMeans ( JSONObject response )
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException  {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
 
-        if ( getStatus( response ).equals( "OK" ) || getStatus( response ).equals( "ZERO_RESULTS" ) ) {
-            JSONArray routes = getRoutes( response );
+        checkErrorInStatusCode( response ); //throws an exception if the response is different from OK
 
-            for ( int i = 0; i < routes.length(); i++ ) {
-                JSONArray steps = getSteps( routes.getJSONObject( i ) );
-                ArrayList < TravelComponent > travelSteps = new ArrayList < TravelComponent >();
+        JSONArray routes = getRoutes( response );
 
-                for ( int j = 0; j < steps.length(); j++ ) {
-                    Instant startingTime = Instant.ofEpochSecond(
-                            getSingleDepartureTimeInUnix( steps.getJSONObject( j ) ) );
-                    Instant endingTime = Instant.ofEpochSecond(
-                            getSingleArrivalTimeInUnix( steps.getJSONObject( j ) ) );
-                    float lengthInKm = ( ( float ) getSingleDistanceInMeters( steps.getJSONObject( j ) ) ) / 1000;
-                    Location departureLoc = getSingleDepartureStop( steps.getJSONObject( j ) );
-                    departureLoc.save();
-                    Location arrivalLoc = getSingleArrivalStop( steps.getJSONObject( j ) );
-                    arrivalLoc.save();
-                    TravelMeanEnum meanEnum = getProperTravelMeanEnum(
-                            getSingleVehicleType( steps.getJSONObject( j ) ) );
-                    PublicTravelMean mean = new PublicTravelMean(
-                            getSingleLineName( steps.getJSONObject( j ) ), meanEnum, 0 );
+        for ( int i = 0; i < routes.length(); i++ ) {
+            JSONArray steps = getSteps( routes.getJSONObject( i ) );
+            ArrayList < TravelComponent > travelSteps = new ArrayList < TravelComponent >();
 
-                    TravelComponent step = new TravelComponent( startingTime, endingTime, lengthInKm, departureLoc,
-                            arrivalLoc, mean );
-                    travelSteps.add( step );
-                }
-                Travel travelOption = new Travel( travelSteps );
-                possiblePaths.add( travelOption );
+            for ( int j = 0; j < steps.length(); j++ ) {
+                Instant startingTime = Instant.ofEpochSecond(
+                        getSingleDepartureTimeInUnix( steps.getJSONObject( j ) ) );
+                Instant endingTime = Instant.ofEpochSecond(
+                        getSingleArrivalTimeInUnix( steps.getJSONObject( j ) ) );
+                float lengthInKm = ( ( float ) getSingleDistanceInMeters( steps.getJSONObject( j ) ) ) / 1000;
+                Location departureLoc = getSingleDepartureStop( steps.getJSONObject( j ) );
+                departureLoc.save();
+                Location arrivalLoc = getSingleArrivalStop( steps.getJSONObject( j ) );
+                arrivalLoc.save();
+                TravelMeanEnum meanEnum = getProperTravelMeanEnum(
+                        getSingleVehicleType( steps.getJSONObject( j ) ) );
+                PublicTravelMean mean = new PublicTravelMean(
+                        getSingleLineName( steps.getJSONObject( j ) ), meanEnum, 0 );
+
+                TravelComponent step = new TravelComponent( startingTime, endingTime, lengthInKm, departureLoc,
+                        arrivalLoc, mean );
+                travelSteps.add( step );
             }
+            Travel travelOption = new Travel( travelSteps );
+            possiblePaths.add( travelOption );
+        }
+        return possiblePaths;
+    }
 
-            return possiblePaths;
-        } else if ( getStatus( response ).equals( "NOT_FOUND" ) )
-            throw new LocationNotFoundException();
-
-        else
-            throw new BadRequestException();
-
+    /**
+     * Checks a google response message; this method is to be invoked when
+     * the response status code, returned by google APIs, have to be checked,
+     * an relative exception is thrown if in the status code is signaled
+     * that something goes wrong during the HTTP call
+     *
+     * @param response JSONObject containing the response returned by google APIs
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException if the request sent contains syntactical errors
+     */
+    private void checkErrorInStatusCode ( JSONObject response )
+            throws LocationNotFoundException, GMapsUnavailableException, BadRequestException {
+        switch ( getStatus( response ) ) {
+            case "OK":
+            case "ZERO_RESULTS":
+                break;
+            case "NOT_FOUND":
+                throw new LocationNotFoundException();
+            case "REQUEST_DENIED":
+            case "UNKNOWN_ERROR":
+            case "OVER_QUERY_LIMIT":
+                throw new GMapsUnavailableException();
+            default:
+                throw new BadRequestException();
+        }
     }
 
 }

@@ -12,7 +12,10 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.NotScheduledException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.BadRequestException;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.LocationNotFoundException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +143,7 @@ public class PathManager extends UserManager {
 
     private void privatePathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
                                        List < TravelMeanEnum > privateMeans, boolean sameLoc )
-            throws GMapsGeneralException {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( sameLoc )
             privateMeans = privateMeansSameLoc( privateMeans );
