@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMes
 
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
+/**
+ * This is the message class sent in the body of an HTTP request to contain the info
+ * about a period constraint into a user's preference profile
+ */
 public class AddPeriodConstraintMessage extends AddConstraintMessage {
 
     private static final long serialVersionUID = -6577930709987006843L;

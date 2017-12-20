@@ -13,6 +13,7 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.ejb.Stateless;
@@ -104,10 +105,10 @@ public class PreferenceManager extends UserManager {
     private void checkTypeOfEventConsistency ( AddTypeOfEventMessage typeOfEventMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>();
         if ( typeOfEventMessage.getName() == null ) {
-            errors.add( "name" );
+            errors.add( WrongFields.NAME );
         }
         if ( typeOfEventMessage.getParamFirstPath() == null ) {
-            errors.add( "paramFirstPath" );
+            errors.add( WrongFields.PARAM_FIRST_PATH );
         }
 
         errors.addAll( checkPeriodConstraints( typeOfEventMessage.getLimitedByPeriod() ) );
@@ -129,23 +130,23 @@ public class PreferenceManager extends UserManager {
         //checks that min < max hour
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMinHour() > periodConstraint.getMaxHour() )
-                .map( periodConstraint -> " periodConstraint " +
+                .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
-                        " min hour must be less than max hour" )
+                        WrongFields.MIN_HOUR_MUST_BE_LESS_THAN_MAX_HOUR )
                 .collect( Collectors.toList() ) );
         //checks that minHour >= 0
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMinHour() < 0 )
-                .map( periodConstraint -> " periodConstraint " +
+                .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
-                        " min hour must be greater than zero" )
+                        WrongFields.MIN_HOUR_MUST_BE_GREATER_THAN_ZERO )
                 .collect( Collectors.toList() ) );
         //checks that maxHour < 24 h
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMaxHour() >= 24 * 60 * 60 )
-                .map( periodConstraint -> " periodConstraint " +
+                .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
-                        " max hour must be less than 24 h" )
+                        WrongFields.MAX_HOUR_MUST_BE_LESS_THAN_24_HOURS )
                 .collect( Collectors.toList() ) );
         periodErrors.addAll( checkTravelMeanEnum( new ArrayList <>( periodConstraints ) ) );
 
@@ -163,16 +164,16 @@ public class PreferenceManager extends UserManager {
         //checks that min length >= 0
         distanceErrors.addAll( distanceConstraints.stream()
                 .filter( distanceConstraint -> distanceConstraint.getMinLength() < 0 )
-                .map( distanceConstraint -> " distanceConstraint " +
+                .map( distanceConstraint -> WrongFields.DISTANCE_CONSTRAINT +
                         distanceConstraints.indexOf( distanceConstraint ) +
-                        " min length must be greater than zero" )
+                        WrongFields.MIN_LENGTH_MUST_BE_GREATER_THAN_ZERO )
                 .collect( Collectors.toList() ) );
         //checks that min length < max length
         distanceErrors.addAll( distanceConstraints.stream()
                 .filter( distanceConstraint -> distanceConstraint.getMinLength() > distanceConstraint.getMaxLength() )
-                .map( distanceConstraint -> " distanceConstraint " +
+                .map( distanceConstraint -> WrongFields.DISTANCE_CONSTRAINT +
                         distanceConstraints.indexOf( distanceConstraint ) +
-                        " min length must be less than max length" )
+                        WrongFields.MIN_LENGTH_MUST_BE_LESS_THAN_MAX_LENGHT )
                 .collect( Collectors.toList() ) );
         distanceErrors.addAll( checkTravelMeanEnum( new ArrayList <>( distanceConstraints ) ) );
 
@@ -191,7 +192,7 @@ public class PreferenceManager extends UserManager {
                 .filter( constraint -> !TravelMeanEnum.isValid( constraint.getConcerns() ) )
                 .map( constraint -> constraint.getClass().getSimpleName() + " " +
                         constraintMessages.indexOf( constraint ) +
-                        " travel mean value not allowed" )
+                        WrongFields.NOT_ALLOWED_TRAVEL_MEAN_VALUE )
                 .collect( Collectors.toList() ) );
         return errors;
     }
@@ -276,10 +277,10 @@ public class PreferenceManager extends UserManager {
     private void checkLocationConsistency ( PreferredLocationMessage locationMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>();
         if ( locationMessage.getName() == null ) {
-            errors.add( "name" );
+            errors.add( WrongFields.NAME );
         }
         if ( locationMessage.getAddress() == null ) {
-            errors.add( "address" );
+            errors.add( WrongFields.ADDRESS );
         }
 
         if ( errors.size() > 0 ) {

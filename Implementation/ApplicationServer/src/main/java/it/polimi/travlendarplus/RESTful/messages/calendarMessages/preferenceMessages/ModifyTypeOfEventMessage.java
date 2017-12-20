@@ -5,6 +5,10 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
 import java.util.List;
 
+/**
+ * This is the message class sent in the body of an HTTP request to modify a
+ * preference profile into the user's account
+ */
 public class ModifyTypeOfEventMessage extends AddTypeOfEventMessage {
 
     private static final long serialVersionUID = 1759339803772382125L;

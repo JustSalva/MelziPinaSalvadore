@@ -35,7 +35,8 @@ public class PeriodicEventsExecutor {
         } catch ( EntityNotFoundException e ) {
             /*no action here the user certainly exists since we are propagating one of his events,
             the consideration is valid also for the generic event*/
-            Logger.getLogger( PeriodicEventsExecutor.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
+            Logger.getLogger( PeriodicEventsExecutor.class.getName() )
+                    .log( Level.SEVERE, e.getMessage(), e );
         }
     }
 

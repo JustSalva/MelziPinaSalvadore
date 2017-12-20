@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages
 
 import java.time.Instant;
 
+/**
+ * This is the message class sent in the body of an HTTP request to modify a
+ * breakEvent into the user's profile
+ */
 public class ModifyBreakEventMessage extends AddBreakEventMessage {
 
     private static final long serialVersionUID = -1681212732442187373L;

@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.RESTful.messages.authenticationMessages;
 
+/**
+ * Response message used to reply to the users after a login operation
+ */
 public class LoginResponse extends TokenResponse {
 
     private static final long serialVersionUID = -3466960414847612423L;

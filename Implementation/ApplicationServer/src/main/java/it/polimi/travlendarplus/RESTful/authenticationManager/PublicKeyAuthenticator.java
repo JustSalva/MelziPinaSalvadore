@@ -11,6 +11,10 @@ import javax.ws.rs.core.Response;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 
+/**
+ * This RESTful class provide the functionalities related to the encryption of
+ * sensible data before actually send it through the network connectivity
+ */
 @Path( "/" )
 public class PublicKeyAuthenticator {
 
@@ -32,7 +36,7 @@ public class PublicKeyAuthenticator {
     @Produces( MediaType.APPLICATION_JSON )
     @Consumes( MediaType.APPLICATION_JSON )
     public Response requestPublicKey ( @PathParam( "idDevice" ) String idDevice ) {
-        RSAEncryption encryption = null;
+        RSAEncryption encryption;
         try {
             encryption = new RSAEncryption( idDevice );
         } catch ( NoSuchAlgorithmException e ) {

@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.RESTful.messages.authenticationMessages;
 
-import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
@@ -32,6 +31,14 @@ public class Credentials extends AuthenticationMessage {
         this.email = email;
     }
 
+    /**
+     * Automatically decrypts a password and return the plain password
+     *
+     * @return the plain password
+     * @throws EntityNotFoundException   if the keyPair needed to decrypt
+     *                                   the password has exceeded
+     * @throws DecryptionFailedException if the password format is inconsistent
+     */
     public String getPassword () throws EntityNotFoundException, DecryptionFailedException {
         //TODO uncomment when Pina will handle the RSA algorithm
         /* RSAEncryption encryption = RSAEncryption.load( idDevice );

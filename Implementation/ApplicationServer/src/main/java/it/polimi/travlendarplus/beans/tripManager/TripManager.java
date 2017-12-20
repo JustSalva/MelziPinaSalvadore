@@ -10,6 +10,7 @@ import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 
@@ -277,7 +278,7 @@ public class TripManager extends UserManager {
 
         List < String > errors = checkTicketConsistency( distanceTicketMessage );
         if ( distanceTicketMessage.getDistance() <= 0 ) {
-            errors.add( " distance" );
+            errors.add( WrongFields.DISTANCE );
         }
         checkErrorExistence( errors );
     }
@@ -293,7 +294,7 @@ public class TripManager extends UserManager {
 
         List < String > errors = checkTicketConsistency( genericTicketMessage );
         if ( genericTicketMessage.getLineName() == null ) {
-            errors.add( " line name " );
+            errors.add( WrongFields.LINE_NAME );
         }
         checkErrorExistence( errors );
     }
@@ -330,10 +331,10 @@ public class TripManager extends UserManager {
         List < String > errors = checkTicketConsistency( periodTicketMessage );
         Ticket decorator = null;
         if ( periodTicketMessage.getName() == null ) {
-            errors.add( "name" );
+            errors.add( WrongFields.NAME );
         }
         if ( !periodTicketMessage.getStartingDate().isBefore( periodTicketMessage.getEndingDate() ) ) {
-            errors.add( " minimum time must be less than ending time" );
+            errors.add( WrongFields.MIN_TIME_MUST_BE_LESS_THAN_ENDING_TIME );
         }
         if ( periodTicketMessage.isConsistent() ) {
             try {
@@ -348,10 +349,11 @@ public class TripManager extends UserManager {
                 errors.addAll( e.getInvalidFields() );
             }
         } else {
-            errors.add( "invalid ticket decorator" );
+            errors.add( WrongFields.INVALID_TICKET_DECORATOR );
         }
         checkErrorExistence( errors );
-        //NB this decorator cannot be null cause if it is an InvalidFieldException is thrown by the precedent instruction
+        //NB this decorator cannot be null cause if it is an InvalidFieldException
+        // is thrown by the precedent instruction
         return decorator;
     }
 
@@ -364,7 +366,7 @@ public class TripManager extends UserManager {
     private List < String > checkTicketConsistency ( AddTicketMessage addTicketMessage ) {
         List < String > errors = new ArrayList <>();
         if ( addTicketMessage.getCost() < 0 ) {
-            errors.add( " cost" );
+            errors.add( WrongFields.COST );
         }
         for ( AddPublicTravelMeanMessage meanMessage : addTicketMessage.getRelatedTo() ) {
             errors.addAll( checkPublicTravelMeanConsistency( meanMessage ) );
@@ -382,10 +384,10 @@ public class TripManager extends UserManager {
     private List < String > checkPublicTravelMeanConsistency ( AddPublicTravelMeanMessage meanMessage ) {
         List < String > errors = new ArrayList <>();
         if ( meanMessage.getName() == null ) {
-            errors.add( "travel mean name" );
+            errors.add( WrongFields.TRAVEL_MEAN + WrongFields.NAME );
         }
         if ( !TravelMeanEnum.isPublicTravelMean( meanMessage.getType() ) ) {
-            errors.add( "travel mean type" );
+            errors.add( WrongFields.TRAVEL_MEAN + WrongFields.TYPE );
         }
         return errors;
     }

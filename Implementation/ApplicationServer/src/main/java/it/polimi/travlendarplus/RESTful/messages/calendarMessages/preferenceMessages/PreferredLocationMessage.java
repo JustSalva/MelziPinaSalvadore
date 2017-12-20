@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMes
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.CalendarMessage;
 
+/**
+ * This is the message class sent in the body of an HTTP request to add a
+ * preferred location into the user's profile
+ */
 public class PreferredLocationMessage extends CalendarMessage {
 
     private static final long serialVersionUID = -5387947525513320656L;

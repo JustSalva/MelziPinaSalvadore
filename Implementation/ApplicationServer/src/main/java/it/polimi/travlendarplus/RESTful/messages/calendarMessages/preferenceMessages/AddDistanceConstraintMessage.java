@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMes
 
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
+/**
+ * This is the message class sent in the body of an HTTP request to contain the info
+ * about a distance constraint into a user's preference profile
+ */
 public class AddDistanceConstraintMessage extends AddConstraintMessage {
 
     private static final long serialVersionUID = 3192731780629920451L;

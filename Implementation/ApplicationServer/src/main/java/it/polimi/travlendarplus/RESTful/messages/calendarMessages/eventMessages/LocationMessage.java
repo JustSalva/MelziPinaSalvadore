@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.CalendarMessage;
 
+/**
+ * Message used as a container of a location info.
+ * This class can be embedded into others message classes
+ */
 public class LocationMessage extends CalendarMessage {
 
     private static final long serialVersionUID = -5709220684464695817L;

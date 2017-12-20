@@ -15,6 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class provides RESTful functionalities that allows the user to reset
+ * his password and receive a new one through his email
+ */
 @Path( "/" )
 public class NewCredentialsAuthenticator {
 

@@ -7,6 +7,10 @@ import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a message class sent to reply with all needed info
+ * to a typeOfEvent - related response (add or modify typeOfEvent request)
+ */
 public class TypeOfEventResponse extends CalendarResponse {
 
     private static final long serialVersionUID = 4793495605267399032L;

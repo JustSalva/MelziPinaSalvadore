@@ -10,7 +10,7 @@ public class PathNotFeasibleException extends CalendarException {
     private static final long serialVersionUID = -4998363330823504627L;
 
     public PathNotFeasibleException () {
-        super( "path not feasible" );
+        super( WrongFields.PATH_NOT_FEASIBLE );
     }
 
     public PathNotFeasibleException ( String message ) {

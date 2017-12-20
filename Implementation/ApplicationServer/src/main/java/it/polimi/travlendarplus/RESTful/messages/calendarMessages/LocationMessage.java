@@ -1,5 +1,10 @@
 package it.polimi.travlendarplus.RESTful.messages.calendarMessages;
 
+/**
+ * Message used to send to the application server a message containing a
+ * location's info, it is to be nested into all messages that needs
+ * to contain a location
+ */
 public class LocationMessage extends CalendarMessage {
 
     private static final long serialVersionUID = -6941596453358896862L;

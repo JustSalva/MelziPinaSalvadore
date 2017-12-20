@@ -10,6 +10,7 @@ import it.polimi.travlendarplus.entities.UserDevice;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.InvalidCredentialsException;
 import it.polimi.travlendarplus.exceptions.authenticationExceptions.UserNotRegisteredException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This restful class manage the authentication process
+ * This RESTful class manage the authentication process
  */
 @Path( "/" )
 public class AuthenticationEndpoint {
@@ -266,10 +267,10 @@ public class AuthenticationEndpoint {
     private void checkRegistrationForm ( RegistrationForm registrationForm ) throws InvalidFieldException {
         List < String > registrationErrors = new ArrayList <>();
         if ( registrationForm.getName() == null ) {
-            registrationErrors.add( "name" );
+            registrationErrors.add( WrongFields.NAME );
         }
         if ( registrationForm.getSurname() == null ) {
-            registrationErrors.add( "surname" );
+            registrationErrors.add( WrongFields.SURNAME );
         }
         try {
             checkCredentials( registrationForm );
@@ -296,13 +297,13 @@ public class AuthenticationEndpoint {
             InternetAddress internetAddress = new InternetAddress( credentials.getEmail() );
             internetAddress.validate();
         } catch ( AddressException e ) {
-            credentialErrors.add( "email" );
+            credentialErrors.add( WrongFields.EMAIL );
         }
         if ( !credentials.isPasswordConsistent() ) {
-            credentialErrors.add( "password" );
+            credentialErrors.add( WrongFields.PASSWORD );
         }
         if ( credentials.getIdDevice() == null ) { //TODO ask to GMS
-            credentialErrors.add( "idDevice" );
+            credentialErrors.add( WrongFields.ID_DEVICE );
         }
         if ( credentialErrors.size() > 0 ) {
             throw new InvalidFieldException( credentialErrors );

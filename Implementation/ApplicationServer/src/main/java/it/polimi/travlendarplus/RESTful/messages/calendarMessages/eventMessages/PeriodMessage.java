@@ -4,6 +4,11 @@ import it.polimi.travlendarplus.RESTful.messages.calendarMessages.CalendarMessag
 
 import java.time.Instant;
 
+/**
+ * Message used as a container of a periodicity info.
+ * This class can be embedded into others message classes in order to
+ * contain such info
+ */
 public class PeriodMessage extends CalendarMessage {
 
     private static final long serialVersionUID = 3808928000453037348L;

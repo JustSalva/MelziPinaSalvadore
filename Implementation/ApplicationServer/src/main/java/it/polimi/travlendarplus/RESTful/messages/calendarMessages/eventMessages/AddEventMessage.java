@@ -3,6 +3,10 @@ package it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages
 
 import java.time.Instant;
 
+/**
+ * This is the message class sent in the body of an HTTP request to add an
+ * event into the user's profile
+ */
 public class AddEventMessage extends AddGenericEventMessage {
 
     private static final long serialVersionUID = 2301576598086898635L;

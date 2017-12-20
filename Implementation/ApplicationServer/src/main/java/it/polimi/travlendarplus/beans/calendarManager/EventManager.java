@@ -12,6 +12,7 @@ import it.polimi.travlendarplus.entities.calendar.Period;
 import it.polimi.travlendarplus.entities.preferences.ParamFirstPath;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -74,15 +75,21 @@ public class EventManager extends UserManager {
     }
 
     /**
-     * Support method that allows to retrieve a generic event from a list
+     * Find an event from a list of generic events, given his identifier
      *
-     * @param eventList list of event to be scanned
-     * @param id        identifier of the event to be found
+     * @param eventList list of events to be scanned
+     * @param id        identifier of the event that have to be found
      * @return the requested event
-     * @throws EntityNotFoundException if the break event does not exist
+     * @throws EntityNotFoundException if the requested event does not exists
      */
-    private GenericEvent findEvent ( List < GenericEvent > eventList, long id ) throws EntityNotFoundException {
-        return EventManager.extractEvent( eventList, id );
+    public static GenericEvent extractEvent ( List < GenericEvent > eventList, long id )
+            throws EntityNotFoundException {
+
+        GenericEvent requestedEvent = eventList.stream()
+                .filter( event -> event.getId() == id ).findFirst().orElse( null );
+        if ( requestedEvent == null )
+            throw new EntityNotFoundException();
+        return requestedEvent;
     }
 
     /**
@@ -110,10 +117,24 @@ public class EventManager extends UserManager {
     }
 
     /**
+     * Support method that allows to retrieve a generic event from a list
+     *
+     * @param eventList list of event to be scanned
+     * @param id        identifier of the event to be found
+     * @return the requested event
+     * @throws EntityNotFoundException if the break event does not exist
+     */
+    private GenericEvent findEvent ( List < GenericEvent > eventList, long id )
+            throws EntityNotFoundException {
+        return EventManager.extractEvent( eventList, id );
+    }
+
+    /**
      * Adds an event into the user's calendar
      *
      * @param eventMessage representation of the event to be added
-     * @return the added event, and the modified ones ( path can change after an event insertion)
+     * @return the added event, and the modified ones
+     *         ( path can change after an event insertion)
      * @throws InvalidFieldException if some fields of the message are invalid
      */
     public List < Event > addEvent ( AddEventMessage eventMessage ) throws InvalidFieldException {
@@ -133,45 +154,6 @@ public class EventManager extends UserManager {
         responseList.add( event );
         startEventPropagatorThread( event );
         return responseList;
-    }
-
-    /**
-     * Provide the event with a feasible path, if it exist, modify also the following event path if needed
-     * This method is used in a visitor pattern in order to add the events into the user's calendar
-     *
-     * @param event event to be added
-     * @return the following event, if modified, null otherwise
-     */
-    public Event addEventAndModifyFollowingEvent ( Event event ) {
-        PathCombination feasiblePaths = null;
-        Event followingEvent = null;
-        if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
-            // CalculatePaths check feasibility into the schedule with regard of TIMETABLE
-            // and CONSTRAINTS defined by the user
-            feasiblePaths = pathManager.calculatePath( event, preferenceManager.getAllowedMeans( event, PathManager.privateList ),
-                    preferenceManager.getAllowedMeans( event, PathManager.publicList ) );
-            // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
-            if ( feasiblePaths != null ) {
-                // Setting previous location if prevLocChoice boolean param is true.
-                if ( event.isPrevLocChoice() ) {
-                    event.setDeparture( scheduleManager.getPossiblePreviousEvent( event.getStartingTime() )
-                            .getEventLocation() );
-                }
-                event.setFeasiblePath( feasiblePaths.getPrevPath() );
-                followingEvent = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
-                // Also info on the following event are uploaded, according to the calculated related-path.
-                if ( followingEvent != null ) {
-                    // Setting previous location if prevLocChoice boolean param is true.
-                    if ( followingEvent.isPrevLocChoice() ) {
-                        followingEvent.setDeparture( event.getEventLocation() );
-                    }
-                    followingEvent.setFeasiblePath( feasiblePaths.getFollPath() );
-                }
-            }
-        }
-        event.setScheduled( feasiblePaths != null );
-
-        return followingEvent;
     }
 
     /**
@@ -200,17 +182,45 @@ public class EventManager extends UserManager {
     }
 
     /**
-     * Checks if an event is to be propagated in time
+     * Provide the event with a feasible path, if it exist, modify also the
+     * following event path if needed
+     * This method is used in a visitor pattern in order to add the events
+     * into the user's calendar
      *
-     * @param event      event to be propagated
-     * @param upperBound time upper bound until which the event is to be propagated
-     * @return true if the event is to be propagated, false otherwise
+     * @param event event to be added
+     * @return the following event, if modified, null otherwise
      */
-    private boolean checkPropagationConditions ( GenericEvent event, Instant upperBound ) {
-        boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
-        Instant nextStartingTime = event.getStartingTime().plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
-        boolean condition2 = nextStartingTime.isBefore( upperBound );
-        return condition1 && condition2;
+    public Event addEventAndModifyFollowingEvent ( Event event ) {
+        PathCombination feasiblePaths = null;
+        Event followingEvent = null;
+        if ( scheduleManager.isEventOverlapFreeIntoSchedule( event, false ) ) {
+            // CalculatePaths check feasibility into the schedule with regard of TIMETABLE
+            // and CONSTRAINTS defined by the user
+            feasiblePaths = pathManager.calculatePath( event,
+                    preferenceManager.getAllowedMeans( event, PathManager.privateList ),
+                    preferenceManager.getAllowedMeans( event, PathManager.publicList ) );
+            // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
+            if ( feasiblePaths != null ) {
+                // Setting previous location if prevLocChoice boolean param is true.
+                if ( event.isPrevLocChoice() ) {
+                    event.setDeparture(
+                            scheduleManager.getPossiblePreviousEvent( event.getStartingTime() ).getEventLocation() );
+                }
+                event.setFeasiblePath( feasiblePaths.getPrevPath() );
+                followingEvent = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
+                // Also info on the following event are uploaded, according to the calculated related-path.
+                if ( followingEvent != null ) {
+                    // Setting previous location if prevLocChoice boolean param is true.
+                    if ( followingEvent.isPrevLocChoice() ) {
+                        followingEvent.setDeparture( event.getEventLocation() );
+                    }
+                    followingEvent.setFeasiblePath( feasiblePaths.getFollPath() );
+                }
+            }
+        }
+        event.setScheduled( feasiblePaths != null );
+
+        return followingEvent;
     }
 
     /**
@@ -223,6 +233,21 @@ public class EventManager extends UserManager {
         return currentUser.getPreferences().stream()
                 .filter( typeOfEvent -> typeOfEvent.getId() == name )
                 .findFirst().get(); //NB his presence has to be already checked
+    }
+
+    /**
+     * Checks if an event is to be propagated in time
+     *
+     * @param event      event to be propagated
+     * @param upperBound time upper bound until which the event is to be propagated
+     * @return true if the event is to be propagated, false otherwise
+     */
+    private boolean checkPropagationConditions ( GenericEvent event, Instant upperBound ) {
+        boolean condition1 = !event.getPeriodicity().getEndingDay().isBefore( event.getStartingTime() );
+        Instant nextStartingTime = event.getStartingTime()
+                .plus( event.getPeriodicity().getDeltaDays(), ChronoUnit.DAYS );
+        boolean condition2 = nextStartingTime.isBefore( upperBound );
+        return condition1 && condition2;
     }
 
     /**
@@ -247,9 +272,10 @@ public class EventManager extends UserManager {
         }
         Location arrival = EventManager.findLocation( eventMessage.getEventLocation() );
 
-        Event event = new Event( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, eventMessage.getDescription(), eventMessage.isPrevLocChoice(),
-                eventMessage.isTravelAtLastChoice(), type, arrival, departure, null );
+        Event event = new Event( eventMessage.getName(), eventMessage.getStartingTime(),
+                eventMessage.getEndingTime(), false, eventMessage.getDescription(),
+                eventMessage.isPrevLocChoice(), eventMessage.isTravelAtLastChoice(),
+                type, arrival, departure, null );
 
 
         if ( eventMessage.getPeriodicity() != null ) {
@@ -267,26 +293,28 @@ public class EventManager extends UserManager {
      * @return the created period
      */
     private Period createPeriodicity ( PeriodMessage periodMessage ) {
-        return new Period( periodMessage.getStartingDay(), periodMessage.getEndingDay(), periodMessage.getDeltaDays() );
+        return new Period( periodMessage.getStartingDay(), periodMessage.getEndingDay(),
+                periodMessage.getDeltaDays() );
     }
 
     /**
      * Checks that the events fields are correct
      *
      * @param eventMessage message to be checked
-     * @throws InvalidFieldException if some fields are wrong ( which one is written inside the exception class)
+     * @throws InvalidFieldException if some fields are wrong
+     *                               ( which one is written inside the exception class)
      */
     private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>( checkGenericEventFields( eventMessage ) );
         if ( eventMessage.isPrevLocChoice() &&
                 scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
-            errors.add( "Not exists a previous location" );
+            errors.add( WrongFields.NO_PREVIOUS_LOCATION );
         try {
             if ( eventMessage.getIdTypeOfEvent() != 0 ) {
                 preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
             }
         } catch ( EntityNotFoundException e ) {
-            errors.add( "TypeOfEvent not found" );
+            errors.add( WrongFields.TYPE_OF_EVENT_NOT_FOUND );
         }
         if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
@@ -302,14 +330,14 @@ public class EventManager extends UserManager {
     private List < String > checkGenericEventFields ( AddGenericEventMessage eventMessage ) {
         List < String > genericEventErrors = new ArrayList <>();
         if ( eventMessage.getName() == null ) {
-            genericEventErrors.add( "name" );
+            genericEventErrors.add( WrongFields.NAME );
         }
         if ( !eventMessage.getStartingTime().isBefore( eventMessage.getEndingTime() ) ) {
-            genericEventErrors.add( "starting time must be less than ending time" );
+            genericEventErrors.add( WrongFields.START_TIME_GREATER_THAN_END_TIME );
         }
         genericEventErrors.addAll( checkPeriodicity( eventMessage.getPeriodicity() ) );
         if ( eventMessage.getStartingTime().isBefore( Instant.now().plus( 10, ChronoUnit.SECONDS ) ) ) {
-            genericEventErrors.add( "only future events are allowed" );
+            genericEventErrors.add( WrongFields.ONLY_FUTURE_EVENTS_ALLOWED );
         }
         return genericEventErrors;
     }
@@ -324,41 +352,20 @@ public class EventManager extends UserManager {
         List < String > periodicityErrors = new ArrayList <>();
         if ( periodMessage != null ) {
             if ( !periodMessage.getStartingDay().isBefore( periodMessage.getEndingDay() ) ) {
-                periodicityErrors.add( "in a periodic event starting day must be less than ending day" );
+                periodicityErrors.add( WrongFields.START_TIME_MUST_BE_LESS_THEN_END_TIME );
             }
             if ( periodMessage.getDeltaDays() < 0 ) {
-                periodicityErrors.add( "deltaDays must be greater than zero" );
+                periodicityErrors.add( WrongFields.DELTA_DAYS_MUST_BE_GREATER_THEN_ZERO );
             }
 
             long deltaBetweenStartAndEndingTime = periodMessage.getStartingDay()
                     .until( periodMessage.getEndingDay(), ChronoUnit.DAYS );
 
             if ( deltaBetweenStartAndEndingTime < periodMessage.getDeltaDays() ) {
-                periodicityErrors.add( "deltaDay value is less than the slack between start and end time" );
+                periodicityErrors.add( WrongFields.DELTA_DAYS_IS_LESS_THAN_THE_SLACK );
             }
         }
         return periodicityErrors;
-    }
-
-    /**
-     * Modifies an already existent event
-     *
-     * @param eventMessage event representing the changed fields
-     * @return the modified events
-     * @throws InvalidFieldException   if some fields are wrong ( which one is written inside the exception class)
-     * @throws EntityNotFoundException if the event to be modified does not exists
-     */
-    public List < Event > modifyEvent ( ModifyEventMessage eventMessage ) throws InvalidFieldException, EntityNotFoundException {
-        checkEventFields( eventMessage );
-        Event event = getEventInformation( eventMessage.getEventId() );
-        deleteEvent( event.getId() );
-        List < Event > eventsModified = addEvent( eventMessage );
-
-        if ( eventMessage.isPropagateToPeriodicEvents() ) {
-            //TODO handle periodic events
-            //feature not included in the first release due to time-related issues
-        }
-        return eventsModified;
     }
 
     /**
@@ -402,12 +409,36 @@ public class EventManager extends UserManager {
     }
 
     /**
+     * Modifies an already existent event
+     *
+     * @param eventMessage event representing the changed fields
+     * @return the modified events
+     * @throws InvalidFieldException   if some fields are wrong ( which one is written inside the exception class)
+     * @throws EntityNotFoundException if the event to be modified does not exists
+     */
+    public List < Event > modifyEvent ( ModifyEventMessage eventMessage )
+            throws InvalidFieldException, EntityNotFoundException {
+
+        checkEventFields( eventMessage );
+        Event event = getEventInformation( eventMessage.getEventId() );
+        deleteEvent( event.getId() );
+        List < Event > eventsModified = addEvent( eventMessage );
+
+        if ( eventMessage.isPropagateToPeriodicEvents() ) {
+            //TODO handle periodic events
+            //feature not included in the first release due to time-related issues
+        }
+        return eventsModified;
+    }
+
+    /**
      * Method used in a visitor pattern in order to add break events into the user's calendar
      *
      * @param breakEvent break event to be added
      */
     public void addBreakEvent ( BreakEvent breakEvent ) {
-        breakEvent.setScheduled( scheduleManager.isBreakOverlapFreeIntoSchedule( breakEvent, false ) );
+        breakEvent.setScheduled(
+                scheduleManager.isBreakOverlapFreeIntoSchedule( breakEvent, false ) );
     }
 
     /**
@@ -416,14 +447,16 @@ public class EventManager extends UserManager {
      * @param eventMessage message representing the break event
      * @throws InvalidFieldException if some fields are wrong ( which one is written inside the exception class)
      */
-    private void checkBreakEventFields ( AddBreakEventMessage eventMessage ) throws InvalidFieldException {
+    private void checkBreakEventFields ( AddBreakEventMessage eventMessage )
+            throws InvalidFieldException {
+
         List < String > errors = new ArrayList <>();
 
         errors.addAll( checkGenericEventFields( eventMessage ) );
 
         if ( eventMessage.getMinimumTime() > eventMessage.getStartingTime()
                 .until( eventMessage.getEndingTime(), ChronoUnit.SECONDS ) ) {
-            errors.add( "minimum time must be less than the slack between start and ending time" );
+            errors.add( WrongFields.MIN_TIME_MUST_BE_LESS_THAN_SLACK );
         }
         if ( errors.size() > 0 ) {
             throw new InvalidFieldException( errors );
@@ -439,31 +472,9 @@ public class EventManager extends UserManager {
     private BreakEvent createBreakEvent ( AddBreakEventMessage eventMessage ) {
         Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
         periodicity.save();
-        return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(), eventMessage.getEndingTime(),
-                false, periodicity, eventMessage.getMinimumTime() );
-    }
-
-    /**
-     * Modifies an already existent break event
-     *
-     * @param eventMessage message representing the break event to be modified
-     * @return the modified break event
-     * @throws InvalidFieldException   if some fields are wrong ( which one is written inside the exception class)
-     * @throws EntityNotFoundException if the break event does not exist
-     */
-    public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
-            throws InvalidFieldException, EntityNotFoundException {
-
-        checkBreakEventFields( eventMessage );
-        BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
-        deleteEvent( breakEvent.getId() );
-        breakEvent = createBreakEvent( eventMessage );
-        if ( eventMessage.isPropagateToPeriodicEvents() ) {
-            //TODO handle periodic events
-            //feature not included in the first release due to time-related issues
-        }
-
-        return breakEvent;
+        return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(),
+                eventMessage.getEndingTime(), false, periodicity,
+                eventMessage.getMinimumTime() );
     }
 
     /**
@@ -513,19 +524,27 @@ public class EventManager extends UserManager {
     }
 
     /**
-     * Find an event from a list of generic events, given his identifier
+     * Modifies an already existent break event
      *
-     * @param eventList list of events to be scanned
-     * @param id        identifier of the event that have to be found
-     * @return the requested event
-     * @throws EntityNotFoundException if the requested event does not exists
+     * @param eventMessage message representing the break event to be modified
+     * @return the modified break event
+     * @throws InvalidFieldException if some fields are wrong
+     *                               ( which one is written inside the exception class)
+     * @throws EntityNotFoundException if the break event does not exist
      */
-    public static GenericEvent extractEvent ( List < GenericEvent > eventList, long id ) throws EntityNotFoundException {
-        GenericEvent requestedEvent = eventList.stream()
-                .filter( event -> event.getId() == id ).findFirst().orElse( null );
-        if ( requestedEvent == null )
-            throw new EntityNotFoundException();
-        return requestedEvent;
+    public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
+            throws InvalidFieldException, EntityNotFoundException {
+
+        checkBreakEventFields( eventMessage );
+        BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
+        deleteEvent( breakEvent.getId() );
+        breakEvent = createBreakEvent( eventMessage );
+        if ( eventMessage.isPropagateToPeriodicEvents() ) {
+            //TODO handle periodic events
+            //feature not included in the first release due to time-related issues
+        }
+
+        return breakEvent;
     }
 
 }

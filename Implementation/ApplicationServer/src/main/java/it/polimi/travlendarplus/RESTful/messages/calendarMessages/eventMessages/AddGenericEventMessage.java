@@ -4,6 +4,11 @@ import it.polimi.travlendarplus.RESTful.messages.calendarMessages.CalendarMessag
 
 import java.time.Instant;
 
+/**
+ * This is the message abstract class sent in the body of an HTTP request to add a
+ * generic event into the user's profile, it is to be extended
+ * by all event message classes
+ */
 public abstract class AddGenericEventMessage extends CalendarMessage {
 
     private static final long serialVersionUID = -1177938740712276321L;

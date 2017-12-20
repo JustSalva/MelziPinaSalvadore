@@ -8,6 +8,10 @@ import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a message class sent to reply with all needed info
+ * to a request that expects a list of event and breakEvents as reply
+ */
 public class EventsListResponse extends CalendarResponse {
 
     private static final long serialVersionUID = 8768153863882742282L;
