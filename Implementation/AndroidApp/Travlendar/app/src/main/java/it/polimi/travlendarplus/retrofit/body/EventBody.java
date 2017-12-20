@@ -1,13 +1,15 @@
 package it.polimi.travlendarplus.retrofit.body;
 
+import it.polimi.travlendarplus.Position;
+
 public class EventBody {
 
     private String name;
     private String description;
     private String startingTime;
     private String endingTime;
-    private Location eventLocation;
-    private Location departure;
+    private Position eventLocation;
+    private Position departure;
     private long idTypeOfEvent;
     private boolean prevLocChoice;
     private boolean travelAtLastChoice;
@@ -17,8 +19,8 @@ public class EventBody {
             String description,
             String startingTime,
             String endingTime,
-            Location eventLocation,
-            Location departure,
+            Position eventLocation,
+            Position departure,
             long idTypeOfEvent,
             boolean prevLocChoice,
             boolean travelAtLastChoice) {

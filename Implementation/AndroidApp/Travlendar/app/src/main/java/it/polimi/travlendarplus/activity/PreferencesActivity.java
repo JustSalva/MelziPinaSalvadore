@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -239,14 +238,14 @@ public class PreferencesActivity extends MenuActivity {
         // Period constraint.
         if (periodConstraint != null) {
             if (periodConstraint.getConcerns().getTravelMean().equals(selectedTravelMean)) {
-                minTime_textView.setText(DateUtility.fromSecondsToHHmm(periodConstraint.getMinHour()));
-                maxTime_textView.setText(DateUtility.fromSecondsToHHmm(periodConstraint.getMaxHour()));
+                minTime_textView.setText(DateUtility.getHHmmFromSeconds(periodConstraint.getMinHour()));
+                maxTime_textView.setText(DateUtility.getHHmmFromSeconds(periodConstraint.getMaxHour()));
             }
         }
         if (distanceConstraint != null) {
             if (distanceConstraint.getConcerns().getTravelMean().equals(selectedTravelMean)) {
-                minDistance_editText.setText(Integer.toString(distanceConstraint.getMinLength()));
-                maxDistance_editText.setText(Integer.toString(distanceConstraint.getMaxLength()));
+                minDistance_editText.setText(Float.toString(distanceConstraint.getMinLength()));
+                maxDistance_editText.setText(Float.toString(distanceConstraint.getMaxLength()));
             }
         }
     }
@@ -282,8 +281,8 @@ public class PreferencesActivity extends MenuActivity {
             selectedPreference.getPeriodOfDayConstraints().add(new Preference.PeriodConstraint(
                     0,
                     Preference.TravelMeanEnum.getEnumFromString(selectedTravelMean),
-                    DateUtility.fromHHmmToSeconds(minTime_textView.getText().toString()),
-                    DateUtility.fromHHmmToSeconds(maxTime_textView.getText().toString())
+                    DateUtility.getSecondsFromHHmm(minTime_textView.getText().toString()),
+                    DateUtility.getSecondsFromHHmm(maxTime_textView.getText().toString())
             ));
         }
     }

@@ -16,6 +16,7 @@ import it.polimi.travlendarplus.retrofit.response.RegisterResponse;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -72,12 +73,12 @@ public interface TravlendarClient {
     );
 
     @POST("event")
-    Call<Void> addEvent(
+    Call<ResponseBody> addEvent(
             @Body EventBody eventBody
     );
 
     @POST("event/breakEvent")
-    Call<Void> addBreakEvent(
+    Call<ResponseBody> addBreakEvent(
             @Body BreakEventBody breakEventBody
     );
 }

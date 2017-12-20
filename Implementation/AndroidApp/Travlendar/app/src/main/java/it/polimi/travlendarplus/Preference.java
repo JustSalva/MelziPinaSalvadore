@@ -74,10 +74,10 @@ public class Preference {
     public static class PeriodConstraint {
         private long id;
         private TravelMeanEnum concerns;
-        private int minHour;
-        private int maxHour;
+        private long minHour;
+        private long maxHour;
 
-        public PeriodConstraint(long id, TravelMeanEnum concerns, int minHour, int maxHour) {
+        public PeriodConstraint(long id, TravelMeanEnum concerns, long minHour, long maxHour) {
             this.id = id;
             this.concerns = concerns;
             this.minHour = minHour;
@@ -92,19 +92,19 @@ public class Preference {
             return concerns;
         }
 
-        public int getMinHour() {
+        public long getMinHour() {
             return minHour;
         }
 
-        public void setMinHour(int minHour) {
+        public void setMinHour(long minHour) {
             this.minHour = minHour;
         }
 
-        public int getMaxHour() {
+        public long getMaxHour() {
             return maxHour;
         }
 
-        public void setMaxHour(int maxHour) {
+        public void setMaxHour(long maxHour) {
             this.maxHour = maxHour;
         }
     }
@@ -112,10 +112,10 @@ public class Preference {
     public static class DistanceConstraint {
         private long id;
         private TravelMeanEnum concerns;
-        private int minLength;
-        private int maxLength;
+        private float minLength;
+        private float maxLength;
 
-        public DistanceConstraint(long id, TravelMeanEnum concerns, int minLength, int maxLength) {
+        public DistanceConstraint(long id, TravelMeanEnum concerns, float minLength, float maxLength) {
             this.id = id;
             this.concerns = concerns;
             this.minLength = minLength;
@@ -130,19 +130,19 @@ public class Preference {
             return concerns;
         }
 
-        public int getMinLength() {
+        public float getMinLength() {
             return minLength;
         }
 
-        public void setMinLength(int minLength) {
+        public void setMinLength(float minLength) {
             this.minLength = minLength;
         }
 
-        public int getMaxLength() {
+        public float getMaxLength() {
             return maxLength;
         }
 
-        public void setMaxLength(int maxLength) {
+        public void setMaxLength(float maxLength) {
             this.maxLength = maxLength;
         }
     }

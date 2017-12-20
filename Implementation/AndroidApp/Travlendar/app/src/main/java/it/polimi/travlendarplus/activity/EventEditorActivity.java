@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.Map;
 
+import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.R;
@@ -25,6 +28,8 @@ import it.polimi.travlendarplus.activity.handler.AddEventHandler;
 import it.polimi.travlendarplus.activity.handler.GetEventLocationsHandler;
 import it.polimi.travlendarplus.activity.handler.GetEventPreferencesHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
+import it.polimi.travlendarplus.retrofit.body.BreakEventBody;
+import it.polimi.travlendarplus.retrofit.body.EventBody;
 import it.polimi.travlendarplus.retrofit.controller.AddEventController;
 import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
 import it.polimi.travlendarplus.retrofit.controller.GetPreferencesController;
@@ -38,8 +43,8 @@ public class EventEditorActivity extends MenuActivity {
     private TextView date_textView;
     private TextView startingTime_textView;
     private TextView endingTime_textView;
+    private TextView minimumTime_textView;
     private AutoCompleteTextView description_editText;
-    private AutoCompleteTextView minimumTime_editText;
     // Spinners.
     private Spinner typeOfEvent_spinner;
     private Spinner eventLocation_spinner;
@@ -47,8 +52,13 @@ public class EventEditorActivity extends MenuActivity {
     private Spinner previousLocation_spinner;
     // Locations.
     private Map<String, Location> locationsMap;
+    private Location selectedEventLocation;
+    private Location selectedPreviousLocation;
     // Preferences.
     private Map<String, Preference> preferencesMap;
+    private Preference selectedPreference;
+    // Booleans.
+    private boolean startTravelingAtLast;
     // Handlers for server responses.
     private Handler getEventLocationsHandler;
     private Handler getEventPreferencesHandler;
@@ -72,8 +82,8 @@ public class EventEditorActivity extends MenuActivity {
         date_textView = findViewById(R.id.date_textView);
         startingTime_textView = findViewById(R.id.startingTime_textView);
         endingTime_textView = findViewById(R.id.endingTime_textView);
+        minimumTime_textView = findViewById(R.id.minimumTime_textView);
         description_editText = findViewById(R.id.description_editText);
-        minimumTime_editText = findViewById(R.id.minimumTime_editText);
         typeOfEvent_spinner = findViewById(R.id.typeofEvent_spinner);
         eventLocation_spinner = findViewById(R.id.eventLocation_spinner);
         startTravelingAt_spinner = findViewById(R.id.startTravelingAt_spinner);
@@ -87,14 +97,63 @@ public class EventEditorActivity extends MenuActivity {
             if (! dataDownloaded) {
                 loadLocationsFromServer();
                 loadPreferencesFromServer();
+                populateStartTravelingAtSpinner();
                 dataDownloaded = true;
             }
         });
 
-        getEventLocationsHandler = new GetEventLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        // Setup type of event spinner listener.
+        typeOfEvent_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedPreference = preferencesMap.get(adapterView.getSelectedItem().toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing happens.
+            }
+        });
+        // Setup event location spinner listener.
+        eventLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedEventLocation = locationsMap.get(adapterView.getSelectedItem().toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing happens.
+            }
+        });
+        // Setup previous location spinner listener.
+        previousLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedPreviousLocation = locationsMap.get(adapterView.getSelectedItem().toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing happens.
+            }
+        });
+        // Setup start traveling at spinner listener;
+        startTravelingAt_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                startTravelingAtLast = adapterView.getSelectedItem().toString().equals("Latest");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing happens.
+            }
+        });
+        getEventLocationsHandler =
+                new GetEventLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
         getEventPreferencesHandler =
                 new GetEventPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        addEventHandler = new AddEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        addEventHandler =
+                new AddEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+
+        findViewById(R.id.confirm_button).setOnClickListener(click -> sendEventToServer());
     }
 
     private void sendEventToServer() {
@@ -102,12 +161,44 @@ public class EventEditorActivity extends MenuActivity {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
-        // Send request to server.
+        // Prepare fields with the right syntax to be sent to server.
+        String date = date_textView.getText().toString();
+        String startingTime = date
+                .concat("T")
+                .concat(DateUtility.getUTCHHmmFromLocalHHmm(startingTime_textView.getText().toString()))
+                .concat(":00.000Z");
+        String endingTime = date
+                .concat("T")
+                .concat(DateUtility.getUTCHHmmFromLocalHHmm(endingTime_textView.getText().toString()))
+                .concat(":00.000Z");
+
+        // Start procedure to send request to server.
         waitForServerResponse();
         AddEventController addEventController = new AddEventController(addEventHandler);
 
-        // TODO: understand if event or break to be sent
-        //addEventController.start(token);
+        // Check what type of event is being created.
+        if (((RadioButton) findViewById(R.id.normalEvent_radioButton)).isChecked()) {
+            EventBody eventBody = new EventBody(
+                    eventName_editText.getText().toString(),
+                    description_editText.getText().toString(),
+                    startingTime,
+                    endingTime,
+                    selectedEventLocation.getLocation(),
+                    selectedPreviousLocation.getLocation(),
+                    selectedPreference.getId(),
+                    ((Switch) findViewById(R.id.previousLocation_switch)).isChecked(),
+                    startTravelingAtLast
+            );
+            addEventController.start(token, eventBody);
+        } else {
+            BreakEventBody breakEventBody = new BreakEventBody(
+                    eventName_editText.getText().toString(),
+                    startingTime,
+                    endingTime,
+                    DateUtility.getNoUTCSecondsFromHHmm(minimumTime_textView.getText().toString())
+            );
+            addEventController.start(token, breakEventBody);
+        }
     }
 
     /**
@@ -152,13 +243,11 @@ public class EventEditorActivity extends MenuActivity {
             valid = false;
         }
         // Check which radio button is selected.
-        if (findViewById(R.id.normalEvent_radioButton).isSelected()) {
-            // Check normal event fields.
-        } else { // Check break events fields.
+        if (((RadioButton)findViewById(R.id.breakEvent_radioButton)).isChecked()) {
             // Check for a non empty minimum time.
-            if (minimumTime_editText.getText().length() == 0) {
-                minimumTime_editText.setError(getString(R.string.error_field_required));
-                focusView = minimumTime_editText;
+            if (minimumTime_textView.getText().length() == 0) {
+                minimumTime_textView.setError(getString(R.string.error_field_required));
+                focusView = minimumTime_textView;
                 valid = false;
             }
         }
@@ -208,6 +297,20 @@ public class EventEditorActivity extends MenuActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         typeOfEvent_spinner.setAdapter(adapter);
+    }
+
+    public void populateStartTravelingAtSpinner() {
+        String[] choices = new String[]{"Earliest", "Latest"};
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getApplicationContext(),
+                android.R.layout.simple_spinner_item,
+                choices
+        );
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        startTravelingAt_spinner.setAdapter(adapter);
     }
 
     /**
@@ -264,8 +367,10 @@ public class EventEditorActivity extends MenuActivity {
         TimePickerFragment newFragment = new TimePickerFragment();
         if (view == findViewById(R.id.startingTime_button)) {
             newFragment.setTextView(findViewById(R.id.startingTime_textView));
-        } else if (view== findViewById(R.id.endingTime_button)) {
+        } else if (view == findViewById(R.id.endingTime_button)) {
             newFragment.setTextView(findViewById(R.id.endingTime_textView));
+        } else if (view == findViewById(R.id.minimumTime_button)) {
+            newFragment.setTextView(findViewById(R.id.minimumTime_textView));
         }
         newFragment.show(getFragmentManager(), "timePicker");
     }

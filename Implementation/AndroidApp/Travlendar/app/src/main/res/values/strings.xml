@@ -59,8 +59,8 @@
     <string name="car_sharing">Car Sharing</string>
     <string name="preferred_path">Preferred path</string>
     <string name="constraints">Constraints</string>
-    <string name="minimum_distance">Minimum distance (m)</string>
-    <string name="maximum_distance">Maximum distance (m)</string>
+    <string name="minimum_distance">Minimum distance (km)</string>
+    <string name="maximum_distance">Maximum distance (km)</string>
     <string name="travel_mean">Travel mean</string>
     <string name="cost_euro">Cost (euro)</string>
     <string name="ticket_type">Ticket type</string>
@@ -119,6 +119,7 @@
     <string name="add_new">Add new</string>
     <string name="name_of_new_preference">Name of new preference</string>
     <string name="start_traveling_at">Start traveling at:</string>
+    <string name="minimum_time">Minimum time</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">
