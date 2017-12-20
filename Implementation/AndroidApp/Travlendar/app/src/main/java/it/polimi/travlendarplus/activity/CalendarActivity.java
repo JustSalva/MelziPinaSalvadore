@@ -22,6 +22,8 @@ import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
 import it.polimi.travlendarplus.activity.handler.GetEventsHandler;
+import it.polimi.travlendarplus.database.entity.event.BreakEvent;
+import it.polimi.travlendarplus.database.entity.event.Event;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
@@ -30,6 +32,7 @@ import it.polimi.travlendarplus.retrofit.controller.GetEventsController;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -47,6 +50,8 @@ public class CalendarActivity extends MenuActivity {
     private boolean eventsDownloaded = false;
 
     private Calendar calendar = new GregorianCalendar();
+    private List<Event> events;
+    private List<BreakEvent> breakEvents;
 
     private Handler getEventsHandler;
 
@@ -74,10 +79,12 @@ public class CalendarActivity extends MenuActivity {
                 eventsDownloaded = true;
             }
         });
+
         // Observe events available in the selected date.
         calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
-        calendarViewModel.getScheduledEvents(calendar.getTime().getTime())
-                .observe(this, scheduledEvents -> {
+        calendarViewModel.getScheduledEvents(calendar.getTime().getTime()).observe(
+                this, scheduledEvents -> {
+                    
                     fillEventsRelativeLayout(scheduledEvents);
                 });
 

@@ -21,6 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.security.PublicKey;
+
 import it.polimi.travlendarplus.R;
 
 import it.polimi.travlendarplus.database.AppDatabase;
@@ -30,10 +33,11 @@ import it.polimi.travlendarplus.retrofit.controller.RegisterController;
 /**
  * A registration screen that offers registration to the server.
  */
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements PublicKeyActivity {
 
     // Database reference and idDevice token.
     private String idDevice;
+    private PublicKey publicKey;
 
     // UI references.
     private EditText email_editText;
@@ -82,37 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // Handle server responses.
         handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String token = bundle.getString("token");
-                        Log.d("UNICODE", token);
-                        // Insert new User into the local DB.
-                        User user = new User(email, name, surname, token);
-                        Log.d("INSERT_USER", user.toString());
-                        new InsertUserTask(getApplicationContext()).execute(user);
 
-                        goToCalendarActivity();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 401:
-                        Toast.makeText(getBaseContext(), "This email is already taken!", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
         };
     }
 
@@ -231,7 +205,7 @@ public class RegistrationActivity extends AppCompatActivity {
     /**
      * Enables user input fields.
      */
-    private void resumeNormalMode() {
+    public void resumeNormalMode() {
         registration_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.GONE);
@@ -245,24 +219,21 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /**
-     * Performs an User input operation in the DB on a separated thread.
-     */
-    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
+    @Override
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
 
-        private AppDatabase database;
+    public String getEmail() {
+        return email;
+    }
 
-        InsertUserTask(Context context) {
-            this.database = AppDatabase.getInstance(context);
-        }
+    public String getName() {
+        return name;
+    }
 
-        protected Void doInBackground(User... users) {
-            for (User user : users) {
-                database.userDao().delete();
-                database.userDao().insert(user);
-            }
-            return null;
-        }
+    public String getSurname() {
+        return surname;
     }
 }
 

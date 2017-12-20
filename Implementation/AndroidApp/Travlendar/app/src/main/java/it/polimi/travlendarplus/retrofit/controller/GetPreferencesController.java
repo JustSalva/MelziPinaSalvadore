@@ -33,7 +33,7 @@ public class GetPreferencesController implements Callback<List<Preference>> {
     @Override
     public void onResponse(Call<List<Preference>> call, Response<List<Preference>> response) {
         Bundle bundle = new Bundle();
-        if(response.isSuccessful()) {
+        if (response.isSuccessful()) {
             String jsonPreferences = new Gson().toJson(response.body());
             bundle.putString("jsonPreferences", jsonPreferences);
         } else {

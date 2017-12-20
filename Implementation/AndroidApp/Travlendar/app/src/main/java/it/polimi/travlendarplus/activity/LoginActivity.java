@@ -1,16 +1,14 @@
 package it.polimi.travlendarplus.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -18,36 +16,48 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import it.polimi.travlendarplus.R;
-import it.polimi.travlendarplus.database.AppDatabase;
-import it.polimi.travlendarplus.database.entity.User;
+import it.polimi.travlendarplus.activity.handler.LoginHandler;
+import it.polimi.travlendarplus.activity.handler.RequestPublicKeyHandler;
 import it.polimi.travlendarplus.retrofit.controller.LoginController;
+import it.polimi.travlendarplus.retrofit.controller.RequestPublicKeyController;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements PublicKeyActivity {
 
     // idDevice token.
     private String idDevice;
-
+    /* PUBLIC KEY: to be removed when encryption works.
+    private PublicKey publicKey;
+    */
     // UI references.
     private EditText email_editText;
     private EditText password_editText;
     private Button login_button;
-    private ProgressBar progressBar;
-
     // Strings to be read from input fields.
     private String email;
     private String password;
-
     // Handler for server responses.
-    private Handler handler;
+    private Handler loginHandler;
+    /* PUBLIC KEY HANDLER: to be removed when encryption works.
+    private Handler requestPublicKeyHandler;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +74,10 @@ public class LoginActivity extends AppCompatActivity {
         email_editText = findViewById(R.id.email_editText);
         password_editText = findViewById(R.id.password_editText);
         login_button = findViewById(R.id.login_button);
-        progressBar = findViewById(R.id.progressBar);
+
+        // Retrieve token representing device.
+        idDevice = FirebaseInstanceId.getInstance().getToken();
+        Log.d("ID_DEVICE", idDevice);
 
         // Listener on the password field.
         password_editText.setOnEditorActionListener((textView, id, keyEvent) -> {
@@ -74,48 +87,23 @@ public class LoginActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        // Listener on the login button.
-        login_button.setOnClickListener(view -> logIn());
+        /* PUBLIC KEY HANDLER: remove comment when encryption working
+            requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        */
 
         // Handle server responses.
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case 0:
-                        Toast.makeText(getBaseContext(), "No internet connection available!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 200:
-                        // Retrieve data from bundle.
-                        Bundle bundle = msg.getData();
-                        String name = bundle.getString("name");
-                        String surname = bundle.getString("surname");
-                        String token = bundle.getString("token");
-                        // Insert new User into the local DB.
-                        User user = new User(email, name, surname, token);
-                        new InsertUserTask(getApplicationContext()).execute(user);
-                        goToCalendarActivity();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(), "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 401:
-                        Toast.makeText(getBaseContext(), "This user is not registered!", Toast.LENGTH_LONG).show();
-                        break;
-                    case 403:
-                        Toast.makeText(getBaseContext(), "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();
-                        password_editText.setError("Wrong password!");
-                        password_editText.requestFocus();
-                        break;
-                    default:
-                        Toast.makeText(getBaseContext(), "Unknown error.", Toast.LENGTH_LONG).show();
-                        Log.d("ERROR_RESPONSE", msg.toString());
-                        break;
-                }
-                resumeNormalMode();
-            }
-        };
+        loginHandler = new LoginHandler(Looper.getMainLooper(), getApplicationContext(), this);
+
+        /* PUBLIC KEY REQUEST: remove comment whe encryption working.
+        if (publicKey == null) {
+            // Send public key request to server.
+            waitForServerResponse();
+            RequestPublicKeyController requestPublicKeyController = new RequestPublicKeyController(requestPublicKeyHandler);
+            requestPublicKeyController.start(idDevice);
+        }
+        */
+        // Listener on the login button.
+        login_button.setOnClickListener(view -> logIn());
     }
 
 
@@ -125,22 +113,37 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void logIn() {
-        // Store values at the time of the login attempt.
-        email = email_editText.getText().toString();
-        password = password_editText.getText().toString();
-
         // Check if inputs are correct.
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
+        // Store values at the time of the login attempt.
+        email = email_editText.getText().toString();
+        password = password_editText.getText().toString();
 
-        // Retrieve token representing device.
-        idDevice = FirebaseInstanceId.getInstance().getToken();
+        /* PASSWORD ENCRYPTION: to be removed when encryption works.
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        String cryptoPassword = null;
+        try {
+            cryptoPassword = Base64.encodeToString(
+                    cipher.doFinal(password.getBytes()),
+                    Base64.DEFAULT
+            );
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        */
 
         // Send request to server.
         waitForServerResponse();
-        LoginController loginController = new LoginController(handler);
+        LoginController loginController = new LoginController(loginHandler);
         loginController.start(email, password, idDevice);
     }
 
@@ -197,44 +200,29 @@ public class LoginActivity extends AppCompatActivity {
         login_button.setEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
     /**
      * Enables user input fields.
      */
-    private void resumeNormalMode() {
+    public void resumeNormalMode() {
         login_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
-    /**
-     * Launches calendar activity.
-     */
-    private void goToCalendarActivity() {
-        Intent intent = new Intent(this, CalendarActivity.class);
-        startActivity(intent);
+    public EditText getPassword_editText() {
+        return password_editText;
     }
 
-    /**
-     * Performs an User input operation in the DB on a separated thread.
-     */
-    private static class InsertUserTask extends AsyncTask<User, Void, Void> {
+    public String getEmail() {
+        return email;
+    }
 
-        private AppDatabase database;
+    @Override
+    public void setPublicKey(PublicKey publicKey) {
 
-        InsertUserTask(Context context) {
-            this.database = AppDatabase.getInstance(context);
-        }
-
-        protected Void doInBackground(User... users) {
-            for (User user : users) {
-                database.userDao().delete();
-                database.userDao().insert(user);
-            }
-            return null;
-        }
     }
 }
 
