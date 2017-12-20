@@ -39,8 +39,8 @@ public class AddEventController implements Callback<ResponseBody> {
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         Bundle bundle = new Bundle();
         if (!response.isSuccessful()) {
-            Log.d("ERROR_RESPONSE", response.raw().body().toString());
-            bundle.putString("Invalid", response.raw().body().toString());
+            Log.d("ERROR_RESPONSE", response.errorBody().contentType().toString());
+            bundle.putString("Invalid", response.errorBody().contentType().toString());
         }
         Message msg = handler.obtainMessage(response.code());
         msg.setData(bundle);

@@ -287,7 +287,6 @@
 
                         <Switch
                             android:id="@+id/previousLocation_switch"
-                            android:checked="true"
                             android:onClick="onSwitchClicked"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -305,11 +304,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:text="@string/previous_location"
+                            android:text="@string/departure_location"
                             android:textStyle="bold" />
 
                         <Spinner
-                            android:id="@+id/previousLocation_spinner"
+                            android:id="@+id/departureLocation_spinner"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />

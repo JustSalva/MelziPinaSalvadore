@@ -155,23 +155,6 @@ public class CalendarActivity extends MenuActivity {
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    /**
-     * Disables user input fields.
-     */
-    public void waitForServerResponse() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Enables user input fields.
-     */
-    public void resumeNormalMode() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
-    }
-
     private final class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View viewDragged, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {

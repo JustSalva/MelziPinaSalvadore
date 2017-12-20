@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -49,11 +48,11 @@ public class EventEditorActivity extends MenuActivity {
     private Spinner typeOfEvent_spinner;
     private Spinner eventLocation_spinner;
     private Spinner startTravelingAt_spinner;
-    private Spinner previousLocation_spinner;
+    private Spinner departureLocation_spinner;
     // Locations.
     private Map<String, Location> locationsMap;
     private Location selectedEventLocation;
-    private Location selectedPreviousLocation;
+    private Location selectedDepartureLocation;
     // Preferences.
     private Map<String, Preference> preferencesMap;
     private Preference selectedPreference;
@@ -87,7 +86,7 @@ public class EventEditorActivity extends MenuActivity {
         typeOfEvent_spinner = findViewById(R.id.typeofEvent_spinner);
         eventLocation_spinner = findViewById(R.id.eventLocation_spinner);
         startTravelingAt_spinner = findViewById(R.id.startTravelingAt_spinner);
-        previousLocation_spinner = findViewById(R.id.previousLocation_spinner);
+        departureLocation_spinner = findViewById(R.id.departureLocation_spinner);
 
         // Observe token and timestamp values.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
@@ -125,10 +124,10 @@ public class EventEditorActivity extends MenuActivity {
             }
         });
         // Setup previous location spinner listener.
-        previousLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        departureLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedPreviousLocation = locationsMap.get(adapterView.getSelectedItem().toString());
+                selectedDepartureLocation = locationsMap.get(adapterView.getSelectedItem().toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -184,7 +183,7 @@ public class EventEditorActivity extends MenuActivity {
                     startingTime,
                     endingTime,
                     selectedEventLocation.getLocation(),
-                    selectedPreviousLocation.getLocation(),
+                    selectedDepartureLocation.getLocation(),
                     selectedPreference.getId(),
                     ((Switch) findViewById(R.id.previousLocation_switch)).isChecked(),
                     startTravelingAtLast
@@ -283,7 +282,7 @@ public class EventEditorActivity extends MenuActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinners.
         eventLocation_spinner.setAdapter(adapter);
-        previousLocation_spinner.setAdapter(adapter);
+        departureLocation_spinner.setAdapter(adapter);
     }
 
     public void populatePreferencesSpinner() {
@@ -342,7 +341,7 @@ public class EventEditorActivity extends MenuActivity {
      */
     public void onSwitchClicked(View view) {
         boolean checked = ((Switch) view).isChecked();
-        if (checked) {
+        if (! checked) {
             findViewById(R.id.previousLocation_linearLayout).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.previousLocation_linearLayout).setVisibility(View.GONE);

@@ -48,26 +48,31 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
             genericEvent.setEvent(event);
             // Insert the generic event in the DB.
             database.calendarDao().insert(genericEvent);
-            // Get the travel components for the event.
-            List<MiniTravel> miniTravels = eventResponse.getFeasiblePath().getMiniTravels();
-            List<TravelComponent> travelComponents = new ArrayList<>();
-            for (MiniTravel miniTravel : miniTravels) {
-                travelComponents.add(new TravelComponent(
-                        miniTravel.getId(),
-                        miniTravel.getLength(),
-                        eventResponse.getId(),
-                        miniTravel.getMeanUsed().getType(),
-                        miniTravel.getDeparture().getAddress(),
-                        miniTravel.getArrival().getAddress(),
-                        miniTravel.getStartingTime().getSeconds(),
-                        miniTravel.getEndingTime().getSeconds()
-                ));
+
+            // If scheduled, get the travel components for the event.
+            if (eventResponse.isScheduled()) {
+                List<MiniTravel> miniTravels = eventResponse.getFeasiblePath().getMiniTravels();
+                List<TravelComponent> travelComponents = new ArrayList<>();
+                for (MiniTravel miniTravel : miniTravels) {
+                    travelComponents.add(new TravelComponent(
+                            miniTravel.getId(),
+                            miniTravel.getLength(),
+                            eventResponse.getId(),
+                            miniTravel.getMeanUsed().getType(),
+                            miniTravel.getDeparture().getAddress(),
+                            miniTravel.getArrival().getAddress(),
+                            miniTravel.getStartingTime().getSeconds(),
+                            miniTravel.getEndingTime().getSeconds()
+                    ));
+                }
+                // Insert travel components in the DB.
+                if (!travelComponents.isEmpty()) {
+                    database.calendarDao().insert(travelComponents);
+                }
             }
-            // Insert travel components in the DB.
-            database.calendarDao().insert(travelComponents);
         }
         // Update timestamp in the user table of the DB.
-        database.userDao().setTimestamp(System.currentTimeMillis());
+        database.userDao().setTimestamp(System.currentTimeMillis()/1000L);
         return null;
     }
 }

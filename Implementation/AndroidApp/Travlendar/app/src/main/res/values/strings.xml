@@ -120,6 +120,7 @@
     <string name="name_of_new_preference">Name of new preference</string>
     <string name="start_traveling_at">Start traveling at:</string>
     <string name="minimum_time">Minimum time</string>
+    <string name="departure_location">Departure location</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

@@ -1,11 +1,13 @@
 package it.polimi.travlendarplus.activity.handler;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
 
 
@@ -29,6 +31,7 @@ public class AddEventHandler extends Handler {
             case 200:
                 // Notify the user that the event has been added.
                 Toast.makeText(context, "Event added!", Toast.LENGTH_LONG).show();
+                context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
             case 400:
                 // Shows the user which invalid fields have been sent to server.

@@ -37,7 +37,7 @@ public class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
             genericEvent.setBreakEvent(breakEvent);
             database.calendarDao().insert(genericEvent);
         }
-        database.userDao().setTimestamp(System.currentTimeMillis());
+        database.userDao().setTimestamp(System.currentTimeMillis()/1000L);
         return null;
     }
 }
