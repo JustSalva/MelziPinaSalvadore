@@ -470,11 +470,15 @@ public class EventManager extends UserManager {
      * @return the created break event
      */
     private BreakEvent createBreakEvent ( AddBreakEventMessage eventMessage ) {
-        Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
-        periodicity.save();
-        return new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(),
-                eventMessage.getEndingTime(), false, periodicity,
-                eventMessage.getMinimumTime() );
+
+        BreakEvent breakEvent = new BreakEvent( eventMessage.getName(), eventMessage.getStartingTime(),
+                eventMessage.getEndingTime(), false, eventMessage.getMinimumTime() );
+        if ( eventMessage.getPeriodicity() != null ) {
+            Period periodicity = createPeriodicity( eventMessage.getPeriodicity() );
+            periodicity.save();
+            breakEvent.setPeriodicity( periodicity );
+        }
+        return breakEvent;
     }
 
     /**
@@ -543,7 +547,6 @@ public class EventManager extends UserManager {
             //TODO handle periodic events
             //feature not included in the first release due to time-related issues
         }
-
         return breakEvent;
     }
 
