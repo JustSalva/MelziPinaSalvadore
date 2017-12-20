@@ -552,5 +552,4 @@ public class EventManager extends UserManager {
         }
         return breakEvent;
     }
-
 }

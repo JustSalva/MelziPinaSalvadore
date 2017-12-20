@@ -164,7 +164,7 @@ public class ScheduleManager extends UserManager {
     // The two ArrayList passed as params contain possible travels that don't overlap with prev/foll events.
     // It determines if a combination of prev and foll path is feasible according to the scheduled breaks.
     public List < PathCombination > getFeasiblePathCombinations ( Event event, List < Travel > previous,
-                                                                       List < Travel > following ) {
+                                                                  List < Travel > following ) {
         List < PathCombination > feasibleComb = new ArrayList < PathCombination >();
         if ( getPossibleFollowingEvent( event.getStartingTime() ) == null )
             return getFeasiblePathCombinationsLastEventCase( event, previous );
@@ -203,6 +203,11 @@ public class ScheduleManager extends UserManager {
         }
 
         return feasibleComb;
+    }
+
+    public void saveForSwap ( ArrayList < GenericEvent > eventsToSave ) {
+        for ( GenericEvent e : eventsToSave )
+            e.save();
     }
 
 }

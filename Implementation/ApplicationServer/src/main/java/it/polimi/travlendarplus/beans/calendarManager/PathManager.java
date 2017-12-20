@@ -269,21 +269,19 @@ public class PathManager extends UserManager {
         for ( GenericEvent genEv : swapOut ) {
             genEv.setScheduled( false );
             genEv.removeFeasiblePath();
-            genEv.save();
             response.add( genEv );
         }
         // Updating swap in event into DB adding scheduled param and path.
         forcedEvent.setScheduled( true );
         forcedEvent.setFeasiblePath( best.getPrevPath() );
-        forcedEvent.save();
         response.add( forcedEvent );
         // Updating following path into DB
         Event following = scheduleManager.getPossibleFollowingEvent( forcedEvent.getStartingTime() );
         if ( following != null ) {
             following.setFeasiblePath( best.getFollPath() );
-            following.save();
             response.add( following );
         }
+        scheduleManager.saveForSwap( response );
         return response;
     }
 

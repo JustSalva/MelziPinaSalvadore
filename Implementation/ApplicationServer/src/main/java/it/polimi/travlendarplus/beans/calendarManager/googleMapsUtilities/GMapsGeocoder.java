@@ -17,7 +17,7 @@ public class GMapsGeocoder {
     //TODO check if it is the best option
     public static String getLatLngAddress ( double lat, double lng ) throws GMapsUnavailableException {
         String call = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng +
-                "&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y";
+                "&key=AIzaSyDzSlw5a43nbpZd8AGvY0UXWIlzd1XxDaw";
         try {
             JSONObject response = HTMLCallAndResponse.performCall( call );
             return response.getJSONArray( "results" ).getJSONObject( 0 ).
