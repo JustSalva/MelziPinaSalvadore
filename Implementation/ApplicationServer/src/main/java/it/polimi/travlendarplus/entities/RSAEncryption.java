@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -67,7 +68,7 @@ public class RSAEncryption extends GenericEntity {
      * @throws EncryptionFailedException if the given encryptedPassword can't be encrypted
      */
     //
-    private static String encryptPassword ( String plainPassword, PublicKey publicKey )
+    public static String encryptPassword ( String plainPassword, PublicKey publicKey )
             throws EncryptionFailedException {
 
         try {
@@ -111,8 +112,18 @@ public class RSAEncryption extends GenericEntity {
         // Generate public and private keys using RSA
         //RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
         RSAEncryption rsaEncryption = RSAEncryption.load( "idDevice" );
-
-        String encryptedText = encryptPassword( plainText, rsaEncryption.publicKey );
+        byte[] bytes = { 48, -126, 1, 34, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 3, -126, 1, 15, 0, 48, -126, 1, 10, 2, -126, 1, 1,
+                0, -110, 37, 38, -66, -118, 117, 30, 31, -117, 2, 68, -48, 119, -54, 110, 41, -2, 89, 52, 24, 60, 95, -114, -84, 121, -117, 68,
+                101, 31, 33, -91, 19, 54, 36, -54, 28, -68, 27, 88, -13, -67, 11, -41, 39, 6, -58, -28, -110, 53, 29, -69, -127, -80, 118, 120, 20,
+                84, 42, 2, -11, -89, -60, -84, -21, -123, -71, -18, -1, 1, -37, 60, -34, -56, 21, 2, 68, -13, 11, 1, -94, -7, 76, 78, -1, 113, -118,
+                107, 47, 16, -85, -21, -43, 83, -30, 50, -12, 103, 11, -89, -46, 123, 6, -48, -51, -21, -26, 51, -123, 75, -11, 23, -85, 74, 28, -85,
+                -77, -5, -21, -84, -84, 56, -27, -42, 70, -73, -28, 13, 86, -101, -53, -64, -4, -29, -17, 12, -110, 69, -128, 123, 32, 3, 108, 55, -73,
+                85, -19, 66, 31, 118, -108, 125, 4, 19, 28, -25, -87, -34, 56, -4, 9, 125, 1, -40, 81, -77, 87, -82, 84, -11, 63, -17, -73, 45, 40, 53, -92,
+                -3, -61, 76, 85, 121, 18, 108, -122, 89, 116, 78, 68, -3, 108, 17, 126, 20, -14, 50, 53, 11, -45, 13, -73, -5, -12, 57, -75, 8, -60, -36,
+                3, 122, 123, 60, -14, -126, 81, 43, -38, 18, -14, 82, -109, -123, 56, -34, 53, -27, 73, 18, -102, -67, 106, -59, 58, -35, 92, 52, 41,
+                -20, -10, 48, 99, -15, 30, -62, -20, -81, -116, 48, -32, 104, -5, -35, -67, 78, 102, 77, -47, 2, 3, 1, 0, 1 };
+        PublicKey publicKey = KeyFactory.getInstance( "RSA" ).generatePublic( new X509EncodedKeySpec( bytes ) );
+        String encryptedText = encryptPassword( plainText, publicKey );
         String decryptedText = rsaEncryption.decryptPassword( encryptedText );
 
         System.out.println( "input:" + plainText );

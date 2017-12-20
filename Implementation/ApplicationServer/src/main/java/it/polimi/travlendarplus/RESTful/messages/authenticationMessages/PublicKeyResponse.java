@@ -10,20 +10,20 @@ public class PublicKeyResponse extends AuthenticationResponse {
 
     private static final long serialVersionUID = -8187045248923272954L;
 
-    private PublicKey publicKey;
+    private byte[] publicKey;
 
     public PublicKeyResponse () {
     }
 
     public PublicKeyResponse ( PublicKey publicKey ) {
-        this.publicKey = publicKey;
+        this.publicKey = publicKey.getEncoded();
     }
 
-    public PublicKey getPublicKey () {
+    public byte[] getPublicKey () {
         return publicKey;
     }
 
-    public void setPublicKey ( PublicKey publicKey ) {
+    public void setPublicKey ( byte[] publicKey ) {
         this.publicKey = publicKey;
     }
 }

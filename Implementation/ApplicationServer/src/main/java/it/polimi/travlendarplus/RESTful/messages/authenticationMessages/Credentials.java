@@ -41,9 +41,9 @@ public class Credentials extends AuthenticationMessage {
      * @throws DecryptionFailedException if the password format is inconsistent
      */
     public String getPassword () throws EntityNotFoundException, DecryptionFailedException {
-        //TODO uncomment when Pina will handle the RSA algorithm
         RSAEncryption encryption = RSAEncryption.load( idDevice );
         return encryption.decryptPassword( password );
+
     }
 
     public void setPassword ( String password ) {
