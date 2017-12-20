@@ -32,7 +32,7 @@ public class GMapsGeocoder {
         address = address.replace( " ", "+" );
         Location retLoc = new Location();
         String call = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +
-                "&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y";
+                "&AIzaSyBc9aH-yiGT09jmvPljH4Kh90_UpzwYs9I";
         try {
             JSONObject response = HTMLCallAndResponse.performCall( call );
             JSONObject obj = response.getJSONArray( "results" ).getJSONObject( 0 );

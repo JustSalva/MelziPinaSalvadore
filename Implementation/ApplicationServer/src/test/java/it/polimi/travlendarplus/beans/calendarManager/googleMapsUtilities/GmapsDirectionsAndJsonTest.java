@@ -156,6 +156,6 @@ public class GmapsDirectionsAndJsonTest {
     }
 
     private boolean sameLocation ( Location l1, Location l2 ) {
-        return l1.getLatitude() - l2.getLatitude() < 0.01 && l1.getLongitude() - l2.getLongitude() < 0.01;
+        return Math.abs( l1.getLatitude() - l2.getLatitude() )< 0.01 && Math.abs(l1.getLongitude() - l2.getLongitude()) < 0.01;
     }
 }
