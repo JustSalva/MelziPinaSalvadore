@@ -113,14 +113,14 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
      * errors are presented and no actual login attempt is made.
      */
     private void logIn() {
+        // Store values at the time of the login attempt.
+        email = email_editText.getText().toString();
+        password = password_editText.getText().toString();
         // Check if inputs are correct.
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
-        // Store values at the time of the login attempt.
-        email = email_editText.getText().toString();
-        password = password_editText.getText().toString();
 
         /* PASSWORD ENCRYPTION: to be removed when encryption works.
         Cipher cipher = null;
