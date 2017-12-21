@@ -128,7 +128,7 @@ public class PathManagerSettingsTest {
         }
 
         //2018/01/20 h:19:30 - 21:30 minimum: 60 min
-        br2sw = setBreakEvent( 10, 1516476600, 1516483800, 1800 );
+        br2sw = setBreakEvent( 11, 1516476600, 1516483800, 3600 );
         if ( brTwo ) {
             br1sw.setScheduled( true );
             breaks.add( br2sw );

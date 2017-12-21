@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.*;
 
 @RunWith( MockitoJUnitRunner.class )
-public class SwapFunctionTest {
+public class SwapFunctionWithBreak {
     PathManager pathManager;
     ScheduleManager scheduleManager;
     PreferenceManager preferenceManager;
@@ -88,6 +87,15 @@ public class SwapFunctionTest {
                 return ( combs != null ) ? combs.get( 0 ) : null;
             }
         } );
+        doNothing().when( scheduleManager ).saveForSwap( any( ArrayList.class ) );
+        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
+    }
+
+    @Test
+    public void swapEventWithFeasibleBreak () throws GMapsGeneralException {
+        //2018/01/20 h:16:30 - 17:00
+        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516465800, 1516467600, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1 );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
                 any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override
@@ -101,226 +109,117 @@ public class SwapFunctionTest {
                 return combs;
             }
         } );
-        doNothing().when( scheduleManager ).saveForSwap( any( ArrayList.class ) );
-
-    }
-
-    @Test
-    public void swapEventsTestBaseCase () throws GMapsGeneralException {
-        //2018/01/20 h:14:30 - 15:30
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516458600, 1516462200, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
                 return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        false, true, true, true, true );
-            }
-        } );
-        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenAnswer( new Answer < Object >() {
-            @Override
-            public Object answer ( InvocationOnMock invocation ) throws Throwable {
-                Event event1 = ( Event ) invocation.getArguments()[ 0 ];
-                Event event2 = ( Event ) invocation.getArguments()[ 1 ];
-                return ( !( event1.getId() == eventToAdd.getId() && event2.getId() == 3 ) );
-            }
         } );
 
         /* I expect:
-            - 3rd event in the schedule swapped out due to overlapping
             - event to add inserted
-            - 4th event in the schedule with different path
-        */
-        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
-        assertEquals( 3, res.size() );
-        assertEquals( false, res.get( 0 ).isScheduled() );
-        assertEquals( true, res.get( 1 ).isScheduled() );
-        assertEquals( true, res.get( 2 ).isScheduled() );
-        assertEquals( 3, res.get( 0 ).getId() );
-        assertEquals( 6, res.get( 1 ).getId() );
-        assertEquals( 4, res.get( 2 ).getId() );
-    }
-
-    @Test
-    public void swapEventsTestRemovePrev () throws GMapsGeneralException {
-        //2018/01/20 h:13:00 - 14:00
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516453200, 1516456800, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
-        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, false,
-                        true, true, true, true, true );
-            }
-        } );
-        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
-
-        /* I expect:
-            - 2nd event in the schedule swapped out due to infeasibility of previous travel calculated
-            - event to add inserted
-            - 3rd event in the schedule with different path
-        */
-        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
-        assertEquals( 3, res.size() );
-        assertEquals( false, res.get( 0 ).isScheduled() );
-        assertEquals( true, res.get( 1 ).isScheduled() );
-        assertEquals( true, res.get( 2 ).isScheduled() );
-        assertEquals( 2, res.get( 0 ).getId() );
-        assertEquals( 6, res.get( 1 ).getId() );
-        assertEquals( 3, res.get( 2 ).getId() );
-    }
-
-    @Test
-    public void swapEventsTestRemoveFoll () throws GMapsGeneralException {
-        //2018/01/20 h:17:00 - 17:59
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516467600, 1516471140, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
-        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, false, true, true, true );
-            }
-        } );
-        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
-
-        /* I expect:
-            - 4th event in the schedule swapped out due to infeasibility of following travel calculated
-            - event to add inserted
-            - 5th event in the schedule with different path
-        */
-        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
-        assertEquals( 3, res.size() );
-        assertEquals( false, res.get( 0 ).isScheduled() );
-        assertEquals( true, res.get( 1 ).isScheduled() );
-        assertEquals( true, res.get( 2 ).isScheduled() );
-        assertEquals( 4, res.get( 0 ).getId() );
-        assertEquals( 6, res.get( 1 ).getId() );
-        assertEquals( 5, res.get( 2 ).getId() );
-    }
-
-    @Test
-    public void swapEventsTestInsertFirstEvent () throws GMapsGeneralException {
-        //2018/01/20 h:9:00 - 10:00
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516438800, 1516442400, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
-        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( false, true,
-                        true, true, true, true, true );
-            }
-        } );
-        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenAnswer( new Answer < Object >() {
-            @Override
-            public Object answer ( InvocationOnMock invocation ) throws Throwable {
-                Event event1 = ( Event ) invocation.getArguments()[ 0 ];
-                Event event2 = ( Event ) invocation.getArguments()[ 1 ];
-                return ( !( event1.getId() == eventToAdd.getId() && event2.getId() == 1 ) );
-            }
-        } );
-
-        /* I expect:
-            - 1st event in the schedule swapped out due to overapping
-            - event to add inserted
-            - 2nd event in the schedule with different path
-        */
-        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
-        assertEquals( 3, res.size() );
-        assertEquals( false, res.get( 0 ).isScheduled() );
-        assertEquals( true, res.get( 1 ).isScheduled() );
-        assertEquals( true, res.get( 2 ).isScheduled() );
-        assertEquals( 1, res.get( 0 ).getId() );
-        assertEquals( 6, res.get( 1 ).getId() );
-        assertEquals( 2, res.get( 2 ).getId() );
-        // Checking that first travel is between the same location.
-        assertTrue( ( ( Event ) res.get( 1 ) ).getFeasiblePath().getTotalLength() < 1 );
-    }
-
-    @Test
-    public void swapEventsTestInsertLastEvent () throws GMapsGeneralException {
-        //2018/01/20 h:21:00 - 21:30
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516482000, 1516483800, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
-        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, true, true, true );
-            }
-        } ).thenAnswer( new Answer < ScheduleHolder >() {
-            @Override
-            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
-                        true, true, false, true, true );
-            }
-        } );
-        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenAnswer( new Answer < Object >() {
-            @Override
-            public Object answer ( InvocationOnMock invocation ) throws Throwable {
-                Event event1 = ( Event ) invocation.getArguments()[ 0 ];
-                Event event2 = ( Event ) invocation.getArguments()[ 1 ];
-                return ( !( event1.getId() == eventToAdd.getId() && event2.getId() == 5 ) );
-            }
-        } );
-
-        /* I expect:
-            - 5th event in the schedule swapped out due to overapping
-            - event to add inserted
+            - event with ID = 4 with different path
         */
         List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
         assertEquals( 2, res.size() );
+        assertEquals( true, res.get( 0 ).isScheduled() );
+        assertEquals( true, res.get( 1 ).isScheduled() );
+        assertEquals( 6, res.get( 0 ).getId() );
+        assertEquals( 4, res.get( 1 ).getId() );
+    }
+
+    @Test
+    public void swapEventNoFeasibleBreak () throws GMapsGeneralException {
+        //2018/01/20 h:16:30 - 17:30
+        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516465800, 1516469400, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1 );
+        when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
+                any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
+            @Override
+            public ArrayList < PathCombination > answer ( InvocationOnMock invocation ) throws Throwable {
+                return new ArrayList < PathCombination >();
+            }
+        } ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
+            @Override
+            public ArrayList < PathCombination > answer ( InvocationOnMock invocation ) throws Throwable {
+                ArrayList < Travel > prev = ( ArrayList < Travel > ) invocation.getArguments()[ 1 ];
+                ArrayList < Travel > foll = ( ArrayList < Travel > ) invocation.getArguments()[ 2 ];
+                ArrayList < PathCombination > combs = new ArrayList < PathCombination >();
+
+                combs.add( new PathCombination( ( prev.size() > 0 ) ? prev.get( rdm.nextInt( prev.size() ) ) : null,
+                        ( foll.size() > 0 ) ? foll.get( rdm.nextInt( foll.size() ) ) : null ) );
+                return combs;
+            }
+        } );
+        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                        true, true, true, false, true );
+            }
+        } );
+
+        /* I expect:
+            - break event with ID = 10 swapped out
+            - event to add inserted
+            - event with ID = 4 with different path
+        */
+        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
+        assertEquals( 3, res.size() );
         assertEquals( false, res.get( 0 ).isScheduled() );
         assertEquals( true, res.get( 1 ).isScheduled() );
-        assertEquals( 5, res.get( 0 ).getId() );
+        assertEquals( true, res.get( 2 ).isScheduled() );
+        assertEquals( 10, res.get( 0 ).getId() );
         assertEquals( 6, res.get( 1 ).getId() );
+        assertEquals( 4, res.get( 2 ).getId() );
     }
 }
