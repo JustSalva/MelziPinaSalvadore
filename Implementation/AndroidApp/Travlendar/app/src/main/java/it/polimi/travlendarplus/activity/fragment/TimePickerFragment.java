@@ -11,9 +11,12 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Time Picker Fragment that allows the user to pick a time.
+ */
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
-
+    // TextView to be modified.
     private TextView textView;
 
     @Override
@@ -22,17 +25,21 @@ public class TimePickerFragment extends DialogFragment
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), this, hour, minute,true);
     }
 
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // Do something with the time chosen by the user
+        // Set the time in the textView.
         String chosenTime = String.format(Locale.ENGLISH, "%02d:%02d", hourOfDay, minute);
         textView.setText(chosenTime);
     }
 
+    /**
+     * Sets the textView text.
+     * @param textView TextView to be modified.
+     */
     public void setTextView(TextView textView) {
         this.textView = textView;
     }

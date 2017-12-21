@@ -1,7 +1,6 @@
 package it.polimi.travlendarplus.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,22 +9,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
+import it.polimi.travlendarplus.activity.handler.DeleteEventHandler;
 import it.polimi.travlendarplus.activity.handler.GetEventsHandler;
-import it.polimi.travlendarplus.activity.listener.MyDragListener;
-import it.polimi.travlendarplus.database.entity.event.BreakEvent;
-import it.polimi.travlendarplus.database.entity.event.Event;
+import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
+import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
+import it.polimi.travlendarplus.activity.listener.MyTouchListener;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
@@ -35,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -61,6 +55,7 @@ public class CalendarActivity extends MenuActivity {
     private List<GenericEvent> eventsList = new ArrayList<>();
 
     private Handler getEventsHandler;
+    private Handler deleteEventHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +93,6 @@ public class CalendarActivity extends MenuActivity {
                     fillEventsRelativeLayout();
                 });
 
-        //overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
-
         date_textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -125,9 +118,13 @@ public class CalendarActivity extends MenuActivity {
             date_textView.setText(dateString);
         }
 
-        // Set as drop recipient for drag action.
-        events_relativeLayout.setOnDragListener(new MyDragListener());
+        // Set events relativeLayout as drop recipient for drag action to schedule.
+        events_relativeLayout.setOnDragListener(new DragToScheduleListener());
+        // Set date textView as drop recipient for drag action to delete.
+        date_textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
+        // Set handlers.
         getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     /**
@@ -202,16 +199,13 @@ public class CalendarActivity extends MenuActivity {
     private TextView createEventTextView(GenericEvent event) {
         TextView textView = new TextView(getApplicationContext());
         textView.setText(event.getName());
+        textView.setId((int) event.getId());
         textView = setColorTextView(textView, event);
-        // Set the height depending on the event duration.
-        int minDuration = (int) (event.getEndTime()-event.getStartTime()) / 60;
-        int height = minDuration * 2;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, height);
-        // Sets the top margin depending on the starting time of the event.
-        int minutesOfDay = (((int) event.getStartTime()) % 86400) / 60;
-        int marginTop = minutesOfDay * 2;
-        params.setMargins(10, marginTop, 10, 10);
-        textView.setLayoutParams(params);
+        textView = setDimensionTextView(textView, event);
+        // Add on touch listener to overlapping events.
+        if (! event.isScheduled()) {
+            textView.setOnTouchListener(new MyTouchListener());
+        }
         return textView;
     }
 
@@ -219,7 +213,7 @@ public class CalendarActivity extends MenuActivity {
     /**
      * Sets the right colors for the event textView, depending on scheduling and type of event.
      * @param textView TextView to be modified.
-     * @param event Event linked to the textView.
+     * @param event Event linked to the TextView.
      * @return Modified textView.
      */
     private TextView setColorTextView(TextView textView, GenericEvent event) {
@@ -247,9 +241,41 @@ public class CalendarActivity extends MenuActivity {
         return textView;
     }
 
+    /**
+     * Sets the right dimension for the event textView, depending on duration and type of event.
+     * @param textView TextView to be modified.
+     * @param event Event linked to the TextView.
+     * @return Modified textView.
+     */
+    private TextView setDimensionTextView(TextView textView, GenericEvent event) {
+        // Set the height depending on the event duration.
+        int minDuration = (int) (event.getEndTime() - event.getStartTime()) / 60;
+        int height = minDuration * 2;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, height);
+        // Sets the top margin depending on the starting time of the event.
+        int minutesOfDay = (((int) event.getStartTime()) % 86400) / 60;
+        int marginTop = minutesOfDay * 2;
+        // Set margins depending on the type of event.
+        int marginSide = event.getType() == GenericEvent.EventType.EVENT ? 30 : 10;
+        params.setMargins(marginSide, marginTop, marginSide, 10);
+        textView.setLayoutParams(params);
+        return textView;
+    }
+
+    /**
+     * Shows a datePicker fragment to select a date.
+     */
     public void showDatePickerDialog(View view) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setTextView(findViewById(R.id.date_textView));
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public Handler getDeleteEventHandler() {
+        return deleteEventHandler;
     }
 }

@@ -27,6 +27,9 @@ public interface CalendarDao {
     @Delete
     void delete(GenericEvent genericEvent);
 
+    @Query("DELETE FROM generic_event WHERE id LIKE :id")
+    void deleteFromId(int id);
+
     @Query("DELETE FROM generic_event")
     void deleteAll();
 

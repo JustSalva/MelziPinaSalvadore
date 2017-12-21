@@ -88,4 +88,9 @@ public interface TravlendarClient {
     Call<ResponseBody> addBreakEvent(
             @Body BreakEventBody breakEventBody
     );
+
+    @DELETE("event/{id}")
+    Call<Void> deleteEvent(
+            @Path("id") int id
+    );
 }
