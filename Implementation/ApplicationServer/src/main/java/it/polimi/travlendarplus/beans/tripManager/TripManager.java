@@ -13,6 +13,7 @@ import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFiel
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.WrongFields;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.ejb.Stateless;
 import java.util.ArrayList;
@@ -220,12 +221,15 @@ public class TripManager extends UserManager {
      * @param travelComponentId identifier of the travel the ticket is to be connected with
      * @throws EntityNotFoundException if either the ticket or the travel specified does not exist
      * @throws IncompatibleTravelMeansException if the ticket is incompatible with the specified travel
+     * @throws TicketNotValidException if the ticket can't be linked to the given travel component
+     *                                 ( why is explained inside the exception instance )
      */
     public void selectTicket ( long ticketId, long travelComponentId )
-            throws EntityNotFoundException, IncompatibleTravelMeansException {
+            throws EntityNotFoundException, IncompatibleTravelMeansException, TicketNotValidException {
 
         TravelComponent travelComponent = retrieveUsersTravelComponent( travelComponentId );
         Ticket selectedTicket = getTicket( ticketId );
+        selectedTicket.checkTicketValidityAfterTravelAssociation( travelComponent );
         selectedTicket.addLinkedTravel( travelComponent );
         selectedTicket.save();
     }
@@ -309,7 +313,6 @@ public class TripManager extends UserManager {
             throws InvalidFieldException {
 
         List < String > errors = new ArrayList <>();
-        //TODO check locations?
         try {
             checkGenericTicketConsistency( pathTicketMessage );
         } catch ( InvalidFieldException e ) {

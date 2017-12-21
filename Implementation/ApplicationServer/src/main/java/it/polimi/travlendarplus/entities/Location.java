@@ -103,5 +103,17 @@ public class Location extends GenericEntity {
         }
         return true;
     }
+
+    @Override
+    public boolean equals ( Object object ) {
+        if ( object == null ) {
+            return false;
+        }
+        if ( getClass() != object.getClass() ) {
+            return false;
+        }
+        return ( this.latitude == ( ( ( Location ) object ).latitude ) &&
+                this.longitude == ( ( ( Location ) object ).longitude ) );
+    }
 }
 

@@ -70,7 +70,7 @@ public class GMapsJSONReader {
      * @param singleStep the travel to be analyzed
      * @return a Json object containing the requested details
      * @throws JSONException when no "transit_details" are given
-     *                      ( this happen when there is a WALKING step )
+     *                       ( this happen when there is a WALKING step )
      */
     private static JSONObject getTransitDetails ( JSONObject singleStep ) throws JSONException {
         return singleStep.getJSONObject( "transit_details" );
@@ -83,7 +83,7 @@ public class GMapsJSONReader {
      * @return a Json object containing the requested details
      * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
      * @throws GMapsUnavailableException if google APIs services are not available
-     * @throws BadRequestException if the request sent contains syntactical errors
+     * @throws BadRequestException       if the request sent contains syntactical errors
      */
     private static Location getSingleArrivalStop ( JSONObject singleStep )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
@@ -108,7 +108,7 @@ public class GMapsJSONReader {
      * @return a Json object containing the requested details
      * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
      * @throws GMapsUnavailableException if google APIs services are not available
-     * @throws BadRequestException if the request sent contains syntactical errors
+     * @throws BadRequestException       if the request sent contains syntactical errors
      */
     private static Location getSingleDepartureStop ( JSONObject singleStep )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
@@ -234,20 +234,49 @@ public class GMapsJSONReader {
     }
 
     /**
+     * Checks a google response message; this method is to be invoked when
+     * the response status code, returned by google APIs, have to be checked,
+     * an relative exception is thrown if in the status code is signaled
+     * that something goes wrong during the HTTP call
+     *
+     * @param response JSONObject containing the response returned by google APIs
+     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
+     * @throws GMapsUnavailableException if google APIs services are not available
+     * @throws BadRequestException       if the request sent contains syntactical errors
+     */
+    protected static void checkErrorInStatusCode ( JSONObject response )
+            throws LocationNotFoundException, GMapsUnavailableException, BadRequestException {
+        switch ( getStatus( response ) ) {
+            case "OK":
+            case "ZERO_RESULTS":
+                break;
+            case "NOT_FOUND":
+                throw new LocationNotFoundException( getStatus( response ) );
+            case "REQUEST_DENIED":
+            case "UNKNOWN_ERROR":
+            case "OVER_QUERY_LIMIT":
+                throw new GMapsUnavailableException( getStatus( response ) );
+            case "INVALID_REQUEST":
+            default:
+                throw new BadRequestException();
+        }
+    }
+
+    /**
      * It creates a Travel with only one TravelComponent, related to NO_TRANSIT
      * and NO_SHARING TravelMean of the specified type.
      *
-     * @param response Json returned by Google Maps APIs as response
-     * @param type category of the travel mean that is connected to a travel
+     * @param response   Json returned by Google Maps APIs as response
+     * @param type       category of the travel mean that is connected to a travel
      * @param travelTime travel duration
-     * @param departure is used to specify if travelTime refers to departure:
-     *                  if FALSE it refers to arrival.
-     * @param depLoc location at which the travel starts
-     * @param arrLoc location at which the travel ends
+     * @param departure  is used to specify if travelTime refers to departure:
+     *                   if FALSE it refers to arrival.
+     * @param depLoc     location at which the travel starts
+     * @param arrLoc     location at which the travel ends
      * @return a list of feasible travels
      * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
      * @throws GMapsUnavailableException if google APIs services are not available
-     * @throws BadRequestException if the request sent contains syntactical errors
+     * @throws BadRequestException       if the request sent contains syntactical errors
      */
     public ArrayList < Travel > getTravelNoTransitMeans ( JSONObject response, TravelMeanEnum type,
                                                           long travelTime, boolean departure,
@@ -294,10 +323,10 @@ public class GMapsJSONReader {
      * @return a list of feasible travels
      * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
      * @throws GMapsUnavailableException if google APIs services are not available
-     * @throws BadRequestException if the request sent contains syntactical errors
+     * @throws BadRequestException       if the request sent contains syntactical errors
      */
     public ArrayList < Travel > getTravelWithTransitMeans ( JSONObject response )
-            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException  {
+            throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
 
         checkErrorInStatusCode( response ); //throws an exception if the response is different from OK
@@ -329,35 +358,6 @@ public class GMapsJSONReader {
             possiblePaths.add( travelOption );
         }
         return possiblePaths;
-    }
-
-    /**
-     * Checks a google response message; this method is to be invoked when
-     * the response status code, returned by google APIs, have to be checked,
-     * an relative exception is thrown if in the status code is signaled
-     * that something goes wrong during the HTTP call
-     *
-     * @param response JSONObject containing the response returned by google APIs
-     * @throws LocationNotFoundException if google APIs signals that an inserted location is invalid
-     * @throws GMapsUnavailableException if google APIs services are not available
-     * @throws BadRequestException if the request sent contains syntactical errors
-     */
-    protected static void checkErrorInStatusCode ( JSONObject response )
-            throws LocationNotFoundException, GMapsUnavailableException, BadRequestException {
-        switch ( getStatus( response ) ) {
-            case "OK":
-            case "ZERO_RESULTS":
-                break;
-            case "NOT_FOUND":
-                throw new LocationNotFoundException();
-            case "REQUEST_DENIED":
-            case "UNKNOWN_ERROR":
-            case "OVER_QUERY_LIMIT":
-                throw new GMapsUnavailableException();
-            case "INVALID_REQUEST":
-            default:
-                throw new BadRequestException();
-        }
     }
 
 }
