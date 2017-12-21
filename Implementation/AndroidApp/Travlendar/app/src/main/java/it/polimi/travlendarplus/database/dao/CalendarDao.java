@@ -30,6 +30,14 @@ public interface CalendarDao {
     @Query("DELETE FROM generic_event")
     void deleteAll();
 
+    @Query("SELECT * FROM generic_event " +
+            "ORDER BY start_time")
+    LiveData<List<GenericEvent>> getAllEvents();
+
+    @Query("SELECT * FROM generic_event WHERE date LIKE :date " +
+            "ORDER BY start_time")
+    LiveData<List<GenericEvent>> getEvents(long date);
+
     @Query("SELECT * FROM generic_event WHERE type LIKE 'event' " +
             "AND date LIKE :date " +
             "AND scheduled LIKE 'true' " +

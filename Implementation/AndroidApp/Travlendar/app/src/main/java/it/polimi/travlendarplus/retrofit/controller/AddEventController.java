@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.IOException;
+
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
 import it.polimi.travlendarplus.retrofit.body.BreakEventBody;
@@ -39,8 +41,12 @@ public class AddEventController implements Callback<ResponseBody> {
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         Bundle bundle = new Bundle();
         if (!response.isSuccessful()) {
-            Log.d("ERROR_RESPONSE", response.errorBody().contentType().toString());
-            bundle.putString("Invalid", response.errorBody().contentType().toString());
+            try {
+                Log.d("ERROR_RESPONSE", response.errorBody().string());
+                bundle.putString("Invalid", response.errorBody().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         Message msg = handler.obtainMessage(response.code());
         msg.setData(bundle);

@@ -15,6 +15,7 @@ public class CalendarViewModel extends AndroidViewModel {
 
     private AppDatabase database;
 
+    private LiveData<List<GenericEvent>> events;
     private LiveData<List<GenericEvent>> scheduledEvents;
     private LiveData<List<GenericEvent>> overlappingEvents;
     private LiveData<List<GenericEvent>> breakEvents;
@@ -22,6 +23,22 @@ public class CalendarViewModel extends AndroidViewModel {
     public CalendarViewModel(@NonNull Application application) {
         super(application);
         database = AppDatabase.getInstance(application.getApplicationContext());
+    }
+
+    public LiveData<List<GenericEvent>> getAllEvents() {
+        if (events == null) {
+            events = new MutableLiveData<>();
+            events = database.calendarDao().getAllEvents();
+        }
+        return events;
+    }
+
+    public LiveData<List<GenericEvent>> getEvents(long date) {
+        if (events == null) {
+            events = new MutableLiveData<>();
+            events = database.calendarDao().getEvents(date);
+        }
+        return events;
     }
 
     public LiveData<List<GenericEvent>> getScheduledEvents(long date) {
