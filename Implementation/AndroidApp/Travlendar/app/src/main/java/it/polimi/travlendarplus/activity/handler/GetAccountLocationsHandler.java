@@ -47,6 +47,7 @@ public class GetAccountLocationsHandler extends Handler {
                 List<Location> locations = new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
                 accountActivity.setLocationsMap(new HashMap<>());
                 for (Location location : locations) {
+                    // Remove %20 added when location name sent.
                     accountActivity.getLocationsMap().put(location.getName(), location);
                 }
                 accountActivity.populateLocationsSpinner();

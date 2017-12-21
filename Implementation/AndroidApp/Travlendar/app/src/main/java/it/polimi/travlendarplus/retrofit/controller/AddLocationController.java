@@ -35,7 +35,9 @@ public class AddLocationController implements Callback<Void> {
      */
     public void start(String authToken, String name, String address, String latitude, String longitude) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Void> call = client.addLocation(new LocationBody(name, address, latitude, longitude));
+        // Remove spaces to avoid errors when passing the parameter in the URL.
+        String spacelessName = name.replace(" ", "_");
+        Call<Void> call = client.addLocation(new LocationBody(spacelessName, address, latitude, longitude));
         call.enqueue(this);
     }
 
