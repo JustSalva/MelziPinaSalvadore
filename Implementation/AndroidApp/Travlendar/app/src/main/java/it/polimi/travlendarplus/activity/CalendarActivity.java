@@ -40,6 +40,9 @@ import java.util.TimeZone;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
+/**
+ * Activity that displays the events in the database.
+ */
 public class CalendarActivity extends MenuActivity {
     // UI references,
     private TextView date_textView;
@@ -54,7 +57,7 @@ public class CalendarActivity extends MenuActivity {
     // Variable to check if the events have already been downloaded.
     private boolean eventsDownloaded = false;
 
-    private Calendar calendar = new GregorianCalendar();
+    private Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
     private List<GenericEvent> eventsList = new ArrayList<>();
 
     private Handler getEventsHandler;
@@ -97,14 +100,6 @@ public class CalendarActivity extends MenuActivity {
 
         //overlapping_gridLayout.setOnTouchListener(new MyTouchListener());
 
-        // Check if the date is already set.
-        if (date_textView.getText().length() == 0) {
-            // Set today's date as date.
-            calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-            String dateString = DateUtility.getStringFromCalendar(calendar);
-            date_textView.setText(dateString);
-        }
-
         date_textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -121,6 +116,14 @@ public class CalendarActivity extends MenuActivity {
                 fillEventsRelativeLayout();
             }
         });
+
+        // Check if the date is already set.
+        if (date_textView.getText().length() == 0) {
+            // Set today's date as date.
+            calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+            String dateString = DateUtility.getStringFromCalendar(calendar);
+            date_textView.setText(dateString);
+        }
 
         // Set as drop recipient for drag action.
         events_relativeLayout.setOnDragListener(new MyDragListener());
@@ -163,10 +166,10 @@ public class CalendarActivity extends MenuActivity {
         events_relativeLayout.removeAllViews();
         overlappingEvents_relativeLayout.removeAllViews();
         // Get long representing selected date.
-        String selectedDate = date_textView.getText().toString();
+        long selectedDate = (calendar.getTimeInMillis() / 1000) + 3600;
         // Inserts break events.
         for (GenericEvent event : eventsList) {
-            if (event.getType().equals(GenericEvent.EventType.BREAK) && selectedDate.equals(event.getDate())) {
+            if (event.getType().equals(GenericEvent.EventType.BREAK) && (selectedDate == event.getDate())) {
                 if (event.isScheduled()) {
                     // Insert scheduled breaks.
                     events_relativeLayout.addView(createEventTextView(event));
@@ -178,7 +181,7 @@ public class CalendarActivity extends MenuActivity {
         }
         // Inserts regular events.
         for (GenericEvent event : eventsList) {
-            if (event.getType().equals(GenericEvent.EventType.EVENT) && selectedDate.equals(event.getDate())) {
+            if (event.getType().equals(GenericEvent.EventType.EVENT) && (selectedDate == event.getDate())) {
                 if (event.isScheduled()) {
                     // Insert scheduled events.
                     events_relativeLayout.addView(createEventTextView(event));
