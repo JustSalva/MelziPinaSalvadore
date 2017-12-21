@@ -75,7 +75,7 @@ public class EventRESTful {
     /**
      * It provide all the user events to be updated into the local database.
      *
-     * @return a list of all the user's GenericEvents
+     * @return an HTTP 200 OK response with a list of all the user's GenericEvents in the body
      */
     @GET
     @Produces( MediaType.APPLICATION_JSON )
@@ -89,7 +89,7 @@ public class EventRESTful {
      * It provide the user events to be updated into the local database.
      *
      * @param timestamp last update of the local database
-     * @return a list of updated GenericEvents
+     * @return an HTTP 200 OK response a list of updated GenericEvents
      */
     @Path( "/updateLocalDb/{timestampLocal}" )
     @GET
@@ -105,8 +105,9 @@ public class EventRESTful {
      * It adds an event into the user profile
      *
      * @param eventMessage eventMessage that describe the event to be added
-     * @return the event info, visualized by the client or or HTTP 400 Bad Request response status code otherwise
-     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     * @return an HTTP 200 OK response, the event info, visualized by the client or an HTTP 400 Bad Request response
+     * status code otherwise ( that means there are invalid fields, the wrong ones are specified in the message body )
+     * or an HTTP 503 Service Unavailable response status code if the path computation services are not available
      */
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
@@ -126,7 +127,9 @@ public class EventRESTful {
      *
      * @param eventMessage eventMessage that describe the event fields to be modified
      * @return a 400 bad request HTTP response if the id specified does not exist or if some fields are not consistent
-     * (in this case in the message body is specified which fields are wrong), an ok HTTP response otherwise
+     * (in this case in the message body is specified which fields are wrong),
+     * or an HTTP 503 Service Unavailable response status code if the path computation services are not available,
+     * an OK HTTP response otherwise
      */
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
@@ -148,17 +151,20 @@ public class EventRESTful {
      * It allows the user to delete a previously inserted event
      *
      * @param id identifier of the event to be deleted
-     * @return bad request HTTP response if the id specified does not exist, an ok HTTP response otherwise
+     * @return bad request HTTP response if the id specified does not exist,
+     * or an HTTP 503 Service Unavailable response status code if the path computation services are not available
+     * an OK HTTP response with the list of modified events in the body
      */
     @Path( "{idEvent}" )
     @DELETE
     public Response deleteEvent ( @PathParam( "idEvent" ) long id ) {
         try {
-            eventManager.deleteEvent( id );
+            return HttpResponseBuilder.buildOkResponse( eventManager.deleteEvent( id ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
+        } catch ( GMapsGeneralException e ) {
+            return HttpResponseBuilder.notAvailable();
         }
-        return HttpResponseBuilder.ok();
     }
 
     /**
@@ -185,7 +191,7 @@ public class EventRESTful {
      *
      * @param eventMessage eventMessage that describe the event fields to be modified
      * @return bad request HTTP response if the id specified does not exist or if some fields are not consistent
-     * (in this case in the message body is specified which fields are wrong), an ok HTTP response otherwise
+     * (in this case in the message body is specified which fields are wrong), an OK HTTP response otherwise
      */
     @Path( "/breakEvent" )
     @PATCH
@@ -198,6 +204,8 @@ public class EventRESTful {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
+        } catch ( GMapsGeneralException e ) {
+            return HttpResponseBuilder.notAvailable();
         }
     }
 

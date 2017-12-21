@@ -88,8 +88,9 @@ public class EventManager extends UserManager {
 
         GenericEvent requestedEvent = eventList.stream()
                 .filter( event -> event.getId() == id ).findFirst().orElse( null );
-        if ( requestedEvent == null )
+        if ( requestedEvent == null ) {
             throw new EntityNotFoundException();
+        }
         return requestedEvent;
     }
 
@@ -224,8 +225,9 @@ public class EventManager extends UserManager {
             }
         }
         event.setScheduled( feasiblePaths != null );
-        if ( feasiblePaths != null )
+        if ( feasiblePaths != null ) {
             feasiblePaths.saveLocationsOnDB();
+        }
         return followingEvent;
     }
 
@@ -313,8 +315,9 @@ public class EventManager extends UserManager {
     private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>( checkGenericEventFields( eventMessage ) );
         if ( eventMessage.isPrevLocChoice() &&
-                scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null )
+                scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null ) {
             errors.add( WrongFields.NO_PREVIOUS_LOCATION );
+        }
         try {
             if ( eventMessage.getIdTypeOfEvent() != 0 ) {
                 preferenceManager.getPreferencesProfile( eventMessage.getIdTypeOfEvent() );
@@ -378,20 +381,37 @@ public class EventManager extends UserManager {
      * Delete an event from the user's calendar
      *
      * @param id identifier of the event
+     * @return a list of modified events, due to the deletion, it might be an empty list
      * @throws EntityNotFoundException if the event to be deleted does not exists
+     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
+     * services are unavailable
      */
-    public void deleteEvent ( long id ) throws EntityNotFoundException {
+    public  List < Event > deleteEvent ( long id ) throws EntityNotFoundException, GMapsGeneralException {
+        List < Event > modifiedEvents = new ArrayList <>();
         GenericEvent genericEvent;
-        //TODO path of the following?
         try {
             genericEvent = getEventInformation( id );
             currentUser.removeEvent( id );
+            scheduleManager.setSchedule( genericEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
+            Event eventToBeUpdated = scheduleManager.getPossibleFollowingEvent( genericEvent.getStartingTime() );
+            /* if the following event has selected the previous location choice as
+               departure location, his travel must be recomputed */
+            if ( eventToBeUpdated != null && eventToBeUpdated.isPrevLocChoice() ) {
+                Event following  = addEventAndModifyFollowingEvent( eventToBeUpdated );
+                if ( following != null ) {
+                    following.save();
+                    modifiedEvents.add( following );
+                }
+                eventToBeUpdated.save();
+                modifiedEvents.add( eventToBeUpdated );
+            }
         } catch ( EntityNotFoundException e ) {
             genericEvent = getBreakEventInformation( id );
             currentUser.removeBreakEvent( id );
         }
         currentUser.save();
         genericEvent.remove();
+        return modifiedEvents;
     }
 
     /**
@@ -421,14 +441,22 @@ public class EventManager extends UserManager {
      * @return the modified events
      * @throws InvalidFieldException   if some fields are wrong ( which one is written inside the exception class)
      * @throws EntityNotFoundException if the event to be modified does not exists
+     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
+     * services are unavailable
      */
     public List < Event > modifyEvent ( ModifyEventMessage eventMessage )
             throws InvalidFieldException, EntityNotFoundException, GMapsGeneralException {
 
         checkEventFields( eventMessage );
         Event event = getEventInformation( eventMessage.getEventId() );
-        deleteEvent( event.getId() );
-        List < Event > eventsModified = addEvent( eventMessage );
+        List < Event > eventsModified = deleteEvent( event.getId() );
+        List < Event >  eventsModifiedAfterInsertion = addEvent( eventMessage );
+        for ( Event event1 : eventsModifiedAfterInsertion){
+            eventsModified = eventsModified.stream().filter( eventModified -> eventModified.getId() != event1.getId())
+                    .collect( Collectors.toCollection( ArrayList::new ) );
+        }
+
+        eventsModified.addAll( eventsModifiedAfterInsertion );
         if ( eventMessage.isPropagateToPeriodicEvents() ) {
             //TODO handle periodic events
             //feature not included in the first release due to time-related issues
@@ -540,9 +568,11 @@ public class EventManager extends UserManager {
      * @throws InvalidFieldException   if some fields are wrong
      *                                 ( which one is written inside the exception class)
      * @throws EntityNotFoundException if the break event does not exist
+     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
+     * services are unavailable
      */
     public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
-            throws InvalidFieldException, EntityNotFoundException {
+            throws InvalidFieldException, EntityNotFoundException, GMapsGeneralException {
 
         checkBreakEventFields( eventMessage );
         BreakEvent breakEvent = getBreakEventInformation( eventMessage.getEventId() );
