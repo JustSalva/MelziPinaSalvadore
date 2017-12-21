@@ -3,10 +3,13 @@ package it.polimi.travlendarplus.entities.tickets;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This JPA class represent a ticket whose validity is related to a specific path
@@ -73,5 +76,29 @@ public class PathTicket extends GenericTicket {
 
     public void setEndingLocation ( Location endingLocation ) {
         this.endingLocation = endingLocation;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param travelComponentToBeAdded {@inheritDoc}
+     * @throws TicketNotValidException if start and end locations of travelComponentToBeAdded
+     *                                 are different from start and end location of the ticket
+     */
+    @Override
+    public void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
+            throws TicketNotValidException {
+        List < String > conflicts = new ArrayList <>();
+        try {
+            super.checkTicketValidityAfterTravelAssociation( travelComponentToBeAdded );
+        } catch ( TicketNotValidException e ) {
+            conflicts.addAll( e.getErrors() );
+        }
+        if ( !( travelComponentToBeAdded.getDeparture().equals( this.startingLocation ) &&
+                travelComponentToBeAdded.getArrival().equals( this.endingLocation ) ) ) {
+            TicketNotValidException exception = new TicketNotValidException();
+            exception.addErrors( conflicts );
+            throw exception;
+        }
     }
 }

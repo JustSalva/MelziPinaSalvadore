@@ -7,6 +7,7 @@ import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMess
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -130,7 +131,17 @@ public class HttpResponseBuilder {
      * @return the requested response message
      */
     public static Response buildInvalidFieldResponse ( InvalidFieldException e ) {
-        return responseBuilder( Response.Status.BAD_REQUEST, e.getInvalidFields() );
+        return buildErrorsMessage( e.getInvalidFields() );
+    }
+
+    /**
+     * Builds a response with a 400 Bad Request status code and a list errors
+     * ( List of Strings)
+     * @param errors list of errors
+     * @return the requested response message
+     */
+    private static Response buildErrorsMessage( List<String> errors){
+        return responseBuilder( Response.Status.BAD_REQUEST, errors );
     }
 
     /**
@@ -143,6 +154,17 @@ public class HttpResponseBuilder {
      */
     public static Response buildAlreadyScheduledResponse ( AlreadyScheduledException e ) {
         return responseBuilder( Response.Status.BAD_REQUEST, e.getMessage() );
+    }
+
+    /**
+     * Builds a response with a 400 Bad Request status code and a list string
+     * that states why a travel component can't be connected with a ticket
+     *
+     * @param e exception that contains the explanations of why it can't be applied
+     * @return the requested response message
+     */
+    public static Response buildTicketNotValidResponse ( TicketNotValidException e ) {
+        return buildErrorsMessage( e.getErrors() );
     }
 
     /**

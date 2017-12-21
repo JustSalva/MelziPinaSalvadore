@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -71,11 +72,11 @@ public abstract class Ticket extends EntityWithLongKey {
         return Collections.unmodifiableList( relatedTo );
     }
 
-    public void setRelatedTo ( List < PublicTravelMean > relatedTo ) {
+    public void setRelatedTo ( ArrayList < PublicTravelMean > relatedTo ) {
         this.relatedTo = relatedTo;
     }
 
-    public void setRelatedTo ( ArrayList < PublicTravelMean > relatedTo ) {
+    public void setRelatedTo ( List < PublicTravelMean > relatedTo ) {
         this.relatedTo = relatedTo;
     }
 
@@ -108,7 +109,8 @@ public abstract class Ticket extends EntityWithLongKey {
      * Adds a travel component in the list of travels for which the user will use this ticket
      *
      * @param travelComponent travel component for which the ticket will be used
-     * @throws IncompatibleTravelMeansException if the travel component is not applicable to a ticket
+     * @throws IncompatibleTravelMeansException if the travel component is not applicable to a ticket since
+     *                                          the ticket does not supports that travel mean
      */
     public void addLinkedTravel ( TravelComponent travelComponent )
             throws IncompatibleTravelMeansException {
@@ -132,4 +134,15 @@ public abstract class Ticket extends EntityWithLongKey {
     public void removeLinkedTravel ( long travelId ) {
         linkedTravels.removeIf( travelComponent -> travelComponent.getId() == travelId );
     }
+
+    /**
+     * Checks if the ticket remains applicable if the specified travel component
+     * is added in the list of travelComponents that will take advantage
+     * of the ticket
+     *
+     * @param travelComponentToBeAdded travel component that might be added
+     * @throws TicketNotValidException if the ticket is not applicable also to the new travel mean
+     */
+    public abstract void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
+            throws TicketNotValidException;
 }

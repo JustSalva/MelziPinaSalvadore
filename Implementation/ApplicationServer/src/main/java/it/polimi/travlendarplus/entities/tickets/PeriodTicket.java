@@ -2,11 +2,15 @@ package it.polimi.travlendarplus.entities.tickets;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidCauses;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This JPA class represent a ticket whose validity is related to a period of time
@@ -97,5 +101,29 @@ public class PeriodTicket extends Ticket {
 
     public void setDecorator ( Ticket decorator ) {
         this.decorator = decorator;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param travelComponentToBeAdded {@inheritDoc}
+     * @throws TicketNotValidException if the travel component exceed the period
+     *                                 of validity of the ticket
+     */
+    @Override
+    public void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
+            throws TicketNotValidException {
+        List < String > conflicts = new ArrayList <>();
+        try {
+            decorator.checkTicketValidityAfterTravelAssociation( travelComponentToBeAdded );
+        } catch ( TicketNotValidException e ) {
+            conflicts.addAll( e.getErrors() );
+        }
+        if ( travelComponentToBeAdded.getStartingTime().isBefore( this.startingDate ) ||
+                travelComponentToBeAdded.getEndingTime().isAfter( this.endingDate ) ) {
+            TicketNotValidException ticketNotValidException =
+                    new TicketNotValidException( TicketNotValidCauses.OUT_OF_VALIDITY_PERIOD );
+            ticketNotValidException.addErrors( conflicts );
+        }
     }
 }

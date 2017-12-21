@@ -8,6 +8,7 @@ import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.InvalidFieldException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -192,13 +193,13 @@ public class TripRESTful {
             if ( isSelection ) {
                 try {
                     tripManager.selectTicket( ticketId, travelComponentId );
-                }catch ( IncompatibleTravelMeansException e ) {
-                    return HttpResponseBuilder.buildBadRequest( e.getMessage() );
+                } catch ( TicketNotValidException e ) {
+                    HttpResponseBuilder.buildTicketNotValidResponse( e );
                 }
             } else {
                 tripManager.deselectTicket( ticketId, travelComponentId );
             }
-        } catch ( EntityNotFoundException e ) {
+        } catch ( EntityNotFoundException | IncompatibleTravelMeansException e ) {
             return HttpResponseBuilder.buildBadRequest( e.getMessage() );
         }
         return HttpResponseBuilder.ok();

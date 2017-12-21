@@ -2,7 +2,10 @@ package it.polimi.travlendarplus.entities.tickets;
 
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidCauses;
+import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -49,5 +52,19 @@ public class GenericTicket extends Ticket {
 
     public void setLineName ( String lineName ) {
         this.lineName = lineName;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param travelComponentToBeAdded {@inheritDoc}
+     * @throws TicketNotValidException if the travel component to be added belongs
+     *                                 to a different public transportation line
+     */
+    @Override
+    public void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
+            throws TicketNotValidException {
+        //TODO line names not yet handled
+        throw new TicketNotValidException( TicketNotValidCauses.WRONG_LINE_NAME );
     }
 }
