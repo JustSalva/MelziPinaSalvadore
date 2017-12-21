@@ -27,6 +27,9 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+/**
+ * Interface defining server requests that can be used in the application.
+ */
 public interface TravlendarClient {
     @GET("security/{idDevice}")
     Call<PublicKeyResponse> requestPublicKey(

@@ -8,7 +8,7 @@ import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.User;
 
 /**
- * Performs an User input operation in the DB on a separated thread.
+ * Task that inserts a list of users in the DB.
  */
 public class InsertUserTask extends AsyncTask<User, Void, Void> {
 

@@ -10,6 +10,10 @@ import android.widget.RadioButton;
 
 import it.polimi.travlendarplus.R;
 
+/**
+ * Activity that allows the creation and editing of a ticket.
+ * To be implemented.
+ */
 public class TicketEditorActivity extends MenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,38 +24,10 @@ public class TicketEditorActivity extends MenuActivity {
         ((RadioButton) findViewById(R.id.generalTicket_radioButton)).setChecked(true);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * When a radio button is clicked, depending on the ticket type
+     * selection a different layout get shown and the other ones gets hidden.
+     */
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();

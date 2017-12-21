@@ -7,11 +7,13 @@ import android.view.View;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.database.view_model.EventViewModel;
 
+/**
+ * Activity that allows the user to see an event info.
+ * To be implemented.
+ */
 public class EventViewerActivity extends MenuActivity {
 
     private EventViewModel eventViewModel;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

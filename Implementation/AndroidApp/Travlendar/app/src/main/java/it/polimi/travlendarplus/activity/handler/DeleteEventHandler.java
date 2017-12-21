@@ -11,6 +11,10 @@ import android.widget.Toast;
 import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.tasks.DeleteEventTask;
 
+/**
+ * Handler that handles the server response to the event deletion.
+ * It is used by the CalendarActivity.
+ */
 public class DeleteEventHandler extends Handler {
 
     private Context context;

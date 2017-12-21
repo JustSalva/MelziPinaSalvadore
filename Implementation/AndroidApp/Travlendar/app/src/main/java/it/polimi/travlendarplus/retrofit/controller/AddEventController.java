@@ -17,6 +17,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs an add event request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class AddEventController implements Callback<ResponseBody> {
 
     private Handler handler;

@@ -13,6 +13,9 @@ import it.polimi.travlendarplus.database.entity.TravelComponent;
 
 import java.util.List;
 
+/**
+ * Dao interface containing methods to access DB calendar events and travel components.
+ */
 @Dao
 public interface CalendarDao {
     @Insert

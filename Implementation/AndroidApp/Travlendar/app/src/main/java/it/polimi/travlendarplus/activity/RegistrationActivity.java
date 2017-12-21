@@ -1,16 +1,11 @@
 package it.polimi.travlendarplus.activity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,12 +21,12 @@ import java.security.PublicKey;
 
 import it.polimi.travlendarplus.R;
 
-import it.polimi.travlendarplus.database.AppDatabase;
-import it.polimi.travlendarplus.database.entity.User;
+import it.polimi.travlendarplus.activity.handler.RegistrationHandler;
 import it.polimi.travlendarplus.retrofit.controller.RegisterController;
 
 /**
- * A registration screen that offers registration to the server.
+ * Activity that allows the user to register to the server.
+ * Public key encryption to be implemented.
  */
 public class RegistrationActivity extends AppCompatActivity implements PublicKeyActivity {
 
@@ -56,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
     private String password2;
 
     // Handler for server responses.
-    private Handler handler;
+    private Handler registrationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +80,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
         registration_button.setOnClickListener(view -> signUp());
 
         // Handle server responses.
-        handler = new Handler(Looper.getMainLooper()) {
-
-        };
+        registrationHandler = new RegistrationHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
 
@@ -115,7 +108,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
 
         // Send request to server.
         waitForServerResponse();
-        RegisterController registerController = new RegisterController(handler);
+        RegisterController registerController = new RegisterController(registrationHandler);
         registerController.start(email, password1, idDevice, name, surname);
     }
 
@@ -191,7 +184,6 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
         return name.length() > 1;
     }
 
-
     /**
      * Disables user input fields.
      */
@@ -209,14 +201,6 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
         registration_button.setEnabled(true);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * Launches calendar activity.
-     */
-    private void goToCalendarActivity() {
-        Intent intent = new Intent(this, CalendarActivity.class);
-        startActivity(intent);
     }
 
     @Override

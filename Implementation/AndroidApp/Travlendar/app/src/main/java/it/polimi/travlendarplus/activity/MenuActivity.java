@@ -20,6 +20,11 @@ import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.database.AppDatabase;
 
+/**
+ * Activity to be extended by all the activities that need a toolbar and a side menu.
+ * Contains a navigationView with the five main activities and a toolbar that shows the name
+ * of the current activity and allows the user to log out.
+ */
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
@@ -27,6 +32,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Links the component to the activity.
+     */
     public void setupMenuToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

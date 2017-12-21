@@ -3,6 +3,9 @@ package it.polimi.travlendarplus.database.entity.ticket;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 
+/**
+ * DB general ticket entity.
+ */
 public class GeneralTicket {
     @ColumnInfo(name = "line_name")
     private String lineName;

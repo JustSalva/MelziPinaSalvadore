@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.User;
 
+/**
+ * View model that allows access to user live data of the DB.
+ */
 public class UserViewModel extends AndroidViewModel {
 
     private AppDatabase database;
@@ -20,9 +23,11 @@ public class UserViewModel extends AndroidViewModel {
         database = AppDatabase.getInstance(application.getApplicationContext());
     }
 
+    /**
+     * @return The user contained in the DB.
+     */
     public LiveData<User> getUser() {
         if (user == null) {
-            user = new MutableLiveData<>();
             user = database.userDao().getUser();
         }
         return user;

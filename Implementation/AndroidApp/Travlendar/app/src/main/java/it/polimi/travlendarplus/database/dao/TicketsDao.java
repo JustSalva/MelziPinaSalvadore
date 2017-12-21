@@ -11,6 +11,9 @@ import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 
 import java.util.List;
 
+/**
+ * Dao interface containing methods to access DB tickets values.
+ */
 @Dao
 public interface TicketsDao {
     @Insert

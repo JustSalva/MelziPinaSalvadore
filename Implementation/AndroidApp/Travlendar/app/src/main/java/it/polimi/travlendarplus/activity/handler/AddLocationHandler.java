@@ -11,6 +11,10 @@ import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.Position;
 import it.polimi.travlendarplus.activity.AccountActivity;
 
+/**
+ * Handler that handles the server response to the location addition.
+ * It is used by the AccountActivity.
+ */
 public class AddLocationHandler extends Handler {
 
     private Context context;

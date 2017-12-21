@@ -17,6 +17,10 @@ import java.util.List;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.PreferencesActivity;
 
+/**
+ * Handler that handles the server response to the preferences request.
+ * It is used by the PreferencesActivity.
+ */
 public class GetPreferencesHandler extends Handler {
 
     private Context context;

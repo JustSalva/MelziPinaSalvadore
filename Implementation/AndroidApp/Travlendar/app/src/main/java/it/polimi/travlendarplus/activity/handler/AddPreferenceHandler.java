@@ -14,6 +14,10 @@ import com.google.gson.Gson;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.PreferencesActivity;
 
+/**
+ * Handler that handles the server response to the preference addition.
+ * It is used by the PreferencesActivity.
+ */
 public class AddPreferenceHandler extends Handler {
 
     private Context context;

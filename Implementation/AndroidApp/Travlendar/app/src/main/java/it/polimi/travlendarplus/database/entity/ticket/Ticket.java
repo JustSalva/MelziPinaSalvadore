@@ -7,6 +7,9 @@ import android.arch.persistence.room.TypeConverters;
 
 import it.polimi.travlendarplus.database.converters.TicketTypeConverters;
 
+/**
+ * DB ticket entity.
+ */
 @Entity
 public class Ticket {
     @PrimaryKey

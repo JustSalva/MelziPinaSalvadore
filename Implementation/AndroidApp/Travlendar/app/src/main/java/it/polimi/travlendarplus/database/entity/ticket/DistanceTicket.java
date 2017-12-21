@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.database.entity.ticket;
 
+/**
+ * DB distance ticket entity.
+ */
 public class DistanceTicket {
 
     private float distance;

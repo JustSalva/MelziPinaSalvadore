@@ -5,6 +5,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
+/**
+ * Adds on touch listener to a view, allowing it to be dragged around.
+ */
 public final class MyTouchListener implements View.OnTouchListener {
 
     public boolean onTouch(View viewDragged, MotionEvent motionEvent) {

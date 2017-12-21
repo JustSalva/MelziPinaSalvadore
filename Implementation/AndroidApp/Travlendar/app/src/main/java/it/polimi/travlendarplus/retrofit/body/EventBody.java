@@ -2,6 +2,9 @@ package it.polimi.travlendarplus.retrofit.body;
 
 import it.polimi.travlendarplus.Position;
 
+/**
+ * Body to be sent to server to add an event.
+ */
 public class EventBody {
 
     private String name;

@@ -4,6 +4,9 @@ package it.polimi.travlendarplus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains info regarding a preference.
+ */
 public class Preference {
     private long id;
     private String name;
@@ -12,6 +15,9 @@ public class Preference {
     private List<DistanceConstraint> distanceConstraints;
     private List<TravelMeanEnum> deactivate;
 
+    /**
+     * Constructor to create the standard preference with id = 0;
+     */
     public Preference() {
         this.id = 0;
         this.name = "Normal";
@@ -41,6 +47,10 @@ public class Preference {
         return periodOfDayConstraints;
     }
 
+    /**
+     * @param travelMean travel mean related to the constraint.
+     * @return periodConstraint related to the travel mean.
+     */
     public PeriodConstraint getPeriodOfDayConstraint(String travelMean) {
         for (PeriodConstraint constraint : periodOfDayConstraints) {
             if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
@@ -54,6 +64,10 @@ public class Preference {
         return distanceConstraints;
     }
 
+    /**
+     * @param travelMean travel mean related to the constraint.
+     * @return distanceConstraint relateed to the travel mean.
+     */
     public DistanceConstraint getDistanceConstraint(String travelMean) {
         for (DistanceConstraint constraint : distanceConstraints) {
             if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
@@ -63,6 +77,10 @@ public class Preference {
         return null;
     }
 
+    /**
+     * @param travelMean travel mean related to the constraint.
+     * @return true if the travel mean is activated in a constraint, false otherwise.
+     */
     public boolean isActivated(TravelMeanEnum travelMean) {
         return !deactivate.contains(travelMean);
     }
@@ -71,6 +89,9 @@ public class Preference {
         return deactivate;
     }
 
+    /**
+     * Constraint regarding the duration of an event.
+     */
     public static class PeriodConstraint {
         private long id;
         private TravelMeanEnum concerns;
@@ -109,6 +130,9 @@ public class Preference {
         }
     }
 
+    /**
+     * Constraint regarding the distance of an event.
+     */
     public static class DistanceConstraint {
         private long id;
         private TravelMeanEnum concerns;
@@ -147,6 +171,9 @@ public class Preference {
         }
     }
 
+    /**
+     * Enum containing values indicating the type of path preferred by the user.
+     */
     public enum ParamFirstPath {
         MIN_COST ("Minimum cost"),
         MIN_LENGTH ("Minimum length"),
@@ -177,6 +204,9 @@ public class Preference {
         }
     }
 
+    /**
+     * Enum containing travel means that can be used by the user.
+     */
     public enum TravelMeanEnum {
         BIKE("Bike"),
         BUS("Bus"),

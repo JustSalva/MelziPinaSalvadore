@@ -15,7 +15,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
+/**
+ * Controller that performs an registration request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class RegisterController implements Callback<RegisterResponse> {
 
     private Handler handler;
@@ -24,6 +27,14 @@ public class RegisterController implements Callback<RegisterResponse> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the request to the server.
+     * @param email Email of the user.
+     * @param password Password of the user.
+     * @param idDevice Id of the device.
+     * @param name Name of the user.
+     * @param surname Surname of the user.
+     */
     public void start(String email, String password, String idDevice, String name, String surname) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class);
         Call<RegisterResponse> call = client

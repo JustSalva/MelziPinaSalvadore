@@ -14,6 +14,9 @@ import it.polimi.travlendarplus.retrofit.response.EventResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Task that inserts a list of events in the DB.
+ */
 public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
 
     private AppDatabase database;

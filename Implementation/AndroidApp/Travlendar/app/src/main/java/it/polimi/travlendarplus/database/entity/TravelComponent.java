@@ -11,6 +11,9 @@ import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 import static android.arch.persistence.room.ForeignKey.SET_NULL;
 
+/**
+ * DB travel component entity.
+ */
 @Entity(foreignKeys = {
         @ForeignKey(
                 entity = GenericEvent.class,

@@ -19,6 +19,10 @@ import java.util.Map;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
 
+/**
+ * Handler that handles the server response to the preferences request.
+ * It is used by the EventEditorActivity.
+ */
 public class GetEventPreferencesHandler extends Handler {
 
     private Context context;

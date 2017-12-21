@@ -11,6 +11,10 @@ import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
 
 
+/**
+ * Handler that handles the server response to the event addition.
+ * It is used by the EventEditorActivity.
+ */
 public class AddEventHandler extends Handler {
 
     private Context context;

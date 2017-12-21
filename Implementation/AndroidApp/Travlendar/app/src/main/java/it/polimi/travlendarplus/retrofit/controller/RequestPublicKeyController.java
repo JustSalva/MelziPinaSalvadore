@@ -18,6 +18,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs a get public key request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class RequestPublicKeyController implements Callback<PublicKeyResponse> {
 
     private Handler handler;
@@ -26,6 +30,10 @@ public class RequestPublicKeyController implements Callback<PublicKeyResponse> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the request with the right parameters.
+     * @param idDevice id representing the device that needs the public key.
+     */
     public void start(String idDevice) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class);
         Call<PublicKeyResponse> call = client.requestPublicKey(idDevice);

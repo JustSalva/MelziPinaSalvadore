@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus;
 
 
+/**
+ * Contains info regarding a location.
+ */
 public class Location {
 
     private String name;

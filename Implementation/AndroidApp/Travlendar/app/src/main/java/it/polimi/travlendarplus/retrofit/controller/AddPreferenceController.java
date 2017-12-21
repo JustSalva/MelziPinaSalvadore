@@ -16,6 +16,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs an add preference request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class AddPreferenceController implements Callback<Preference> {
 
     private Handler handler;
@@ -24,6 +28,11 @@ public class AddPreferenceController implements Callback<Preference> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the server request.
+     * @param authToken Authorization token.
+     * @param preferenceBody Body containing the preference info.
+     */
     public void start(String authToken, PreferenceBody preferenceBody) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         Call<Preference> call = client.addPreference(preferenceBody);

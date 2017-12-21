@@ -18,6 +18,10 @@ import java.util.List;
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
 
+/**
+ * Handler that handles the server response to the locations request.
+ * It is used by the EventEditorActivity.
+ */
 public class GetEventLocationsHandler extends Handler {
 
     private Context context;

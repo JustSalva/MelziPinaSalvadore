@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus;
 
 
+/**
+ * Contains info regarding a travel component.
+ */
 public class MiniTravel {
 
     private long id;

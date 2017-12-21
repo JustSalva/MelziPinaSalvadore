@@ -33,6 +33,10 @@ import it.polimi.travlendarplus.retrofit.controller.AddEventController;
 import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
 import it.polimi.travlendarplus.retrofit.controller.GetPreferencesController;
 
+/**
+ * Activity that allows the user to create a new event.
+ * Event editing to be implemented.
+ */
 public class EventEditorActivity extends MenuActivity {
     // UI references.
     private LinearLayout normalEvent_linearLayout;
@@ -67,7 +71,6 @@ public class EventEditorActivity extends MenuActivity {
     private String token;
     // Variable to check if the events have already been downloaded.
     private boolean dataDownloaded = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +260,10 @@ public class EventEditorActivity extends MenuActivity {
         return valid;
     }
 
+    /**
+     * Sends request to server to receive locations of the user.
+     * Locations received are saved in locationsMap.
+     */
     private void loadLocationsFromServer() {
         // Send request to server.
         waitForServerResponse();
@@ -264,6 +271,10 @@ public class EventEditorActivity extends MenuActivity {
         getLocationsController.start(token);
     }
 
+    /**
+     * Sends request to server to receive preferences of the user.
+     * Preferences received are saved in preferencesMap.
+     */
     private void loadPreferencesFromServer() {
         // Send request to server.
         waitForServerResponse();
@@ -271,6 +282,9 @@ public class EventEditorActivity extends MenuActivity {
         getPreferencesController.start(token);
     }
 
+    /**
+     * Populates the locations spinners with locations names from the locationsMap.
+     */
     public void populateLocationsSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -285,6 +299,9 @@ public class EventEditorActivity extends MenuActivity {
         departureLocation_spinner.setAdapter(adapter);
     }
 
+    /**
+     * Populates the typeOfEvent spinner with preferences names contained in preferencesMap.
+     */
     public void populatePreferencesSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -298,6 +315,9 @@ public class EventEditorActivity extends MenuActivity {
         typeOfEvent_spinner.setAdapter(adapter);
     }
 
+    /**
+     * Populates the startTravelingAt spinner with the choices "Earliest" and "Latest"
+     */
     public void populateStartTravelingAtSpinner() {
         String[] choices = new String[]{"Earliest", "Latest"};
         // Create an ArrayAdapter using the string array and a default spinner layout

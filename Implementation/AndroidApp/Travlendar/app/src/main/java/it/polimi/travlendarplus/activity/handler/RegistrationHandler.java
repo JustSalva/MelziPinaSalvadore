@@ -15,6 +15,10 @@ import it.polimi.travlendarplus.activity.RegistrationActivity;
 import it.polimi.travlendarplus.activity.tasks.InsertUserTask;
 import it.polimi.travlendarplus.database.entity.User;
 
+/**
+ * Handler that handles the server response to the registration request.
+ * It is used by the RegistrationActivity.
+ */
 public class RegistrationHandler extends Handler {
 
     private Context context;

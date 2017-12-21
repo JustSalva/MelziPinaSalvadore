@@ -17,6 +17,10 @@ import java.security.PublicKey;
 import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.PublicKeyActivity;
 
+/**
+ * Handler that handles the server response to the public key request.
+ * It is used by the PublicKeyActivity.
+ */
 public class RequestPublicKeyHandler extends Handler {
 
     private Context context;

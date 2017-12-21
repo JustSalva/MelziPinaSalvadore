@@ -2,6 +2,9 @@ package it.polimi.travlendarplus.database.entity.ticket;
 
 import android.arch.persistence.room.ColumnInfo;
 
+/**
+ * DB path ticket entity.
+ */
 public class PathTicket {
 
     @ColumnInfo(name = "departure_location")

@@ -18,6 +18,10 @@ import java.util.List;
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.AccountActivity;
 
+/**
+ * Handler that handles the server response to the locations request.
+ * It is used by the AccountActivity.
+ */
 public class GetAccountLocationsHandler extends Handler {
 
     private Context context;

@@ -4,6 +4,10 @@ import android.os.Bundle;
 
 import it.polimi.travlendarplus.R;
 
+/**
+ * Activity that allows the user to arrange his trips.
+ * Not implemented yet.
+ */
 public class ArrangeTripActivity extends MenuActivity {
 
     @Override

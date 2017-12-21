@@ -36,6 +36,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Activity that displays the events in the database.
+ * Allows the user to schedule and delete events by dragging them.
  */
 public class CalendarActivity extends MenuActivity {
     // UI references,
@@ -53,7 +54,7 @@ public class CalendarActivity extends MenuActivity {
 
     private Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
     private List<GenericEvent> eventsList = new ArrayList<>();
-
+    // Handlers for server responses.
     private Handler getEventsHandler;
     private Handler deleteEventHandler;
 
@@ -119,7 +120,7 @@ public class CalendarActivity extends MenuActivity {
         }
 
         // Set events relativeLayout as drop recipient for drag action to schedule.
-        events_relativeLayout.setOnDragListener(new DragToScheduleListener());
+        events_relativeLayout.setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
         // Set date textView as drop recipient for drag action to delete.
         date_textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
         // Set handlers.

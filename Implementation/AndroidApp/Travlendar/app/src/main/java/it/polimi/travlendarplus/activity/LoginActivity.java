@@ -37,10 +37,10 @@ import it.polimi.travlendarplus.retrofit.controller.LoginController;
 import it.polimi.travlendarplus.retrofit.controller.RequestPublicKeyController;
 
 /**
- * A login screen that offers login via email/password.
+ * Activity that allows the user to perform a login or to reach the registration activity.
+ * Password encryption to be implemented.
  */
 public class LoginActivity extends AppCompatActivity implements PublicKeyActivity {
-
     // idDevice token.
     private String idDevice;
     /* PUBLIC KEY: to be removed when encryption works.

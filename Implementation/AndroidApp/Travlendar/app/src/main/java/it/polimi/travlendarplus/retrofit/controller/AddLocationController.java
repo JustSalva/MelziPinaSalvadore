@@ -13,6 +13,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs an add location request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class AddLocationController implements Callback<Void> {
 
     private Handler handler;
@@ -21,6 +25,14 @@ public class AddLocationController implements Callback<Void> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the server request.
+     * @param authToken Authorization token.
+     * @param name Name of the location.
+     * @param address Address of the location.
+     * @param latitude Latitude of the location.
+     * @param longitude Longitude of the location.
+     */
     public void start(String authToken, String name, String address, String latitude, String longitude) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         Call<Void> call = client.addLocation(new LocationBody(name, address, latitude, longitude));

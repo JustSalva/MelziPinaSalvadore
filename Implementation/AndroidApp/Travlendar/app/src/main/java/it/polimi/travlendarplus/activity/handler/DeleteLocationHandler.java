@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 import it.polimi.travlendarplus.activity.AccountActivity;
 
+/**
+ * Handler that handles the server response to the location deletion.
+ * It is used by the AccountActivity.
+ */
 public class DeleteLocationHandler extends Handler {
 
     private Context context;

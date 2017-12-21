@@ -7,6 +7,9 @@ import android.arch.persistence.room.Query;
 
 import it.polimi.travlendarplus.database.entity.User;
 
+/**
+ * Dao interface containing methods to access DB user values.
+ */
 @Dao
 public interface UserDao {
     @Insert

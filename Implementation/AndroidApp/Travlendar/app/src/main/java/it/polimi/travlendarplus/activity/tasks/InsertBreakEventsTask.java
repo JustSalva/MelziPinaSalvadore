@@ -11,6 +11,9 @@ import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
 
 import java.util.List;
 
+/**
+ * Task that inserts a list of break events in the DB.
+ */
 public class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
 
     private AppDatabase database;

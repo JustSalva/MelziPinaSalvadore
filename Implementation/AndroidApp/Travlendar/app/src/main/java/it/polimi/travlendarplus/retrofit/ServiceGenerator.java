@@ -7,6 +7,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Class used to create server requests.
+ */
 public class ServiceGenerator {
 
     private static final String BASE_URL = "http://151.236.60.56:8080/ApplicationServerArchive/";
@@ -32,7 +35,6 @@ public class ServiceGenerator {
 
             if (!httpClient.interceptors().contains(interceptor)) {
                 httpClient.addInterceptor(interceptor);
-
                 builder.client(httpClient.build());
                 retrofit = builder.build();
             }

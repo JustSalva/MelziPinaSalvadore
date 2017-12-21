@@ -11,6 +11,9 @@ import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.
 import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.PATH;
 import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.PERIOD;
 
+/**
+ * Class that contains type converters for saving ticket objects in the DB.
+ */
 public class TicketTypeConverters {
     @TypeConverter
     public static Ticket.TicketType toTicketType(String type) {

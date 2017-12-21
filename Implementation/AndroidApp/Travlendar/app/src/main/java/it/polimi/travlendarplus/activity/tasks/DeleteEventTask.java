@@ -6,6 +6,10 @@ import android.os.AsyncTask;
 
 import it.polimi.travlendarplus.database.AppDatabase;
 
+
+/**
+ * Task that deletes an event specified by the parameter eventId from the DB.
+ */
 public class DeleteEventTask extends AsyncTask<Void, Void, Void> {
 
     private AppDatabase database;

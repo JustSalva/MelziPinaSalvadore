@@ -15,6 +15,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs a get events request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class GetEventsController implements Callback<GenericEventsResponse> {
 
     private Handler handler;
@@ -23,6 +27,11 @@ public class GetEventsController implements Callback<GenericEventsResponse> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the server request.
+     * @param authToken Authorization token.
+     * @param timestamp Timestamp of the last getEvent.
+     */
     public void start(String authToken, long timestamp) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         Call<GenericEventsResponse> call = client.getEvents(timestamp);

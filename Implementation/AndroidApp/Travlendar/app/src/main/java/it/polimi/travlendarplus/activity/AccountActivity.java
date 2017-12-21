@@ -34,8 +34,11 @@ import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
 
 import java.util.Map;
 
+/**
+ * Activity the lets the user see his personal information and location.
+ * It allows the user to add and delete locations.
+ */
 public class AccountActivity extends MenuActivity {
-
     // UI references.
     private TextView name_textView;
     private TextView surname_textView;
@@ -50,7 +53,6 @@ public class AccountActivity extends MenuActivity {
 
     private final int PLACE_PICKER_REQUEST = 1;
     private String token;
-
     private UserViewModel userViewModel;
 
     // Contain values taken from user input fields.
@@ -129,6 +131,9 @@ public class AccountActivity extends MenuActivity {
         deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
+    /**
+     * Sends request to the server to get locations available.
+     */
     private void loadLocationsFromServer() {
         // Send request to server.
         waitForServerResponse();
@@ -165,17 +170,16 @@ public class AccountActivity extends MenuActivity {
     }
 
     /**
-     * Sends the location entered by the user to the server.
+     * Checks the values inserted from the user. If correct, sends the location specified to the server.
      */
     private void sendLocationToServer() {
         // Store values at the time of the sending attempt.
         locationName = locationName_editText.getText().toString();
-
+        // check values entered.
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
             return;
         }
-
         // Send request to server.
         waitForServerResponse();
         AddLocationController addLocationController = new AddLocationController(addLocationHandler);
@@ -214,6 +218,9 @@ public class AccountActivity extends MenuActivity {
         return valid;
     }
 
+    /**
+     * Sends request to the server asking to delete a location specified by its name.
+     */
     private void deleteLocationFromServer() {
         // Send request to server.
         waitForServerResponse();
@@ -221,6 +228,10 @@ public class AccountActivity extends MenuActivity {
         deleteLocationController.start(token, selectedLocation.getName());
     }
 
+    /**
+     * Populate the locations spinner with locations previously got from the server.
+     * Locations are stored in locationsMap.
+     */
     public void populateLocationsSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(

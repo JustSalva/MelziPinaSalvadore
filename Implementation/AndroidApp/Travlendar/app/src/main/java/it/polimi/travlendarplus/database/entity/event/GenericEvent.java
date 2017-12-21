@@ -13,6 +13,9 @@ import java.util.GregorianCalendar;
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.database.converters.EventTypeConverters;
 
+/**
+ * DB generic event entity.
+ */
 @Entity(tableName = "generic_event")
 public class GenericEvent {
     @PrimaryKey

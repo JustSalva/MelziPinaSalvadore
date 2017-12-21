@@ -12,6 +12,9 @@ import it.polimi.travlendarplus.database.entity.TravelComponent;
 import java.util.List;
 
 
+/**
+ * View model that allows access to travel components live data of the DB.
+ */
 public class EventViewModel extends AndroidViewModel {
 
     private AppDatabase database = AppDatabase
@@ -24,15 +27,14 @@ public class EventViewModel extends AndroidViewModel {
         super(application);
     }
 
+    /**
+     * @param eventId id of the event.
+     * @return All the travel components related to a event.
+     */
     public LiveData<List<TravelComponent>> getTravelComponents(int eventId) {
         if (travelComponents == null) {
-            travelComponents = new MutableLiveData<>();
-            loadTravelComponents(eventId);
+            travelComponents = database.calendarDao().getTravelComponents(eventId);
         }
         return travelComponents;
-    }
-
-    private void loadTravelComponents(int eventId) {
-        travelComponents = database.calendarDao().getTravelComponents(eventId);
     }
 }

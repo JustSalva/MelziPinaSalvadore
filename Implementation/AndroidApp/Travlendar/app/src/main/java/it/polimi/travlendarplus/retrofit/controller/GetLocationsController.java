@@ -18,6 +18,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs a get locations request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class GetLocationsController implements Callback<List<Location>> {
 
     private Handler handler;
@@ -26,6 +30,10 @@ public class GetLocationsController implements Callback<List<Location>> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the server request.
+     * @param authToken Authorization token.
+     */
     public void start(String authToken) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         Call<List<Location>> call = client.getLocations();

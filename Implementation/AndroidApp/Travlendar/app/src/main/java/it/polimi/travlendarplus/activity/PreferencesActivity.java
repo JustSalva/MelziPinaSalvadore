@@ -35,9 +35,12 @@ import it.polimi.travlendarplus.retrofit.controller.ModifyPreferenceController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Activity that allows the user to manage his preferences.
+ * Allows the user to create, modify and delete preferences.
+ */
 public class PreferencesActivity extends MenuActivity {
-
-    //UI references.
+    // UI references.
     private ImageView deletePreference_imageView;
     private LinearLayout checkBoxes_linearLayout;
     private Spinner preferences_spinner;
@@ -124,7 +127,6 @@ public class PreferencesActivity extends MenuActivity {
                 // Nothing happens.
             }
         });
-
         // Setup travel mean constrained spinner listener.
         travelMeanConstrained_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -135,7 +137,6 @@ public class PreferencesActivity extends MenuActivity {
                 selectedTravelMean = Preference.TravelMeanEnum.values()[i].getTravelMean();
                 fillConstraints();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 // Nothing happens.
@@ -154,6 +155,10 @@ public class PreferencesActivity extends MenuActivity {
         deletePreferenceHandler = new DeletePreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
+    /**
+     * Sends request to get preferences from the server.
+     * Preferences received are stored in preferencesMap.
+     */
     private void loadPreferencesFromServer() {
         // Initialize preferences map with standard type of event.
         preferencesMap = new HashMap<>();
@@ -164,6 +169,9 @@ public class PreferencesActivity extends MenuActivity {
         getPreferencesController.start(token);
     }
 
+    /**
+     * Populates preferences spinner with preferences names contained in preferencesMap.
+     */
     public void populatePreferencesSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -180,6 +188,7 @@ public class PreferencesActivity extends MenuActivity {
     /**
      * Sets the right checkboxes for travel means of the selected preference
      * in the checkBoxes_linearLayout.
+     * Every checkbox has a listener that updates the selected preference constraints.
      */
     private void createTravelMeansCheckBoxes() {
         // Clear old checkboxes.
@@ -287,6 +296,10 @@ public class PreferencesActivity extends MenuActivity {
         }
     }
 
+    /**
+     * Checks if the user inputs are valid. If they are valid, sends a request to the server
+     * to add the inserted preference.
+     */
     private void addPreferenceToServer() {
         // Save inserted name for the new preference.
         String newPreferenceName = ((TextView) findViewById(R.id.newPreferenceName_textView))
@@ -337,6 +350,9 @@ public class PreferencesActivity extends MenuActivity {
         return valid;
     }
 
+    /**
+     * Sends a request to the server to modify the currently selected preference.
+     */
     private void modifyPreferenceToServer() {
         // Save edited constraints.
         saveEditedConstraints();
@@ -354,6 +370,9 @@ public class PreferencesActivity extends MenuActivity {
         modifyPreferenceController.start(token, preferenceBody);
     }
 
+    /**
+     * Sends a request to the server to delete the currently selected preference.
+     */
     private void deletePreferenceFromServer() {
         // Send request to server.
         waitForServerResponse();
@@ -361,6 +380,10 @@ public class PreferencesActivity extends MenuActivity {
         deletePreferenceController.start(token, selectedPreference.getId());
     }
 
+    /**
+     * Shows a time picker fragment that allows the user to insert a time constraint.
+     * The time selected is than added to the textView adjacent to the button used.
+     */
     public void showTimePickerDialog(View view) {
         TimePickerFragment newFragment = new TimePickerFragment();
         if (view == findViewById(R.id.minTime_button)) {

@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus.retrofit.response;
 
 
+/**
+ * Location parsed by the JSON returned by the server.
+ */
 public class GetLocationsResponse {
 
     private String name;

@@ -3,6 +3,9 @@ package it.polimi.travlendarplus.retrofit.response;
 
 import java.util.List;
 
+/**
+ * Generic event parsed from the JSON returned by the server.
+ */
 public class GenericEventsResponse {
 
     private List<EventResponse> updatedEvents;

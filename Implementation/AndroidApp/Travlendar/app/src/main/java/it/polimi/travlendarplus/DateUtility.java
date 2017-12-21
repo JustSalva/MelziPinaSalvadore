@@ -9,6 +9,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * Utility class that provides useful methods to interact with calendars and strings.
+ */
 public class DateUtility {
 
     /**
@@ -80,6 +83,11 @@ public class DateUtility {
         return sdf.format(calendar.getTime());
     }
 
+    /**
+     * Transalates a LocalTimeZone HH:mm string into a UTC HH:mm string.
+     * @param localString String HH:mm in local time.
+     * @return String HH:mm in UTC time.
+     */
     public static String getUTCHHmmFromLocalHHmm(String localString) {
         long seconds = getSecondsFromHHmm(localString);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
@@ -88,6 +96,11 @@ public class DateUtility {
         return sdf.format(calendar.getTime());
     }
 
+    /**
+     * Translates a local timeZone HH:mm string in seconds passed from the day's start.
+     * @param time String HH:mm in localTimeZone.
+     * @return seconds passed from the day's start.
+     */
     public static long getNoUTCSecondsFromHHmm(String time) {
         String[] array = time.split(":");
         long hours = Long.parseLong(array[0]);

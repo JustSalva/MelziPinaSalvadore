@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus;
 
 
+/**
+ * Contains info regarding a location's position.
+ */
 public class Position {
     private float latitude;
     private float longitude;

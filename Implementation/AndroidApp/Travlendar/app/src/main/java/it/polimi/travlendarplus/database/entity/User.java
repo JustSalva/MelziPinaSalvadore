@@ -3,6 +3,9 @@ package it.polimi.travlendarplus.database.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+/**
+ * DB user entity.
+ */
 @Entity
 public class User {
     @PrimaryKey(autoGenerate = true)

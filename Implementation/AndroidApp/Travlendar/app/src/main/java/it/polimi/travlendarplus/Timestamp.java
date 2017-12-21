@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus;
 
+/**
+ * Class representing a timestamp.
+ */
 public class Timestamp {
     private long seconds;
     private long nanos;

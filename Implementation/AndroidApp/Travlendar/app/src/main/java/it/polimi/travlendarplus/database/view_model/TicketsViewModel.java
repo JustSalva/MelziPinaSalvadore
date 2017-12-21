@@ -12,6 +12,9 @@ import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import java.util.List;
 
 
+/**
+ * View model that allows access to tickets live data of the DB.
+ */
 public class TicketsViewModel extends AndroidViewModel {
 
     private AppDatabase database = AppDatabase
@@ -27,51 +30,43 @@ public class TicketsViewModel extends AndroidViewModel {
         super(application);
     }
 
+    /**
+     * @return All the general tickets contained in the DB.
+     */
     public LiveData<List<Ticket>> getGeneralTickets() {
         if (generalTickets == null) {
-            generalTickets = new MutableLiveData<>();
-            loadGeneralTickets();
+            generalTickets = database.ticketsDao().getGeneralTickets();
         }
         return generalTickets;
     }
 
+    /**
+     * @return All the period tickets contained in the DB.
+     */
     public LiveData<List<Ticket>> getPeriodTicket() {
         if (periodTickets == null) {
-            periodTickets = new MutableLiveData<>();
-            loadPeriodTickets();
+            periodTickets = database.ticketsDao().getPeriodTickets();
         }
         return periodTickets;
     }
 
+    /**
+     * @return All the distance tickets contained in the DB.
+     */
     public LiveData<List<Ticket>> getDistanceTicket() {
         if (distanceTickets == null) {
-            distanceTickets = new MutableLiveData<>();
-            loadDistanceTickets();
+            distanceTickets = database.ticketsDao().getDistanceTickets();
         }
         return distanceTickets;
     }
 
+    /**
+     * @return All the path ticket contained in the DB.
+     */
     public LiveData<List<Ticket>> getPathTicket() {
         if (pathTickets == null) {
-            pathTickets = new MutableLiveData<>();
-            loadPathTickets();
+            pathTickets = database.ticketsDao().getPathTickets();
         }
         return pathTickets;
-    }
-
-    private void loadGeneralTickets() {
-        generalTickets = database.ticketsDao().getGeneralTickets();
-    }
-
-    private void loadPeriodTickets() {
-        periodTickets = database.ticketsDao().getPeriodTickets();
-    }
-
-    private void loadDistanceTickets() {
-        distanceTickets = database.ticketsDao().getDistanceTickets();
-    }
-
-    private void loadPathTickets() {
-        pathTickets = database.ticketsDao().getPathTickets();
     }
 }

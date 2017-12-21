@@ -15,6 +15,10 @@ import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.tasks.InsertUserTask;
 import it.polimi.travlendarplus.database.entity.User;
 
+/**
+ * Handler that handles the server response to the login request.
+ * It is used by the LoginActivity.
+ */
 public class LoginHandler extends Handler {
 
     private Context context;

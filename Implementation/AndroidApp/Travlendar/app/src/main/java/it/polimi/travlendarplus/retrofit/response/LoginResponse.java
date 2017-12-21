@@ -1,5 +1,8 @@
 package it.polimi.travlendarplus.retrofit.response;
 
+/**
+ * Login info parsed from the JSON returned by the server.
+ */
 public class LoginResponse {
 
     private String token;

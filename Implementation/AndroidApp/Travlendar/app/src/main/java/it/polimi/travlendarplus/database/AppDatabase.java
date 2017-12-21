@@ -13,6 +13,9 @@ import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.User;
 import it.polimi.travlendarplus.database.dao.UserDao;
 
+/**
+ * Database class defining all the different entities contained in it.
+ */
 @Database(entities = {User.class, Ticket.class, GenericEvent.class, TravelComponent.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 

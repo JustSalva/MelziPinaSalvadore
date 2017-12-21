@@ -1,6 +1,9 @@
 package it.polimi.travlendarplus.retrofit.body;
 
 
+/**
+ * Body to be sent to server to add a location.
+ */
 public class LocationBody {
 
     private String name;

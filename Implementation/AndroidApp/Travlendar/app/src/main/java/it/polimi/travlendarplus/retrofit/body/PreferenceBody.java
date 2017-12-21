@@ -4,6 +4,9 @@ import it.polimi.travlendarplus.Preference;
 
 import java.util.List;
 
+/**
+ * Body to be sent to server to add a preference.
+ */
 public class PreferenceBody {
     private long id;
     private String name;

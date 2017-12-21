@@ -1,16 +1,27 @@
 package it.polimi.travlendarplus.activity.listener;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import it.polimi.travlendarplus.activity.CalendarActivity;
+
 /**
  * Listens if a View is been dragged by the user to schedule the event related.
  */
 public final class DragToScheduleListener implements View.OnDragListener {
+
+    private Context context;
+    private CalendarActivity calendarActivity;
+
+    public DragToScheduleListener(Context context, CalendarActivity calendarActivity) {
+        this.context = context;
+        this.calendarActivity = calendarActivity;
+    }
 
     @Override
     public boolean onDrag(View viewReceiving, DragEvent event) {

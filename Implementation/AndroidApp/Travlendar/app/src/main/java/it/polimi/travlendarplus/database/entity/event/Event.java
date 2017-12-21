@@ -2,6 +2,9 @@ package it.polimi.travlendarplus.database.entity.event;
 
 import android.arch.persistence.room.ColumnInfo;
 
+/**
+ * DB event entity.
+ */
 public class Event {
 
     private String description;

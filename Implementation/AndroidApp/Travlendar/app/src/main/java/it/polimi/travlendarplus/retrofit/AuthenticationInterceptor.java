@@ -7,6 +7,10 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Class used to add an authentication header to the request sent to the server.
+ * The token used is the one returned by the server during login/registration.
+ */
 public class AuthenticationInterceptor implements Interceptor {
 
     private String authToken;

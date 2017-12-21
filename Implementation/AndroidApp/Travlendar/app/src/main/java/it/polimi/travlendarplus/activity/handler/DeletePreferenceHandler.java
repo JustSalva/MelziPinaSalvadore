@@ -10,6 +10,10 @@ import android.widget.Toast;
 
 import it.polimi.travlendarplus.activity.PreferencesActivity;
 
+/**
+ * Handler that handles the server response to the preference deletion.
+ * It is used by the PreferencesActivity.
+ */
 public class DeletePreferenceHandler extends Handler {
 
     private Context context;

@@ -9,6 +9,9 @@ import java.util.Objects;
 import static it.polimi.travlendarplus.database.entity.event.GenericEvent.EventType.BREAK;
 import static it.polimi.travlendarplus.database.entity.event.GenericEvent.EventType.EVENT;
 
+/**
+ * Class that contains type converters for saving event objects in the DB.
+ */
 public class EventTypeConverters {
     @TypeConverter
     public static GenericEvent.EventType toEventType(String type) {

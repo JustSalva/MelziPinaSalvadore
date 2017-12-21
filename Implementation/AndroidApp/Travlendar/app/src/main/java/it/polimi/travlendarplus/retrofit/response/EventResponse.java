@@ -4,6 +4,9 @@ import it.polimi.travlendarplus.FeasiblePath;
 import it.polimi.travlendarplus.Position;
 import it.polimi.travlendarplus.Timestamp;
 
+/**
+ * Event parsed from the JSON returned by the server.
+ */
 public class EventResponse {
 
     private String name;

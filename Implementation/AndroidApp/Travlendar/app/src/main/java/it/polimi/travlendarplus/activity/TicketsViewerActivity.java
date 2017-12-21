@@ -12,6 +12,10 @@ import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+/**
+ * Activity that shows a ticket info.
+ * To be implemented.
+ */
 public class TicketsViewerActivity extends MenuActivity {
 
     private LinearLayout ticketsContainer_linearLayout;

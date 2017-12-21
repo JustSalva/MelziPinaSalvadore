@@ -2,6 +2,9 @@ package it.polimi.travlendarplus.database.entity.event;
 
 import android.arch.persistence.room.ColumnInfo;
 
+/**
+ * DB period entity.
+ */
 public class Period {
 
     @ColumnInfo(name = "start_date")

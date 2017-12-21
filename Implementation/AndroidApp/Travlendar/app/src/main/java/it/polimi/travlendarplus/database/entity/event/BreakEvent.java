@@ -2,6 +2,9 @@ package it.polimi.travlendarplus.database.entity.event;
 
 import android.arch.persistence.room.ColumnInfo;
 
+/**
+ * DB break event entity.
+ */
 public class BreakEvent {
 
     @ColumnInfo(name = "minimum_time")

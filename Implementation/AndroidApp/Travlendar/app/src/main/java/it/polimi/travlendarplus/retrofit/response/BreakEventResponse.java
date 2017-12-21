@@ -3,6 +3,9 @@ package it.polimi.travlendarplus.retrofit.response;
 
 import it.polimi.travlendarplus.Timestamp;
 
+/**
+ * Break event parsed from the JSON returned by the server.
+ */
 public class BreakEventResponse {
 
     private long id;

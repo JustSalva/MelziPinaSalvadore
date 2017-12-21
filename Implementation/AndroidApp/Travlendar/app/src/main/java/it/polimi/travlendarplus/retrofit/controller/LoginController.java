@@ -14,6 +14,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Controller that performs a login request to the server.
+ * Fills a message to be sent to the desired handler.
+ */
 public class LoginController implements Callback<LoginResponse> {
 
     private Handler handler;
@@ -22,6 +26,12 @@ public class LoginController implements Callback<LoginResponse> {
         this.handler = handler;
     }
 
+    /**
+     * Starts the server request.
+     * @param email Email of the user.
+     * @param password Password of the user.
+     * @param idDevice Id of the device.
+     */
     public void start(String email, String password, String idDevice) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class);
         Call<LoginResponse> call = client.login(new LoginBody(email, password, idDevice));
