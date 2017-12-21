@@ -14,7 +14,6 @@ import it.polimi.travlendarplus.entities.travels.Travel;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -88,6 +87,18 @@ public class SwapFunctionTest {
                 return ( combs != null ) ? combs.get( 0 ) : null;
             }
         } );
+        when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ), any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
+            @Override
+            public ArrayList < PathCombination > answer ( InvocationOnMock invocation ) throws Throwable {
+                ArrayList < Travel > prev = ( ArrayList < Travel > ) invocation.getArguments()[ 1 ];
+                ArrayList < Travel > foll = ( ArrayList < Travel > ) invocation.getArguments()[ 2 ];
+                ArrayList < PathCombination > combs = new ArrayList < PathCombination >();
+
+                combs.add( new PathCombination( ( prev.size() > 0 ) ? prev.get( rdm.nextInt( prev.size() ) ) : null,
+                        ( foll.size() > 0 ) ? foll.get( rdm.nextInt( foll.size() ) ) : null ) );
+                return combs;
+            }
+        } );
         doNothing().when( scheduleManager ).saveForSwap( any( ArrayList.class ) );
 
     }
@@ -108,18 +119,6 @@ public class SwapFunctionTest {
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
                 return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, false, true, true,
                         true, true );
-            }
-        } );
-        when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ), any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
-            @Override
-            public ArrayList < PathCombination > answer ( InvocationOnMock invocation ) throws Throwable {
-                ArrayList < Travel > prev = ( ArrayList < Travel > ) invocation.getArguments()[ 1 ];
-                ArrayList < Travel > foll = ( ArrayList < Travel > ) invocation.getArguments()[ 2 ];
-                ArrayList < PathCombination > combs = new ArrayList < PathCombination >();
-
-                combs.add( new PathCombination( ( prev.size() > 0 ) ? prev.get( rdm.nextInt( prev.size() ) ) : null,
-                        ( foll.size() > 0 ) ? foll.get( rdm.nextInt( foll.size() ) ) : null ) );
-                return combs;
             }
         } );
         when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenAnswer( new Answer < Object >() {
@@ -169,29 +168,17 @@ public class SwapFunctionTest {
                 return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, true, true, true,
                         true, true );
             }
-        } ).thenAnswer( new Answer<ScheduleHolder> () {
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
                 return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, false, true, true, true,
                         true, true );
             }
         } );
-        when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), anyList(), anyList() ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
-            @Override
-            public ArrayList < PathCombination > answer ( InvocationOnMock invocation ) throws Throwable {
-                ArrayList < Travel > prev = ( ArrayList < Travel > ) invocation.getArguments()[ 1 ];
-                ArrayList < Travel > foll = ( ArrayList < Travel > ) invocation.getArguments()[ 2 ];
-                ArrayList < PathCombination > combs = new ArrayList < PathCombination >();
-
-                combs.add( new PathCombination( ( prev.size() > 0 ) ? prev.get( rdm.nextInt( prev.size() ) ) : null,
-                        ( foll.size() > 0 ) ? foll.get( rdm.nextInt( foll.size() ) ) : null ) );
-                return combs;
-            }
-        } );
         when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
 
         /* I expect that:
-            - 2nd event in the schedule swapped out due to infeasibility of previous travel
+            - 2nd event in the schedule swapped out due to infeasibility of previous travel calculated
             - event to add inserted in 2nd position
             - 3rd event in the schedule with different path
         */
@@ -203,5 +190,52 @@ public class SwapFunctionTest {
         assertEquals( 2, res.get( 0 ).getId() );
         assertEquals( 6, res.get( 1 ).getId() );
         assertEquals( 3, res.get( 2 ).getId() );
+    }
+
+    @Test
+    public void swapEventsTestRemoveFoll () throws GMapsGeneralException {
+        //2018/01/20 h:17:00 - 17:59
+        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516467600, 1516471140, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, true, true, true,
+                        true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, true, true, true,
+                        true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, true, true, true,
+                        true, true );
+            }
+        } ).thenAnswer( new Answer < ScheduleHolder >() {
+            @Override
+            public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
+                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true, true, false, true,
+                        true, true );
+            }
+        } );
+        when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
+
+        /* I expect that:
+            - 4th event in the schedule swapped out due to infeasibility of following travel calculated
+            - event to add inserted in 4th position
+            - 5th event in the schedule with different path
+        */
+        List < GenericEvent > res = pathManager.swapEvents( eventToAdd, privateMeans, publicMeans );
+        assertEquals( 3, res.size() );
+        assertEquals( false, res.get( 0 ).isScheduled() );
+        assertEquals( true, res.get( 1 ).isScheduled() );
+        assertEquals( true, res.get( 2 ).isScheduled() );
+        assertEquals( 4, res.get( 0 ).getId() );
+        assertEquals( 6, res.get( 1 ).getId() );
+        assertEquals( 5, res.get( 2 ).getId() );
     }
 }
