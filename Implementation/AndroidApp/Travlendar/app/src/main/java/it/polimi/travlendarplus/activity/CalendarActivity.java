@@ -190,7 +190,6 @@ public class CalendarActivity extends MenuActivity {
         }
     }
 
-
     /**
      * Creates and return a textView containing the event information.
      * @param event The event to be displayed in the textView.
@@ -199,16 +198,15 @@ public class CalendarActivity extends MenuActivity {
     private TextView createEventTextView(GenericEvent event) {
         TextView textView = new TextView(getApplicationContext());
         textView.setText(event.getName());
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTypeface(null, Typeface.BOLD);
         textView.setId((int) event.getId());
         textView = setColorTextView(textView, event);
         textView = setDimensionTextView(textView, event);
-        // Add on touch listener to overlapping events.
-        if (! event.isScheduled()) {
-            textView.setOnTouchListener(new MyTouchListener());
-        }
+        // Add on touch listener to events.
+        textView.setOnTouchListener(new MyTouchListener());
         return textView;
     }
-
 
     /**
      * Sets the right colors for the event textView, depending on scheduling and type of event.

@@ -18,6 +18,8 @@ public final class DragToScheduleListener implements View.OnDragListener {
         int color = viewReceiving.getDrawingCacheBackgroundColor();
         View viewDragged = (View) event.getLocalState();
         int eventId = viewDragged.getId();
+        int bgColor = viewDragged.getDrawingCacheBackgroundColor();
+        boolean scheduled = (bgColor == Color.parseColor("#FF88CF92")) || (bgColor == Color.parseColor("#FFFF00"));
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 viewReceiving.setBackgroundColor(Color.parseColor("#00FF00"));
@@ -28,12 +30,10 @@ public final class DragToScheduleListener implements View.OnDragListener {
                 viewReceiving.setBackgroundColor(color);
                 break;
             case DragEvent.ACTION_DROP:
-                // Dropped, reassign View to ViewGroup
-                ViewGroup owner = (ViewGroup) viewDragged.getParent();
-                owner.removeView(viewDragged);
-                RelativeLayout container = (RelativeLayout) viewReceiving;
-                container.addView(viewDragged, 0);
-                viewDragged.setVisibility(View.VISIBLE);
+                // Send request to schedule event.
+                if (scheduled) {
+                    // TODO: send request.
+                }
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 viewReceiving.setBackgroundColor(color);
