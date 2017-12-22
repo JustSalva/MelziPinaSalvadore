@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.location;
 
 
 import android.content.Context;
@@ -17,28 +17,25 @@ import java.util.List;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.AccountActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
 /**
  * Handler that handles the server response to the locations request.
  * It is used by the AccountActivity.
  */
-public class GetAccountLocationsHandler extends Handler {
+public class GetAccountLocationsHandler extends DefaultHandler {
 
-    private Context context;
     private AccountActivity accountActivity;
 
     public GetAccountLocationsHandler(Looper looper, Context context, AccountActivity accountActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.accountActivity = accountActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
-        switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
+        super.handleMessage(msg);
+        switch (msg.what) {
             case 200:
                 Toast.makeText(context, "Locations updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -53,8 +50,6 @@ public class GetAccountLocationsHandler extends Handler {
                 accountActivity.populateLocationsSpinner();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         accountActivity.resumeNormalMode();

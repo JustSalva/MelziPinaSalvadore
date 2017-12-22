@@ -21,24 +21,19 @@ import it.polimi.travlendarplus.activity.PublicKeyActivity;
  * Handler that handles the server response to the public key request.
  * It is used by the PublicKeyActivity.
  */
-public class RequestPublicKeyHandler extends Handler {
+public class RequestPublicKeyHandler extends DefaultHandler {
 
-    private Context context;
     private PublicKeyActivity activity;
 
     public RequestPublicKeyHandler(Looper looper, Context context, PublicKeyActivity activity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.activity = activity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                context.startActivity(new Intent(context, LoginActivity.class));
-                break;
             case 200:
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
@@ -51,8 +46,6 @@ public class RequestPublicKeyHandler extends Handler {
                 context.startActivity(new Intent(context, LoginActivity.class));
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 context.startActivity(new Intent(context, LoginActivity.class));
                 break;
         }

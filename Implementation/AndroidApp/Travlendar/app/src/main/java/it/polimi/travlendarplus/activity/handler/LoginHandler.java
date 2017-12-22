@@ -22,23 +22,19 @@ import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
  * Handler that handles the server response to the login request.
  * It is used by the LoginActivity.
  */
-public class LoginHandler extends Handler {
+public class LoginHandler extends DefaultHandler {
 
-    private Context context;
     private LoginActivity loginActivity;
 
     public LoginHandler(Looper looper, Context context, LoginActivity loginActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.loginActivity = loginActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
@@ -51,27 +47,12 @@ public class LoginHandler extends Handler {
                 new InsertUserTask(context).execute(user);
                 context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
-            case 400:
-                // Shows the user which invalid fields have been sent to server.
-                Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                ErrorResponse errorResponse = new Gson()
-                        .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
-                // Shows a toast for each error message.
-                for (String message : errorResponse.getMessages()) {
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                }
-                break;
-            case 401:
-                Toast.makeText(context, "This user is not registered!", Toast.LENGTH_LONG).show();
-                break;
             case 403:
                 Toast.makeText(context, "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();
                 loginActivity.getPassword_editText().setError("Wrong password!");
                 loginActivity.getPassword_editText().requestFocus();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         loginActivity.resumeNormalMode();

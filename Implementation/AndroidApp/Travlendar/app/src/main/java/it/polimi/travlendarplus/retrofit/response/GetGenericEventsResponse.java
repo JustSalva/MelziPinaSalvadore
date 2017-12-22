@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Generic event parsed from the JSON returned by the server.
  */
-public class GenericEventsResponse {
+public class GetGenericEventsResponse {
 
     private List<EventResponse> updatedEvents;
     private List<BreakEventResponse> updatedBreakEvents;

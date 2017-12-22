@@ -24,9 +24,9 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.R;
-import it.polimi.travlendarplus.activity.handler.AddLocationHandler;
-import it.polimi.travlendarplus.activity.handler.DeleteLocationHandler;
-import it.polimi.travlendarplus.activity.handler.GetAccountLocationsHandler;
+import it.polimi.travlendarplus.activity.handler.location.AddLocationHandler;
+import it.polimi.travlendarplus.activity.handler.location.DeleteLocationHandler;
+import it.polimi.travlendarplus.activity.handler.location.GetAccountLocationsHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.controller.AddLocationController;
 import it.polimi.travlendarplus.retrofit.controller.DeleteLocationController;

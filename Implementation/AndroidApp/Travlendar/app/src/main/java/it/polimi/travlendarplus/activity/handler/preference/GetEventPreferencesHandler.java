@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.preference;
 
 
 import android.content.Context;
@@ -18,28 +18,25 @@ import java.util.Map;
 
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
 /**
  * Handler that handles the server response to the preferences request.
  * It is used by the EventEditorActivity.
  */
-public class GetEventPreferencesHandler extends Handler {
+public class GetEventPreferencesHandler extends DefaultHandler {
 
-    private Context context;
     private EventEditorActivity eventEditorActivity;
 
     public GetEventPreferencesHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.eventEditorActivity = eventEditorActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 Toast.makeText(context, "Preferences updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -61,8 +58,6 @@ public class GetEventPreferencesHandler extends Handler {
                 eventEditorActivity.populatePreferencesSpinner();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         eventEditorActivity.resumeNormalMode();

@@ -44,7 +44,7 @@ public final class DragToScheduleListener implements View.OnDragListener {
                 break;
             case DragEvent.ACTION_DROP:
                 // Send request to schedule event.
-                if (scheduled) {
+                if (! scheduled) {
                     // Send request to server.
                     calendarActivity.waitForServerResponse();
                     ScheduleEventController scheduleEventController =

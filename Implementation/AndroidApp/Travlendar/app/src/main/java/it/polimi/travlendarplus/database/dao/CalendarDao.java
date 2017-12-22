@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Dao
 public interface CalendarDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(GenericEvent genericEvent);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.preference;
 
 
 import android.content.Context;
@@ -13,28 +13,25 @@ import com.google.gson.Gson;
 
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.PreferencesActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
 /**
  * Handler that handles the server response to the preference modification.
  * It is used by the PreferencesActivity.
  */
-public class ModifyPreferenceHandler extends Handler {
+public class ModifyPreferenceHandler extends DefaultHandler {
 
-    private Context context;
     private PreferencesActivity preferencesActivity;
 
     public ModifyPreferenceHandler(Looper looper, Context context, PreferencesActivity preferencesActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.preferencesActivity = preferencesActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 Toast.makeText(context, "Preference edited!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -46,8 +43,6 @@ public class ModifyPreferenceHandler extends Handler {
                 preferencesActivity.populatePreferencesSpinner();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         preferencesActivity.resumeNormalMode();

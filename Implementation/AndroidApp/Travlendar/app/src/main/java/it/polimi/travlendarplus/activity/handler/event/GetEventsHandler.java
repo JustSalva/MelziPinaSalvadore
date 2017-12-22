@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.event;
 
 
 import android.content.Context;
@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.activity.tasks.InsertBreakEventsTask;
 import it.polimi.travlendarplus.activity.tasks.InsertEventsTask;
 import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
@@ -24,23 +25,19 @@ import it.polimi.travlendarplus.retrofit.response.EventResponse;
  * Handler that handles the server response to the events request.
  * It is used by the CalendarActivity.
  */
-public class GetEventsHandler extends Handler {
+public class GetEventsHandler extends DefaultHandler {
 
-    private Context context;
     private CalendarActivity calendarActivity;
 
     public GetEventsHandler(Looper looper, Context context, CalendarActivity calendarActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.calendarActivity = calendarActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 Toast.makeText(context, "Events updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -65,8 +62,6 @@ public class GetEventsHandler extends Handler {
                 new InsertBreakEventsTask(context, breakEvents).execute();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         calendarActivity.resumeNormalMode();

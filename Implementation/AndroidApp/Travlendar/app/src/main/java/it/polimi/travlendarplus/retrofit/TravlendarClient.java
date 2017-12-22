@@ -8,14 +8,11 @@ import it.polimi.travlendarplus.retrofit.body.LocationBody;
 import it.polimi.travlendarplus.retrofit.body.LoginBody;
 import it.polimi.travlendarplus.retrofit.body.PreferenceBody;
 import it.polimi.travlendarplus.retrofit.body.RegisterBody;
-import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
-import it.polimi.travlendarplus.retrofit.response.EventResponse;
-import it.polimi.travlendarplus.retrofit.response.GenericEventsResponse;
+import it.polimi.travlendarplus.retrofit.response.GetGenericEventsResponse;
 import it.polimi.travlendarplus.retrofit.response.LoginResponse;
 import it.polimi.travlendarplus.retrofit.response.PublicKeyResponse;
 import it.polimi.travlendarplus.retrofit.response.RegisterResponse;
 
-import java.security.PublicKey;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -78,7 +75,7 @@ public interface TravlendarClient {
     );
 
     @GET("event/updateLocalDb/{timestamp}")
-    Call<GenericEventsResponse> getEvents(
+    Call<GetGenericEventsResponse> getEvents(
             @Path("timestamp") long timestamp
     );
 
@@ -98,7 +95,7 @@ public interface TravlendarClient {
     );
 
     @PATCH("path/{id}")
-    Call<Void> scheduleEvent(
+    Call<GetGenericEventsResponse> scheduleEvent(
             @Path("id") int id
     );
 }

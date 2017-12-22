@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.location;
 
 
 import android.content.Context;
@@ -17,28 +17,25 @@ import java.util.List;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
 /**
  * Handler that handles the server response to the locations request.
  * It is used by the EventEditorActivity.
  */
-public class GetEventLocationsHandler extends Handler {
+public class GetEventLocationsHandler extends DefaultHandler {
 
-    private Context context;
     private EventEditorActivity eventEditorActivity;
 
     public GetEventLocationsHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.eventEditorActivity = eventEditorActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
-        switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
+        super.handleMessage(msg);
+        switch (msg.what) {
             case 200:
                 Toast.makeText(context, "Locations updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -52,8 +49,6 @@ public class GetEventLocationsHandler extends Handler {
                 eventEditorActivity.populateLocationsSpinner();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         eventEditorActivity.resumeNormalMode();

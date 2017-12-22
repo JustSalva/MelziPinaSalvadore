@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.activity.handler;
+package it.polimi.travlendarplus.activity.handler.event;
 
 
 import android.content.Context;
@@ -9,29 +9,26 @@ import android.os.Message;
 import android.widget.Toast;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
+import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.activity.tasks.DeleteEventTask;
 
 /**
  * Handler that handles the server response to the event deletion.
  * It is used by the CalendarActivity.
  */
-public class DeleteEventHandler extends Handler {
+public class DeleteEventHandler extends DefaultHandler {
 
-    private Context context;
     private CalendarActivity calendarActivity;
 
     public DeleteEventHandler(Looper looper, Context context, CalendarActivity calendarActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.calendarActivity = calendarActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 int eventId = msg.getData().getInt("Id");
                 // Notify the user that the event has been removed.
@@ -41,14 +38,10 @@ public class DeleteEventHandler extends Handler {
                 // Reload calendar activity.
                 context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
-            case 400:
-                Toast.makeText(context, "The event specified does not exist!", Toast.LENGTH_LONG).show();
-                break;
             case 503:
                 Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
                 break;
         }
         calendarActivity.resumeNormalMode();

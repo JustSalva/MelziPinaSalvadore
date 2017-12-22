@@ -9,7 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
-import it.polimi.travlendarplus.retrofit.response.GenericEventsResponse;
+import it.polimi.travlendarplus.retrofit.response.GetGenericEventsResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +19,7 @@ import retrofit2.Response;
  * Controller that performs a get events request to the server.
  * Fills a message to be sent to the desired handler.
  */
-public class GetEventsController implements Callback<GenericEventsResponse> {
+public class GetEventsController implements Callback<GetGenericEventsResponse> {
 
     private Handler handler;
 
@@ -34,11 +34,11 @@ public class GetEventsController implements Callback<GenericEventsResponse> {
      */
     public void start(String authToken, long timestamp) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<GenericEventsResponse> call = client.getEvents(timestamp);
+        Call<GetGenericEventsResponse> call = client.getEvents(timestamp);
         call.enqueue(this);
     }
     @Override
-    public void onResponse(Call<GenericEventsResponse> call, Response<GenericEventsResponse> response) {
+    public void onResponse(Call<GetGenericEventsResponse> call, Response<GetGenericEventsResponse> response) {
         Bundle bundle = new Bundle();
         if (response.isSuccessful()) {
             String jsonEvents = new Gson().toJson(response.body().getUpdatedEvents());
@@ -54,7 +54,7 @@ public class GetEventsController implements Callback<GenericEventsResponse> {
     }
 
     @Override
-    public void onFailure(Call<GenericEventsResponse> call, Throwable t) {
+    public void onFailure(Call<GetGenericEventsResponse> call, Throwable t) {
         Log.d("INTERNET_CONNECTION", "ABSENT");
         Message msg = handler.obtainMessage(0);
         msg.sendToTarget();

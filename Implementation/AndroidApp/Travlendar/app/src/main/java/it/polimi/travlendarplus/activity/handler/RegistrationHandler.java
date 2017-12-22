@@ -22,23 +22,19 @@ import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
  * Handler that handles the server response to the registration request.
  * It is used by the RegistrationActivity.
  */
-public class RegistrationHandler extends Handler {
+public class RegistrationHandler extends DefaultHandler {
 
-    private Context context;
     private RegistrationActivity registrationActivity;
 
     public RegistrationHandler(Looper looper, Context context, RegistrationActivity registrationActivity) {
-        super(looper);
-        this.context = context;
+        super(looper, context);
         this.registrationActivity = registrationActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
+        super.handleMessage(msg);
         switch (msg.what){
-            case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                break;
             case 200:
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
@@ -53,22 +49,7 @@ public class RegistrationHandler extends Handler {
                 new InsertUserTask(context).execute(user);
                 context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
-            case 400:
-                // Shows the user which invalid fields have been sent to server.
-                Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
-                ErrorResponse errorResponse = new Gson()
-                        .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
-                // Shows a toast for each error message.
-                for (String message : errorResponse.getMessages()) {
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                }
-                break;
-            case 401:
-                Toast.makeText(context, "This email is already taken!", Toast.LENGTH_LONG).show();
-                break;
             default:
-                Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
-                Log.d("ERROR_RESPONSE", msg.toString());
                 break;
         }
         registrationActivity.resumeNormalMode();
