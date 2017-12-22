@@ -114,7 +114,6 @@ public class Travel extends EntityWithLongKey {
         }
         long startingTime = miniTravels.get( i ).getStartingTime().getEpochSecond() - timeToSub;
         return Instant.ofEpochSecond( startingTime );
-
     }
 
     public Instant getEndingTime () {
@@ -151,6 +150,32 @@ public class Travel extends EntityWithLongKey {
 
     public int numberOfChanges () {
         return miniTravels.size() - 1;
+    }
+
+    public void fixTimes () {
+        int i = 0;
+        // It goes into the while if the path starts with walking components.
+        while ( miniTravels.get( i ).getStartingTime().getEpochSecond() == 0 ) {
+            i++;
+        }
+        // Adjusting starting and ending time for paths starting with walking components.
+        while ( i > 0 ) {
+            long stTimeFoll = miniTravels.get( i ).getStartingTime().getEpochSecond();
+            long walkingDuration = miniTravels.get( i - 1 ).getEndingTime().getEpochSecond();
+            miniTravels.get( i - 1 ).setStartingTime( Instant.ofEpochSecond( stTimeFoll - walkingDuration ) );
+            miniTravels.get( i - 1 ).setEndingTime( Instant.ofEpochSecond( stTimeFoll ) );
+            i--;
+        }
+        // Adjusting walking component planned after a component related to public mean.
+        while ( i < miniTravels.size() ) {
+            if ( miniTravels.get( i ).getStartingTime().getEpochSecond() == 0 ) {
+                long endTimePrev = miniTravels.get( i - 1 ).getEndingTime().getEpochSecond();
+                long walkingDuration = miniTravels.get( i ).getEndingTime().getEpochSecond();
+                miniTravels.get( i ).setStartingTime( Instant.ofEpochSecond( endTimePrev ) );
+                miniTravels.get( i ).setEndingTime( Instant.ofEpochSecond( endTimePrev + walkingDuration ) );
+            }
+            i++;
+        }
     }
 
     @Override

@@ -83,7 +83,7 @@ public class GMapsDirectionsHandler {
     }
 
     private void baseCall () {
-        addParam( "key", "AIzaSyBc9aH-yiGT09jmvPljH4Kh90_UpzwYs9I" );
+        addParam( "key", "AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y" );
         addParam( "alternatives", "true" );
         addParam( "units", "metric" );
         addParam( "avoid", "ferries" );

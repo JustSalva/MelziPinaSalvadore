@@ -24,7 +24,7 @@ public class GMapsGeocoder {
     public static String getLatLngAddress ( double lat, double lng )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         String call = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng +
-                "&key=AIzaSyDzSlw5a43nbpZd8AGvY0UXWIlzd1XxDaw";
+                "&key=AIzaSyDaLQb73k0f7P6dNAnA6yLbBdmfddYs-3Y";
 
         try {
             JSONObject response = HTMLCallAndResponse.performCall( call );

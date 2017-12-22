@@ -40,7 +40,7 @@ public class RESTfulTestSettings {
     private PathCombination combination = new PathCombination( null, null );
     private ArrayList < TravelMeanEnum > privateMeans;
     private ArrayList < TravelMeanEnum > publicMeans;
-    private TravelMeanEnum[] privM = { TravelMeanEnum.CAR };
+    private TravelMeanEnum[] privM = new TravelMeanEnum[ 0 ];//{ TravelMeanEnum.CAR };
     private TravelMeanEnum[] pubM = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS };
 
     public String addEventBaseCaseTest ( boolean first, boolean second, boolean third, boolean setTravel )
@@ -95,7 +95,7 @@ public class RESTfulTestSettings {
             be1 = setBreakEvent( 1516442400, 1516446000, 30 * 60, true );
             user.addBreak( be1 );
         }
-        List< GenericEvent > swapResponse = null;
+        List < GenericEvent > swapResponse = null;
         try {
             swapResponse = pathManager.swapEvents( e4, privateMeans, publicMeans );
         } catch ( GMapsGeneralException e ) {
@@ -116,6 +116,9 @@ public class RESTfulTestSettings {
         e2 = setEvent( 1516456800, 1516460400, true, mandello, lecco, toe1 );
         //2018/01/20 h:18:00 - 20:00
         e3 = setEvent( 1516471200, 1516478400, true, mandello, como, toe1 );
+        e1.setId( 1001 );
+        e2.setId( 1002 );
+        e3.setId( 1003 );
         setScheduleld( first, second, third );
         if ( setTravels )
             baseTravelsConfiguration();

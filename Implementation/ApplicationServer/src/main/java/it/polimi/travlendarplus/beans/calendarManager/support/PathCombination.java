@@ -49,6 +49,11 @@ public class PathCombination {
             saveTravelLocations( follPath.getMiniTravels() );
     }
 
+    public void fixTimes () {
+        prevPath.fixTimes();
+        follPath.fixTimes();
+    }
+
     private void saveTravelLocations ( List < TravelComponent > travel ) {
         for ( TravelComponent comb : travel ) {
             comb.getDeparture().save();

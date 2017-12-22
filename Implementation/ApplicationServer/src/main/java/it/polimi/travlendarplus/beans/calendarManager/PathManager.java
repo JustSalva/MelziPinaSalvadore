@@ -78,9 +78,11 @@ public class PathManager extends UserManager {
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         List < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
                 previousPaths, followingPaths );
-        return ( !possibleCombinations.isEmpty() ) ? preferenceManager.findBestPath(
-                possibleCombinations, event.getType() )
-                : null;
+        if ( possibleCombinations.isEmpty() )
+            return null;
+        PathCombination bestPath = preferenceManager.findBestPath( possibleCombinations, event.getType() );
+        bestPath.fixTimes();
+        return bestPath;
     }
 
     private List < Travel > getPreviousTravels ( Event event, List < TravelMeanEnum > privateMeans,
