@@ -23,6 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 
 import javax.crypto.BadPaddingException;
@@ -43,9 +44,8 @@ import it.polimi.travlendarplus.retrofit.controller.RequestPublicKeyController;
 public class LoginActivity extends AppCompatActivity implements PublicKeyActivity {
     // idDevice token.
     private String idDevice;
-    /* PUBLIC KEY: to be removed when encryption works.
+    // PUBLIC KEY: to be removed when encryption works.
     private PublicKey publicKey;
-    */
     // UI references.
     private EditText email_editText;
     private EditText password_editText;
@@ -55,9 +55,8 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
     private String password;
     // Handler for server responses.
     private Handler loginHandler;
-    /* PUBLIC KEY HANDLER: to be removed when encryption works.
+    // PUBLIC KEY HANDLER: to be removed when encryption works.
     private Handler requestPublicKeyHandler;
-    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,21 +86,19 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
             }
             return false;
         });
-        /* PUBLIC KEY HANDLER: remove comment when encryption working
-            requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        */
+        // Public key handler.
+        requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
         // Handle server responses.
         loginHandler = new LoginHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
-        /* PUBLIC KEY REQUEST: remove comment whe encryption working.
+        // Public key request.
         if (publicKey == null) {
             // Send public key request to server.
             waitForServerResponse();
             RequestPublicKeyController requestPublicKeyController = new RequestPublicKeyController(requestPublicKeyHandler);
             requestPublicKeyController.start(idDevice);
         }
-        */
         // Listener on the login button.
         login_button.setOnClickListener(view -> logIn());
     }
@@ -122,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
             return;
         }
 
-        /* PASSWORD ENCRYPTION: to be removed when encryption works.
+        // PASSWORD ENCRYPTION: to be removed when encryption works.
         Cipher cipher = null;
         try {
             cipher = Cipher.getInstance("RSA");
@@ -132,14 +129,11 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
         }
         String cryptoPassword = null;
         try {
-            cryptoPassword = Base64.encodeToString(
-                    cipher.doFinal(password.getBytes()),
-                    Base64.DEFAULT
-            );
+            byte[] passwordBytes = password.getBytes();
+            cryptoPassword = Base64.encodeToString(cipher.doFinal(passwordBytes), Base64.URL_SAFE);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
-        */
 
         // Send request to server.
         waitForServerResponse();
@@ -222,7 +216,7 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
 
     @Override
     public void setPublicKey(PublicKey publicKey) {
-
+        this.publicKey = publicKey;
     }
 }
 

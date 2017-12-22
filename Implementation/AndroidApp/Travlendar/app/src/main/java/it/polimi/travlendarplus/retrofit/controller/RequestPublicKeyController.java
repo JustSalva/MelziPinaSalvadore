@@ -44,8 +44,8 @@ public class RequestPublicKeyController implements Callback<PublicKeyResponse> {
     public void onResponse(Call<PublicKeyResponse> call, Response<PublicKeyResponse> response) {
         Bundle bundle = new Bundle();
         if (response.isSuccessful()) {
-            // String jsonPublicKey = response.body();
-            // bundle.putString("jsonPublicKey", jsonPublicKey);
+            byte[] bytesPublicKey = response.body().getPublicKey();
+            bundle.putByteArray("bytesPublicKey", bytesPublicKey);
         } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }

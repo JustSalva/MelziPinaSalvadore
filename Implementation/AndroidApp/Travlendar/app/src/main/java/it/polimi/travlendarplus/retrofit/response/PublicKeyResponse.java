@@ -8,9 +8,9 @@ import java.security.PublicKey;
  */
 public class PublicKeyResponse {
 
-    private PublicKey publicKey;
+    private byte[] publicKey;
 
-    public PublicKey getPublicKey() {
+    public byte[] getPublicKey() {
         return publicKey;
     }
 }
