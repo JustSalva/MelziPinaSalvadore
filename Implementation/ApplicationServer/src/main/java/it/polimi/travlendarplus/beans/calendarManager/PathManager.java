@@ -55,6 +55,12 @@ public class PathManager extends UserManager {
         preferenceManager.setCurrentUser( currentUser );
     }
 
+    public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
+                                           List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
+        scheduleManager.setSchedule( event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
+        return calcPathNoSetSchedule( event, privateMeans, publicMeans );
+    }
+
     /**
      * Compute a the best path relative to a given event
      *
@@ -64,9 +70,8 @@ public class PathManager extends UserManager {
      * @return the requested path if available, null otherwise
      * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
      */
-    public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
-                                           List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
-        scheduleManager.setSchedule( event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
+    private PathCombination calcPathNoSetSchedule ( Event event, List < TravelMeanEnum > privateMeans,
+                                                    List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         // Obtaining possible paths that don't overlap with previous and following scheduled events.
         List < Travel > previousPaths = getPreviousTravels( event, privateMeans, publicMeans );
         List < Travel > followingPaths = getFollowingTravels( event, privateMeans, publicMeans );
@@ -261,7 +266,8 @@ public class PathManager extends UserManager {
                         forcedEvent.getStartingTime() ) );
             }
         }
-        PathCombination best = ( complete ) ? preferenceManager.findBestPath( combs, forcedEvent.getType() ) : null;
+        PathCombination best = ( complete ) ? preferenceManager.findBestPath( combs, forcedEvent.getType() ) :
+                calcPathNoSetSchedule( forcedEvent, privateMeans, publicMeans );
         return best != null ? conclusionForSwap( best, forcedEvent, swapOutEvents ) : new ArrayList <>();
     }
 
