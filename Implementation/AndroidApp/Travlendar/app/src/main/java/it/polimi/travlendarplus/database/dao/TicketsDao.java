@@ -28,6 +28,9 @@ public interface TicketsDao {
     @Query("DELETE FROM ticket")
     void deleteAll();
 
+    @Query("SELECT * from ticket")
+    LiveData<List<Ticket>> getTickets();
+
     @Query("SELECT * from ticket WHERE type LIKE 'General'")
     LiveData<List<Ticket>> getGeneralTickets();
 

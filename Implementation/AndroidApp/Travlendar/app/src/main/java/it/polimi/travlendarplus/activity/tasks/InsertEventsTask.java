@@ -9,7 +9,7 @@ import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.Event;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
-import it.polimi.travlendarplus.retrofit.response.EventResponse;
+import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,52 +21,19 @@ public class TicketsViewModel extends AndroidViewModel {
             .getInstance(getApplication()
                     .getApplicationContext());
 
-    private LiveData<List<Ticket>> generalTickets;
-    private LiveData<List<Ticket>> periodTickets;
-    private LiveData<List<Ticket>> distanceTickets;
-    private LiveData<List<Ticket>> pathTickets;
+    private LiveData<List<Ticket>> tickets;
 
     public TicketsViewModel(@NonNull Application application) {
         super(application);
     }
 
     /**
-     * @return All the general tickets contained in the DB.
+     * @return All the tickets contained in the DB.
      */
-    public LiveData<List<Ticket>> getGeneralTickets() {
-        if (generalTickets == null) {
-            generalTickets = database.ticketsDao().getGeneralTickets();
+    public LiveData<List<Ticket>> getTickets() {
+        if (tickets == null) {
+            tickets = database.ticketsDao().getTickets();
         }
-        return generalTickets;
-    }
-
-    /**
-     * @return All the period tickets contained in the DB.
-     */
-    public LiveData<List<Ticket>> getPeriodTicket() {
-        if (periodTickets == null) {
-            periodTickets = database.ticketsDao().getPeriodTickets();
-        }
-        return periodTickets;
-    }
-
-    /**
-     * @return All the distance tickets contained in the DB.
-     */
-    public LiveData<List<Ticket>> getDistanceTicket() {
-        if (distanceTickets == null) {
-            distanceTickets = database.ticketsDao().getDistanceTickets();
-        }
-        return distanceTickets;
-    }
-
-    /**
-     * @return All the path ticket contained in the DB.
-     */
-    public LiveData<List<Ticket>> getPathTicket() {
-        if (pathTickets == null) {
-            pathTickets = database.ticketsDao().getPathTickets();
-        }
-        return pathTickets;
+        return tickets;
     }
 }

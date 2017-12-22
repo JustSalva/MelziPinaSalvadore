@@ -9,7 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
-import it.polimi.travlendarplus.retrofit.response.GetGenericEventsResponse;
+import it.polimi.travlendarplus.retrofit.response.event.GetGenericEventsResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;

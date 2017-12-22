@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.event.BreakEvent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
-import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
+import it.polimi.travlendarplus.retrofit.response.event.BreakEventResponse;
 
 import java.util.List;
 

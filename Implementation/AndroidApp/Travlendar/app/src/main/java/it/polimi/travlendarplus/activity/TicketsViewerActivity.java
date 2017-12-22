@@ -1,14 +1,19 @@
 package it.polimi.travlendarplus.activity;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.database.entity.ticket.Ticket;
+import it.polimi.travlendarplus.database.view_model.TicketsViewModel;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -21,6 +26,13 @@ public class TicketsViewerActivity extends MenuActivity {
 
     private LinearLayout ticketsContainer_linearLayout;
 
+    private TicketsViewModel ticketsViewModel;
+
+    private List<Ticket> ticketsList;
+    private boolean ticketsDownloaded = false;
+
+    private Handler getTicketsHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +41,37 @@ public class TicketsViewerActivity extends MenuActivity {
 
         ticketsContainer_linearLayout = findViewById(R.id.ticketsContainer_linearLayout);
 
+        ticketsViewModel = ViewModelProviders.of(this).get(TicketsViewModel.class);
+        ticketsViewModel.getTickets().observe(this, tickets -> {
+            ticketsList = tickets;
+            fillTicketsLayout();
+        });
+
+        if (! ticketsDownloaded) {
+            loadTicketsFromServer();
+            ticketsDownloaded = true;
+        }
+
         findViewById(R.id.addTicket_button).setOnClickListener(
                 click -> startActivity(new Intent(getApplicationContext(), TicketEditorActivity.class))
         );
     }
 
-    private void insertTicketGridLayout(Ticket ticket) {
+    private void loadTicketsFromServer() {
+        // Send request to server.
+        waitForServerResponse();
+        GetTicketsController getTicketsController = new GetTicketsController(getEventsHandler);
+        getEventsController.start(token, timestamp);
+    }
+
+    private void fillTicketsLayout() {
+        ticketsContainer_linearLayout.removeAllViews();
+        for (Ticket ticket : ticketsList) {
+            ticketsContainer_linearLayout.addView(insertTicketGridLayout(ticket));
+        }
+    }
+
+    private GridLayout insertTicketGridLayout(Ticket ticket) {
         GridLayout gridLayout = new GridLayout(getApplicationContext());
         gridLayout.setColumnCount(2);
         gridLayout.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
@@ -55,5 +92,6 @@ public class TicketsViewerActivity extends MenuActivity {
             case GENERAL:
                 break;
         }
+        return gridLayout;
     }
 }

@@ -3,7 +3,6 @@ package it.polimi.travlendarplus.activity.handler.event;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -18,8 +17,8 @@ import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.activity.tasks.InsertBreakEventsTask;
 import it.polimi.travlendarplus.activity.tasks.InsertEventsTask;
-import it.polimi.travlendarplus.retrofit.response.BreakEventResponse;
-import it.polimi.travlendarplus.retrofit.response.EventResponse;
+import it.polimi.travlendarplus.retrofit.response.event.BreakEventResponse;
+import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
 /**
  * Handler that handles the server response to the events request.

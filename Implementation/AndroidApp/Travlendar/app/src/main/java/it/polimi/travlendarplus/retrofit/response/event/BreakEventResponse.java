@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.retrofit.response;
+package it.polimi.travlendarplus.retrofit.response.event;
 
 
 import it.polimi.travlendarplus.Timestamp;

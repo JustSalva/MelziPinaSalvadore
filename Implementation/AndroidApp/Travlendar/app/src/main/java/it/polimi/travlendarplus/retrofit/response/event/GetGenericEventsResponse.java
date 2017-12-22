@@ -1,7 +1,10 @@
-package it.polimi.travlendarplus.retrofit.response;
+package it.polimi.travlendarplus.retrofit.response.event;
 
 
 import java.util.List;
+
+import it.polimi.travlendarplus.retrofit.response.event.BreakEventResponse;
+import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
 /**
  * Generic event parsed from the JSON returned by the server.
