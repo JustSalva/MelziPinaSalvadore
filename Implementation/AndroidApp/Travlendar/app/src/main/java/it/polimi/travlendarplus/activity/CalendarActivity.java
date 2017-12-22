@@ -22,6 +22,7 @@ import it.polimi.travlendarplus.activity.handler.event.ScheduleEventHandler;
 import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchListener;
+import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
@@ -55,6 +56,7 @@ public class CalendarActivity extends MenuActivity {
 
     private Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
     private List<GenericEvent> eventsList = new ArrayList<>();
+    private List<TravelComponent> travelComponentsList = new ArrayList<>();
     // Handlers for server responses.
     private Handler getEventsHandler;
     private Handler deleteEventHandler;
@@ -95,6 +97,12 @@ public class CalendarActivity extends MenuActivity {
                     eventsList = events;
                     fillEventsRelativeLayout();
                 });
+        calendarViewModel.getAllTravelComponents().observe(
+                this, travelComponents -> {
+                    travelComponentsList = travelComponents;
+                    fillEventsRelativeLayout();
+                }
+        );
 
         date_textView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -186,6 +194,8 @@ public class CalendarActivity extends MenuActivity {
                 if (event.isScheduled()) {
                     // Insert scheduled events.
                     events_relativeLayout.addView(createEventTextView(event));
+                    // Inserts travels for scheduled events.
+                    events_relativeLayout.addView(createTravelTextView(event));
                 } else {
                     // Insert overlapping events.
                     overlappingEvents_relativeLayout.addView(createEventTextView(event));
@@ -207,6 +217,52 @@ public class CalendarActivity extends MenuActivity {
         textView.setId((int) event.getId());
         textView = setColorTextView(textView, event);
         textView = setDimensionTextView(textView, event);
+        // Add on touch listener to events.
+        textView.setOnTouchListener(new MyTouchListener());
+        return textView;
+    }
+
+    /**
+     * Creates and return a textView containing the travel information.
+     * @param event The event related to the travel to be displayed in the textView.
+     * @return A textView containing the travel info.
+     */
+    private TextView createTravelTextView(GenericEvent event) {
+        List<TravelComponent> eventTravelComponents = new ArrayList<>();
+        for (TravelComponent travelComponent : travelComponentsList) {
+            if (travelComponent.getEventId() == event.getId()) {
+                eventTravelComponents.add(travelComponent);
+            }
+        }
+        // Saves starting and ending travel time.
+        long startingTime = Long.MAX_VALUE;
+        long endingTime = 0;
+        for (TravelComponent travelComponent : eventTravelComponents) {
+            if (travelComponent.getEndTime() > endingTime) {
+                endingTime = travelComponent.getEndTime();
+            }
+            if (travelComponent.getStartTime() < startingTime) {
+                startingTime = travelComponent.getStartTime();
+            }
+        }
+        // Set style.
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText("Travel");
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTypeface(null, Typeface.BOLD);
+        // Set colors.
+        textView.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
+        textView.setBackgroundColor(Color.parseColor("#ADFF2F"));
+        textView = setDimensionTextView(textView, event);
+        // Set the height depending on the event duration.
+        int minDuration = (int) (endingTime - startingTime) / 60;
+        int height = minDuration * 2;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, height);
+        // Sets the top margin depending on the starting time of the event.
+        int minutesOfDay = (((int) startingTime) % 86400) / 60;
+        int marginTop = minutesOfDay * 2;
+        params.setMargins(30, marginTop, 30, 10);
+        textView.setLayoutParams(params);
         // Add on touch listener to events.
         textView.setOnTouchListener(new MyTouchListener());
         return textView;

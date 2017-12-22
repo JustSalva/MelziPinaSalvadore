@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -27,6 +28,10 @@ public class TicketsViewerActivity extends MenuActivity {
         super.setupMenuToolbar();
 
         ticketsContainer_linearLayout = findViewById(R.id.ticketsContainer_linearLayout);
+
+        findViewById(R.id.addTicket_button).setOnClickListener(
+                click -> startActivity(new Intent(getApplicationContext(), TicketEditorActivity.class))
+        );
     }
 
     private void insertTicketGridLayout(Ticket ticket) {

@@ -7,6 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import it.polimi.travlendarplus.database.AppDatabase;
+import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CalendarViewModel extends AndroidViewModel {
     private LiveData<List<GenericEvent>> scheduledEvents;
     private LiveData<List<GenericEvent>> overlappingEvents;
     private LiveData<List<GenericEvent>> breakEvents;
+    private LiveData<List<TravelComponent>> travelComponents;
 
     public CalendarViewModel(@NonNull Application application) {
         super(application);
@@ -85,5 +87,12 @@ public class CalendarViewModel extends AndroidViewModel {
             breakEvents = database.calendarDao().getBreakEvents(date);
         }
         return breakEvents;
+    }
+
+    /**
+     * @return All the travel components present in the DB.
+     */
+    public LiveData<List<TravelComponent>> getAllTravelComponents() {
+        return database.calendarDao().getAllTravelComponents();
     }
 }

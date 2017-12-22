@@ -38,7 +38,7 @@ public abstract class DefaultHandler extends Handler {
                 ErrorResponse errorResponse = new Gson()
                         .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
                 // Shows a toast for each error message.
-                if (errorResponse.getMessages().isEmpty()) {
+                if (errorResponse.getMessages() == null) {
                     Toast.makeText(context, "Invalid request sent to server!", Toast.LENGTH_LONG).show();
                 } else {
                     for (String message : errorResponse.getMessages()) {

@@ -60,7 +60,10 @@ public interface CalendarDao {
     LiveData<List<GenericEvent>> getBreakEvents(long date);
 
     @Query("SELECT * FROM travel_component WHERE event_id LIKE :eventId")
-    LiveData<List<TravelComponent>> getTravelComponents(int eventId);
+    LiveData<List<TravelComponent>> getTravelComponents(long eventId);
+
+    @Query("SELECT * FROM travel_component")
+    LiveData<List<TravelComponent>> getAllTravelComponents();
 
     @Query("DELETE FROM travel_component")
     void deleteTravelComponents();
