@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.PeriodTicketResponse;
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -124,6 +126,27 @@ public class PeriodTicket extends Ticket {
             TicketNotValidException ticketNotValidException =
                     new TicketNotValidException( TicketNotValidCauses.OUT_OF_VALIDITY_PERIOD );
             ticketNotValidException.addErrors( conflicts );
+            throw ticketNotValidException;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void serializeResponse ( TicketListResponse ticketListResponse ) {
+        ticketListResponse.addPeriodTicket( new PeriodTicketResponse( this ) );
+    }
+
+
+    /**
+     * Visitor method used to serialize a correct response to the client,
+     * when a the decorator of this class must be serialized properly
+     *
+     * @param periodTicketResponse message that is to be sent to the client
+     */
+    @Override
+    public void decorateResponse ( PeriodTicketResponse periodTicketResponse ) {
+        this.decorator.decorateResponse( periodTicketResponse );
     }
 }

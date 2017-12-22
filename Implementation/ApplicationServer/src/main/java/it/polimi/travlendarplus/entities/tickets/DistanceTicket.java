@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.PeriodTicketResponse;
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -76,5 +78,21 @@ public class DistanceTicket extends Ticket {
         if ( this.distance < newDistance ) {
             throw new TicketNotValidException( TicketNotValidCauses.MAX_DISTANCE_EXCEEDED );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void serializeResponse ( TicketListResponse ticketListResponse ) {
+        ticketListResponse.addDistanceTicket( this );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void decorateResponse ( PeriodTicketResponse periodTicketResponse ) {
+        periodTicketResponse.setDistanceTicket( this );
     }
 }

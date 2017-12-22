@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.PeriodTicketResponse;
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
@@ -145,4 +147,20 @@ public abstract class Ticket extends EntityWithLongKey {
      */
     public abstract void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
             throws TicketNotValidException;
+
+    /**
+     * Visitor method used to serialize a correct response to the client,
+     * useful in order to handle all tickets in the same way
+     *
+     * @param ticketListResponse message that is to be sent to the client
+     */
+    public abstract void serializeResponse ( TicketListResponse ticketListResponse );
+
+    /**
+     * Visitor method used to serialize a correct response to the client,
+     * when a periodTicket must serialize his decorated ticket properly
+     *
+     * @param periodTicketResponse message that is to be sent to the client
+     */
+    public abstract void decorateResponse ( PeriodTicketResponse periodTicketResponse );
 }

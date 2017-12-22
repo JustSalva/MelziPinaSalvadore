@@ -56,7 +56,8 @@ public class TripRESTful {
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     public Response getTickets () {
-        return HttpResponseBuilder.buildOkResponse( tripManager.getTickets() );
+        return HttpResponseBuilder.buildOkResponse(
+                new TicketListResponse( tripManager.getTickets() ) );
     }
 
     /**
@@ -151,7 +152,6 @@ public class TripRESTful {
         return HttpResponseBuilder.ok();
     }
 
-
     /**
      * It allows the user to associate a ticket to a travelComponent
      *
@@ -187,6 +187,17 @@ public class TripRESTful {
         return handleTicketSelection( ticketId, travelComponentId, false );
     }
 
+    /**
+     * Handle the ticket selection/deselection since the message to be returned
+     * to the client are the same ones
+     *
+     * @param ticketId identifier of the ticket to be selected or deselected
+     * @param travelComponentId identifier of the travelComponent to be associated/disassociated with
+     * @param isSelection true if the ticket is to be selected, false otherwise
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code if one or both the ids are correct
+     * ( in the body is specified which fields are wrong )
+     */
     private Response handleTicketSelection ( long ticketId, long travelComponentId, boolean isSelection ) {
 
         try {

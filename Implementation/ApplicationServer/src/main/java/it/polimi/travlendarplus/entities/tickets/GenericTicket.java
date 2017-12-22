@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.PeriodTicketResponse;
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
@@ -65,6 +67,22 @@ public class GenericTicket extends Ticket {
     public void checkTicketValidityAfterTravelAssociation ( TravelComponent travelComponentToBeAdded )
             throws TicketNotValidException {
         //TODO line names not yet handled
-        throw new TicketNotValidException( TicketNotValidCauses.WRONG_LINE_NAME );
+        //throw new TicketNotValidException( TicketNotValidCauses.WRONG_LINE_NAME );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void serializeResponse ( TicketListResponse ticketListResponse ) {
+        ticketListResponse.addGenericTicket( this );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void decorateResponse ( PeriodTicketResponse periodTicketResponse ) {
+        periodTicketResponse.setGenericTicket( this );
     }
 }

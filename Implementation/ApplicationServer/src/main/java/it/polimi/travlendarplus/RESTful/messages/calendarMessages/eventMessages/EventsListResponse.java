@@ -19,6 +19,9 @@ public class EventsListResponse extends CalendarResponse {
     private List < Event > updatedEvents;
     private List < BreakEvent > updatedBreakEvents;
 
+    public EventsListResponse () {
+    }
+
     public EventsListResponse ( List < GenericEvent > updatedEvents ) {
         this.updatedEvents = new ArrayList <>();
         this.updatedBreakEvents = new ArrayList <>();

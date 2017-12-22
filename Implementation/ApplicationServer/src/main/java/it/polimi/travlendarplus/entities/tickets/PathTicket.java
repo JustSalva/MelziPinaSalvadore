@@ -1,5 +1,7 @@
 package it.polimi.travlendarplus.entities.tickets;
 
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.PeriodTicketResponse;
+import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
@@ -100,5 +102,21 @@ public class PathTicket extends GenericTicket {
             exception.addErrors( conflicts );
             throw exception;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void serializeResponse ( TicketListResponse ticketListResponse ) {
+        ticketListResponse.addPathTicket( this );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void decorateResponse ( PeriodTicketResponse periodTicketResponse ) {
+        periodTicketResponse.setPathTicket( this );
     }
 }
