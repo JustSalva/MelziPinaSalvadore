@@ -39,7 +39,7 @@ public abstract class Ticket extends EntityWithLongKey {
     private List < PublicTravelMean > relatedTo;
 
     /**
-     * list of travel components in which the ticket is selected as used
+     * List of travel components in which the ticket is selected as used
      */
     @JoinTable( name = "LINKED_PATHS" )
     @OneToMany( fetch = FetchType.LAZY )

@@ -44,6 +44,13 @@ public class PeriodOfDayConstraint extends Constraint {
     public PeriodOfDayConstraint () {
     }
 
+    /**
+     * Allows to load a PeriodOfDayConstraint class from the database
+     *
+     * @param key primary key of the periodOfDayConstraint tuple
+     * @return the requested tuple as a PeriodOfDayConstraint class instance
+     * @throws EntityNotFoundException if the requested tuple does not exist
+     */
     public static PeriodOfDayConstraint load ( long key ) throws EntityNotFoundException {
         return GenericEntity.load( PeriodOfDayConstraint.class, key );
     }

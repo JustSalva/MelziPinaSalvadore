@@ -99,12 +99,22 @@ public class Travel extends EntityWithLongKey {
         return length;
     }
 
+    /**
+     * @return the UNIX time at which the travel starts
+     */
     public Instant getStartingTime () {
         return ( miniTravels.get( 0 ).getStartingTime().getEpochSecond() > 0 )
                 ? miniTravels.get( 0 ).getStartingTime()
                 : correctStartingTime();
     }
 
+    /**
+     * Since some walking components are not provided with start and end time but
+     * only with a duration this method take into account this and compute a
+     * correct starting time
+     *
+     * @return the corrected UNIX time at which the travel starts
+     */
     private Instant correctStartingTime () {
         int i = 0;
         long timeToSub = 0;
@@ -116,11 +126,20 @@ public class Travel extends EntityWithLongKey {
         return Instant.ofEpochSecond( startingTime );
     }
 
+    /**
+     * @return the UNIX time at which the travel ends
+     */
     public Instant getEndingTime () {
         return ( miniTravels.get( miniTravels.size() - 1 ).getStartingTime().getEpochSecond() > 0 ) ?
                 miniTravels.get( miniTravels.size() - 1 ).getEndingTime() : correctEndingTime();
     }
 
+    /**
+     * Since some walking components are not provided with start and end time but
+     * only with a duration this method take into account this and compute a
+     * correct ending time
+     * @return the UNIX time at which the travel ends
+     */
     private Instant correctEndingTime () {
         int i = miniTravels.size() - 1;
         long timeToAdd = 0;
@@ -152,6 +171,10 @@ public class Travel extends EntityWithLongKey {
         return miniTravels.size() - 1;
     }
 
+    /**
+     * This method provides the walking components with start and end time since
+     * they only have a duration
+     */
     public void fixTimes () {
         int i = 0;
         // It goes into the while if the path starts with walking components.
