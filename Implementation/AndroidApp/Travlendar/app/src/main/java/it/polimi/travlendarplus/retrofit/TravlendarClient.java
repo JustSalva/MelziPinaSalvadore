@@ -96,4 +96,9 @@ public interface TravlendarClient {
     Call<Void> deleteEvent(
             @Path("id") int id
     );
+
+    @PATCH("path/{id}")
+    Call<Void> scheduleEvent(
+            @Path("id") int id
+    );
 }

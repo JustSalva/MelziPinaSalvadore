@@ -7,9 +7,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.Position;
 import it.polimi.travlendarplus.activity.AccountActivity;
+import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
 /**
  * Handler that handles the server response to the location addition.
@@ -43,7 +46,14 @@ public class AddLocationHandler extends Handler {
                 accountActivity.populateLocationsSpinner();
                 break;
             case 400:
+                // Shows the user which invalid fields have been sent to server.
                 Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                ErrorResponse errorResponse = new Gson()
+                        .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
+                // Shows a toast for each error message.
+                for (String message : errorResponse.getMessages()) {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();

@@ -10,10 +10,13 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.tasks.InsertUserTask;
 import it.polimi.travlendarplus.database.entity.User;
+import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
 /**
  * Handler that handles the server response to the login request.
@@ -49,7 +52,14 @@ public class LoginHandler extends Handler {
                 context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
             case 400:
+                // Shows the user which invalid fields have been sent to server.
                 Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                ErrorResponse errorResponse = new Gson()
+                        .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
+                // Shows a toast for each error message.
+                for (String message : errorResponse.getMessages()) {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
                 break;
             case 401:
                 Toast.makeText(context, "This user is not registered!", Toast.LENGTH_LONG).show();

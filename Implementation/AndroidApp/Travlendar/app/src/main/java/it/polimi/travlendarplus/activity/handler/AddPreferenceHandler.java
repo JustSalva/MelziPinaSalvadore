@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.PreferencesActivity;
+import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
 /**
  * Handler that handles the server response to the preference addition.
@@ -46,7 +47,14 @@ public class AddPreferenceHandler extends Handler {
                 preferencesActivity.populatePreferencesSpinner();
                 break;
             case 400:
+                // Shows the user which invalid fields have been sent to server.
                 Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
+                ErrorResponse errorResponse = new Gson()
+                        .fromJson(msg.getData().getString("errorResponse"), ErrorResponse.class);
+                // Shows a toast for each error message.
+                for (String message : errorResponse.getMessages()) {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();

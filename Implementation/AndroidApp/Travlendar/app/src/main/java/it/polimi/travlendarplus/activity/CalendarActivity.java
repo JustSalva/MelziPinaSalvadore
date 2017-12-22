@@ -18,6 +18,7 @@ import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
 import it.polimi.travlendarplus.activity.handler.DeleteEventHandler;
 import it.polimi.travlendarplus.activity.handler.GetEventsHandler;
+import it.polimi.travlendarplus.activity.handler.ScheduleEventHandler;
 import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchListener;
@@ -57,6 +58,7 @@ public class CalendarActivity extends MenuActivity {
     // Handlers for server responses.
     private Handler getEventsHandler;
     private Handler deleteEventHandler;
+    private Handler scheduleEventHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,7 @@ public class CalendarActivity extends MenuActivity {
         // Set handlers.
         getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
         deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        scheduleEventHandler = new ScheduleEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     /**
@@ -276,5 +279,9 @@ public class CalendarActivity extends MenuActivity {
 
     public Handler getDeleteEventHandler() {
         return deleteEventHandler;
+    }
+
+    public Handler getScheduleEventHandler() {
+        return scheduleEventHandler;
     }
 }

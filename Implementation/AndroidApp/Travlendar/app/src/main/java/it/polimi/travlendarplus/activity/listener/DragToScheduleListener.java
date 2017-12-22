@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
+import it.polimi.travlendarplus.retrofit.controller.DeleteEventController;
+import it.polimi.travlendarplus.retrofit.controller.ScheduleEventController;
 
 /**
  * Listens if a View is been dragged by the user to schedule the event related.
@@ -43,7 +45,11 @@ public final class DragToScheduleListener implements View.OnDragListener {
             case DragEvent.ACTION_DROP:
                 // Send request to schedule event.
                 if (scheduled) {
-                    // TODO: send request.
+                    // Send request to server.
+                    calendarActivity.waitForServerResponse();
+                    ScheduleEventController scheduleEventController =
+                            new ScheduleEventController(calendarActivity.getScheduleEventHandler());
+                    scheduleEventController.start(calendarActivity.getToken(), eventId);
                 }
                 break;
             case DragEvent.ACTION_DRAG_ENDED:

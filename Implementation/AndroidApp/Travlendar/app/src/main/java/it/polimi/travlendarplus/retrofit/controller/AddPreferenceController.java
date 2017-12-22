@@ -7,11 +7,15 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
+
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
 import it.polimi.travlendarplus.retrofit.body.PreferenceBody;
 
+import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +50,18 @@ public class AddPreferenceController implements Callback<Preference> {
             String jsonPreference = new Gson().toJson(response.body());
             bundle.putString("jsonPreference", jsonPreference);
         } else {
-            Log.d("ERROR_RESPONSE", response.toString());
+            // Get the ErrorResponse containing error messages sent by the server.
+            try {
+                ErrorResponse errorResponse = new Gson()
+                        .fromJson(response.errorBody().string(), ErrorResponse.class);
+                for (String message : errorResponse.getMessages()) {
+                    Log.d("ERROR_RESPONSE", message);
+                }
+                // Put the ErrorResponse in a Json to be sent to the handler.
+                bundle.putString("errorResponse", new Gson().toJson(errorResponse));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         Message msg = handler.obtainMessage(response.code());
         msg.setData(bundle);
