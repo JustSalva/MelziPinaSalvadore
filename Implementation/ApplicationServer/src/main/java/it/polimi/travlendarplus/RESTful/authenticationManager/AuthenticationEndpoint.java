@@ -218,6 +218,18 @@ public class AuthenticationEndpoint {
         } catch ( EntityNotFoundException e ) {
             //nothing if it not exists is ok, we are creating it
         }
+        /*TODO not available in first release
+          until we don't implement GCM notifications we can't handle properly the updates
+          of multiple local databases, so until then only 1 device can remain logged,
+          so only one token per user can be active (the tokens are correlated to exactly one user device)*/
+        if ( user.getUserDevices().size() > 0 ){
+            List <UserDevice>userDevicesToBeRemoved = new ArrayList <>( user.getUserDevices() );
+            for ( UserDevice deviceToBeRemoved : userDevicesToBeRemoved ) {
+                user.removeUserDevice( deviceToBeRemoved.getIdDevice() );
+                deviceToBeRemoved.remove();
+            }
+            user.save();
+        }
 
         user.addUserDevice( idDevice );
         user.save();
