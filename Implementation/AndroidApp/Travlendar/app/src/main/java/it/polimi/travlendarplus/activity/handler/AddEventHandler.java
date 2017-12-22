@@ -42,6 +42,9 @@ public class AddEventHandler extends Handler {
                 Toast.makeText(context, "Invalid fields sent to server!", Toast.LENGTH_LONG).show();
                 Toast.makeText(context, msg.getData().getString("Invalid"), Toast.LENGTH_LONG).show();
                 break;
+            case 503:
+                Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
+                break;
             default:
                 Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
                 break;

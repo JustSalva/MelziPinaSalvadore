@@ -44,6 +44,9 @@ public class DeleteEventHandler extends Handler {
             case 400:
                 Toast.makeText(context, "The event specified does not exist!", Toast.LENGTH_LONG).show();
                 break;
+            case 503:
+                Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
+                break;
             default:
                 Toast.makeText(context, "Unknown error.", Toast.LENGTH_LONG).show();
                 break;
