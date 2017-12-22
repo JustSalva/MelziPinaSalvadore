@@ -50,7 +50,7 @@ public class TripRESTful {
     /**
      * Allows the user to retrieve all his saved tickets
      *
-     * @return an HTTP 200 OK success status response code and all the tickets  of the user
+     * @return an HTTP 200 OK success status response code and all the tickets of the user
      * ( in the message body )
      */
     @GET
@@ -58,6 +58,25 @@ public class TripRESTful {
     public Response getTickets () {
         return HttpResponseBuilder.buildOkResponse(
                 new TicketListResponse( tripManager.getTickets() ) );
+    }
+
+    /**
+     * Allows the user to obtain all the tickets that are compatible with the specified travel mean
+     *
+     * @return an HTTP 200 OK success status response code and all the compatible tickets of the user
+     * ( in the message body ) or HTTP 400 Bad Request response status code
+     * if the travel specified does not exist
+     */
+    @Path( "/{travelComponentId}" )
+    @GET
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getCompatibleTickets ( @PathParam( "travelComponentId" ) long travelComponentId ) {
+        try {
+            return HttpResponseBuilder.buildOkResponse(
+                    new TicketListResponse( tripManager.getCompatibleTickets( travelComponentId ) ) );
+        } catch ( EntityNotFoundException e ) {
+            return HttpResponseBuilder.badRequest();
+        }
     }
 
     /**
@@ -124,6 +143,14 @@ public class TripRESTful {
         return addTicketMessage( periodTicketMessage );
     }
 
+    /**
+     * Helper method that allows to add a new ticket
+     *
+     * @param ticketMessage message containing the info of the ticket to be inserted
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body )
+     */
     private Response addTicketMessage ( AddTicketMessage ticketMessage ) {
         try {
             return HttpResponseBuilder.buildOkResponse(
@@ -191,9 +218,9 @@ public class TripRESTful {
      * Handle the ticket selection/deselection since the message to be returned
      * to the client are the same ones
      *
-     * @param ticketId identifier of the ticket to be selected or deselected
+     * @param ticketId          identifier of the ticket to be selected or deselected
      * @param travelComponentId identifier of the travelComponent to be associated/disassociated with
-     * @param isSelection true if the ticket is to be selected, false otherwise
+     * @param isSelection       true if the ticket is to be selected, false otherwise
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code if one or both the ids are correct
      * ( in the body is specified which fields are wrong )
@@ -220,11 +247,11 @@ public class TripRESTful {
      * Allows the user to modify a distance ticket
      *
      * @param distanceTicketMessage message containing the info of the distance ticket to be modified
-     * @param ticketId identifier of the ticket to be modified
+     * @param ticketId              identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
-     *      if the body is empty the ticket does not exist)
+     * if the body is empty the ticket does not exist)
      */
     @Path( "/distanceTicket/{ticketId}" )
     @PATCH
@@ -240,18 +267,18 @@ public class TripRESTful {
      * Allows the user to modify a generic ticket
      *
      * @param genericTicketMessage message containing the info of the generic ticket to be modified
-     * @param ticketId identifier of the ticket to be modified
+     * @param ticketId             identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
-     *      if the body is empty the ticket does not exist)
+     * if the body is empty the ticket does not exist)
      */
     @Path( "/genericTicket/{ticketId}" )
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyGenericTicketMessage ( AddGenericTicketMessage genericTicketMessage,
-                                              @PathParam( "ticketId" ) long ticketId ) {
+                                                 @PathParam( "ticketId" ) long ticketId ) {
         return modifyTicketMessage( genericTicketMessage, ticketId );
     }
 
@@ -259,19 +286,18 @@ public class TripRESTful {
      * Allows the user to modify a path ticket
      *
      * @param pathTicketMessage message containing the info of the path ticket to be modified
-     * @param ticketId identifier of the ticket to be modified
+     * @param ticketId          identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
-     *      if the body is empty the ticket does not exist)
-     *
+     * if the body is empty the ticket does not exist)
      */
     @Path( "/pathTicket/{ticketId}" )
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyPathTicketMessage ( AddPathTicketMessage pathTicketMessage,
-                                           @PathParam( "ticketId" ) long ticketId ) {
+                                              @PathParam( "ticketId" ) long ticketId ) {
         return modifyTicketMessage( pathTicketMessage, ticketId );
     }
 
@@ -279,21 +305,32 @@ public class TripRESTful {
      * Allows the user to modify a period ticket
      *
      * @param periodTicketMessage message containing the info of the period ticket to be modified
-     * @param ticketId identifier of the ticket to be modified
+     * @param ticketId            identifier of the ticket to be modified
      * @return an HTTP 200 OK success status response code if the request is fulfilled
      * or HTTP 400 Bad Request response status code otherwise
      * ( that means there are invalid fields, the wrong ones are specified in the message body
-     *      if the body is empty the ticket does not exist)
+     * if the body is empty the ticket does not exist)
      */
     @Path( "/periodTicket/{ticketId}" )
     @PATCH
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response modifyPeriodTicketMessage ( AddPeriodTicketMessage periodTicketMessage,
-                                             @PathParam( "ticketId" ) long ticketId  ) {
+                                                @PathParam( "ticketId" ) long ticketId ) {
         return modifyTicketMessage( periodTicketMessage, ticketId );
     }
 
+
+    /**
+     * Helper method that allows to add a new ticket
+     *
+     * @param ticketMessage message containing the info of the ticket to be modified
+     * @param ticketId      identifier of the ticket to be modified
+     * @return an HTTP 200 OK success status response code if the request is fulfilled
+     * or HTTP 400 Bad Request response status code otherwise
+     * ( that means there are invalid fields, the wrong ones are specified in the message body
+     * if the body is empty the ticket does not exist)
+     */
     private Response modifyTicketMessage ( AddTicketMessage ticketMessage, long ticketId ) {
         try {
             return HttpResponseBuilder.buildOkResponse(

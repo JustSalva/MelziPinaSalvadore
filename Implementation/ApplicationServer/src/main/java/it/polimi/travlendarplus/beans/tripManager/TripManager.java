@@ -52,6 +52,34 @@ public class TripManager extends UserManager {
     }
 
     /**
+     * Finds all the user's tickets that can be applicable to the specified travel component
+     *
+     * @param travelComponentId identifier of the travel component to be added
+     * @return all the tickets saved by the user
+     * @throws EntityNotFoundException if the specified travel component does not exist
+     */
+    public List < Ticket > getCompatibleTickets( long travelComponentId ) throws EntityNotFoundException {
+
+        TravelComponent travelComponent = retrieveUsersTravelComponent( travelComponentId );
+        List < Ticket > userTickets = getTickets();
+        List < Ticket > compatibleTickets = new ArrayList <>();
+        //the ticket list have to be scanned in order to find the compatible tickets
+        for ( Ticket ticket : userTickets ){
+            if( ticket.isCompatible( travelComponent.getMeanUsed().getType() )){
+                try {
+                    ticket.checkTicketValidityAfterTravelAssociation( travelComponent );
+                    //if compatible the ticket is added into the list of compatible ones
+                    compatibleTickets.add( ticket );
+                } catch ( TicketNotValidException e ) {
+                    //if not compatible nothing happens
+                }
+            }
+        }
+        return compatibleTickets;
+
+    }
+
+    /**
      * Adds a distance ticket in the user's profile
      *
      * @param distanceTicketMessage message representing the distance ticket

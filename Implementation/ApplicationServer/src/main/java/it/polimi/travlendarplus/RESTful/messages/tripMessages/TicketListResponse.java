@@ -8,14 +8,18 @@ import it.polimi.travlendarplus.entities.tickets.Ticket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketListResponse extends TripResponse{
+/**
+ * This is a message class sent to reply with all needed info
+ * to a getTickets request with a proper and readable response message
+ */
+public class TicketListResponse extends TripResponse {
 
     private static final long serialVersionUID = 8848546547229766767L;
 
-    private List< DistanceTicket > distanceTickets;
-    private List< GenericTicket > genericTickets;
-    private List< PathTicket > pathTickets;
-    private List <PeriodTicketResponse> periodTickets;
+    private List < DistanceTicket > distanceTickets;
+    private List < GenericTicket > genericTickets;
+    private List < PathTicket > pathTickets;
+    private List < PeriodTicketResponse > periodTickets;
 
     public TicketListResponse () {
     }
@@ -25,7 +29,7 @@ public class TicketListResponse extends TripResponse{
         this.genericTickets = new ArrayList <>();
         this.pathTickets = new ArrayList <>();
         this.periodTickets = new ArrayList <>();
-        for ( Ticket ticket : userTickets ){
+        for ( Ticket ticket : userTickets ) {
             ticket.serializeResponse( this );
         }
     }

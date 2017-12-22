@@ -9,6 +9,10 @@ import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTra
 
 import java.util.List;
 
+/**
+ * This is the message class sent in the body of an HTTP request to add a
+ * path ticket into the user's profile
+ */
 public class AddPathTicketMessage extends AddGenericTicketMessage {
 
     private static final long serialVersionUID = 6010171063455341375L;
@@ -19,8 +23,9 @@ public class AddPathTicketMessage extends AddGenericTicketMessage {
     public AddPathTicketMessage () {
     }
 
-    public AddPathTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo, String lineName,
-                                  LocationMessage startingLocation, LocationMessage endingLocation ) {
+    public AddPathTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo,
+                                  String lineName, LocationMessage startingLocation,
+                                  LocationMessage endingLocation ) {
         super( cost, relatedTo, lineName );
         this.startingLocation = startingLocation;
         this.endingLocation = endingLocation;
@@ -42,11 +47,17 @@ public class AddPathTicketMessage extends AddGenericTicketMessage {
         this.endingLocation = endingLocation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Ticket addTicket ( TripManager tripManager ) throws InvalidFieldException {
         return tripManager.addPathTicket( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Ticket modifyTicket ( TripManager tripManager, long ticketId )
             throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {

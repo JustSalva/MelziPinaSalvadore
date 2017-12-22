@@ -2,6 +2,10 @@ package it.polimi.travlendarplus.RESTful.messages.tripMessages;
 
 import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 
+/**
+ * This is an helper message class used to contain the name and the type of
+ * the travel means that can be associated to a ticket
+ */
 public class AddPublicTravelMeanMessage extends TripMessage {
 
     private static final long serialVersionUID = 582651283252214691L;

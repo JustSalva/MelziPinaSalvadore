@@ -5,6 +5,7 @@ import it.polimi.travlendarplus.RESTful.messages.tripMessages.TicketListResponse
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
 import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
+import it.polimi.travlendarplus.entities.travelMeans.TravelMeanEnum;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.IncompatibleTravelMeansException;
 import it.polimi.travlendarplus.exceptions.tripManagerExceptions.TicketNotValidException;
@@ -117,15 +118,28 @@ public abstract class Ticket extends EntityWithLongKey {
     public void addLinkedTravel ( TravelComponent travelComponent )
             throws IncompatibleTravelMeansException {
 
-        PublicTravelMean toBeLinked =
-                relatedTo.stream()
-                        .filter( publicTravelMean -> publicTravelMean.getType()
-                                .equals( travelComponent.getMeanUsed().getType() ) )
-                        .findFirst().orElse( null );
-        if ( toBeLinked == null ) {
+        if ( isCompatible( travelComponent.getMeanUsed().getType() ) ) {
             throw new IncompatibleTravelMeansException();
         }
         linkedTravels.add( travelComponent );
+    }
+
+    /**
+     * Checks if a travel mean type is compatible with the ticket
+     *
+     * @param travelMean travel mean whose compatibility is to be checked
+     * @return true if compatible, false otherwise
+     */
+    public boolean isCompatible ( TravelMeanEnum travelMean ) {
+        PublicTravelMean eligibleTravelComponent = relatedTo.stream()
+                .filter( publicTravelMean -> publicTravelMean.getType()
+                        .equals( travelMean ) )
+                .findFirst().orElse( null );
+
+        if ( eligibleTravelComponent == null ) {
+            return false;
+        }
+        return true;
     }
 
     /**

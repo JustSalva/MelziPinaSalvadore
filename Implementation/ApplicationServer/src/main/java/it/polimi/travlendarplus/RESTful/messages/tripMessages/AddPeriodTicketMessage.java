@@ -26,8 +26,8 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
     public AddPeriodTicketMessage () {
     }
 
-    public AddPeriodTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo, String name,
-                                    Instant startingDate, Instant endingDate ) {
+    public AddPeriodTicketMessage ( float cost, List < AddPublicTravelMeanMessage > relatedTo,
+                                    String name, Instant startingDate, Instant endingDate ) {
         super( cost, relatedTo );
         this.name = name;
         this.startingDate = startingDate;
@@ -94,7 +94,11 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
         this.pathDecorator = pathDecorator;
     }
 
-    //The ticket is consistent if only one of the decorators is present
+    /**
+     * The ticket is consistent if only one of the decorators is present
+     *
+     * @return true if the ticket is consistent, false otherwise
+     */
     public boolean isConsistent () {
         boolean xorBetweenFirstAndSecond = ( isDistanceDecorator() && !isGenericDecorator() ) ||
                 ( !isDistanceDecorator() && isGenericDecorator() );
@@ -106,29 +110,66 @@ public class AddPeriodTicketMessage extends AddTicketMessage {
         return secondXor && !allThreeTrue;
     }
 
-    public DistanceTicket retrieveDistanceTicket ( TripManager tripManager ) throws InvalidFieldException {
+    /**
+     * Provide the distance ticket contained inside the message
+     *
+     * @param tripManager manager that will handle the ticket creation
+     * @return the requested distance ticket
+     * @throws InvalidFieldException if some fields of the message are wrong
+     *                               ( which one is specified inside the exception)
+     */
+    public DistanceTicket retrieveDistanceTicket ( TripManager tripManager )
+            throws InvalidFieldException {
+
         tripManager.checkDistanceTicketConsistency( distanceDecorator );
         return tripManager.createDistanceTicket( distanceDecorator );
     }
 
-    public GenericTicket retrieveGenericTicket ( TripManager tripManager ) throws InvalidFieldException {
+    /**
+     * Provide the generic ticket contained inside the message
+     *
+     * @param tripManager manager that will handle the ticket creation
+     * @return the requested generic ticket
+     * @throws InvalidFieldException if some fields of the message are wrong
+     *                               ( which one is specified inside the exception)
+     */
+    public GenericTicket retrieveGenericTicket ( TripManager tripManager )
+            throws InvalidFieldException {
+
         tripManager.checkGenericTicketConsistency( genericDecorator );
         return tripManager.createGenericTicket( genericDecorator );
     }
 
-    public PathTicket retrievePathTicket ( TripManager tripManager ) throws InvalidFieldException {
+    /**
+     * Provide the path ticket contained inside the message
+     *
+     * @param tripManager manager that will handle the ticket creation
+     * @return the requested path ticket
+     * @throws InvalidFieldException if some fields of the message are wrong
+     *                               ( which one is specified inside the exception)
+     */
+    public PathTicket retrievePathTicket ( TripManager tripManager )
+            throws InvalidFieldException {
+
         tripManager.checkPathTicketConsistency( pathDecorator );
         return tripManager.createPathTicket( pathDecorator );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Ticket addTicket ( TripManager tripManager ) throws InvalidFieldException {
         return tripManager.addPeriodTicket( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Ticket modifyTicket ( TripManager tripManager, long ticketId )
             throws InvalidFieldException, EntityNotFoundException, IncompatibleTravelMeansException {
+
         return tripManager.modifyPeriodTicket( this, ticketId );
     }
 }

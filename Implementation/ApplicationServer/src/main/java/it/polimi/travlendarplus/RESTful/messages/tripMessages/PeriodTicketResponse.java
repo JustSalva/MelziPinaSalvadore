@@ -10,6 +10,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a message class sent to reply with all needed info
+ * to a getTickets request with the infos about a period ticket
+ */
 public class PeriodTicketResponse extends TripResponse {
 
     private static final long serialVersionUID = 7271436663136619574L;
@@ -17,7 +21,7 @@ public class PeriodTicketResponse extends TripResponse {
     private String name;
     private Instant startingDate;
     private Instant endingDate;
-    private List< TravelComponent > linkedTravels;
+    private List < TravelComponent > linkedTravels;
 
     private DistanceTicket distanceTicket;
     private GenericTicket genericTicket;
@@ -26,7 +30,7 @@ public class PeriodTicketResponse extends TripResponse {
     public PeriodTicketResponse () {
     }
 
-    public PeriodTicketResponse( PeriodTicket periodTicket){
+    public PeriodTicketResponse ( PeriodTicket periodTicket ) {
         periodTicket.decorateResponse( this );
         this.name = periodTicket.getName();
         this.startingDate = periodTicket.getStartingDate();
