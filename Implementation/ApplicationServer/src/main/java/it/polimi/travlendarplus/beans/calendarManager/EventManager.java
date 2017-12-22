@@ -546,7 +546,6 @@ public class EventManager extends UserManager {
      * @return the requested location
      */
     public static Location findLocation ( LocationMessage locationMessage ) {
-        //TODO check correctness?
         Location location;
         try {
             location = Location.load(

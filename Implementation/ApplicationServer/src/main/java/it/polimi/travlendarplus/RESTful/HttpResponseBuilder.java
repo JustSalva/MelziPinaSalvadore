@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.RESTful;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.ErrorListResponse;
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.preferenceMessages.TypeOfEventResponse;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
 import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
@@ -141,7 +142,7 @@ public class HttpResponseBuilder {
      * @return the requested response message
      */
     private static Response buildErrorsMessage( List<String> errors){
-        return responseBuilder( Response.Status.BAD_REQUEST, errors );
+        return responseBuilder( Response.Status.BAD_REQUEST, new ErrorListResponse( errors ));
     }
 
     /**

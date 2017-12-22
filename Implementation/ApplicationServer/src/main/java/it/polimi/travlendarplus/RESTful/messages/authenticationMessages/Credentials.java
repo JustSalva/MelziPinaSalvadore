@@ -41,8 +41,10 @@ public class Credentials extends AuthenticationMessage {
      * @throws DecryptionFailedException if the password format is inconsistent
      */
     public String getPassword () throws EntityNotFoundException, DecryptionFailedException {
-        RSAEncryption encryption = RSAEncryption.load( idDevice );
-        return encryption.decryptPassword( password );
+        //TODO
+        /*RSAEncryption encryption = RSAEncryption.load( idDevice );
+        return encryption.decryptPassword( password );*/
+        return password;
 
     }
 
