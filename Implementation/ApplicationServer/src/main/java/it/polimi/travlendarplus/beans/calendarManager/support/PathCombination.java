@@ -43,15 +43,21 @@ public class PathCombination {
     }
 
     public void saveLocationsOnDB () {
-        if ( prevPath != null )
+        if ( prevPath != null ) {
             saveTravelLocations( prevPath.getMiniTravels() );
-        if ( follPath != null )
+        }
+        if ( follPath != null ) {
             saveTravelLocations( follPath.getMiniTravels() );
+        }
     }
 
     public void fixTimes () {
-        prevPath.fixTimes();
-        follPath.fixTimes();
+        if ( prevPath != null ) {
+            prevPath.fixTimes();
+        }
+        if ( follPath != null ) {
+            follPath.fixTimes();
+        }
     }
 
     private void saveTravelLocations ( List < TravelComponent > travel ) {
