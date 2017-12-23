@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.activity.handler;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.MainActivity;
 import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;

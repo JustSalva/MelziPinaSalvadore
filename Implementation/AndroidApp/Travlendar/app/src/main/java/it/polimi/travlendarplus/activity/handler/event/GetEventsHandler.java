@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.activity.handler.event;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -14,9 +15,11 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
+import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.activity.tasks.InsertBreakEventsTask;
 import it.polimi.travlendarplus.activity.tasks.InsertEventsTask;
+import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.retrofit.response.event.BreakEventResponse;
 import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
@@ -35,8 +38,10 @@ public class GetEventsHandler extends DefaultHandler {
 
     @Override
     public void handleMessage(Message msg){
-        super.handleMessage(msg);
         switch (msg.what){
+            case 0:
+                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
+                break;
             case 200:
                 Toast.makeText(context, "Events updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
@@ -59,6 +64,11 @@ public class GetEventsHandler extends DefaultHandler {
                 new InsertEventsTask(context, events).execute();
                 // Write new break events into DB.
                 new InsertBreakEventsTask(context, breakEvents).execute();
+                break;
+            case 401:
+                Toast.makeText(context, "You logged in from another device!", Toast.LENGTH_LONG).show();
+                new RemoveUserTask(context).execute();
+                context.startActivity(new Intent(context, LoginActivity.class));
                 break;
             default:
                 break;
