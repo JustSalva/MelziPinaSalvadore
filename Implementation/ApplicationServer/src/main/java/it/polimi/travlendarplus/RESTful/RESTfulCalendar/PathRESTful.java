@@ -83,7 +83,7 @@ public class PathRESTful {
     @Produces( MediaType.APPLICATION_JSON )
     public Response swapSchedule ( @PathParam( "idEvent" ) long id ) {
         try {
-            return HttpResponseBuilder.buildOkResponse( new EventsListResponse( pathManager.swapEvents( id ) ) );
+            return HttpResponseBuilder.buildOkResponse( new EventsListResponse( pathManager.swapGenericEvent( id ) ) );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
         } catch ( AlreadyScheduledException e ) {

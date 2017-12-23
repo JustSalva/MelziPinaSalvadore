@@ -2,10 +2,12 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
+import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.persistence.Column;
@@ -153,6 +155,14 @@ public class BreakEvent extends GenericEvent {
         return minimumTime <= Math.min( getEndingTime().getEpochSecond(), event.getStartingTime().getEpochSecond() ) -
                 Math.max( path.getEndingTime().getEpochSecond(), getStartingTime().getEpochSecond() ) ||
                 minimumTime <= Duration.between( event.getEndingTime(), getEndingTime() ).getSeconds();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List < GenericEvent > swap ( PathManager pathManager ) throws GMapsGeneralException {
+        return pathManager.swapBreakEvent( this );
     }
 
     /**

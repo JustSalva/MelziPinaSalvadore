@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -77,9 +78,9 @@ public class PathManager extends UserManager {
         List < Travel > followingPaths = getFollowingTravels( event, privateMeans, publicMeans );
         // Filtering obtained paths according to constraints defined
         previousPaths = previousPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
-                .collect( toList() );
+                .collect( Collectors.toCollection( ArrayList::new ) );
         followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
-                .collect( toList() );
+                .collect( Collectors.toCollection( ArrayList::new ) );
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         List < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
                 previousPaths, followingPaths );
@@ -186,8 +187,10 @@ public class PathManager extends UserManager {
         if ( possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
                 equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() ).size() > 0 )
             // In the case they are not, removing long walking paths
-            possiblePaths = possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
-                    equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() );
+            possiblePaths = possiblePaths.stream().filter( p -> !p.getMiniTravels()
+                    .get( 0 ).getMeanUsed().getType().getParam().equals( "walking" ) ||
+                    p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH )
+                .collect( Collectors.toCollection( ArrayList::new ) );
     }
 
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
@@ -237,9 +240,9 @@ public class PathManager extends UserManager {
             List < Travel > prev = getPreviousTravels( forcedEvent, privateMeans, publicMeans );
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
-                    .collect( toList() );
+                    .collect( Collectors.toCollection( ArrayList::new ) );
             foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
-                    .collect( toList() );
+                    .collect( Collectors.toCollection( ArrayList::new ) );
             // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if ( !prev.isEmpty() && ( !foll.isEmpty() || scheduleManager.getPossibleFollowingEvent(
                     forcedEvent.getStartingTime() ) == null ) ) {
@@ -348,7 +351,7 @@ public class PathManager extends UserManager {
     }
 
     /**
-     * Force an event into the schedule, removing all the events that overlaps with it
+     * Force a genericEvent into the schedule, removing all the events that overlaps with it
      *
      * @param eventId identifier of the event to be forced into the schedule
      * @return a list of generic events, modified during the swap
@@ -356,24 +359,38 @@ public class PathManager extends UserManager {
      * @throws AlreadyScheduledException if the event is already in the schedule,
      *                                   and so it can't be forced into it
      */
-    public List < GenericEvent > swapEvents ( long eventId )
+    public List < GenericEvent > swapGenericEvent ( long eventId )
             throws EntityNotFoundException, AlreadyScheduledException, GMapsGeneralException {
 
         ArrayList < GenericEvent > genericEvents = new ArrayList <>( currentUser.getEvents() );
+        genericEvents.addAll( currentUser.getBreaks() );
         //NB the swap in the first release is available only for events and not break events!
-        Event event = ( Event ) EventManager.extractEvent( genericEvents, eventId );
-        if ( event.isScheduled() ) {
+        GenericEvent genericEvent = EventManager.extractEvent( genericEvents, eventId );
+        if ( genericEvent.isScheduled() ) {
             throw new AlreadyScheduledException();
         }
-        return swapEvents( event, preferenceManager.getAllowedMeans( event, privateList ),
-                preferenceManager.getAllowedMeans( event, publicList ) );
+
+        return genericEvent.swap( this );
     }
 
-    public ArrayList < GenericEvent > swapBreakEvent ( BreakEvent forcedBreak ) throws GMapsGeneralException {
+    /**
+     * Force a event into the schedule, removing all the events that overlaps with it
+     *
+     * @param forcedEvent event to be forced into the schedule
+     * @return a list of modified ( due to the swap ) events
+     * @throws GMapsGeneralException if Google Maps services are unavailable
+     */
+    public List < GenericEvent > swapEvent ( Event forcedEvent  ) throws GMapsGeneralException {
+        return swapEvents( forcedEvent, preferenceManager.getAllowedMeans( forcedEvent, privateList ),
+                preferenceManager.getAllowedMeans( forcedEvent, publicList ) );
+    }
+
+    public List < GenericEvent > swapBreakEvent ( BreakEvent forcedBreak ) throws GMapsGeneralException {
         scheduleManager.setSchedule( forcedBreak.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         // Removing all break events overlapping with the forced one
         List < BreakEvent > freeBreaks = scheduleManager.getSchedule().getBreaks().stream().filter( br ->
-                scheduleManager.areEventsOverlapFree( forcedBreak, br ) ).collect( toList() );
+                scheduleManager.areEventsOverlapFree( forcedBreak, br ) )
+                .collect( Collectors.toCollection( ArrayList::new ) );
         scheduleManager.getSchedule().setBreaks( freeBreaks );
 
         List < Event > involved = scheduleManager.getEventsIntoIntervalWithPathRegard( scheduleManager.getSchedule().
@@ -412,7 +429,7 @@ public class PathManager extends UserManager {
         // Getting possible paths before the event
         List < Travel > paths = getPreviousTravels( following, priEnum, pubEnum );
         paths = paths.stream().filter( p -> preferenceManager.checkConstraints( p, following.getType() ) )
-                .collect( toList() );
+                .collect( Collectors.toCollection( ArrayList::new ) );
         // Use the path in the schedule that follow the event to simulate the path calculation
         ArrayList < Travel > simFoll = new ArrayList < Travel >();
         simFoll.add( ( scheduleManager.getPossibleFollowingEvent( following.getStartingTime() ) != null )

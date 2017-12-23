@@ -2,6 +2,7 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
+import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.GenericEntity;
 import it.polimi.travlendarplus.entities.Location;
@@ -14,6 +15,7 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /**
  * This JPA class represent a standard event
@@ -186,6 +188,14 @@ public class Event extends GenericEvent {
         return new Event( this.getName(), startingTime, endingTime, false, this.getPeriodicity(),
                 this.description, this.prevLocChoice, this.travelAtLastChoice,
                 this.type, this.eventLocation, this.departure );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List< GenericEvent > swap ( PathManager pathManager ) throws GMapsGeneralException {
+        return pathManager.swapEvent( this );
     }
 
     /**

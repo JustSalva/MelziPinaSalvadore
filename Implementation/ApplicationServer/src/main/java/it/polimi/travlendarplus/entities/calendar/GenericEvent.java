@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.entities.calendar;
 
 import it.polimi.travlendarplus.RESTful.messages.calendarMessages.eventMessages.EventsListResponse;
 import it.polimi.travlendarplus.beans.calendarManager.EventManager;
+import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.EntityWithLongKey;
 import it.polimi.travlendarplus.entities.Timestamp;
@@ -12,6 +13,7 @@ import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundE
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * This JPA class represent a generic event structure, it is to be implemented by both event and break event classes
@@ -89,8 +91,9 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
 
     @Override
     public int compareTo ( GenericEvent gEvent ) {
-        if ( startingTime == null || gEvent.startingTime == null )
+        if ( startingTime == null || gEvent.startingTime == null ) {
             return -1;
+        }
         return startingTime.isAfter( gEvent.startingTime ) ? 1 :
                 startingTime.isBefore( gEvent.startingTime ) ? -1 : 0;
     }
@@ -192,6 +195,16 @@ public abstract class GenericEvent extends EntityWithLongKey implements Comparab
      */
     public abstract GenericEvent nextPeriodicEvent ();
 
+
+    /**
+     * Visitor method used during the swap of a genericEvent, it is used to call the
+     * right method for all possible subclasses of GenericEvent
+     *
+     * @param pathManager manager who is handling the swap
+     * @return a list of modified ( due to the swap ) events
+     * @throws GMapsGeneralException if Google Maps services are unavailable
+     */
+    public abstract List < GenericEvent > swap ( PathManager pathManager ) throws GMapsGeneralException;
 
     /**
      * Visitor method used during the scheduling computation process of an event, it is used to check
