@@ -1,46 +1,52 @@
-package it.polimi.travlendarplus.retrofit.controller;
+package it.polimi.travlendarplus.retrofit.controller.event;
 
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Controller that performs a delete location request to the server.
+ * Controller that performs a delete event request to the server.
  * Fills a message to be sent to the desired handler.
  */
-public class DeleteLocationController implements Callback<Void> {
+public class DeleteEventController implements Callback<Void> {
 
     private Handler handler;
+    private int eventId;
 
-    public DeleteLocationController(Handler handler) {
+    public DeleteEventController(Handler handler) {
         this.handler = handler;
     }
 
     /**
      * Starts the server request.
      * @param authToken Authorization token.
-     * @param name Name of the location to be deleted.
+     * @param id Id of the event to be deleted.
      */
-    public void start(String authToken, String name) {
+    public void start(String authToken, int id) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Void> call = client.deleteLocation(name);
+        this.eventId = id;
+        Call<Void> call = client.deleteEvent(id);
         call.enqueue(this);
     }
 
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {
-        if(!response.isSuccessful()) {
+        Bundle bundle = new Bundle();
+        if (response.isSuccessful()) {
+            bundle.putInt("Id", eventId);
+        } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }
         Message msg = handler.obtainMessage(response.code());
+        msg.setData(bundle);
         msg.sendToTarget();
     }
 

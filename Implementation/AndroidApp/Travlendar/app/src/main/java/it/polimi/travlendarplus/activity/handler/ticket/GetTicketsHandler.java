@@ -14,8 +14,13 @@ import java.util.List;
 
 import it.polimi.travlendarplus.activity.TicketsViewerActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
+import it.polimi.travlendarplus.activity.tasks.InsertTicketsTask;
 import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
 
+/**
+ * Handler that handles the server response to the getTickets request.
+ * It is used by the TicketsViewerActivity.
+ */
 public class GetTicketsHandler extends DefaultHandler {
 
     private TicketsViewerActivity activity;
@@ -37,6 +42,7 @@ public class GetTicketsHandler extends DefaultHandler {
                 AllTicketsResponse tickets = new Gson()
                         .fromJson(jsonTickets, AllTicketsResponse.class);
                 // Saves tickets in the DB.
+                new InsertTicketsTask(context, tickets).execute();
                 break;
             default:
                 break;

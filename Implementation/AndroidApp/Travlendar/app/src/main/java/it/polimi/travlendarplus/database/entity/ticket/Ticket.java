@@ -14,7 +14,6 @@ import it.polimi.travlendarplus.database.converters.TicketTypeConverters;
 public class Ticket {
     @PrimaryKey
     private long id;
-
     private float cost;
 
     @TypeConverters(TicketTypeConverters.class)
@@ -24,7 +23,7 @@ public class Ticket {
     @Embedded
     private DistanceTicket distanceTicket;
     @Embedded
-    private GeneralTicket generalTicket;
+    private GenericTicket genericTicket;
 
     public Ticket(long id, float cost) {
         this.id = id;
@@ -71,16 +70,16 @@ public class Ticket {
         this.distanceTicket = distanceTicket;
     }
 
-    public GeneralTicket getGeneralTicket() {
-        return generalTicket;
+    public GenericTicket getGenericTicket() {
+        return genericTicket;
     }
 
-    public void setGeneralTicket(GeneralTicket generalTicket) {
-        this.generalTicket = generalTicket;
+    public void setGenericTicket(GenericTicket genericTicket) {
+        this.genericTicket = genericTicket;
     }
 
     public enum TicketType {
-        GENERAL("General"),
+        GENERIC("Generic"),
         DISTANCE("Distance"),
         PERIOD("Period"),
         PATH("Path");

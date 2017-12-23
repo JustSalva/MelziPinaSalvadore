@@ -28,9 +28,9 @@ import it.polimi.travlendarplus.activity.handler.location.AddLocationHandler;
 import it.polimi.travlendarplus.activity.handler.location.DeleteLocationHandler;
 import it.polimi.travlendarplus.activity.handler.location.GetAccountLocationsHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
-import it.polimi.travlendarplus.retrofit.controller.AddLocationController;
-import it.polimi.travlendarplus.retrofit.controller.DeleteLocationController;
-import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
+import it.polimi.travlendarplus.retrofit.controller.location.AddLocationController;
+import it.polimi.travlendarplus.retrofit.controller.location.DeleteLocationController;
+import it.polimi.travlendarplus.retrofit.controller.location.GetLocationsController;
 
 import java.util.Map;
 

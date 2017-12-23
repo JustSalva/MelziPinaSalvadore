@@ -29,9 +29,9 @@ import it.polimi.travlendarplus.activity.handler.preference.GetEventPreferencesH
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.body.BreakEventBody;
 import it.polimi.travlendarplus.retrofit.body.EventBody;
-import it.polimi.travlendarplus.retrofit.controller.AddEventController;
-import it.polimi.travlendarplus.retrofit.controller.GetLocationsController;
-import it.polimi.travlendarplus.retrofit.controller.GetPreferencesController;
+import it.polimi.travlendarplus.retrofit.controller.event.AddEventController;
+import it.polimi.travlendarplus.retrofit.controller.location.GetLocationsController;
+import it.polimi.travlendarplus.retrofit.controller.preference.GetPreferencesController;
 
 /**
  * Activity that allows the user to create a new event.

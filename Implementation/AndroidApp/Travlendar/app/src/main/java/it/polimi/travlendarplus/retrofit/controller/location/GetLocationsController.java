@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.retrofit.controller;
+package it.polimi.travlendarplus.retrofit.controller.location;
 
 
 import android.os.Bundle;
@@ -7,9 +7,10 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import it.polimi.travlendarplus.Preference;
+import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
+
 
 import java.util.List;
 
@@ -18,14 +19,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Controller that performs a get preferences request to the server.
+ * Controller that performs a get locations request to the server.
  * Fills a message to be sent to the desired handler.
  */
-public class GetPreferencesController implements Callback<List<Preference>> {
+public class GetLocationsController implements Callback<List<Location>> {
 
     private Handler handler;
 
-    public GetPreferencesController(Handler handler) {
+    public GetLocationsController(Handler handler) {
         this.handler = handler;
     }
 
@@ -35,15 +36,16 @@ public class GetPreferencesController implements Callback<List<Preference>> {
      */
     public void start(String authToken) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<List<Preference>> call = client.getPreferences();
+        Call<List<Location>> call = client.getLocations();
         call.enqueue(this);
     }
+
     @Override
-    public void onResponse(Call<List<Preference>> call, Response<List<Preference>> response) {
+    public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
         Bundle bundle = new Bundle();
-        if (response.isSuccessful()) {
-            String jsonPreferences = new Gson().toJson(response.body());
-            bundle.putString("jsonPreferences", jsonPreferences);
+        if(response.isSuccessful()) {
+            String jsonLocations = new Gson().toJson(response.body());
+            bundle.putString("jsonLocations", jsonLocations);
         } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }
@@ -53,7 +55,7 @@ public class GetPreferencesController implements Callback<List<Preference>> {
     }
 
     @Override
-    public void onFailure(Call<List<Preference>> call, Throwable t) {
+    public void onFailure(Call<List<Location>> call, Throwable t) {
         Log.d("INTERNET_CONNECTION", "ABSENT");
         Message msg = handler.obtainMessage(0);
         msg.sendToTarget();

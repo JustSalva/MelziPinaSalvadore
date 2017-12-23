@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,8 +13,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.handler.ticket.GetTicketsHandler;
 import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import it.polimi.travlendarplus.database.view_model.TicketsViewModel;
+import it.polimi.travlendarplus.database.view_model.UserViewModel;
+import it.polimi.travlendarplus.retrofit.controller.ticket.GetTicketsController;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -23,14 +27,16 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * To be implemented.
  */
 public class TicketsViewerActivity extends MenuActivity {
-
+    // UI references.
     private LinearLayout ticketsContainer_linearLayout;
-
+    // View models.
+    private UserViewModel userViewModel;
     private TicketsViewModel ticketsViewModel;
-
+    // Variables references.
     private List<Ticket> ticketsList;
     private boolean ticketsDownloaded = false;
-
+    private String token;
+    // Server responses handlers.
     private Handler getTicketsHandler;
 
     @Override
@@ -41,11 +47,19 @@ public class TicketsViewerActivity extends MenuActivity {
 
         ticketsContainer_linearLayout = findViewById(R.id.ticketsContainer_linearLayout);
 
+        // Setup view models.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         ticketsViewModel = ViewModelProviders.of(this).get(TicketsViewModel.class);
+        // Attach listeners to view models.
+        userViewModel.getUser().observe(this, user -> {
+            token = user != null ? user.getToken() : "";
+        });
         ticketsViewModel.getTickets().observe(this, tickets -> {
             ticketsList = tickets;
             fillTicketsLayout();
         });
+        // Setup handlers.
+        getTicketsHandler = new GetTicketsHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
         if (! ticketsDownloaded) {
             loadTicketsFromServer();
@@ -60,8 +74,8 @@ public class TicketsViewerActivity extends MenuActivity {
     private void loadTicketsFromServer() {
         // Send request to server.
         waitForServerResponse();
-        GetTicketsController getTicketsController = new GetTicketsController(getEventsHandler);
-        getEventsController.start(token, timestamp);
+        GetTicketsController getTicketsController = new GetTicketsController(getTicketsHandler);
+        getTicketsController.start(token);
     }
 
     private void fillTicketsLayout() {
@@ -89,7 +103,7 @@ public class TicketsViewerActivity extends MenuActivity {
 
         //TODO
         switch (ticket.getType()) {
-            case GENERAL:
+            case GENERIC:
                 break;
         }
         return gridLayout;

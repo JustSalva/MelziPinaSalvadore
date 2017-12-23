@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Dao
 public interface TicketsDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Ticket Ticket);
 
     @Update
@@ -31,8 +32,8 @@ public interface TicketsDao {
     @Query("SELECT * from ticket")
     LiveData<List<Ticket>> getTickets();
 
-    @Query("SELECT * from ticket WHERE type LIKE 'General'")
-    LiveData<List<Ticket>> getGeneralTickets();
+    @Query("SELECT * from ticket WHERE type LIKE 'Generic'")
+    LiveData<List<Ticket>> getGenericTickets();
 
     @Query("SELECT * from ticket WHERE type LIKE 'Period'")
     LiveData<List<Ticket>> getPeriodTickets();

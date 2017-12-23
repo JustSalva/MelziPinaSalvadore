@@ -87,7 +87,7 @@
                         android:layout_weight="1">
 
                         <RadioButton
-                            android:id="@+id/generalTicket_radioButton"
+                            android:id="@+id/genericTicket_radioButton"
                             android:onClick="onRadioButtonClicked"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/generalTicket_linearLayout"
+                    android:id="@+id/genericTicket_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

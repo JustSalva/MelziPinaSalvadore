@@ -5,12 +5,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.DragEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
-import it.polimi.travlendarplus.database.entity.event.GenericEvent;
-import it.polimi.travlendarplus.retrofit.controller.DeleteEventController;
+import it.polimi.travlendarplus.retrofit.controller.event.DeleteEventController;
 
 /**
  * Listens if a View is been dragged by the user to delete the event related.

@@ -45,7 +45,6 @@ public class LoginHandler extends DefaultHandler {
                 // Insert new User into the local DB.
                 User user = new User(email, name, surname, token);
                 new InsertUserTask(context).execute(user);
-                context.startActivity(new Intent(context, CalendarActivity.class));
                 break;
             case 403:
                 Toast.makeText(context, "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();

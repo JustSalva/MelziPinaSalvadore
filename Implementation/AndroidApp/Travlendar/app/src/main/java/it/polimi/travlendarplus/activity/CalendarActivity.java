@@ -26,7 +26,7 @@ import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
-import it.polimi.travlendarplus.retrofit.controller.GetEventsController;
+import it.polimi.travlendarplus.retrofit.controller.event.GetEventsController;
 
 import java.util.ArrayList;
 import java.util.Calendar;

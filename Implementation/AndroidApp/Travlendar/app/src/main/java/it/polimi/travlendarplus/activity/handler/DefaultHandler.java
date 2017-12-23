@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import it.polimi.travlendarplus.activity.LoginActivity;
+import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
 /**
@@ -48,6 +49,7 @@ public abstract class DefaultHandler extends Handler {
                 break;
             case 401:
                 Toast.makeText(context, "You logged in from another device!", Toast.LENGTH_LONG).show();
+                new RemoveUserTask(context).execute();
                 context.startActivity(new Intent(context, LoginActivity.class));
                 break;
             default:

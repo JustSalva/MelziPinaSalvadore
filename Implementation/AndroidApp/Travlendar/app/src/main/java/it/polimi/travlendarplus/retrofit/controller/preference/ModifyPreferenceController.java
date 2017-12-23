@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.retrofit.controller;
+package it.polimi.travlendarplus.retrofit.controller.preference;
 
 
 import android.os.Bundle;
@@ -7,39 +7,35 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
-
-import java.io.IOException;
-
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
 import it.polimi.travlendarplus.retrofit.body.PreferenceBody;
 
-import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Controller that performs an add preference request to the server.
+ * Controller that performs an editing preference request to the server.
  * Fills a message to be sent to the desired handler.
  */
-public class AddPreferenceController implements Callback<Preference> {
+public class ModifyPreferenceController implements Callback<Preference> {
 
     private Handler handler;
 
-    public AddPreferenceController(Handler handler) {
+    public ModifyPreferenceController(Handler handler) {
         this.handler = handler;
     }
 
     /**
      * Starts the server request.
      * @param authToken Authorization token.
-     * @param preferenceBody Body containing the preference info.
+     * @param preferenceBody Preference info.
      */
     public void start(String authToken, PreferenceBody preferenceBody) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Preference> call = client.addPreference(preferenceBody);
+        Call<Preference> call = client.modifyPreference(preferenceBody);
         call.enqueue(this);
     }
 
@@ -50,18 +46,7 @@ public class AddPreferenceController implements Callback<Preference> {
             String jsonPreference = new Gson().toJson(response.body());
             bundle.putString("jsonPreference", jsonPreference);
         } else {
-            // Get the ErrorResponse containing error messages sent by the server.
-            try {
-                ErrorResponse errorResponse = new Gson()
-                        .fromJson(response.errorBody().string(), ErrorResponse.class);
-                for (String message : errorResponse.getMessages()) {
-                    Log.d("ERROR_RESPONSE", message);
-                }
-                // Put the ErrorResponse in a Json to be sent to the handler.
-                bundle.putString("errorResponse", new Gson().toJson(errorResponse));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Log.d("ERROR_RESPONSE", response.toString());
         }
         Message msg = handler.obtainMessage(response.code());
         msg.setData(bundle);

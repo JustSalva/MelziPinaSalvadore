@@ -21,7 +21,7 @@ public class TicketEditorActivity extends MenuActivity {
         setContentView(R.layout.activity_ticket_editor);
         super.setupMenuToolbar();
 
-        ((RadioButton) findViewById(R.id.generalTicket_radioButton)).setChecked(true);
+        ((RadioButton) findViewById(R.id.genericTicket_radioButton)).setChecked(true);
     }
 
     /**
@@ -34,23 +34,23 @@ public class TicketEditorActivity extends MenuActivity {
 
         // Check which radio button was clicked
         switch(view.getId()) {
-            case R.id.generalTicket_radioButton:
+            case R.id.genericTicket_radioButton:
                 if (checked) {
-                    findViewById(R.id.generalTicket_linearLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.genericTicket_linearLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.distanceTicket_linearLayout).setVisibility(View.GONE);
                     findViewById(R.id.periodTicket_linearLayout).setVisibility(View.GONE);
                 }
                 break;
             case R.id.distanceTicket_radioButton:
                 if (checked) {
-                    findViewById(R.id.generalTicket_linearLayout).setVisibility(View.GONE);
+                    findViewById(R.id.genericTicket_linearLayout).setVisibility(View.GONE);
                     findViewById(R.id.distanceTicket_linearLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.periodTicket_linearLayout).setVisibility(View.GONE);
                 }
                 break;
             case R.id.periodTicket_radioButton:
                 if (checked) {
-                    findViewById(R.id.generalTicket_linearLayout).setVisibility(View.GONE);
+                    findViewById(R.id.genericTicket_linearLayout).setVisibility(View.GONE);
                     findViewById(R.id.distanceTicket_linearLayout).setVisibility(View.GONE);
                     findViewById(R.id.periodTicket_linearLayout).setVisibility(View.VISIBLE);
                 }

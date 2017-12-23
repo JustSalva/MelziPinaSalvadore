@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.retrofit.controller;
+package it.polimi.travlendarplus.retrofit.controller.event;
 
 
 import android.os.Bundle;
@@ -6,42 +6,45 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import it.polimi.travlendarplus.retrofit.ServiceGenerator;
 import it.polimi.travlendarplus.retrofit.TravlendarClient;
+import it.polimi.travlendarplus.retrofit.response.event.GetGenericEventsResponse;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Controller that performs a delete event request to the server.
+ * Controller that performs a get events request to the server.
  * Fills a message to be sent to the desired handler.
  */
-public class DeleteEventController implements Callback<Void> {
+public class GetEventsController implements Callback<GetGenericEventsResponse> {
 
     private Handler handler;
-    private int eventId;
 
-    public DeleteEventController(Handler handler) {
+    public GetEventsController(Handler handler) {
         this.handler = handler;
     }
 
     /**
      * Starts the server request.
      * @param authToken Authorization token.
-     * @param id Id of the event to be deleted.
+     * @param timestamp Timestamp of the last getEvent.
      */
-    public void start(String authToken, int id) {
+    public void start(String authToken, long timestamp) {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        this.eventId = id;
-        Call<Void> call = client.deleteEvent(id);
+        Call<GetGenericEventsResponse> call = client.getEvents(timestamp);
         call.enqueue(this);
     }
-
     @Override
-    public void onResponse(Call<Void> call, Response<Void> response) {
+    public void onResponse(Call<GetGenericEventsResponse> call, Response<GetGenericEventsResponse> response) {
         Bundle bundle = new Bundle();
         if (response.isSuccessful()) {
-            bundle.putInt("Id", eventId);
+            String jsonEvents = new Gson().toJson(response.body().getUpdatedEvents());
+            bundle.putString("jsonEvents", jsonEvents);
+            String jsonBreakEvents = new Gson().toJson(response.body().getUpdatedBreakEvents());
+            bundle.putString("jsonBreakEvents", jsonBreakEvents);
         } else {
             Log.d("ERROR_RESPONSE", response.toString());
         }
@@ -51,7 +54,7 @@ public class DeleteEventController implements Callback<Void> {
     }
 
     @Override
-    public void onFailure(Call<Void> call, Throwable t) {
+    public void onFailure(Call<GetGenericEventsResponse> call, Throwable t) {
         Log.d("INTERNET_CONNECTION", "ABSENT");
         Message msg = handler.obtainMessage(0);
         msg.sendToTarget();

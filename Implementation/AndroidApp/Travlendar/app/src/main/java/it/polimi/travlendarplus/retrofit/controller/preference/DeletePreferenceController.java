@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.retrofit.controller;
+package it.polimi.travlendarplus.retrofit.controller.preference;
 
 
 import android.os.Handler;

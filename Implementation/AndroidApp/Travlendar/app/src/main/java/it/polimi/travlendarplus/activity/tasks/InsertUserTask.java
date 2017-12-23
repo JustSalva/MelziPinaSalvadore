@@ -2,8 +2,10 @@ package it.polimi.travlendarplus.activity.tasks;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
+import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.User;
 
@@ -12,9 +14,11 @@ import it.polimi.travlendarplus.database.entity.User;
  */
 public class InsertUserTask extends AsyncTask<User, Void, Void> {
 
+    private Context context;
     private AppDatabase database;
 
     public InsertUserTask(Context context) {
+        this.context = context;
         this.database = AppDatabase.getInstance(context);
     }
 
@@ -23,6 +27,7 @@ public class InsertUserTask extends AsyncTask<User, Void, Void> {
             database.userDao().delete();
             database.userDao().insert(user);
         }
+        context.startActivity(new Intent(context, CalendarActivity.class));
         return null;
     }
 }

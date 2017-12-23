@@ -1,6 +1,10 @@
 package it.polimi.travlendarplus.database.entity.ticket;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.TypeConverters;
+
+import it.polimi.travlendarplus.database.converters.TicketTypeConverters;
 
 /**
  * DB period ticket entity.
@@ -11,6 +15,10 @@ public class PeriodTicket {
     private long startDate;
     @ColumnInfo(name = "end_date")
     private long endDate;
+
+    @TypeConverters(TicketTypeConverters.class)
+    @ColumnInfo(name = "decorator_type")
+    private Ticket.TicketType decoratorType;
 
     public PeriodTicket(String name, long startDate, long endDate) {
         this.name = name;
@@ -40,5 +48,13 @@ public class PeriodTicket {
 
     public void setEndDate(long endDate) {
         this.endDate = endDate;
+    }
+
+    public Ticket.TicketType getDecoratorType() {
+        return decoratorType;
+    }
+
+    public void setDecoratorType(Ticket.TicketType decoratorType) {
+        this.decoratorType = decoratorType;
     }
 }

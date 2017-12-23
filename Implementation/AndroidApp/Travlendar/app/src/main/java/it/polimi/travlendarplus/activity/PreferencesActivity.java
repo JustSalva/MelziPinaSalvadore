@@ -27,10 +27,10 @@ import it.polimi.travlendarplus.activity.handler.preference.GetPreferencesHandle
 import it.polimi.travlendarplus.activity.handler.preference.ModifyPreferenceHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.body.PreferenceBody;
-import it.polimi.travlendarplus.retrofit.controller.AddPreferenceController;
-import it.polimi.travlendarplus.retrofit.controller.DeletePreferenceController;
-import it.polimi.travlendarplus.retrofit.controller.GetPreferencesController;
-import it.polimi.travlendarplus.retrofit.controller.ModifyPreferenceController;
+import it.polimi.travlendarplus.retrofit.controller.preference.AddPreferenceController;
+import it.polimi.travlendarplus.retrofit.controller.preference.DeletePreferenceController;
+import it.polimi.travlendarplus.retrofit.controller.preference.GetPreferencesController;
+import it.polimi.travlendarplus.retrofit.controller.preference.ModifyPreferenceController;
 
 import java.util.HashMap;
 import java.util.Map;

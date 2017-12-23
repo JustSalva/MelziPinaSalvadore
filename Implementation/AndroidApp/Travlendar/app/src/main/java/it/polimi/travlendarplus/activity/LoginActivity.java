@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -92,13 +93,14 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
         // Handle server responses.
         loginHandler = new LoginHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
-        // Public key request.
+        /* PUBLIC KEY REQUEST: to be removed when encryption works.
         if (publicKey == null) {
             // Send public key request to server.
             waitForServerResponse();
             RequestPublicKeyController requestPublicKeyController = new RequestPublicKeyController(requestPublicKeyHandler);
             requestPublicKeyController.start(idDevice);
-        }
+        }*/
+
         // Listener on the login button.
         login_button.setOnClickListener(view -> logIn());
     }
@@ -119,21 +121,21 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
             return;
         }
 
-        // PASSWORD ENCRYPTION: to be removed when encryption works.
+        /* PASSWORD ENCRYPTION: to be removed when encryption works.
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("RSA");
+            cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         String cryptoPassword = null;
         try {
-            byte[] passwordBytes = password.getBytes();
+            byte[] passwordBytes = password.getBytes("UTF-8");
             cryptoPassword = Base64.encodeToString(cipher.doFinal(passwordBytes), Base64.URL_SAFE);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
+        } catch (IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
+        }*/
 
         // Send request to server.
         waitForServerResponse();

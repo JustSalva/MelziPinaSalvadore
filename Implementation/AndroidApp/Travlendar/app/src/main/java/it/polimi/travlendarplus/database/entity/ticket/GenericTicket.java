@@ -6,14 +6,14 @@ import android.arch.persistence.room.Embedded;
 /**
  * DB general ticket entity.
  */
-public class GeneralTicket {
+public class GenericTicket {
     @ColumnInfo(name = "line_name")
     private String lineName;
 
     @Embedded
     private PathTicket pathTicket;
 
-    public GeneralTicket(String lineName, PathTicket pathTicket) {
+    public GenericTicket(String lineName, PathTicket pathTicket) {
         this.lineName = lineName;
         this.pathTicket = pathTicket;
     }
