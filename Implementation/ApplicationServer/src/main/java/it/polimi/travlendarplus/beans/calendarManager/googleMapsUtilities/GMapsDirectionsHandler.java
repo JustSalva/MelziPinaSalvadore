@@ -26,28 +26,30 @@ public class GMapsDirectionsHandler {
     // in this class.
 
     //it calculates eventual paths related to this event: the function requires the previous event
-    public String getBaseCallPreviousPath ( Event event, Event previousEvent ) {
+    public String getBaseCallPreviousPath ( Event event, Event previousEvent, boolean prevDateAllowed ) {
         addParam( "origin", event.getDeparture().getLatitude() + "," +
                 event.getDeparture().getLongitude() );
         addParam( "destination", event.getEventLocation().getLatitude() + "," +
                 event.getEventLocation().getLongitude() );
-        if ( previousEvent == null || event.isTravelAtLastChoice() )
+        if ( previousEvent == null || event.isTravelAtLastChoice() || !prevDateAllowed ) {
             addParam( "arrival_time", event.getStartingTime().getEpochSecond() + "" );
-        else
+        } else {
             addParam( "departure_time", previousEvent.getEndingTime().getEpochSecond() + "" );
+        }
         return callURL.toString();
     }
 
     //it calculates eventual paths after this event: the function requires the following event
-    public String getBaseCallFollowingPath ( Event event, Event followingEvent ) {
+    public String getBaseCallFollowingPath ( Event event, Event followingEvent, boolean prevDateAllowed ) {
         addParam( "origin", followingEvent.getDeparture().getLatitude() + "," +
                 followingEvent.getDeparture().getLongitude() );
         addParam( "destination", followingEvent.getEventLocation().getLatitude() + "," +
                 followingEvent.getEventLocation().getLongitude() );
-        if ( followingEvent.isTravelAtLastChoice() )
+        if ( followingEvent.isTravelAtLastChoice() || !prevDateAllowed ) {
             addParam( "arrival_time", followingEvent.getStartingTime().getEpochSecond() + "" );
-        else
+        } else {
             addParam( "departure_time", event.getEndingTime().getEpochSecond() + "" );
+        }
         return callURL.toString();
     }
 
@@ -70,15 +72,17 @@ public class GMapsDirectionsHandler {
         if ( transitMeans.size() > 0 ) {
             callWithTravel.append( "&mode=transit" );
             callWithTravel.append( "&transit_mode=" + transitMeans.get( 0 ).getParam() );
-            for ( int i = 1; i < transitMeans.size(); i++ )
+            for ( int i = 1; i < transitMeans.size(); i++ ) {
                 callWithTravel.append( "|" + transitMeans.get( i ).getParam() );
+            }
         }
         return callWithTravel.toString();
     }
 
     private void addParam ( String param, String address ) {
-        if ( callURL.charAt( getCallURL().length() - 1 ) != '?' )
+        if ( callURL.charAt( getCallURL().length() - 1 ) != '?' ) {
             callURL.append( "&" );
+        }
         callURL.append( param ).append( "=" ).append( address );
     }
 

@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Stateless
 public class PathManager extends UserManager {
 
+    private static final long MARGIN_TIME = 5 * 60;
     protected static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
     protected static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
             TravelMeanEnum.SUBWAY };
@@ -97,11 +99,13 @@ public class PathManager extends UserManager {
             event.setDeparture( ( previous != null ) ? previous.getEventLocation() : event.getEventLocation() );
         }
         try {
+            boolean prevDateAllowed = previousDateAllowed( previous, event );
             // Obtaining baseCall string for previous paths, here locations and times are setted.
-            String baseCall = directionsHandler.getBaseCallPreviousPath( event, previous );
+            String baseCall = directionsHandler.getBaseCallPreviousPath( event, previous, prevDateAllowed );
             boolean sameLoc = isBetweenSameLocations( event );
             // Obtaining possible paths for the specified means.
-            possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, previous, event, sameLoc );
+            possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, previous, event, sameLoc,
+                    prevDateAllowed );
         } catch ( GMapsGeneralException e ) {
             Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
             throw e;
@@ -123,11 +127,13 @@ public class PathManager extends UserManager {
             if ( following.isPrevLocChoice() ) {
                 following.setDeparture( event.getEventLocation() );
             }
+            boolean prevDateAllowed = previousDateAllowed( event, following );
             // Obtaining baseCall string for previous paths, here locations and times are setted.
-            String baseCall = directionsHandler.getBaseCallFollowingPath( event, following );
+            String baseCall = directionsHandler.getBaseCallFollowingPath( event, following, prevDateAllowed );
             boolean sameLoc = isBetweenSameLocations( following );
             // Obtaining possible paths for the specified means.
-            possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, event, following, sameLoc );
+            possiblePaths = possiblePathsAdder( baseCall, privateMeans, publicMeans, event, following, sameLoc,
+                    prevDateAllowed );
         } catch ( GMapsGeneralException e ) {
             Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
             throw e;
@@ -137,9 +143,9 @@ public class PathManager extends UserManager {
 
     private List < Travel > possiblePathsAdder ( String baseCall, List < TravelMeanEnum > privateMeans,
                                                  List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
-                                                 boolean sameLoc ) throws GMapsGeneralException {
+                                                 boolean sameLoc, boolean prevDateAllowed ) throws GMapsGeneralException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
-        privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
+        privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc, prevDateAllowed );
         if ( !publicMeans.isEmpty() ) {
             publicPathsHandler( possiblePaths, baseCall, eventA, eventB, publicMeans, sameLoc );
         }
@@ -147,7 +153,7 @@ public class PathManager extends UserManager {
     }
 
     private void privatePathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
-                                       List < TravelMeanEnum > privateMeans, boolean sameLoc )
+                                       List < TravelMeanEnum > privateMeans, boolean sameLoc, boolean prevDateAllowed )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( sameLoc ) {
@@ -159,16 +165,16 @@ public class PathManager extends UserManager {
                 GMapsJSONReader reader = new GMapsJSONReader();
                 JSONObject privatePathJSON = HTMLCallAndResponse.performCall(
                         directionsHandler.getCallWithNoTransit( baseCall, mean ) );
-                /*Two cases: 1) eventA is the previous and eventB the main event -> it is managed the case
-                in which eventA is NULL.
+                /*Two cases:
+                1) eventA is the previous and eventB the main event -> it is managed the case in which eventA is NULL.
                 2) eventA is the main event and eventB is the following event -> eventB is not NULL
                  because this case is managed above.*/
-                privatePaths = ( eventA != null && !eventB.isTravelAtLastChoice() ) ?
-                        reader.getTravelNoTransitMeans( privatePathJSON, mean, eventA.getEndingTime().getEpochSecond(),
-                                true, eventB.getDeparture(), eventB.getEventLocation() ) :
+                privatePaths = ( eventA != null && !eventB.isTravelAtLastChoice() && prevDateAllowed )
+                        ? reader.getTravelNoTransitMeans( privatePathJSON, mean, eventA.getEndingTime().getEpochSecond(),
+                        true, eventB.getDeparture(), eventB.getEventLocation() )
                         // It is the case when the possible new event would be the first in the schedule.
-                        reader.getTravelNoTransitMeans( privatePathJSON, mean, eventB.getStartingTime().getEpochSecond(),
-                                false, eventB.getDeparture(), eventB.getEventLocation() );
+                        : reader.getTravelNoTransitMeans( privatePathJSON, mean, eventB.getStartingTime().getEpochSecond(),
+                        false, eventB.getDeparture(), eventB.getEventLocation() );
             } catch ( JSONException err ) {
                 Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, err.getMessage(), err );
             }
@@ -179,6 +185,14 @@ public class PathManager extends UserManager {
                 }
             }
         }
+    }
+
+    private boolean previousDateAllowed ( Event eventA, Event eventB ) {
+        if ( eventA == null ) {
+            return false;
+        }
+        return eventA.getEndingTime().isAfter( Instant.ofEpochSecond( Instant.now().getEpochSecond() + MARGIN_TIME ) );
+
     }
 
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
