@@ -73,4 +73,17 @@ public class ScheduleHolder {
         return newList;
     }
 
+    public void changeEventPath ( long id, Travel path ) {
+        for ( Event e : events )
+            if ( e.getId() == id )
+                e.setFeasiblePath( path );
+    }
+
+    public void setEvents ( List < Event > events ) {
+        this.events = events;
+    }
+
+    public void setBreaks ( List < BreakEvent > breaks ) {
+        this.breaks = breaks;
+    }
 }

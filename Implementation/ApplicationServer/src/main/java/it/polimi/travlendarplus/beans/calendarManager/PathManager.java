@@ -95,10 +95,8 @@ public class PathManager extends UserManager {
         List < Travel > possiblePaths = new ArrayList < Travel >();
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         Event previous = scheduleManager.getPossiblePreviousEvent( event.getStartingTime() );
-        if ( event.isPrevLocChoice() && previous != null ) {
-            event.setDeparture( previous.getEventLocation() );
-        } else if ( event.isPrevLocChoice() && previous == null ) {
-            event.setDeparture( event.getEventLocation() );
+        if ( event.isPrevLocChoice() ) {
+            event.setDeparture( ( previous != null ) ? previous.getEventLocation() : event.getEventLocation() );
         }
         try {
             // Obtaining baseCall string for previous paths, here locations and times are setted.
@@ -268,7 +266,11 @@ public class PathManager extends UserManager {
         }
         PathCombination best = ( complete ) ? preferenceManager.findBestPath( combs, forcedEvent.getType() ) :
                 calcPathNoSetSchedule( forcedEvent, privateMeans, publicMeans );
-        return best != null ? conclusionForSwap( best, forcedEvent, swapOutEvents ) : new ArrayList <>();
+        if ( best != null ) {
+            best.fixTimes();
+            return conclusionForSwap( best, forcedEvent, swapOutEvents );
+        }
+        return new ArrayList <>();
     }
 
     private List < GenericEvent > conclusionForSwap ( PathCombination best, Event forcedEvent,
@@ -365,6 +367,68 @@ public class PathManager extends UserManager {
         }
         return swapEvents( event, preferenceManager.getAllowedMeans( event, privateList ),
                 preferenceManager.getAllowedMeans( event, publicList ) );
+    }
+
+    public ArrayList < GenericEvent > swapBreakEvent ( BreakEvent forcedBreak ) throws GMapsGeneralException {
+        scheduleManager.setSchedule( forcedBreak.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
+        // Removing all break events overlapping with the forced one
+        List < BreakEvent > freeBreaks = scheduleManager.getSchedule().getBreaks().stream().filter( br ->
+                scheduleManager.areEventsOverlapFree( forcedBreak, br ) ).collect( toList() );
+        scheduleManager.getSchedule().setBreaks( freeBreaks );
+
+        List < Event > involved = scheduleManager.getEventsIntoIntervalWithPathRegard( scheduleManager.getSchedule().
+                getEvents(), forcedBreak );
+        while ( !involved.isEmpty() && !forcedBreak.isMinimumEnsuredWithPathRegard( involved ) ) {
+            Event mostOverlapping = eventToRemove( involved, forcedBreak );
+            Event following = scheduleManager.getPossibleFollowingEvent( mostOverlapping.getStartingTime() );
+            scheduleManager.getSchedule().removeSpecEvent( mostOverlapping );
+            adjustFollowing( following );
+            involved = scheduleManager.getEventsIntoIntervalWithPathRegard( scheduleManager.getSchedule().
+                    getEvents(), forcedBreak );
+        }
+        return conclusionForBreakSwap();
+    }
+
+    private ArrayList < GenericEvent > conclusionForBreakSwap () {
+        //TODO
+        return null;
+    }
+
+    private Event eventToRemove ( List < Event > involved, BreakEvent forcedBreak ) {
+        Event toRemove = involved.get( 0 );
+        for ( int i = 1; i < involved.size(); i++ )
+            if ( scheduleManager.overlappingEventWithBreak( involved.get( i ), forcedBreak ) >
+                    scheduleManager.overlappingEventWithBreak( toRemove, forcedBreak ) )
+                toRemove = involved.get( i );
+        return toRemove;
+    }
+
+    private void adjustFollowing ( Event following ) throws GMapsGeneralException {
+        if ( following == null ) {
+            return;
+        }
+        List < TravelMeanEnum > pubEnum = preferenceManager.getAllowedMeans( following, publicList );
+        List < TravelMeanEnum > priEnum = preferenceManager.getAllowedMeans( following, privateList );
+        // Getting possible paths before the event
+        List < Travel > paths = getPreviousTravels( following, priEnum, pubEnum );
+        paths = paths.stream().filter( p -> preferenceManager.checkConstraints( p, following.getType() ) )
+                .collect( toList() );
+        // Use the path in the schedule that follow the event to simulate the path calculation
+        ArrayList < Travel > simFoll = new ArrayList < Travel >();
+        simFoll.add( ( scheduleManager.getPossibleFollowingEvent( following.getStartingTime() ) != null )
+                ? scheduleManager.getPossibleFollowingEvent( following.getStartingTime() ).getFeasiblePath()
+                : null );
+        List < PathCombination > combs = scheduleManager.getFeasiblePathCombinations( following, paths, simFoll );
+        // A feasible path is found, adjusting the schedule with the new path
+        if ( !combs.isEmpty() ) {
+            PathCombination pathComb = preferenceManager.findBestPath( combs, following.getType() );
+            pathComb.fixTimes();
+            scheduleManager.getSchedule().changeEventPath( following.getId(), pathComb.getPrevPath() );
+        } else { // No feasible path according to user preferences: removing the event and trying with the next one
+            Event nextFoll = scheduleManager.getPossibleFollowingEvent( following.getStartingTime() );
+            scheduleManager.getSchedule().removeSpecEvent( following );
+            adjustFollowing( nextFoll );
+        }
     }
 
 }

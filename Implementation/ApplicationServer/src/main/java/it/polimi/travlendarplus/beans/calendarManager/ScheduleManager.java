@@ -132,9 +132,16 @@ public class ScheduleManager extends UserManager {
         if ( areEventsOverlapFree( event1, event2 ) )
             return 0;
         return Math.min( event1.getEndingTime().getEpochSecond(), event2.getEndingTime().getEpochSecond() ) -
-                ( ( event1.getStartingTime().isBefore( event2.getEndingTime() ) )
-                        ? event2.getStartingTime().getEpochSecond()
-                        : event1.getStartingTime().getEpochSecond() );
+                Math.max( event2.getStartingTime().getEpochSecond(), event1.getStartingTime().getEpochSecond() );
+    }
+
+    public long overlappingEventWithBreak ( Event event, BreakEvent breakEv ) {
+        long ovEventTime = overlappingTime( event, breakEv );
+        return ovEventTime + ( ( event.getFeasiblePath().getStartingTime().isBefore( breakEv.getEndingTime() ) &&
+                event.getFeasiblePath().getEndingTime().isAfter( breakEv.getStartingTime() ) ) ?
+                Math.min( event.getFeasiblePath().getEndingTime().getEpochSecond(), breakEv.getEndingTime().getEpochSecond() ) -
+                        Math.max( breakEv.getStartingTime().getEpochSecond(), event.getStartingTime().getEpochSecond() ) : 0 );
+
     }
 
     // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
@@ -150,7 +157,7 @@ public class ScheduleManager extends UserManager {
 
     // It returns an ArrayList of events into "events" that are overlapping with "intervalEvent" .
     // It considers also the event-related paths. The ArrayList passed as a param must be ordered.
-    private List < Event > getEventsIntoIntervalWithPathRegard ( List < Event > events, GenericEvent intervalEvent ) {
+    public List < Event > getEventsIntoIntervalWithPathRegard ( List < Event > events, GenericEvent intervalEvent ) {
         List < Event > involvedEvents = new ArrayList < Event >();
         // Event-related paths are taken into account in order to check if there is an overlap.
         for ( Event event : events )
