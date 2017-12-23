@@ -77,16 +77,7 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
 
         // Retrieve token representing device.
         idDevice = FirebaseInstanceId.getInstance().getToken();
-        Log.d("ID_DEVICE", idDevice);
 
-        // Listener on the password field.
-        password_editText.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                logIn();
-                return true;
-            }
-            return false;
-        });
         // Public key handler.
         requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
