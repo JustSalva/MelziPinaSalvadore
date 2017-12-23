@@ -1,0 +1,144 @@
+<resources>
+    <string name="app_name">TravlendarPlus</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="calendar">Calendar</string>
+    <string name="map">Map</string>
+    <string name="my_account">My Account</string>
+    <string name="preferences">Preferences</string>
+    <string name="my_tickets">My Tickets</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="melziPietro">Melzi Pietro</string>
+    <string name="pinaAlessandro">Pina Alessandro</string>
+    <string name="salvadoreMatteo">Salvadore Matteo</string>
+    <string name="travlendar">Travlendar+</string>
+    <string name="iconAppDescription">Icon of the application.</string>
+    <string name="login">Login</string>
+    <string name="registration">Registration</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="today">Today</string>
+
+    <!-- Strings related to login and registration -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_surname">Surname</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_registration">Register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_name">This name must be at least 2 character long</string>
+    <string name="error_invalid_surname">This surname must be at least 2 character long</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_different_passwords">You inserted two different passwords</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_registration">Registration</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <!---->
+    <string name="locations">Locations</string>
+    <string name="add_location">Add location</string>
+    <string name="location_name">Location name</string>
+    <string name="save">Save</string>
+    <string name="type_of_event">Type of event</string>
+    <string name="car">Car</string>
+    <string name="train">Train</string>
+    <string name="foot">Foot</string>
+    <string name="metro">Metro</string>
+    <string name="tram">Tram</string>
+    <string name="taxi">Taxi</string>
+    <string name="bicycle">Bicycle</string>
+    <string name="bike_sharing">Bike Sharing</string>
+    <string name="car_sharing">Car Sharing</string>
+    <string name="preferred_path">Preferred path</string>
+    <string name="constraints">Constraints</string>
+    <string name="minimum_distance">Minimum distance (km)</string>
+    <string name="maximum_distance">Maximum distance (km)</string>
+    <string name="travel_mean">Travel mean</string>
+    <string name="cost_euro">Cost (euro)</string>
+    <string name="ticket_type">Ticket type</string>
+    <string name="general_ticket">General ticket</string>
+    <string name="distance_ticket">Distance ticket</string>
+    <string name="period_ticket">Period ticket</string>
+    <string name="line_name">Line name</string>
+    <string name="starting_location">Starting location</string>
+    <string name="ending_location">Ending location</string>
+    <string name="distance_km">Distance (km)</string>
+    <string name="name">Name</string>
+    <string name="starting_date">Starting date</string>
+    <string name="ending_date">Ending date</string>
+    <string name="add_ticket">Add ticket</string>
+    <string name="confirm">Confirm</string>
+    <string name="date">Date</string>
+    <string name="normal_event">Normal Event</string>
+    <string name="break_event">Break event</string>
+    <string name="description">Description</string>
+    <string name="event_location">Event location</string>
+    <string name="start_from_previous_location">Start from previous location?</string>
+    <string name="previous_location">Previous location</string>
+    <string name="minimum_type">Minimum time</string>
+    <string name="arrange">Arrange</string>
+    <string name="change">Change</string>
+    <string name="travel">Travel</string>
+    <string name="schedule">Schedule</string>
+    <string name="overlapping">Overlapping</string>
+    <string name="edit_event">Edit event</string>
+    <string name="view_event">View event</string>
+    <string name="arrange_trip">Arrange trip</string>
+    <string name="edit_ticket">Edit ticket</string>
+    <string name="insert_date">Insert date</string>
+    <string name="insert_time">Insert time</string>
+    <string name="starting_time">Starting time</string>
+    <string name="ending_time">Ending time</string>
+    <string name="travel_means_allowed">Travel means allowed</string>
+    <string name="_00_00">00:00</string>
+    <string name="_24_00">24:00</string>
+    <string name="min_time">Min time</string>
+    <string name="max_time">Max time</string>
+    <string name="constraints_on">Constraints on</string>
+    <string name="periodical_event">Periodical event</string>
+    <string name="change_date">Change date</string>
+    <string name="add_event">Add event</string>
+    <string name="tickets_viewer">Tickets viewer</string>
+    <string name="logout">Logout</string>
+    <string name="goToRegistration">No account yet? Register right now!</string>
+    <string name="location_address">Location address</string>
+    <string name="select_location">Select location</string>
+    <string name="deleteLocation_imageDescription">Trash bin to delete location</string>
+    <string name="deletePreference_imageDescription">Trash bin to delete preference</string>
+    <string name="subway">Subway</string>
+    <string name="bus">Bus</string>
+    <string name="edit">Edit</string>
+    <string name="add_new">Add new</string>
+    <string name="name_of_new_preference">Name of new preference</string>
+    <string name="start_traveling_at">Start traveling at:</string>
+    <string name="minimum_time">Minimum time</string>
+    <string name="departure_location">Departure location</string>
+
+    <!-- SPINNER POPULATION -->
+    <string-array name="travelMeans_array">
+        <item>Bike</item>
+        <item>Bus</item>
+        <item>By Foot</item>
+        <item>Car</item>
+        <item>Subway</item>
+        <item>Train</item>
+        <item>Tram</item>
+        <item>Sharing Bike</item>
+        <item>Sharing Car</item>
+    </string-array>
+
+    <string-array name="preferredPath_array">
+        <item>Minimum cost</item>
+        <item>Minimum length</item>
+        <item>Minimum time</item>
+        <item>Eco-friendly</item>
+    </string-array>
+</resources>
