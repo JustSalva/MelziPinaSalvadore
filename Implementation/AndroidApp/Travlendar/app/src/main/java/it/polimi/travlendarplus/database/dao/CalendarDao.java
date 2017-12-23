@@ -22,7 +22,7 @@ public interface CalendarDao {
     void insert(GenericEvent genericEvent);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<TravelComponent> travelComponents);
+    void insert(TravelComponent travelComponent);
 
     @Update
     void update(GenericEvent genericEvent);
@@ -31,7 +31,7 @@ public interface CalendarDao {
     void delete(GenericEvent genericEvent);
 
     @Query("DELETE FROM generic_event WHERE id LIKE :id")
-    void deleteFromId(int id);
+    void deleteEventFromId(int id);
 
     @Query("DELETE FROM generic_event")
     void deleteAll();
@@ -67,4 +67,7 @@ public interface CalendarDao {
 
     @Query("DELETE FROM travel_component")
     void deleteTravelComponents();
+
+    @Query("DELETE FROM travel_component WHERE event_id LIKE :eventId")
+    void deleteEventTravelComponents(long eventId);
 }

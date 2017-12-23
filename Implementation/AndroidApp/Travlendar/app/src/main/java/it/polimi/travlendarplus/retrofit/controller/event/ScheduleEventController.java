@@ -41,6 +41,7 @@ public class ScheduleEventController implements Callback<GetGenericEventsRespons
             Log.d("ERROR_RESPONSE", response.toString());
         }
         Message msg = handler.obtainMessage(response.code());
+        msg.setData(bundle);
         msg.sendToTarget();
     }
 

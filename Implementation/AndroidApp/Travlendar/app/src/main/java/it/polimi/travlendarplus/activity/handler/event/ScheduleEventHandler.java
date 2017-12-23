@@ -18,6 +18,10 @@ import it.polimi.travlendarplus.activity.tasks.InsertEventsTask;
 import it.polimi.travlendarplus.retrofit.response.event.BreakEventResponse;
 import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
+/**
+ * Handler that handles the server response to the scheduling request.
+ * It is used by the CalendarActivity.
+ */
 public class ScheduleEventHandler extends DefaultHandler {
 
     private CalendarActivity calendarActivity;

@@ -29,6 +29,8 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
 
     protected Void doInBackground(Void... voids) {
         for (EventResponse eventResponse : events) {
+            // If the event is already present, delete it.
+            database.calendarDao().deleteEventFromId((int) eventResponse.getId());
             // Create generic event.
             GenericEvent genericEvent = new GenericEvent(
                     eventResponse.getId(),
@@ -52,12 +54,13 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
             // Insert the generic event in the DB.
             database.calendarDao().insert(genericEvent);
 
+            // Delete all the old travel components for the event.
+            database.calendarDao().deleteEventTravelComponents(eventResponse.getId());
             // If scheduled, get the travel components for the event.
             if (eventResponse.isScheduled()) {
                 List<MiniTravel> miniTravels = eventResponse.getFeasiblePath().getMiniTravels();
-                List<TravelComponent> travelComponents = new ArrayList<>();
                 for (MiniTravel miniTravel : miniTravels) {
-                    travelComponents.add(new TravelComponent(
+                    TravelComponent travelComponent = new TravelComponent(
                             miniTravel.getId(),
                             miniTravel.getLength(),
                             eventResponse.getId(),
@@ -66,11 +69,9 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
                             miniTravel.getArrival().getAddress(),
                             miniTravel.getStartingTime().getSeconds(),
                             miniTravel.getEndingTime().getSeconds()
-                    ));
-                }
-                // Insert travel components in the DB.
-                if (!travelComponents.isEmpty()) {
-                    database.calendarDao().insert(travelComponents);
+                    );
+                    // Insert travel component in the DB.
+                    database.calendarDao().insert(travelComponent);
                 }
             }
         }
