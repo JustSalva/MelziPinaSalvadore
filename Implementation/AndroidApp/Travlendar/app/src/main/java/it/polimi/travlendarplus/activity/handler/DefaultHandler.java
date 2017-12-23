@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import it.polimi.travlendarplus.activity.LoginActivity;
+import it.polimi.travlendarplus.activity.MainActivity;
 import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
@@ -33,6 +34,7 @@ public abstract class DefaultHandler extends Handler {
         switch (msg.what){
             case 0:
                 Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
+                context.startActivity(new Intent(context, MainActivity.class));
                 break;
             case 400:
                 // Shows the user which invalid fields have been sent to server.
