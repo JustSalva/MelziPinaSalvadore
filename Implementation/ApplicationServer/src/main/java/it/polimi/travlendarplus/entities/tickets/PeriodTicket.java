@@ -123,6 +123,7 @@ public class PeriodTicket extends Ticket {
         }
         if ( travelComponentToBeAdded.getStartingTime().isBefore( this.startingDate ) ||
                 travelComponentToBeAdded.getEndingTime().isAfter( this.endingDate ) ) {
+
             TicketNotValidException ticketNotValidException =
                     new TicketNotValidException( TicketNotValidCauses.OUT_OF_VALIDITY_PERIOD );
             ticketNotValidException.addErrors( conflicts );

@@ -15,7 +15,7 @@ public interface PublicKeyTimerInterface {
     /**
      * Schedule a timer relative to a RSA key pair
      *
-     * @param rsaEncryption
+     * @param rsaEncryption container of the pair of keys to be deleted by timer
      */
     void scheduleSingleTimer ( RSAEncryption rsaEncryption );
 }

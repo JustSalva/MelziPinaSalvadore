@@ -4,6 +4,7 @@ import it.polimi.travlendarplus.entities.tickets.DistanceTicket;
 import it.polimi.travlendarplus.entities.tickets.GenericTicket;
 import it.polimi.travlendarplus.entities.tickets.PathTicket;
 import it.polimi.travlendarplus.entities.tickets.PeriodTicket;
+import it.polimi.travlendarplus.entities.travelMeans.PublicTravelMean;
 import it.polimi.travlendarplus.entities.travels.TravelComponent;
 
 import java.time.Instant;
@@ -18,10 +19,14 @@ public class PeriodTicketResponse extends TripResponse {
 
     private static final long serialVersionUID = 7271436663136619574L;
 
+    private long id;
+    private float cost;
     private String name;
     private Instant startingDate;
     private Instant endingDate;
+    private List < PublicTravelMean > relatedTo;
     private List < TravelComponent > linkedTravels;
+
 
     private DistanceTicket distanceTicket;
     private GenericTicket genericTicket;
@@ -32,9 +37,12 @@ public class PeriodTicketResponse extends TripResponse {
 
     public PeriodTicketResponse ( PeriodTicket periodTicket ) {
         periodTicket.decorateResponse( this );
+        this.id = periodTicket.getId();
+        this.cost = periodTicket.getCost();
         this.name = periodTicket.getName();
         this.startingDate = periodTicket.getStartingDate();
         this.endingDate = periodTicket.getEndingDate();
+        this.relatedTo = new ArrayList <>( periodTicket.getRelatedTo() );
         this.linkedTravels = new ArrayList <>( periodTicket.getLinkedTravels() );
     }
 
@@ -92,5 +100,29 @@ public class PeriodTicketResponse extends TripResponse {
 
     public void setLinkedTravels ( List < TravelComponent > linkedTravels ) {
         this.linkedTravels = linkedTravels;
+    }
+
+    public long getId () {
+        return id;
+    }
+
+    public void setId ( long id ) {
+        this.id = id;
+    }
+
+    public float getCost () {
+        return cost;
+    }
+
+    public void setCost ( float cost ) {
+        this.cost = cost;
+    }
+
+    public List < PublicTravelMean > getRelatedTo () {
+        return relatedTo;
+    }
+
+    public void setRelatedTo ( List < PublicTravelMean > relatedTo ) {
+        this.relatedTo = relatedTo;
     }
 }
