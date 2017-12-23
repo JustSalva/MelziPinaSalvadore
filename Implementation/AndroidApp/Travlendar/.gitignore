@@ -1,17 +1,4 @@
-*.toc
-RASD/RASD.synctex.gz
-*.log
-*.aux
-*.out
-*.pdf
-DD/DD.synctex.gz
-Implementation/ApplicationServer/.idea/
-Implementation/ApplicationServer/bin
-Implementation/ApplicationServer/out/
-Implementation/ApplicationServer/target/
-Implementation/ApplicationServer/ApplicationServer.iml
-Implementation/ApplicationServer/lib/
-
+# Created by https://www.gitignore.io/api/androidstudio
 
 ### AndroidStudio ###
 # Covers files to be ignored for android development using Android Studio.
