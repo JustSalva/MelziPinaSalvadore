@@ -16,20 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 
 import it.polimi.travlendarplus.Location;
-import it.polimi.travlendarplus.activity.EventEditorActivity;
+import it.polimi.travlendarplus.activity.AccountActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
+import it.polimi.travlendarplus.activity.handler.LocationLoader;
 
 /**
  * Handler that handles the server response to the locations request.
- * It is used by the EventEditorActivity.
+ * It is used by the AccountActivity.
  */
-public class GetEventLocationsHandler extends DefaultHandler {
+public class GetAccountLocationsHandler extends DefaultHandler {
 
-    private EventEditorActivity eventEditorActivity;
+    private LocationLoader activity;
 
-    public GetEventLocationsHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
+    public GetAccountLocationsHandler(Looper looper, Context context, LocationLoader activity) {
         super(looper, context);
-        this.eventEditorActivity = eventEditorActivity;
+        this.activity = activity;
     }
 
     @Override
@@ -42,15 +43,17 @@ public class GetEventLocationsHandler extends DefaultHandler {
                 Bundle bundle = msg.getData();
                 String jsonLocations = bundle.getString("jsonLocations");
                 List<Location> locations = new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
-                eventEditorActivity.setLocationsMap(new HashMap<>());
+                activity.
+                accountActivity.setLocationsMap(new HashMap<>());
                 for (Location location : locations) {
-                    eventEditorActivity.getLocationsMap().put(location.getName(), location);
+                    // Remove %20 added when location name sent.
+                    activity.getLocationsMap().put(location.getName(), location);
                 }
-                eventEditorActivity.populateLocationsSpinner();
+                activity.populateLocationsSpinner();
                 break;
             default:
                 break;
         }
-        eventEditorActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

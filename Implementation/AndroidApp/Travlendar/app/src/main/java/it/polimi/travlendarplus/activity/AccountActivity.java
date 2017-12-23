@@ -24,9 +24,10 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.handler.LocationLoader;
 import it.polimi.travlendarplus.activity.handler.location.AddLocationHandler;
 import it.polimi.travlendarplus.activity.handler.location.DeleteLocationHandler;
-import it.polimi.travlendarplus.activity.handler.location.GetAccountLocationsHandler;
+import it.polimi.travlendarplus.activity.handler.location.GetLocationsHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.controller.location.AddLocationController;
 import it.polimi.travlendarplus.retrofit.controller.location.DeleteLocationController;
@@ -38,7 +39,7 @@ import java.util.Map;
  * Activity the lets the user see his personal information and location.
  * It allows the user to add and delete locations.
  */
-public class AccountActivity extends MenuActivity {
+public class AccountActivity extends MenuActivity implements LocationLoader {
     // UI references.
     private TextView name_textView;
     private TextView surname_textView;
@@ -126,7 +127,7 @@ public class AccountActivity extends MenuActivity {
         addLocation_button.setOnClickListener(view -> sendLocationToServer());
 
         // Handle server responses.
-        getLocationsHandler = new GetAccountLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
         addLocationHandler = new AddLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
         deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
@@ -282,5 +283,12 @@ public class AccountActivity extends MenuActivity {
 
     public Location getSelectedLocation() {
         return selectedLocation;
+    }
+
+    @Override
+    public void updateLocations(Map<String, Location> locationMap) {
+        this.locationsMap = locationMap;
+        populateLocationsSpinner();
+        resumeNormalMode();
     }
 }

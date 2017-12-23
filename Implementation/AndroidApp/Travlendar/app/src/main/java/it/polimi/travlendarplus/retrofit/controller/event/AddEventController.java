@@ -49,15 +49,17 @@ public class AddEventController implements Callback<ResponseBody> {
         Bundle bundle = new Bundle();
         if (!response.isSuccessful()) {
             // Get the ErrorResponse containing error messages sent by the server.
-            try {
-                ErrorResponse errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
-                for (String message : errorResponse.getMessages()) {
-                    Log.d("ERROR_RESPONSE", message);
+            if (response.code() != 503) {
+                try {
+                    ErrorResponse errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                    for (String message : errorResponse.getMessages()) {
+                        Log.d("ERROR_RESPONSE", message);
+                    }
+                    // Put the ErrorResponse in a Json to be sent to the handler.
+                    bundle.putString("errorResponse", new Gson().toJson(errorResponse));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                // Put the ErrorResponse in a Json to be sent to the handler.
-                bundle.putString("errorResponse", new Gson().toJson(errorResponse));
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         Message msg = handler.obtainMessage(response.code());

@@ -21,6 +21,7 @@ import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.TimePickerFragment;
+import it.polimi.travlendarplus.activity.handler.PreferenceLoader;
 import it.polimi.travlendarplus.activity.handler.preference.AddPreferenceHandler;
 import it.polimi.travlendarplus.activity.handler.preference.DeletePreferenceHandler;
 import it.polimi.travlendarplus.activity.handler.preference.GetPreferencesHandler;
@@ -39,7 +40,7 @@ import java.util.Map;
  * Activity that allows the user to manage his preferences.
  * Allows the user to create, modify and delete preferences.
  */
-public class PreferencesActivity extends MenuActivity {
+public class PreferencesActivity extends MenuActivity implements PreferenceLoader {
     // UI references.
     private ImageView deletePreference_imageView;
     private LinearLayout checkBoxes_linearLayout;
@@ -400,5 +401,12 @@ public class PreferencesActivity extends MenuActivity {
 
     public Preference getSelectedPreference() {
         return selectedPreference;
+    }
+
+    @Override
+    public void updatePreferences(Map<String, Preference> preferenceMap) {
+        this.preferencesMap = preferenceMap;
+        populatePreferencesSpinner();
+        resumeNormalMode();
     }
 }

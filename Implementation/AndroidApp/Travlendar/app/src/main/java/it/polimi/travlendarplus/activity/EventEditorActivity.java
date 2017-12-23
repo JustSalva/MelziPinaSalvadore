@@ -23,9 +23,11 @@ import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
 import it.polimi.travlendarplus.activity.fragment.TimePickerFragment;
+import it.polimi.travlendarplus.activity.handler.LocationLoader;
+import it.polimi.travlendarplus.activity.handler.PreferenceLoader;
 import it.polimi.travlendarplus.activity.handler.event.AddEventHandler;
-import it.polimi.travlendarplus.activity.handler.location.GetEventLocationsHandler;
-import it.polimi.travlendarplus.activity.handler.preference.GetEventPreferencesHandler;
+import it.polimi.travlendarplus.activity.handler.location.GetLocationsHandler;
+import it.polimi.travlendarplus.activity.handler.preference.GetPreferencesHandler;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
 import it.polimi.travlendarplus.retrofit.body.BreakEventBody;
 import it.polimi.travlendarplus.retrofit.body.EventBody;
@@ -37,7 +39,7 @@ import it.polimi.travlendarplus.retrofit.controller.preference.GetPreferencesCon
  * Activity that allows the user to create a new event.
  * Event editing to be implemented.
  */
-public class EventEditorActivity extends MenuActivity {
+public class EventEditorActivity extends MenuActivity implements LocationLoader, PreferenceLoader {
     // UI references.
     private LinearLayout normalEvent_linearLayout;
     private LinearLayout breakEvent_linearLayout;
@@ -149,9 +151,9 @@ public class EventEditorActivity extends MenuActivity {
             }
         });
         getEventLocationsHandler =
-                new GetEventLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+                new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
         getEventPreferencesHandler =
-                new GetEventPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
+                new GetPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
         addEventHandler =
                 new AddEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
@@ -394,19 +396,17 @@ public class EventEditorActivity extends MenuActivity {
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
-    public Map<String, Location> getLocationsMap() {
-        return locationsMap;
+    @Override
+    public void updateLocations(Map<String, Location> locationMap) {
+        this.locationsMap = locationMap;
+        populateLocationsSpinner();
+        resumeNormalMode();
     }
 
-    public void setLocationsMap(Map<String, Location> locationsMap) {
-        this.locationsMap = locationsMap;
-    }
-
-    public Map<String, Preference> getPreferencesMap() {
-        return preferencesMap;
-    }
-
-    public void setPreferencesMap(Map<String, Preference> preferencesMap) {
-        this.preferencesMap = preferencesMap;
+    @Override
+    public void updatePreferences(Map<String, Preference> preferenceMap) {
+        this.preferencesMap = preferenceMap;
+        populatePreferencesSpinner();
+        resumeNormalMode();
     }
 }

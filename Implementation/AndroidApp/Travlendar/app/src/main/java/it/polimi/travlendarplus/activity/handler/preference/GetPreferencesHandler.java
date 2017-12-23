@@ -12,23 +12,25 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polimi.travlendarplus.Preference;
-import it.polimi.travlendarplus.activity.PreferencesActivity;
+import it.polimi.travlendarplus.activity.EventEditorActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
 /**
  * Handler that handles the server response to the preferences request.
- * It is used by the PreferencesActivity.
+ * It is used by the EventEditorActivity.
  */
-public class GetPreferencesHandler extends DefaultHandler {
+public class GetEventPreferencesHandler extends DefaultHandler {
 
-    private PreferencesActivity preferencesActivity;
+    private EventEditorActivity eventEditorActivity;
 
-    public GetPreferencesHandler(Looper looper, Context context, PreferencesActivity preferencesActivity) {
+    public GetEventPreferencesHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
         super(looper, context);
-        this.preferencesActivity = preferencesActivity;
+        this.eventEditorActivity = eventEditorActivity;
     }
 
     @Override
@@ -46,15 +48,18 @@ public class GetPreferencesHandler extends DefaultHandler {
                                 new TypeToken<List<Preference>>(){}.getType()
                         );
                 // Fill map of preferences.
+                Map<String, Preference> preferencesMap = new HashMap<>();
+                preferencesMap.put("Normal", new Preference());
+                eventEditorActivity.setPreferencesMap(preferencesMap);
                 for (Preference preference : preferences) {
-                    preferencesActivity.getPreferencesMap().put(preference.getName(), preference);
+                    eventEditorActivity.getPreferencesMap().put(preference.getName(), preference);
                 }
                 // Update preferences spinner.
-                preferencesActivity.populatePreferencesSpinner();
+                eventEditorActivity.populatePreferencesSpinner();
                 break;
             default:
                 break;
         }
-        preferencesActivity.resumeNormalMode();
+        eventEditorActivity.resumeNormalMode();
     }
 }
