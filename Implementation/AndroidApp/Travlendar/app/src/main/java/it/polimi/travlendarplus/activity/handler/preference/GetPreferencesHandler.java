@@ -3,10 +3,8 @@ package it.polimi.travlendarplus.activity.handler.preference;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,18 +17,19 @@ import java.util.Map;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.activity.EventEditorActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
+import it.polimi.travlendarplus.activity.handler.PreferenceLoader;
 
 /**
  * Handler that handles the server response to the preferences request.
  * It is used by the EventEditorActivity.
  */
-public class GetEventPreferencesHandler extends DefaultHandler {
+public class GetPreferencesHandler extends DefaultHandler {
 
-    private EventEditorActivity eventEditorActivity;
+    private PreferenceLoader activity;
 
-    public GetEventPreferencesHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
+    public GetPreferencesHandler(Looper looper, Context context, PreferenceLoader activity) {
         super(looper, context);
-        this.eventEditorActivity = eventEditorActivity;
+        this.activity = activity;
     }
 
     @Override
@@ -50,16 +49,14 @@ public class GetEventPreferencesHandler extends DefaultHandler {
                 // Fill map of preferences.
                 Map<String, Preference> preferencesMap = new HashMap<>();
                 preferencesMap.put("Normal", new Preference());
-                eventEditorActivity.setPreferencesMap(preferencesMap);
                 for (Preference preference : preferences) {
-                    eventEditorActivity.getPreferencesMap().put(preference.getName(), preference);
+                    preferencesMap.put(preference.getName(), preference);
                 }
                 // Update preferences spinner.
-                eventEditorActivity.populatePreferencesSpinner();
+                activity.updatePreferences(preferencesMap);
                 break;
             default:
                 break;
         }
-        eventEditorActivity.resumeNormalMode();
     }
 }

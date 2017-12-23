@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polimi.travlendarplus.Location;
 import it.polimi.travlendarplus.activity.AccountActivity;
@@ -24,11 +25,11 @@ import it.polimi.travlendarplus.activity.handler.LocationLoader;
  * Handler that handles the server response to the locations request.
  * It is used by the AccountActivity.
  */
-public class GetAccountLocationsHandler extends DefaultHandler {
+public class GetLocationsHandler extends DefaultHandler {
 
     private LocationLoader activity;
 
-    public GetAccountLocationsHandler(Looper looper, Context context, LocationLoader activity) {
+    public GetLocationsHandler(Looper looper, Context context, LocationLoader activity) {
         super(looper, context);
         this.activity = activity;
     }
@@ -42,18 +43,16 @@ public class GetAccountLocationsHandler extends DefaultHandler {
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonLocations = bundle.getString("jsonLocations");
-                List<Location> locations = new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
-                activity.
-                accountActivity.setLocationsMap(new HashMap<>());
+                List<Location> locations =
+                        new Gson().fromJson(jsonLocations, new TypeToken<List<Location>>(){}.getType());
+                Map<String, Location> locationMap = new HashMap<>();
                 for (Location location : locations) {
-                    // Remove %20 added when location name sent.
-                    activity.getLocationsMap().put(location.getName(), location);
+                    locationMap.put(location.getName(), location);
                 }
-                activity.populateLocationsSpinner();
+                activity.updateLocations(locationMap);
                 break;
             default:
                 break;
         }
-        activity.resumeNormalMode();
     }
 }
