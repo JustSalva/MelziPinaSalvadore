@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
+import java.security.spec.KeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
@@ -22,6 +23,11 @@ import java.util.Base64;
 public class RSAEncryption extends GenericEntity {
 
     private static final long serialVersionUID = 8890765076763091319L;
+    private static final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    private static final int RSA_KEY_LENGTH = 2048;
+    private static final String ALGORITHM_NAME = "RSA";
+    private static final String PADDING_SCHEME = "OAEPWITHSHA-512ANDMGF1PADDING";
+    private static final String MODE_OF_OPERATION = "ECB"; // This essentially means none behind the scene
 
     /**
      * Identifier of the device the credentials are associated to
@@ -52,11 +58,11 @@ public class RSAEncryption extends GenericEntity {
 
     public RSAEncryption ( String idDevice ) throws NoSuchAlgorithmException {
         this.idDevice = idDevice;
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
-        //keyPairGenerator.initialize( 2048 );
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        this.privateKey = keyPair.getPrivate();
-        this.publicKey = keyPair.getPublic();
+        KeyPairGenerator rsaKeyGen = KeyPairGenerator.getInstance( ALGORITHM_NAME );
+        rsaKeyGen.initialize( RSA_KEY_LENGTH );
+        KeyPair rsaKeyPair = rsaKeyGen.generateKeyPair();
+        this.privateKey = rsaKeyPair.getPrivate();
+        this.publicKey = rsaKeyPair.getPublic();
         this.timestamp = Instant.now();
     }
 
@@ -74,7 +80,7 @@ public class RSAEncryption extends GenericEntity {
 
         try {
             Cipher cipher = setUpCypher( Cipher.ENCRYPT_MODE, publicKey );
-            return Base64.getEncoder().encodeToString( cipher.doFinal( plainPassword.getBytes("UTF-8") ) );
+            return byteArrayToHexString( cipher.doFinal( plainPassword.getBytes("UTF-8") ) );
         } catch ( GeneralSecurityException | UnsupportedEncodingException e ) {
             throw new EncryptionFailedException();
         }
@@ -91,7 +97,7 @@ public class RSAEncryption extends GenericEntity {
      * @see Cipher
      */
     private static Cipher setUpCypher ( int cipherMode, Key key ) throws GeneralSecurityException {
-        Cipher cipher = Cipher.getInstance( "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING" );
+        Cipher cipher = Cipher.getInstance( ALGORITHM_NAME + "/" + MODE_OF_OPERATION + "/" + PADDING_SCHEME );
         cipher.init( cipherMode, key );
         return cipher;
     }
@@ -105,28 +111,6 @@ public class RSAEncryption extends GenericEntity {
      */
     public static RSAEncryption load ( String idDevice ) throws EntityNotFoundException {
         return GenericEntity.load( RSAEncryption.class, idDevice );
-    }
-
-    public static void main ( String[] args ) throws Exception {
-        String plainText = "password";
-
-        // Generate public and private keys using RSA
-        //RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
-        RSAEncryption rsaEncryption = RSAEncryption.load( "idDevice" );
-        byte[] bytes = {48,-127,-97,48,13,6,9,42,-122,72,-122,-9,13,1,1,1,5,0,3,-127,-115,0,48,-127,-119,2,-127,-127,0,
-                -125,-60,-126,-67,53,10,22,29,74,73,-24,108,64,27,-24,-76,-86,-58,4,-38,-35,14,85,71,8,38,-114,76,40,-32,
-                -12,126,119,19,29,-7,2,119,44,94,119,113,-6,107,73,-65,19,-104,39,-84,105,36,-107,35,-84,99,3,-127,-28,8,
-                -48,-6,-27,-52,21,-23,118,126,-40,-100,-47,-82,17,-34,-4,-122,-98,40,63,63,-108,-95,100,70,-39,-78,126,-77,
-                -105,-85,116,37,-99,-28,68,-55,120,-23,79,45,-63,7,63,-3,87,46,-6,-102,-88,-44,-86,-18,-34,37,40,13,-125,
-                124,6,-11,-32,-29,122,31,-18,-108,-1,121,2,3,1,0,1};
-        PublicKey publicKey = KeyFactory.getInstance( "RSA" ).generatePublic( new X509EncodedKeySpec( bytes ) );
-        String encryptedText = encryptPassword( plainText, publicKey );
-        String decryptedText = rsaEncryption.decryptPassword( encryptedText );
-
-        System.out.println( "input:" + plainText );
-        System.out.println( "encrypted:" + encryptedText );
-        System.out.println( "decrypted:" + decryptedText );
-
     }
 
     /**
@@ -153,7 +137,7 @@ public class RSAEncryption extends GenericEntity {
 
         try {
             Cipher cipher = setUpCypher( Cipher.DECRYPT_MODE, privateKey );
-            return new String( cipher.doFinal( Base64.getDecoder().decode( encryptedPassword ) ),"UTF-8" );
+            return new String( cipher.doFinal(  hexStringToByteArray( encryptedPassword ) ),"UTF-8" );
         } catch ( GeneralSecurityException | UnsupportedEncodingException e ) {
             throw new DecryptionFailedException();
         }
@@ -204,5 +188,69 @@ public class RSAEncryption extends GenericEntity {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Converts the String of hexadecimals to an array of bytes
+     *
+     * @param s string to be converted
+     * @return the requested array
+     */
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len/2];
+
+        for(int i = 0; i < len; i+=2){
+            data[i/2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i+1), 16));
+        }
+
+        return data;
+    }
+
+    /**
+     * Converts the array of bytes into a String of hexadecimals
+     *
+     * @param bytes array to be converted
+     * @return the requested String
+     */
+    public static String byteArrayToHexString(byte[] bytes) {
+        char[] hexChars = new char[bytes.length*2];
+        int v;
+
+        for(int j=0; j < bytes.length; j++) {
+            v = bytes[j] & 0xFF;
+            hexChars[j*2] = hexArray[v>>>4];
+            hexChars[j*2 + 1] = hexArray[v & 0x0F];
+        }
+
+        return new String(hexChars);
+    }
+
+    public static void main ( String[] args ) throws Exception {
+        String plainText = "password";
+
+        // Generate public and private keys using RSA
+        //RSAEncryption rsaEncryption = new RSAEncryption( "pippo" );
+        RSAEncryption rsaEncryption = RSAEncryption.load( "idDevice" );
+        byte[] bytes = { 48,-126,1,34,48,13,6,9,42,-122,72,-122,-9,13,1,1,1,5,0,3,-126,1,15,0,48,-126,1,10,2,-126,1
+                ,1,0,-93,-52,-101,-92,85,94,-22,-60,13,0,32,-88,21,-102,-29,-22,83,41,122,28,68,84,-50,98,-1,-27,
+                -93,85,-11,-95,125,-100,50,-113,-96,-43,118,-8,25,-95,54,-11,-95,-44,30,11,7,-74,-60,113,97,108,
+                -59,110,31,31,17,15,-59,82,127,7,5,-73,-68,56,-26,46,98,-108,-120,37,54,11,55,53,-122,-101,97,-50,
+                -121,-27,-14,98,-50,102,-62,-97,-103,-89,87,9,40,-57,68,-42,-126,-90,-30,-8,-101,88,112,-122,-43,-3,
+                -3,-66,55,95,-110,-87,-61,-120,-1,5,-3,-100,84,45,81,102,87,78,-104,61,106,27,-52,-92,-15,-112,8,-39,
+                -4,-121,21,78,103,87,-120,-6,-97,40,-8,-41,67,20,-10,-110,11,-11,-75,53,-119,-107,-14,119,90,59,-1,43,
+                -10,106,111,-13,42,-18,-48,-23,-26,95,32,-104,92,28,10,-108,8,-10,-68,-21,37,-89,53,-35,65,48,78,30,-17,
+                -100,-51,-20,114,2,-105,-44,-124,63,-89,-53,-97,14,67,-46,72,-34,76,-25,-48,-66,20,55,56,-121,85,-81,-47,
+                12,44,31,-78,3,-74,-31,22,53,11,27,67,13,-65,-3,-58,2,-110,-18,-99,86,-60,-115,67,-5,37,105,-40,83,-46,
+                13,-8,-36,-14,-128,91,-97,2,3,1,0,1};
+        PublicKey publicKey = KeyFactory.getInstance( "RSA" ).generatePublic( new X509EncodedKeySpec( bytes ) );
+        String encryptedText = encryptPassword( plainText, publicKey );
+        String decryptedText = rsaEncryption.decryptPassword( encryptedText );
+
+        System.out.println( "input:" + plainText );
+
+        System.out.println("encrypted:" + encryptedText);
+        System.out.println( "decrypted:" + decryptedText );
+
     }
 }

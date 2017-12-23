@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Helper class that is to be used to read the Google Maps direction responses
@@ -258,6 +260,7 @@ public class GMapsJSONReader {
                 throw new GMapsUnavailableException( getStatus( response ) );
             case "INVALID_REQUEST":
             default:
+                Logger.getLogger( GMapsJSONReader.class.getName() ).log( Level.SEVERE, response.toString() );
                 throw new BadRequestException();
         }
     }
