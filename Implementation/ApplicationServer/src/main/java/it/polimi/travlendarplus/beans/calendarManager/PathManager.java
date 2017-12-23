@@ -473,12 +473,15 @@ public class PathManager extends UserManager {
     private void addRemovingEventToResponse ( List < GenericEvent > response, GenericEvent event ) {
         event.setScheduled( false );
         event.removeFeasiblePath();
+        event.save();
         response.add( event );
     }
 
     private void addEventWithNewPathToResponse ( List < GenericEvent > response, Event event, Travel path ) {
         event.setScheduled( true );
+        path.save();
         event.setFeasiblePath( path );
+        event.save();
         response.add( event );
     }
 

@@ -253,6 +253,7 @@ public class ScheduleManager extends UserManager {
         for ( GenericEvent e : eventsToSave ) {
             e.save();
         }
+        currentUser.save();
     }
 
     private List < PathCombination > removeLongWalkingPath ( List < PathCombination > possiblePaths ) {

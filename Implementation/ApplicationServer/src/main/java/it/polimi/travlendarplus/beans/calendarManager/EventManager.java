@@ -314,6 +314,7 @@ public class EventManager extends UserManager {
      */
     private void checkEventFields ( AddEventMessage eventMessage ) throws InvalidFieldException {
         List < String > errors = new ArrayList <>( checkGenericEventFields( eventMessage ) );
+        scheduleManager.setSchedule( eventMessage.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
         if ( eventMessage.isPrevLocChoice() &&
                 scheduleManager.getPossiblePreviousEvent( eventMessage.getStartingTime() ) == null ) {
             errors.add( WrongFields.NO_PREVIOUS_LOCATION );
