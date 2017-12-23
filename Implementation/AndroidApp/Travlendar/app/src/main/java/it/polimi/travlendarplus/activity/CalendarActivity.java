@@ -247,7 +247,7 @@ public class CalendarActivity extends MenuActivity {
         }
         // Set style.
         TextView textView = new TextView(getApplicationContext());
-        textView.setText("Travel");
+        textView.setText(event.getName().concat("'s travel"));
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTypeface(null, Typeface.BOLD);
         // Set colors.
@@ -263,8 +263,6 @@ public class CalendarActivity extends MenuActivity {
         int marginTop = minutesOfDay * 2;
         params.setMargins(30, marginTop, 30, 10);
         textView.setLayoutParams(params);
-        // Add on touch listener to events.
-        textView.setOnTouchListener(new MyTouchListener());
         return textView;
     }
 

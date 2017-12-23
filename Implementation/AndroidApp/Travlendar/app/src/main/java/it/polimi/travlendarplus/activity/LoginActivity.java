@@ -23,15 +23,19 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.handler.LoginHandler;
 import it.polimi.travlendarplus.activity.handler.RequestPublicKeyHandler;
@@ -43,6 +47,11 @@ import it.polimi.travlendarplus.retrofit.controller.RequestPublicKeyController;
  * Password encryption to be implemented.
  */
 public class LoginActivity extends AppCompatActivity implements PublicKeyActivity {
+    private static final int RSA_KEY_LENGTH = 2048;
+    private static final String ALGORITHM_NAME = "RSA";
+    private static final String PADDING_SCHEME = "OAEPWITHSHA-512ANDMGF1PADDING";
+    private static final String MODE_OF_OPERATION = "ECB";
+
     // idDevice token.
     private String idDevice;
     // PUBLIC KEY: to be removed when encryption works.
@@ -115,15 +124,14 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
         /* PASSWORD ENCRYPTION: to be removed when encryption works.
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
+            cipher = Cipher.getInstance(ALGORITHM_NAME + "/" + MODE_OF_OPERATION + "/" + PADDING_SCHEME);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         String cryptoPassword = null;
         try {
-            byte[] passwordBytes = password.getBytes("UTF-8");
-            cryptoPassword = Base64.encodeToString(cipher.doFinal(passwordBytes), Base64.URL_SAFE);
+            cryptoPassword = DateUtility.byteArrayToHexString( cipher.doFinal( "password".getBytes("UTF-8") ) );
         } catch (IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }*/

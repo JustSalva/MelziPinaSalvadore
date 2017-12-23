@@ -321,7 +321,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
      * Populates the startTravelingAt spinner with the choices "Earliest" and "Latest"
      */
     public void populateStartTravelingAtSpinner() {
-        String[] choices = new String[]{"Earliest", "Latest"};
+        String[] choices = new String[]{"Latest", "Earliest"};
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
