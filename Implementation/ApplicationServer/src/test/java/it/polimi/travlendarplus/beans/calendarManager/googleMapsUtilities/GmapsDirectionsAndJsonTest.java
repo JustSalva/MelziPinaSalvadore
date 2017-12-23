@@ -57,7 +57,7 @@ public class GmapsDirectionsAndJsonTest {
 
         setTravelMeans();
         setEvents();
-        String baseCallPrev = gmdh.getBaseCallPreviousPath( ev, prev );
+        String baseCallPrev = gmdh.getBaseCallPreviousPath( ev, prev , true);
         for ( TravelMeanEnum priM : priAL ) {
             JSONObject response = HTMLCallAndResponse.performCall( gmdh.getCallWithNoTransit( baseCallPrev, priM ) );
             System.out.println( gmdh.getCallWithNoTransit( baseCallPrev, priM ) );
@@ -74,7 +74,7 @@ public class GmapsDirectionsAndJsonTest {
 
         if ( foll != null ) {
             gmdh = new GMapsDirectionsHandler();
-            String baseCallFoll = gmdh.getBaseCallFollowingPath( ev, foll );
+            String baseCallFoll = gmdh.getBaseCallFollowingPath( ev, foll , true);
             for ( TravelMeanEnum priM : priAL ) {
                 response = HTMLCallAndResponse.performCall( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );
                 System.out.println( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );

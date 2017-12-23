@@ -334,7 +334,7 @@ public class PathManager extends UserManager {
         if ( !copy.contains( TravelMeanEnum.BY_FOOT ) ) {
             copy.add( TravelMeanEnum.BY_FOOT );
         }
-        return privateMeans;
+        return copy;
     }
 
     public Travel getBestPathInfo ( long pathId ) throws EntityNotFoundException, NotScheduledException {
@@ -408,6 +408,8 @@ public class PathManager extends UserManager {
             involved = scheduleManager.getEventsIntoIntervalWithPathRegard( scheduleManager.getSchedule().
                     getEvents(), forcedBreak );
         }
+        forcedBreak.setScheduled( true );
+        response.add( forcedBreak );
         scheduleManager.saveForSwap( response );
         return response;
     }
