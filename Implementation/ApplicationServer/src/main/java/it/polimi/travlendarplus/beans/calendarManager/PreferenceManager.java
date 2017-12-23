@@ -133,21 +133,21 @@ public class PreferenceManager extends UserManager {
                 .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
                         WrongFields.MIN_HOUR_MUST_BE_LESS_THAN_MAX_HOUR )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         //checks that minHour >= 0
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMinHour() < 0 )
                 .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
                         WrongFields.MIN_HOUR_MUST_BE_GREATER_THAN_ZERO )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         //checks that maxHour < 24 h
         periodErrors.addAll( periodConstraints.stream()
                 .filter( periodConstraint -> periodConstraint.getMaxHour() >= 24 * 60 * 60 )
                 .map( periodConstraint -> WrongFields.PERIOD_CONSTRAINT +
                         periodConstraints.indexOf( periodConstraint ) +
                         WrongFields.MAX_HOUR_MUST_BE_LESS_THAN_24_HOURS )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         periodErrors.addAll( checkTravelMeanEnum( new ArrayList <>( periodConstraints ) ) );
 
         return periodErrors;
@@ -167,14 +167,14 @@ public class PreferenceManager extends UserManager {
                 .map( distanceConstraint -> WrongFields.DISTANCE_CONSTRAINT +
                         distanceConstraints.indexOf( distanceConstraint ) +
                         WrongFields.MIN_LENGTH_MUST_BE_GREATER_THAN_ZERO )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         //checks that min length < max length
         distanceErrors.addAll( distanceConstraints.stream()
                 .filter( distanceConstraint -> distanceConstraint.getMinLength() > distanceConstraint.getMaxLength() )
                 .map( distanceConstraint -> WrongFields.DISTANCE_CONSTRAINT +
                         distanceConstraints.indexOf( distanceConstraint ) +
                         WrongFields.MIN_LENGTH_MUST_BE_LESS_THAN_MAX_LENGHT )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         distanceErrors.addAll( checkTravelMeanEnum( new ArrayList <>( distanceConstraints ) ) );
 
         return distanceErrors;
@@ -193,7 +193,7 @@ public class PreferenceManager extends UserManager {
                 .map( constraint -> constraint.getClass().getSimpleName() + " " +
                         constraintMessages.indexOf( constraint ) +
                         WrongFields.NOT_ALLOWED_TRAVEL_MEAN_VALUE )
-                .collect( Collectors.toList() ) );
+                .collect( Collectors.toCollection( ArrayList::new ) ) );
         return errors;
     }
 

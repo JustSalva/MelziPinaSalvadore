@@ -16,14 +16,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class GmapsDirectionsAndJsonTest {
-    String[] locations = { "London,England", "Milano,Italy", "Paris,France", "Monza,Italy", "Rho,Italy", "Sesto San Giovanni,Italy" };
-    //String[] locations = {"Stoccolma,Svezia","Linkoping,Svezia","Goteborg,Svezia","Orebro,Svezia","Copenaghen,Danimarca","Oslo,Norvegia"};
+    String[] locations = { "London,England", "Milano,Italy", "Paris,France", "Monza,Italy", "Rho,Italy",
+            "Sesto San Giovanni,Italy" };
     List < Location > loc = new ArrayList < Location >();
     TravelMeanEnum[] pubMeans = { TravelMeanEnum.SUBWAY, TravelMeanEnum.BUS, TravelMeanEnum.TRAIN, TravelMeanEnum.TRAM };
     TravelMeanEnum[] priMeans = { TravelMeanEnum.BY_FOOT, TravelMeanEnum.CAR, TravelMeanEnum.BIKE };
@@ -47,7 +47,8 @@ public class GmapsDirectionsAndJsonTest {
     @Test
     public void check () throws GMapsGeneralException {
         assertEquals( locations.length, loc.size() );
-        loc = loc.stream().filter( l -> l.getAddress().length() > 0 ).collect( toList() );
+        loc = loc.stream().filter( l -> l.getAddress().length() > 0 ).collect( Collectors
+                .toCollection( ArrayList::new ) );
         assertEquals( locations.length, loc.size() );
         assertEquals( times.length, instantTimes.size() );
 
@@ -77,8 +78,9 @@ public class GmapsDirectionsAndJsonTest {
             for ( TravelMeanEnum priM : priAL ) {
                 response = HTMLCallAndResponse.performCall( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );
                 System.out.println( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );
-                for ( Travel t : jsonReader.getTravelNoTransitMeans( response, priM, ( foll.isTravelAtLastChoice() ) ?
-                                foll.getStartingTime().getEpochSecond() : ev.getEndingTime().getEpochSecond(), !foll.isTravelAtLastChoice(),
+                for ( Travel t : jsonReader.getTravelNoTransitMeans( response, priM, ( foll.isTravelAtLastChoice() )
+                                ? foll.getStartingTime().getEpochSecond()
+                                : ev.getEndingTime().getEpochSecond(), !foll.isTravelAtLastChoice(),
                         ( foll.isPrevLocChoice() ) ? ev.getEventLocation() : foll.getDeparture(), foll.getEventLocation() ) )
                     follTravels.add( t );
             }
@@ -158,6 +160,7 @@ public class GmapsDirectionsAndJsonTest {
     }
 
     private boolean sameLocation ( Location l1, Location l2 ) {
-        return Math.abs( l1.getLatitude() - l2.getLatitude() )< 0.01 && Math.abs(l1.getLongitude() - l2.getLongitude()) < 0.01;
+        return Math.abs( l1.getLatitude() - l2.getLatitude() ) < 0.01 && Math.abs( l1.getLongitude() -
+                l2.getLongitude() ) < 0.01;
     }
 }

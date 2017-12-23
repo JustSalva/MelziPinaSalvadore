@@ -7,8 +7,7 @@ import it.polimi.travlendarplus.entities.travels.Travel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import java.util.stream.Collectors;
 
 public class ScheduleHolder {
 
@@ -31,7 +30,8 @@ public class ScheduleHolder {
     //the add of the event is only simulated: we use a copied ArrayList
     public List < Event > getListWithNewEvent ( Event newEvent ) {
         List < Event > newList = copyEventList();
-        newList = newList.stream().filter( e -> e.getId() != newEvent.getId() ).collect( toList() );
+        newList = newList.stream().filter( e -> e.getId() != newEvent.getId() ).collect( Collectors
+                .toCollection( ArrayList::new ) );
         newList.add( newEvent );
         Collections.sort( newList );
         return newList;
