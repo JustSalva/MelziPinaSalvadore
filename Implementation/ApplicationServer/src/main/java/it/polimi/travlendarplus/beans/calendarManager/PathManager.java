@@ -29,15 +29,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * This class provide all methods related to handle the path computation
  */
 @Stateless
 public class PathManager extends UserManager {
-
-    private final static float MAX_LENGTH = 2.5f;
 
     protected static TravelMeanEnum[] privateList = { TravelMeanEnum.CAR, TravelMeanEnum.BIKE, TravelMeanEnum.BY_FOOT };
     protected static TravelMeanEnum[] publicList = { TravelMeanEnum.TRAIN, TravelMeanEnum.BUS, TravelMeanEnum.TRAM,
@@ -141,8 +137,7 @@ public class PathManager extends UserManager {
 
     private List < Travel > possiblePathsAdder ( String baseCall, List < TravelMeanEnum > privateMeans,
                                                  List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
-                                                 boolean sameLoc )
-            throws GMapsGeneralException {
+                                                 boolean sameLoc ) throws GMapsGeneralException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc );
         if ( !publicMeans.isEmpty() ) {
@@ -184,26 +179,10 @@ public class PathManager extends UserManager {
                 }
             }
         }
-        // Deleting long walking path...if there are alternatives
-        removeLongWalkingPath( possiblePaths );
-    }
-
-    private void removeLongWalkingPath ( List < Travel > possiblePaths ) {
-        // Checking if long walking paths are not the only feasible...
-        if ( possiblePaths.stream().filter( p -> !p.getMiniTravels().get( 0 ).getMeanUsed().getType().getParam().
-                equals( "walking" ) || p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH ).collect( toList() ).size() > 0 )
-        // In the case they are not, removing long walking paths
-        {
-            possiblePaths = possiblePaths.stream().filter( p -> !p.getMiniTravels()
-                    .get( 0 ).getMeanUsed().getType().getParam().equals( "walking" ) ||
-                    p.getMiniTravels().get( 0 ).getLength() < MAX_LENGTH )
-                    .collect( Collectors.toCollection( ArrayList::new ) );
-        }
     }
 
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
-                                      List < TravelMeanEnum > publicMeans, boolean sameLoc )
-            throws GMapsGeneralException {
+                                      List < TravelMeanEnum > publicMeans, boolean sameLoc ) throws GMapsGeneralException {
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( !sameLoc ) { // If departure location is the same of arrival location, the path can be done only
             // with private means.
@@ -428,8 +407,9 @@ public class PathManager extends UserManager {
         List < BreakEvent > swapOutBreaks = scheduleManager.getSchedule().getBreaks().stream().filter( br ->
                 !scheduleManager.areEventsOverlapFree( forcedBreak, br ) )
                 .collect( Collectors.toCollection( ArrayList::new ) );
-        for ( BreakEvent br : swapOutBreaks )
+        for ( BreakEvent br : swapOutBreaks ) {
             addRemovingEventToResponse( response, br );
+        }
         scheduleManager.getSchedule().setBreaks( freeBreaks );
     }
 

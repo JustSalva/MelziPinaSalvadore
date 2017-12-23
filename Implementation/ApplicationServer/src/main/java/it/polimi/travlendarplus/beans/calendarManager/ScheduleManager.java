@@ -6,6 +6,7 @@ import it.polimi.travlendarplus.entities.calendar.BreakEvent;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.travels.Travel;
+import it.polimi.travlendarplus.entities.travels.TravelComponent;
 
 import javax.ejb.Stateless;
 import java.time.Instant;
@@ -15,6 +16,8 @@ import java.util.List;
 
 @Stateless
 public class ScheduleManager extends UserManager {
+
+    private final static float MAX_WALKING_LENGTH = 2.5f;
 
     public final static long SECONDS_IN_A_DAY = 24 * 60 * 60;
 
@@ -159,9 +162,11 @@ public class ScheduleManager extends UserManager {
     public long overlappingEventWithBreak ( Event event, BreakEvent breakEv ) {
         long ovEventTime = overlappingTime( event, breakEv );
         return ovEventTime + ( ( event.getFeasiblePath().getStartingTime().isBefore( breakEv.getEndingTime() ) &&
-                event.getFeasiblePath().getEndingTime().isAfter( breakEv.getStartingTime() ) ) ?
-                Math.min( event.getFeasiblePath().getEndingTime().getEpochSecond(), breakEv.getEndingTime().getEpochSecond() ) -
-                        Math.max( breakEv.getStartingTime().getEpochSecond(), event.getStartingTime().getEpochSecond() ) : 0 );
+                event.getFeasiblePath().getEndingTime().isAfter( breakEv.getStartingTime() ) )
+                ? Math.min( event.getFeasiblePath().getEndingTime().getEpochSecond(), breakEv.getEndingTime().
+                getEpochSecond() ) - Math.max( breakEv.getStartingTime().getEpochSecond(),
+                event.getStartingTime().getEpochSecond() )
+                : 0 );
 
     }
 
@@ -218,6 +223,8 @@ public class ScheduleManager extends UserManager {
                 }
             }
         }
+        // Deleting long walking path...if there are alternatives
+        feasibleComb = removeLongWalkingPath( feasibleComb );
         return feasibleComb;
     }
 
@@ -246,6 +253,29 @@ public class ScheduleManager extends UserManager {
         for ( GenericEvent e : eventsToSave ) {
             e.save();
         }
+    }
+
+    private List < PathCombination > removeLongWalkingPath ( List < PathCombination > possiblePaths ) {
+        ArrayList < PathCombination > noWalkingLong = new ArrayList < PathCombination >();
+        for ( PathCombination comb : possiblePaths ) {
+            boolean walkingLong = false;
+            for ( TravelComponent travComp : comb.getPrevPath().getMiniTravels() ) {
+                if ( travComp.getMeanUsed().getType().getParam().equals( "walking" ) &&
+                        travComp.getLength() > MAX_WALKING_LENGTH ) {
+                    walkingLong = true;
+                }
+            }
+            for ( TravelComponent travComp : comb.getFollPath().getMiniTravels() ) {
+                if ( travComp.getMeanUsed().getType().getParam().equals( "walking" ) &&
+                        travComp.getLength() > MAX_WALKING_LENGTH ) {
+                    walkingLong = true;
+                }
+            }
+            if ( !walkingLong ) {
+                noWalkingLong.add( comb );
+            }
+        }
+        return ( !noWalkingLong.isEmpty() ) ? noWalkingLong : possiblePaths;
     }
 
 }
