@@ -1,6 +1,6 @@
 package it.polimi.travlendarplus.beans.calendarManager.pathManager;
 
-import it.polimi.travlendarplus.EJBTestInjector;
+import it.polimi.travlendarplus.beans.calendarManager.EJBTestInjector;
 import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.PreferenceManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;

@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus;
+package it.polimi.travlendarplus.beans.calendarManager;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;

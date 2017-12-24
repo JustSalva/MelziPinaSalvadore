@@ -1,11 +1,13 @@
 package it.polimi.travlendarplus.beans.calendarManager.pathManager;
 
-import it.polimi.travlendarplus.EJBTestInjector;
+import it.polimi.travlendarplus.TestUtilities;
+import it.polimi.travlendarplus.beans.calendarManager.EJBTestInjector;
 import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.PreferenceManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
 import it.polimi.travlendarplus.beans.calendarManager.support.ScheduleHolder;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
@@ -39,6 +41,7 @@ public class SwapFunctionWithBreak {
     List < TravelMeanEnum > publicMeans;
     Event eventToAdd;
     ScheduleHolder simulatedSchedule;
+    User user = new User();
 
     @Before
     public void init () throws Exception {
@@ -64,9 +67,11 @@ public class SwapFunctionWithBreak {
             @Override
             public Event answer ( InvocationOnMock invocation ) throws Throwable {
                 Instant startingTime = ( Instant ) invocation.getArguments()[ 0 ];
-                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ )
-                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) )
+                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ ) {
+                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) ) {
                         return simulatedSchedule.getEvents().get( i );
+                    }
+                }
                 return null;
             }
         } );
@@ -74,9 +79,11 @@ public class SwapFunctionWithBreak {
             @Override
             public Event answer ( InvocationOnMock invocation ) throws Throwable {
                 Instant startingTime = ( Instant ) invocation.getArguments()[ 0 ];
-                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ )
-                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) )
+                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ ) {
+                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) ) {
                         return i == 0 ? null : simulatedSchedule.getEvents().get( i - 1 );
+                    }
+                }
                 return simulatedSchedule.getEvents().get( simulatedSchedule.getEvents().size() - 1 );
             }
         } );
@@ -88,14 +95,16 @@ public class SwapFunctionWithBreak {
             }
         } );
         doNothing().when( scheduleManager ).saveForSwap( any( ArrayList.class ) );
+        doNothing().when( scheduleManager ).saveEvent( any( GenericEvent.class ) );
+        doNothing().when( scheduleManager ).savePath( any( Travel.class ) );
         when( scheduleManager.areEventsOverlapFree( any( Event.class ), any( Event.class ) ) ).thenReturn( true );
     }
 
     @Test
     public void swapEventWithFeasibleBreak () throws GMapsGeneralException {
         //2018/01/20 h:16:30 - 17:00
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516465800, 1516467600, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516465800, 1516467600, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
                 any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override
@@ -132,8 +141,8 @@ public class SwapFunctionWithBreak {
     @Test
     public void swapEventNoFeasibleBreak () throws GMapsGeneralException {
         //2018/01/20 h:16:30 - 17:30
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516465800, 1516469400, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516465800, 1516469400, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
                 any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override

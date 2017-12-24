@@ -1,8 +1,6 @@
 package it.polimi.travlendarplus.RESTful.test;
 
-import it.polimi.travlendarplus.RESTful.HttpResponseBuilder;
 import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralException;
-import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsUnavailableException;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -106,7 +104,7 @@ public class RESTfulTest {
         }
     }
 
-    @Path( "swap" )
+    /*@Path( "swap" )
     @GET
     @Produces( "text/plain" )
     public String swap () {
@@ -164,5 +162,5 @@ public class RESTfulTest {
         } catch ( GMapsGeneralException e ) {
             return e.getMessage();
         }
-    }
+    }*/
 }

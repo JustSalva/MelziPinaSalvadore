@@ -1,11 +1,13 @@
 package it.polimi.travlendarplus.beans.calendarManager.pathManager;
 
-import it.polimi.travlendarplus.EJBTestInjector;
+import it.polimi.travlendarplus.TestUtilities;
+import it.polimi.travlendarplus.beans.calendarManager.EJBTestInjector;
 import it.polimi.travlendarplus.beans.calendarManager.PathManager;
 import it.polimi.travlendarplus.beans.calendarManager.PreferenceManager;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.beans.calendarManager.support.PathCombination;
 import it.polimi.travlendarplus.beans.calendarManager.support.ScheduleHolder;
+import it.polimi.travlendarplus.entities.User;
 import it.polimi.travlendarplus.entities.calendar.Event;
 import it.polimi.travlendarplus.entities.calendar.GenericEvent;
 import it.polimi.travlendarplus.entities.preferences.TypeOfEvent;
@@ -40,6 +42,7 @@ public class SwapFunctionTest {
     List < TravelMeanEnum > publicMeans;
     Event eventToAdd;
     ScheduleHolder simulatedSchedule;
+    User user = new User();
 
     @Before
     public void init () throws Exception {
@@ -65,9 +68,11 @@ public class SwapFunctionTest {
             @Override
             public Event answer ( InvocationOnMock invocation ) throws Throwable {
                 Instant startingTime = ( Instant ) invocation.getArguments()[ 0 ];
-                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ )
-                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) )
+                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ ) {
+                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) ) {
                         return simulatedSchedule.getEvents().get( i );
+                    }
+                }
                 return null;
             }
         } );
@@ -75,9 +80,11 @@ public class SwapFunctionTest {
             @Override
             public Event answer ( InvocationOnMock invocation ) throws Throwable {
                 Instant startingTime = ( Instant ) invocation.getArguments()[ 0 ];
-                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ )
-                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) )
+                for ( int i = 0; i < simulatedSchedule.getEvents().size(); i++ ) {
+                    if ( startingTime.isBefore( simulatedSchedule.getEvents().get( i ).getStartingTime() ) ) {
                         return i == 0 ? null : simulatedSchedule.getEvents().get( i - 1 );
+                    }
+                }
                 return simulatedSchedule.getEvents().get( simulatedSchedule.getEvents().size() - 1 );
             }
         } );
@@ -102,14 +109,16 @@ public class SwapFunctionTest {
             }
         } );
         doNothing().when( scheduleManager ).saveForSwap( any( ArrayList.class ) );
+        doNothing().when( scheduleManager ).saveEvent( any( GenericEvent.class ) );
+        doNothing().when( scheduleManager ).savePath( any( Travel.class ) );
 
     }
 
     @Test
     public void swapEventsTestBaseCase () throws GMapsGeneralException {
         //2018/01/20 h:14:30 - 15:30
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516458600, 1516462200, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516458600, 1516462200, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
@@ -150,8 +159,8 @@ public class SwapFunctionTest {
     @Test
     public void swapEventsTestRemovePrev () throws GMapsGeneralException {
         //2018/01/20 h:13:00 - 14:00
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516453200, 1516456800, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516453200, 1516456800, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
@@ -197,8 +206,8 @@ public class SwapFunctionTest {
     @Test
     public void swapEventsTestRemoveFoll () throws GMapsGeneralException {
         //2018/01/20 h:17:00 - 17:59
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516467600, 1516471140, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516467600, 1516471140, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
@@ -244,8 +253,8 @@ public class SwapFunctionTest {
     @Test
     public void swapEventsTestInsertFirstEvent () throws GMapsGeneralException {
         //2018/01/20 h:9:00 - 10:00
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516438800, 1516442400, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516438800, 1516442400, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
@@ -288,8 +297,8 @@ public class SwapFunctionTest {
     @Test
     public void swapEventsTestInsertLastEvent () throws GMapsGeneralException {
         //2018/01/20 h:21:00 - 21:30
-        eventToAdd = PathManagerSettingsTest.setEvent( 6, 1516482000, 1516483800, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1 );
+        eventToAdd = TestUtilities.setEvent( 6, 1516482000, 1516483800, true, false,
+                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.maggianico, PathManagerSettingsTest.toe1, user );
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
