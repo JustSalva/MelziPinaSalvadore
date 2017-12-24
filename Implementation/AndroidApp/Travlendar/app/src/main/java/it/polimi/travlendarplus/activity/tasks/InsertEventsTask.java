@@ -64,7 +64,7 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
                             miniTravel.getId(),
                             miniTravel.getLength(),
                             eventResponse.getId(),
-                            miniTravel.getMeanUsed().getType(),
+                            miniTravel.getMeanUsed().getType().getTravelMean(),
                             miniTravel.getDeparture().getAddress(),
                             miniTravel.getArrival().getAddress(),
                             miniTravel.getStartingTime().getSeconds(),

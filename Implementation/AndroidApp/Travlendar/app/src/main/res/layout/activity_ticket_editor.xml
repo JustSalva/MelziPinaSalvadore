@@ -42,6 +42,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/travelMeans_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -59,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp">
                         <AutoCompleteTextView
-                            android:id="@+id/cost_euro"
+                            android:id="@+id/cost_editText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/cost_euro"
@@ -114,7 +115,7 @@
                             android:layout_height="wrap_content">
 
                             <AutoCompleteTextView
-                                android:id="@+id/line_name"
+                                android:id="@+id/lineName_editText"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="@string/line_name"
@@ -124,43 +125,58 @@
 
                         </android.support.design.widget.TextInputLayout>
 
-                        <LinearLayout
+                        <CheckBox
+                            android:id="@+id/pathTicket_checkBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/starting_location"
-                                android:textStyle="bold"/>
-
-                            <Spinner
-                                android:id="@+id/startingLocation_spinner"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"/>
-
-                        </LinearLayout>
+                            android:text="@string/path_ticket"/>
 
                         <LinearLayout
+                            android:id="@+id/path_linearLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
-                            <TextView
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/ending_location"
-                                android:textStyle="bold"/>
+                                android:layout_marginTop="10dp">
 
-                            <Spinner
-                                android:id="@+id/endingLocation_spinner"
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/starting_location"
+                                    android:textStyle="bold"/>
+
+                                <Spinner
+                                    android:id="@+id/startingLocation_spinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"/>
+                                android:layout_marginTop="10dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/ending_location"
+                                    android:textStyle="bold"/>
+
+                                <Spinner
+                                    android:id="@+id/endingLocation_spinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"/>
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -179,7 +195,7 @@
                             android:layout_height="wrap_content">
 
                             <AutoCompleteTextView
-                                android:id="@+id/distance"
+                                android:id="@+id/distance_editText"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="@string/distance_km"

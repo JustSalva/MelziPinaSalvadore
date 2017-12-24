@@ -123,6 +123,7 @@
     <string name="departure_location">Departure location</string>
     <string name="generic_ticket">Generic ticket</string>
     <string name="valid_over_a_period_of_time">Valid over a period of time</string>
+    <string name="path_ticket">Path ticket</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

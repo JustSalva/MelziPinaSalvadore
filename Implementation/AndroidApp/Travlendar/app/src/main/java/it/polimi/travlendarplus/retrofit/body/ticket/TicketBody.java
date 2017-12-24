@@ -14,4 +14,12 @@ public class TicketBody {
         this.cost = cost;
         this.relatedTo = relatedTo;
     }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public List<TravelMeanUsed> getRelatedTo() {
+        return relatedTo;
+    }
 }

@@ -136,7 +136,6 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
         travelMeanConstrained_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // Save edited values.
                 saveEditedConstraints();
                 // Change the selected travel men constrained.
                 selectedTravelMean = TravelMeanEnum.values()[i].getTravelMean();

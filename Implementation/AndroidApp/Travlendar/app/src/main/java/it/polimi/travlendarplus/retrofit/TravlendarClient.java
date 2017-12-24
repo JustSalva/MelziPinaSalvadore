@@ -11,6 +11,7 @@ import it.polimi.travlendarplus.retrofit.body.RegisterBody;
 import it.polimi.travlendarplus.retrofit.body.ticket.DistanceTicketBody;
 import it.polimi.travlendarplus.retrofit.body.ticket.GenericTicketBody;
 import it.polimi.travlendarplus.retrofit.body.ticket.PathTicketBody;
+import it.polimi.travlendarplus.retrofit.body.ticket.PeriodTicketBody;
 import it.polimi.travlendarplus.retrofit.response.event.GetGenericEventsResponse;
 import it.polimi.travlendarplus.retrofit.response.LoginResponse;
 import it.polimi.travlendarplus.retrofit.response.PublicKeyResponse;
@@ -22,6 +23,7 @@ import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
 import it.polimi.travlendarplus.retrofit.response.ticket.DistanceTicketResponse;
 import it.polimi.travlendarplus.retrofit.response.ticket.GenericTicketResponse;
 import it.polimi.travlendarplus.retrofit.response.ticket.PathTicketResponse;
+import it.polimi.travlendarplus.retrofit.response.ticket.PeriodTicketResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -110,19 +112,23 @@ public interface TravlendarClient {
     Call<AllTicketsResponse> getAllTickets();
 
     @POST("trip/distanceTicket")
-    Call<DistanceTicketResponse> addDistanceTicket(
+    Call<Void> addDistanceTicket(
             @Body DistanceTicketBody distanceTicketBody
     );
 
     @POST("trip/genericTicket")
-    Call<GenericTicketResponse> addGenericTicket(
+    Call<Void> addGenericTicket(
             @Body GenericTicketBody genericTicketBody
     );
 
     @POST("trip/pathTicket")
-    Call<PathTicketResponse> addPathTicket(
+    Call<Void> addPathTicket(
             @Body PathTicketBody pathTicketBody
     );
 
+    @POST("trip/periodTicket")
+    Call<Void> addPeriodTicket(
+            @Body PeriodTicketBody periodTicketBody
+    );
 
 }

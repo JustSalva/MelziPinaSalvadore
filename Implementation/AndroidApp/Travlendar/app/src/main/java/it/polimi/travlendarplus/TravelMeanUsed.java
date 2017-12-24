@@ -6,9 +6,13 @@ package it.polimi.travlendarplus;
  */
 public class TravelMeanUsed {
 
-    private String type;
+    private TravelMeanEnum type;
 
-    public String getType() {
+    public TravelMeanUsed(TravelMeanEnum type) {
+        this.type = type;
+    }
+
+    public TravelMeanEnum getType() {
         return type;
     }
 }
