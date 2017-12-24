@@ -156,11 +156,11 @@ public class TicketEditorActivity extends MenuActivity implements LocationLoader
             checkBox.setOnCheckedChangeListener(((compoundButton, checked) -> {
                 if (checked) {
                     relatedTo.add(
-                            new TravelMeanUsed(TravelMeanEnum.getEnumFromString(travelMean.getTravelMean()))
+                            new TravelMeanUsed(TravelMeanEnum.getEnumFromString(travelMean.getTravelMean()), travelMean.getTravelMean())
                     );
                 } else {
                     relatedTo.remove(
-                            new TravelMeanUsed(TravelMeanEnum.getEnumFromString(travelMean.getTravelMean()))
+                            new TravelMeanUsed(TravelMeanEnum.getEnumFromString(travelMean.getTravelMean()), travelMean.getTravelMean())
                     );
                 }
             }));
@@ -185,6 +185,9 @@ public class TicketEditorActivity extends MenuActivity implements LocationLoader
         });
     }
 
+    /**
+     * Collects data from input fields and sends add ticket request to server.
+     */
     private void addTicket() {
         if (!validate()) {
             Toast.makeText(getBaseContext(), "Something is wrong", Toast.LENGTH_LONG).show();
