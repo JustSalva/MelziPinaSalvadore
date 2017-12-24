@@ -70,16 +70,16 @@ public class PathManagerTest {
 
     @Test
     public void calculatePathsTest () throws GMapsGeneralException {
-        PathManagerSettingsTest.baseConfiguration( first, second, third );
+        PathManagerSettings.baseConfiguration( first, second, third );
 
-        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettingsTest.e1.getStartingTime() ) ).thenReturn( null );
-        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettingsTest.e2.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e1 );
-        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettingsTest.e3.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e2 );
-        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettingsTest.e4.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e1 );
-        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettingsTest.e1.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e2 );
-        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettingsTest.e2.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e3 );
-        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettingsTest.e3.getStartingTime() ) ).thenReturn( null );
-        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettingsTest.e4.getStartingTime() ) ).thenReturn( PathManagerSettingsTest.e2 );
+        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettings.e1.getStartingTime() ) ).thenReturn( null );
+        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettings.e2.getStartingTime() ) ).thenReturn( PathManagerSettings.e1 );
+        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettings.e3.getStartingTime() ) ).thenReturn( PathManagerSettings.e2 );
+        when( scheduleManager.getPossiblePreviousEvent( PathManagerSettings.e4.getStartingTime() ) ).thenReturn( PathManagerSettings.e1 );
+        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettings.e1.getStartingTime() ) ).thenReturn( PathManagerSettings.e2 );
+        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettings.e2.getStartingTime() ) ).thenReturn( PathManagerSettings.e3 );
+        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettings.e3.getStartingTime() ) ).thenReturn( null );
+        when( scheduleManager.getPossibleFollowingEvent( PathManagerSettings.e4.getStartingTime() ) ).thenReturn( PathManagerSettings.e2 );
         when( preferenceManager.checkConstraints( any( Travel.class ), any( TypeOfEvent.class ) ) ).thenReturn( true );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ), any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override
@@ -104,21 +104,21 @@ public class PathManagerTest {
         if ( first && !second && third ) {
             centralEvent();
         } else if ( !first && second ) {
-            PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e1 );
-            assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
-            assertTrue( comb.getPrevPath() == null || !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e1.getStartingTime() ) );
-            assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
+            PathCombination comb = PathManagerSettings.getPathCombinationTest( pathManager, PathManagerSettings.e1 );
+            assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettings.e2.getStartingTime() ) );
+            assertTrue( comb.getPrevPath() == null || !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettings.e1.getStartingTime() ) );
+            assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettings.e1.getEndingTime() ) );
         } else if ( second && !third ) {
-            PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e3 );
-            assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e2.getEndingTime() ) );
-            assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e3.getStartingTime() ) );
-            assertTrue( comb.getFollPath() == null || !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e3.getEndingTime() ) );
+            PathCombination comb = PathManagerSettings.getPathCombinationTest( pathManager, PathManagerSettings.e3 );
+            assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettings.e2.getEndingTime() ) );
+            assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettings.e3.getStartingTime() ) );
+            assertTrue( comb.getFollPath() == null || !comb.getFollPath().getStartingTime().isBefore( PathManagerSettings.e3.getEndingTime() ) );
         } else if ( first && second && third ) {
-            PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e4 );
-            assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
-            assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
-            assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e4.getStartingTime() ) );
-            assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e4.getEndingTime() ) );
+            PathCombination comb = PathManagerSettings.getPathCombinationTest( pathManager, PathManagerSettings.e4 );
+            assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettings.e1.getEndingTime() ) );
+            assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettings.e2.getStartingTime() ) );
+            assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettings.e4.getStartingTime() ) );
+            assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettings.e4.getEndingTime() ) );
         }
 
     }
@@ -128,31 +128,31 @@ public class PathManagerTest {
     }
 
     private void centralEvent () throws GMapsGeneralException {
-        PathCombination comb = PathManagerSettingsTest.getPathCombinationTest( pathManager, PathManagerSettingsTest.e2 );
-        assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettingsTest.e1.getEndingTime() ) );
-        assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettingsTest.e3.getStartingTime() ) );
-        assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettingsTest.e2.getStartingTime() ) );
-        assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettingsTest.e2.getEndingTime() ) );
-        if ( PathManagerSettingsTest.e2.isPrevLocChoice() ) {
-            assertTrue( areSameLocations( PathManagerSettingsTest.e1.getEventLocation(),
+        PathCombination comb = PathManagerSettings.getPathCombinationTest( pathManager, PathManagerSettings.e2 );
+        assertTrue( !comb.getPrevPath().getStartingTime().isBefore( PathManagerSettings.e1.getEndingTime() ) );
+        assertTrue( !comb.getFollPath().getEndingTime().isAfter( PathManagerSettings.e3.getStartingTime() ) );
+        assertTrue( !comb.getPrevPath().getEndingTime().isAfter( PathManagerSettings.e2.getStartingTime() ) );
+        assertTrue( !comb.getFollPath().getStartingTime().isBefore( PathManagerSettings.e2.getEndingTime() ) );
+        if ( PathManagerSettings.e2.isPrevLocChoice() ) {
+            assertTrue( areSameLocations( PathManagerSettings.e1.getEventLocation(),
                     comb.getPrevPath().getMiniTravels().get( 0 ).getDeparture() ) );
-            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+            assertTrue( areSameLocations( PathManagerSettings.e2.getEventLocation(),
                     comb.getPrevPath().getMiniTravels().get( comb.getPrevPath().getMiniTravels().size() - 1 ).getArrival() ) );
         } else {
-            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getDeparture(),
+            assertTrue( areSameLocations( PathManagerSettings.e2.getDeparture(),
                     comb.getPrevPath().getMiniTravels().get( 0 ).getDeparture() ) );
-            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+            assertTrue( areSameLocations( PathManagerSettings.e2.getEventLocation(),
                     comb.getPrevPath().getMiniTravels().get( comb.getPrevPath().getMiniTravels().size() - 1 ).getArrival() ) );
         }
-        if ( PathManagerSettingsTest.e3.isPrevLocChoice() ) {
-            assertTrue( areSameLocations( PathManagerSettingsTest.e2.getEventLocation(),
+        if ( PathManagerSettings.e3.isPrevLocChoice() ) {
+            assertTrue( areSameLocations( PathManagerSettings.e2.getEventLocation(),
                     comb.getFollPath().getMiniTravels().get( 0 ).getDeparture() ) );
-            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getEventLocation(),
+            assertTrue( areSameLocations( PathManagerSettings.e3.getEventLocation(),
                     comb.getFollPath().getMiniTravels().get( comb.getFollPath().getMiniTravels().size() - 1 ).getArrival() ) );
         } else {
-            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getDeparture(),
+            assertTrue( areSameLocations( PathManagerSettings.e3.getDeparture(),
                     comb.getFollPath().getMiniTravels().get( 0 ).getDeparture() ) );
-            assertTrue( areSameLocations( PathManagerSettingsTest.e3.getEventLocation(),
+            assertTrue( areSameLocations( PathManagerSettings.e3.getEventLocation(),
                     comb.getFollPath().getMiniTravels().get( comb.getFollPath().getMiniTravels().size() - 1 ).getArrival() ) );
         }
     }

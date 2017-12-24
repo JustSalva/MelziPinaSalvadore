@@ -15,7 +15,7 @@ import it.polimi.travlendarplus.exceptions.googleMapsExceptions.GMapsGeneralExce
 
 import java.util.ArrayList;
 
-public class PathManagerSettingsTest {
+public class PathManagerSettings {
     static Location lecco, mandello, como, maggianico, abbadia;
     static Event e1, e2, e3, e4;
     static Event e1sw, e2sw, e3sw, e4sw, e5sw;

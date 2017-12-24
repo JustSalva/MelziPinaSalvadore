@@ -56,7 +56,7 @@ public class SwapFunctionWithBreak {
         injector.assign( PreferenceManager.class, preferenceManager );
         injector.inject( pathManager );
 
-        PathManagerSettingsTest.baseSet();
+        PathManagerSettings.baseSet();
         privateMeans = new ArrayList < TravelMeanEnum >();
         publicMeans = new ArrayList < TravelMeanEnum >();
         publicMeans.add( TravelMeanEnum.BUS );
@@ -104,7 +104,7 @@ public class SwapFunctionWithBreak {
     public void swapEventWithFeasibleBreak () throws GMapsGeneralException {
         //2018/01/20 h:16:30 - 17:00
         eventToAdd = TestUtilities.setEvent( 6, 1516465800, 1516467600, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1, user );
+                PathManagerSettings.abbadia, PathManagerSettings.mandello, PathManagerSettings.toe1, user );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
                 any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override
@@ -121,7 +121,7 @@ public class SwapFunctionWithBreak {
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } );
@@ -142,7 +142,7 @@ public class SwapFunctionWithBreak {
     public void swapEventNoFeasibleBreak () throws GMapsGeneralException {
         //2018/01/20 h:16:30 - 17:30
         eventToAdd = TestUtilities.setEvent( 6, 1516465800, 1516469400, true, false,
-                PathManagerSettingsTest.abbadia, PathManagerSettingsTest.mandello, PathManagerSettingsTest.toe1, user );
+                PathManagerSettings.abbadia, PathManagerSettings.mandello, PathManagerSettings.toe1, user );
         when( scheduleManager.getFeasiblePathCombinations( any( Event.class ), any( ArrayList.class ),
                 any( ArrayList.class ) ) ).thenAnswer( new Answer < ArrayList < PathCombination > >() {
             @Override
@@ -164,55 +164,55 @@ public class SwapFunctionWithBreak {
         when( scheduleManager.getSchedule() ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, true, true );
             }
         } ).thenAnswer( new Answer < ScheduleHolder >() {
             @Override
             public ScheduleHolder answer ( InvocationOnMock invocation ) throws Throwable {
-                return simulatedSchedule = PathManagerSettingsTest.createScheduleHolder( true, true,
+                return simulatedSchedule = PathManagerSettings.createScheduleHolder( true, true,
                         true, true, true, false, true );
             }
         } );

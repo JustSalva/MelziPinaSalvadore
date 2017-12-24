@@ -1,4 +1,4 @@
-package it.polimi.travlendarplus.beans.calendarManager.schedule_manager;
+package it.polimi.travlendarplus.beans.calendarManager.scheduleManager;
 
 import it.polimi.travlendarplus.TestUtilities;
 import it.polimi.travlendarplus.entities.calendar.BreakEvent;
@@ -11,7 +11,7 @@ import it.polimi.travlendarplus.entities.travels.TravelComponent;
 import java.time.Instant;
 import java.util.ArrayList;
 
-public class ScheduleManagerSettingOperations {
+public class ScheduleManagerSettings {
 
     public void settings ( ScheduleManagerTest test ) {
         ArrayList < Event > events = new ArrayList <>();
