@@ -30,6 +30,7 @@ import it.polimi.travlendarplus.retrofit.controller.event.GetEventsController;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -175,7 +176,7 @@ public class CalendarActivity extends MenuActivity {
         events_relativeLayout.removeAllViews();
         overlappingEvents_relativeLayout.removeAllViews();
         // Get long representing selected date.
-        long selectedDate = (calendar.getTimeInMillis() / 1000) + 3600;
+        long selectedDate = (calendar.getTimeInMillis() / 1000) + (TimeZone.getDefault().getOffset(calendar.getTime().getTime()) / 1000);
         // Inserts break events.
         for (GenericEvent event : eventsList) {
             if (event.getType().equals(GenericEvent.EventType.BREAK) && (selectedDate == event.getDate())) {
