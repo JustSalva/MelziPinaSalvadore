@@ -54,6 +54,8 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
 
     private final int PLACE_PICKER_REQUEST = 1;
     private String token;
+    private boolean firstLaunch = true;
+    // View models.
     private UserViewModel userViewModel;
 
     // Contain values taken from user input fields.
@@ -101,8 +103,9 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
             email_textView.setText(email);
             token = user != null ? user.getToken() : "";
             // To be called only on the first onCreate().
-            if (savedInstanceState == null) {
+            if (firstLaunch) {
                 loadLocationsFromServer();
+                firstLaunch = false;
             }
         });
 
@@ -246,31 +249,8 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
         locations_spinner.setAdapter(adapter);
     }
 
-    /**
-     * Disables user input fields.
-     */
-    public void waitForServerResponse() {
-        addLocation_button.setEnabled(false);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Enables user input fields.
-     */
-    public void resumeNormalMode() {
-        addLocation_button.setEnabled(true);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
-    }
-
     public Map<String, Location> getLocationsMap() {
         return locationsMap;
-    }
-
-    public void setLocationsMap(Map<String, Location> locationsMap) {
-        this.locationsMap = locationsMap;
     }
 
     public String getLocationName() {

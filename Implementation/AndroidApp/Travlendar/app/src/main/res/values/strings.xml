@@ -121,6 +121,8 @@
     <string name="start_traveling_at">Start traveling at:</string>
     <string name="minimum_time">Minimum time</string>
     <string name="departure_location">Departure location</string>
+    <string name="generic_ticket">Generic ticket</string>
+    <string name="valid_over_a_period_of_time">Valid over a period of time</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

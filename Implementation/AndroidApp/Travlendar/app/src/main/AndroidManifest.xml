@@ -51,7 +51,7 @@
             android:label="@string/preferences"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name="it.polimi.travlendarplus.activity.TicketEditorActivity"
-            android:label="@string/edit_ticket"
+            android:label="@string/add_ticket"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name="it.polimi.travlendarplus.activity.EventEditorActivity"
             android:label="@string/add_event"

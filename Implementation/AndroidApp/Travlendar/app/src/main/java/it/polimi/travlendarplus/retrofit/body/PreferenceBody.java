@@ -1,6 +1,8 @@
 package it.polimi.travlendarplus.retrofit.body;
 
+import it.polimi.travlendarplus.ParamFirstPath;
 import it.polimi.travlendarplus.Preference;
+import it.polimi.travlendarplus.TravelMeanEnum;
 
 import java.util.List;
 
@@ -10,17 +12,17 @@ import java.util.List;
 public class PreferenceBody {
     private long id;
     private String name;
-    private Preference.ParamFirstPath paramFirstPath;
+    private ParamFirstPath paramFirstPath;
     private List<Preference.PeriodConstraint> limitedByPeriod;
     private List<Preference.DistanceConstraint> limitedByDistance;
-    private List<Preference.TravelMeanEnum> deactivate;
+    private List<TravelMeanEnum> deactivate;
 
     public PreferenceBody(
             String name,
-            Preference.ParamFirstPath paramFirstPath,
+            ParamFirstPath paramFirstPath,
             List<Preference.PeriodConstraint> limitedByPeriod,
             List<Preference.DistanceConstraint> limitedByDistance,
-            List<Preference.TravelMeanEnum> deactivate) {
+            List<TravelMeanEnum> deactivate) {
         this.name = name;
         this.paramFirstPath = paramFirstPath;
         this.limitedByPeriod = limitedByPeriod;

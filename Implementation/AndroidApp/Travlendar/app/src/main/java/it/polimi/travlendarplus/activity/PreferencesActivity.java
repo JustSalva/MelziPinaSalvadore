@@ -18,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import it.polimi.travlendarplus.DateUtility;
+import it.polimi.travlendarplus.ParamFirstPath;
 import it.polimi.travlendarplus.Preference;
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.TravelMeanEnum;
 import it.polimi.travlendarplus.activity.fragment.TimePickerFragment;
 import it.polimi.travlendarplus.activity.handler.PreferenceLoader;
 import it.polimi.travlendarplus.activity.handler.preference.AddPreferenceHandler;
@@ -53,6 +55,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
     private AutoCompleteTextView maxDistance_editText;
 
     private String token;
+    private boolean firstLaunch = true;
     private Map<String, Preference> preferencesMap;
     private Preference selectedPreference;
     private String selectedTravelMean;
@@ -90,9 +93,10 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
         userViewModel.getUser().observe(this, user -> {
             token = user != null ? user.getToken() : "";
             // To be called only on the first onCreate().
-            if (savedInstanceState == null) {
+            if (firstLaunch) {
                 selectedPreference = new Preference();
                 loadPreferencesFromServer();
+                firstLaunch = false;
             }
         });
 
@@ -119,7 +123,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedPreference.setParamFirstPath(
-                        Preference.ParamFirstPath
+                        ParamFirstPath
                                 .getEnumFromString(adapterView.getSelectedItem().toString()));
             }
 
@@ -135,7 +139,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
                 // Save edited values.
                 saveEditedConstraints();
                 // Change the selected travel men constrained.
-                selectedTravelMean = Preference.TravelMeanEnum.values()[i].getTravelMean();
+                selectedTravelMean = TravelMeanEnum.values()[i].getTravelMean();
                 fillConstraints();
             }
             @Override
@@ -195,7 +199,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
         // Clear old checkboxes.
         checkBoxes_linearLayout.removeAllViews();
         // Create a checkbox for each travel mean in the enum class.
-        for (Preference.TravelMeanEnum travelMean : Preference.TravelMeanEnum.values()) {
+        for (TravelMeanEnum travelMean : TravelMeanEnum.values()) {
             // Setup checkbox.
             CheckBox checkBox = new CheckBox(this);
             checkBox.setText(travelMean.getTravelMean());
@@ -207,11 +211,11 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
             checkBox.setOnCheckedChangeListener((compoundButton, bool) -> {
                 if (! bool) {
                     selectedPreference.getDeactivate()
-                            .add(Preference.TravelMeanEnum
+                            .add(TravelMeanEnum
                                     .getEnumFromString(checkBox.getText().toString()));
                 } else {
                     selectedPreference.getDeactivate()
-                            .remove(Preference.TravelMeanEnum
+                            .remove(TravelMeanEnum
                                     .getEnumFromString(checkBox.getText().toString()));
                 }
             });
@@ -221,13 +225,13 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
     }
 
     /**
-     * Sets the right selection for the selected preference paramFirstPath.
+     * Sets the right selection for the selected ParamFirstPath.
      */
     private void setPreferredPathSpinner() {
         int index = 0;
         String param = selectedPreference.getParamFirstPath().toString();
-        for (int i = 0; i < Preference.ParamFirstPath.values().length; i++) {
-            if (Preference.ParamFirstPath.values()[i].toString().equals(param)) {
+        for (int i = 0; i < ParamFirstPath.values().length; i++) {
+            if (ParamFirstPath.values()[i].toString().equals(param)) {
                 index = i;
             }
         }
@@ -276,7 +280,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
             // Save edited constraint.
             selectedPreference.getDistanceConstraints().add(new Preference.DistanceConstraint(
                     0,
-                    Preference.TravelMeanEnum.getEnumFromString(selectedTravelMean),
+                    TravelMeanEnum.getEnumFromString(selectedTravelMean),
                     Integer.parseInt(minDistance_editText.getText().toString()),
                     Integer.parseInt(maxDistance_editText.getText().toString())
             ));
@@ -290,7 +294,7 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
             }
             selectedPreference.getPeriodOfDayConstraints().add(new Preference.PeriodConstraint(
                     0,
-                    Preference.TravelMeanEnum.getEnumFromString(selectedTravelMean),
+                    TravelMeanEnum.getEnumFromString(selectedTravelMean),
                     DateUtility.getSecondsFromHHmm(minTime_textView.getText().toString()),
                     DateUtility.getSecondsFromHHmm(maxTime_textView.getText().toString())
             ));
