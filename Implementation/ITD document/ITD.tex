@@ -1,0 +1,141 @@
+\documentclass[11pt]{report}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=25mm,
+ right=25mm,
+ top=30mm,
+ bottom=25mm,
+ headsep=7mm}
+
+\interfootnotelinepenalty=10000
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{todonotes}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{microtype}
+
+\graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+	\begin{titlepage}
+		\centering
+		\includegraphics{logo.png}\par\vspace{1cm}
+		{\scshape\LARGE\bfseries Politecnico di Milano \par}
+		\vspace{1cm}
+		{\scshape\Large Software Engineering 2\par}
+		\vspace{1.5cm}
+		{\Huge\bfseries Implementation and Test document\par}
+		\vspace{1cm}
+		{\small Version 1.0 - 30/12/2017\par}
+		\vspace{1cm}
+		{\normalsize\href{https://github.com/JustSalva/MelziPinaSalvadore/tree/master/DeliveryFolder}{\color{blue}Installation link}\par} 
+		\vspace{0.5cm}
+		{\href{https://github.com/JustSalva/MelziPinaSalvadore/tree/master/Implementation/ApplicationServer}{\color{blue}Application server source code link}\par} 
+		\vspace{0.5cm}
+		{\href{https://github.com/JustSalva/MelziPinaSalvadore/tree/master/Implementation/AndroidApp/Travlendar}{\color{blue}Android app source code link}\par} 
+		\todo{TODO}
+		\vspace{4cm}
+		{\Large\itshape Pietro Melzi, Alessandro Pina, Matteo Salvadore\par}
+
+		\vfill
+
+		% Bottom of the page
+		{\large AA 2017-2018\par}
+	\end{titlepage}
+
+	\tableofcontents{}
+
+	\chapter{INTRODUCTION}
+	\label{ch:INTRODUCTION}
+	
+		\section{Purpose}
+		\label{sect:Purpose}
+			\input{./1-Introduction/1-purpose.tex}
+			
+		\section{Scope}
+		\label{sect:Scope}
+			\input{./1-Introduction/2-scope.tex}
+			
+		\section{Definitions, Acronyms, Abbreviations}
+		\label{sect:Definitions, Acronyms, Abbreviations}
+			\input{./1-Introduction/3-definitions.tex}
+			\input{./1-Introduction/3-acronyms.tex}
+			\input{./1-Introduction/3-abbreviations.tex}
+			
+		\section{Revision history}
+		\label{sect:Revision history}
+			\input{./1-Introduction/4-revision_history.tex}
+			
+		\section{Reference Documents}
+		\label{sect:Documents}
+			\input{./1-Introduction/5-reference_documents.tex}
+			
+		\section{Document Structure}
+		\label{sect:Document Structure}
+			\input{./1-Introduction/6-document_structure.tex}
+			
+	\chapter{IMPLEMENTED REQUIREMENTS}
+	\label{ch:IMPLEMENTED REQUIREMENTS}
+		\input{./2-ImplementedRequirements/ImplementedRequirements.tex}
+			
+	\chapter{ADOPTED DEVELOPMENT FRAMEWORKS}
+	\label{ch:ADOPTED DEVELOPMENT FRAMEWORKS}
+	
+		\section{Adopted programming languages}
+		\label{sect:Adopted programming languages}
+			\input{./3-AdoptedDevelopmentFrameworks/Adopted_programming_languages.tex}
+			
+		\section{Adopted middleware}
+		\label{sect:Adopted middleware}
+			\input{./3-AdoptedDevelopmentFrameworks/Adopted_middleware.tex}
+		
+		\section{Additional APIs (not included into DD)}
+		\label{sect:Additional APIs (not included into DD)}
+			\input{./3-AdoptedDevelopmentFrameworks/Additional_APIs.tex}
+	
+	\chapter{SOURCE CODE STRUCTURE}
+	\label{ch:SOURCE CODE STRUCTURE}	
+		\input{./4-SourceCodeStructure/Source_code_structure.tex}
+	
+	\chapter{TESTING}
+	\label{ch:TESTING}	
+		\input{./5-Testing/Testing.tex}
+	
+	\chapter{INSTALLATION INSTRUCTIONS}
+	\label{ch:INSTALLATION INSTRUCTIONS}	
+		\input{./6-InstallationInstructions/Installation_instructions.tex}
+	
+	\chapter{EFFORT SPENT}
+	\label{ch:EFFORT SPENT}
+		\input{./7-EffortSpent/effort_spent.tex}
+		
+	\chapter{REFERENCES}
+	\label{ch:REFERENCES}
+	
+		\section{Bibliography}
+		\label{sect: Bibliography}
+		\input{./8-References/References.tex}
+		
+		\section{Software used}
+		\label{sect: Software used}
+		\input{./8-References/Software_used.tex}
+		
+
+\end{document}

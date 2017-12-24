@@ -1,0 +1,22 @@
+\subsection{Definitions}
+	\begin{itemize}
+	\item \textit{Arrange trip}: the system provides all the information available about a travel to the user. If the travel is related to one or more public travel means, the system helps the user to organize it. It is indicated if the user already holds a valid ticket for a certain travel or if he has to buy a required one. Purchase of a ticket is handled on the websites of the transport service providers. Trip and travel are synonymous.
+	\item \textit{Best path}: it is the preferred travel option proposed to reach the event location among all the feasible paths, according to parameters specified by the user. The best path can be chosen according to one of these features: length, cost or environmental sustainability. Best path is the path taken into account and showed in the daily schedule; the user can substitute it at any moment with an alternative feasible path. 
+	\item \textit{Break event}: it is an optional event whose starting and ending time are flexible. The user can define this kind of event when he wants to reserve a certain amount of time in the schedule and he doesn't need to specify a starting time. For instance, a user could be able to specify that lunch must be possible every day between 11:30-
+2:30, and it must be at least half an hour long, but the specific timing is flexible. The app would then be sure to reserve, if possible, at least 30 minutes for lunch each day.
+	\item \textit{Constraint}: it is a rule defined on travel means by the user. When the system calculates feasible paths, each constraint must be taken into account: travel options not respectful of existing constraints are ignored. A constraint can be associated to a type of event. 
+	\newline
+	There are different types of constraints: min/max distance allowed for a travel mean, interval of hours in which it is possible to take a travel mean and possibility to deactivate a travel mean. 
+	\item \textit{Current Unix Timestamp}: it is the number of seconds since Jan 01 1970. (UTC)
+	\item \textit{Customized type of event}: it is a set of rules related to a particular type of event that can be used several time by the user. The user can define a customized type of event in hs preferences, starting from the default type of event.	
+	\item \textit{Default type of event}: it is a general set of rules defined usually the first time that the user exploits the system, it can be modified. Default type of event is related to each event that doesn't need a particular type of event. New types of event are defined starting from the constraints enclosed in the default one.	
+	\item \textit{Feasible path}: a path that allows the user to reach a specified location before the starting time of the event to attend. It observes the constraints defined for that event.
+	\item \textit{Google Maps API}: a set of functions offered by Google Maps to decide the travel path between two locations.
+	\item \textit{Overlapping event}: an event (or a part of it) that happens in the same time slot of another event, added previously in the schedule. Because the schedule must be feasible, an event is considered as "overlapping" also if only its related travel overlaps an event present in the schedule.
+	\item \textit{Periodicity}: it is related to events that occur more than one time. It can be defined as weekly, monthly or in which days of the week the event happen.
+	\item \textit{Schedule}: a daily plan containing a set of events inserted by the user that allows him to travel and attend all the events. If an event overlaps other events, it cannot be inserted into the schedule. 
+	\item \textit{Type of event}: a set of rules (constraints) that is defined by the user and can be associated to multiple events.
+	\item \textit{Transport service provider}: a public or private company that controls and supplies the transport with a travel mean. 
+	\item \textit{Travel}: it is used to indicate the path that the user has to follows in order to reach a location. It can be composed by different travel components.
+	\item \textit{Travel component}: each single path that can be traveled with a travel mean. It has a starting time, a ending time, a departure location, an arrival location and a length. The union of one or more travel components creates a travel.
+	\end{itemize}
