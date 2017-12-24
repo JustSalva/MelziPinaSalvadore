@@ -42,7 +42,7 @@ public class GMapsGeocoder {
         address = address.replace( " ", "+" );
         Location retLoc = new Location();
         String call = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +
-                "&AIzaSyBc9aH-yiGT09jmvPljH4Kh90_UpzwYs9I";
+                "&AIzaSyBNIQeUu-paVMsVbybXDK8fEfg0RL7uZgo";
         try {
             JSONObject response = HTMLCallAndResponse.performCall( call );
             GMapsJSONReader.checkErrorInStatusCode( response );

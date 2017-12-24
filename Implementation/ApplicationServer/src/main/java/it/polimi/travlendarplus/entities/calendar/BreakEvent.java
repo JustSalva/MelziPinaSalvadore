@@ -106,8 +106,7 @@ public class BreakEvent extends GenericEvent {
     public boolean isMinimumEnsuredWithPathRegard ( List < Event > events ) {
         if ( events.size() == 0 )
             return true;
-        /* Checking if there is enough time between the first event and its
-        path or before the first event.
+        /* Checking if there is enough time between the first event and its path or before the first event.
          */
         if ( enoughTimeBeforeFirstEvent( events.get( 0 ) ) )
             return true;
