@@ -5,7 +5,7 @@ We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS)
 Notice that we want to provide instructions as generic as possible, so we will not provide any IDE-related instructions; feel free to use your own IDE to run both Glassfish 5.0 and MySQL 5.7, but if you never used/run these tools please stick to our instructions or simply use our online server.
 \subsection{Prerequisite}
 \label{subsect:Prerequisite}
-Check that your platform hardware meets the following prerequisites, we've written above, if you want to read the full prerequisite please head to: \href{https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}{\color{blue}https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf} and to \todo{TODO}, in fact we've provided a brief summary of those documents.
+Check that your platform hardware meets the following prerequisites, we've written above, if you want to read the full prerequisite please head to: \href{https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}{\color{blue}https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}, in fact we've provided a brief summary of that document. As for MySQL, the developers do not provide any minimum requirement. 
 \begin{itemize}
 	\item \textbf{Required JDK Version:} GlassFish Server Open Source Edition Release 5.0 requires Oracle JDK 8 Update 144 or later;
 	\item \textbf{Required Disk Space:} The installation sizes will vary depending on your configuration, but the approximate amount of disk space used by GlassFish Server 5.0 is 138 MB;
@@ -39,7 +39,7 @@ NB. To stop GlassFish type 'stop-domain domain1' in the same terminal you've sta
 	\item Open a terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysqld.exe' in order to start MySQL;
 	\item Open another terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysql -u root -p' in order to access to MySQL command line console;
 	\item MySQL command line console will ask for a password, just press 'enter';
-	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server;
+	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
 \end{itemize}
 	
 \subsection{Linux}
