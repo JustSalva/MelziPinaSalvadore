@@ -207,11 +207,6 @@ public class EventManager extends UserManager {
                     preferenceManager.getAllowedMeans( event, PathManager.publicList ) );
             // If feasiblePaths is different from NULL there is a feasible solution and the event can be added.
             if ( feasiblePaths != null ) {
-                // Setting previous location if prevLocChoice boolean param is true.
-                if ( event.isPrevLocChoice() ) {
-                    event.setDeparture(
-                            scheduleManager.getPossiblePreviousEvent( event.getStartingTime() ).getEventLocation() );
-                }
                 event.setFeasiblePath( feasiblePaths.getPrevPath() );
                 followingEvent = scheduleManager.getPossibleFollowingEvent( event.getStartingTime() );
                 // Also info on the following event are uploaded, according to the calculated related-path.
@@ -223,6 +218,11 @@ public class EventManager extends UserManager {
                     followingEvent.setFeasiblePath( feasiblePaths.getFollPath() );
                 }
             }
+        }
+        // Setting previous location if prevLocChoice boolean param is true.
+        if ( event.isPrevLocChoice() ) {
+            event.setDeparture(
+                    scheduleManager.getPossiblePreviousEvent( event.getStartingTime() ).getEventLocation() );
         }
         event.setScheduled( feasiblePaths != null );
         if ( feasiblePaths != null ) {
