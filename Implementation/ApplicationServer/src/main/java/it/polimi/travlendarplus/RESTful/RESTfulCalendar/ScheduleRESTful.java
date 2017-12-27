@@ -27,7 +27,7 @@ public class ScheduleRESTful {
      * Enterprise Java beans that offers the logic related to schedule management functionalities
      */
     @EJB
-    ScheduleManager scheduleManager;
+    private ScheduleManager scheduleManager;
 
     /**
      * User that performs a request, automatically injected after his authentication

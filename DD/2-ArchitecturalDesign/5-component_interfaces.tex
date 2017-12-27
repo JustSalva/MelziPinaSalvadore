@@ -7,38 +7,43 @@ We classify our interfaces in two types: the (internal) interfaces, used by the 
 This external interface offers, to the user's devices, access to all the schedule-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getUpdatedSchedule(unicode, timestampLocal)}: it updates the user schedule into local database (GET method);
-\item \textit{getDailySchedule(day, unicode)}: it allows to obtain the schedule of a specified day (GET method);
-\item \textit{addEventToSchedule(overlappingEvent, unicode)}: it is used when the user want to force into the schedule an overlapping event (PATCH method). 
+\item \textit{getDailySchedule(day, unicode)}: it allows to obtain the schedule of a specified day (GET method).
 \end{itemize}
 
 \subsubsection{IExternalEventManagement}
 This external interface offers, to the user's devices, access to all the event-related functionalities. It exposes the following methods:
 \begin{itemize}
-\item \textit{getEventUpdated(unicode, timestampLocal)}: it updates the user events into the local database. This function returns also the best path for each event (GET method);
-\item \textit{getEventInfo(event, unicode)}: it allows to obtain the info related to a specific event (GET method);
+\item \textit{getEventsUpdated(unicode, timestampLocal)}: it provide all the updated the user's events that are to be saved into the local database. This function returns also the best path for each event (GET method);
+\item \textit{getEvents(unicode)}: It provide all the user events to be saved into the local database. This function returns also the best path for each event (GET method);
+\item \textit{getEventInformation(event, unicode)}: it allows to obtain the info related to a specific event (GET method);
 \item \textit{addEvent(event, unicode)}: it begins the task of adding the event specified by the user. Internal methods will be used in order to add correctly the event into the database, to insert if into the schedule and to provide a feasible path (POST method);
-\item \textit{modifyEvent(event, unicode)}: it allows the user to modify a previously inserted event (UPDATE method);
+\item \textit{modifyEvent(event, unicode)}: it allows the user to modify a previously inserted event (PATCH method);
 \item \textit{deleteEvent(event, unicode)}: it allows the user to delete a previously inserted event (DELETE method);
-\item \textit{performAlternativeRequests (path, unicode)}: it is used when the user wants to obtain alternative feasible paths of a selected path (GET method).
+\item \textit{performAlternativeRequests (path, unicode)}: it is used when the user wants to obtain alternative feasible paths of a selected path (GET method);
+\item \textit{addBreakEvent(breakEvent, unicode)}: it begins the task of adding the break event specified by the user. Internal methods will be used in order to add correctly the event into the database and to insert if into the schedule (POST method);
+\item \textit{modifyBreakEvent(breakEvent, unicode)}: it allows the user to modify a previously inserted break event (PATCH method).
 \end{itemize}
 
 \subsubsection{IExternalPreferenceManagement}
 This external interface offers, to the user's devices, access to all the preference-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getPreferenceProfiles(unicode)}: it allows to obtain the profiles, containing user preferences, defined by a user. These profiles are named "type of events" (GET method);
+\item \textit{getPreferenceProfile(preferenceId, unicode)}: it allows to obtain info about a specific preference profile, given his ID (GET method);
 \item \textit{addPreference(typeOfEvent, unicode)}: it allows the user to add a new type of event with a set of preferences and constraints (POST method);
-\item \textit{modifyPreference(typeOfEvent, unicode)}: it allows the user to modify a previously inserted type of event (UPDATE method);
-\item \textit{deletePreference(typeOfEvent, unicode)}: it allows the user to delete a previously inserted type of event (DELETE method).
+\item \textit{modifyPreference(typeOfEvent, unicode)}: it allows the user to modify a previously inserted type of event (PATCH method);
+\item \textit{deletePreference(typeOfEvent, unicode)}: it allows the user to delete a previously inserted type of event (DELETE method);
 \item \textit{addPreferredLocation(location, name, unicode)}: it allows the user to add a new Preferred Location (POST method);
-\item \textit{modifyPreferredLocation(location, name, unicode)}: it allows the user to modify a Preferred Location (UPDATE method);
+\item \textit{modifyPreferredLocation(location, name, unicode)}: it allows the user to modify a Preferred Location (PATCH method);
 \item \textit{deletePreferredLocation(name, unicode)}: it allows the user to delete a Preferred Location (DELETE method);
-\item \textit{getPreferredLocations(unicode)}: it allows the user to obtain the data relative to his preferred locations (GET method);
+\item \textit{getAllPreferredLocations(unicode)}: it allows the user to obtain the data relative to his preferred locations (GET method);
+\item \textit{getPreferredLocation(locationName, unicode)}: it allows the user to obtain the data relative to a specific preferred location given his name (GET method).
 \end{itemize}
 \subsubsection{IExternalPathManagement}
 This external interface offers, to the user's devices, access to all the travel paths-related functionalities. It exposes the following methods:
 \begin{itemize}
 \item \textit{getPathInfo(event, unicode)}: it is used to obtain info related to a specific path that is part of the schedule (GET method);
-\item \textit{getMap(unicode)}: it is used to obtain info that allow to draw the user travels on the map (GET method).
+\item \textit{getMap(unicode)}: it is used to obtain info that allow to draw the user travels on the map (GET method);
+\item \textit{swapSchedule(overlappingEvent, unicode)}: it is used when the user want to force into the schedule an overlapping event (PATCH method). 
 \end{itemize}
 
 \subsection{IAuthentication}
@@ -46,8 +51,8 @@ This external interface offers, to the user's devices, access to all the travel 
 This external interface offers, to the user's devices, authentication, registration and profile-management functionalities. It exposes the following methods:
 \begin{itemize}
 	\item \textit{register(registrationForm, IdDevice)}: it is used when a user registers himself into the system. To do so the encrypted registration form (email, name, surname, password and captcha) is sent to the Application Server , which returns an univocal code related to the device (POST method);
-	\item \textit{submitLogin(mail, password, IdDevice)}: it is used when a user has to log into the system, it returns an univocal code related to the device (POST method);
-	\item \textit{editProfile(registrationForm)}: it is used when a user wants to modify his profile, to do so it sends the same info contained in the registration form (UPDATE method);
+	\item \textit{submitLogin(credentials, IdDevice)}: it is used when a user has to log into the system, it returns an univocal code related to the device (POST method);
+	\item \textit{editProfile(registrationForm)}: it is used when a user wants to modify his profile, to do so it sends the same info contained in the registration form (PATCH method);
 	\item \textit{requestPublicKey(IDdevice)}: it is used when an user is about to log into the system and so it must obtain a public key to encrypt his password (GET method);
 	\item \textit{deleteProfile(mail, password, IdDevice)}: it allows the user to remove his profile from Travlender+ (DELETE method);
 	\item \textit{askNewCredentials(mail)}: it allows the user to request a new password, that will be sent to his email (PATCH method).
@@ -59,7 +64,7 @@ This external interface offers, to the user's devices, the arrange trips functio
 \begin{itemize}
 	\item \textit{addTicket(ticket, unicode)}: it adds a ticket into the user personal tickets (POST method);
 	\item \textit{deleteTicket(ticket, unicode)}: it deletes a ticket from the user personal tickets (DELETE method);
-	\item \textit{modifyTicket(ticket, unicode)}: it modifies a ticket contained in the user personal tickets list (UPDATE method);
+	\item \textit{modifyTicket(ticket, unicode)}: it modifies a ticket contained in the user personal tickets list (PATCH method);
 	\item \textit{buyTicket(path, unicode)}: it allows the user to obtain the specific URLs where he can buy the tickets needed for a travel (GET method);
 	\item \textit{getTickets(unicode)}: it allows the user to obtain the data relative to his saved tickets (GET method);
 	\item \textit{selectTicket(ticket, unicode, path)}: it allows the user to connect a ticket to a specific travel path (PATCH method);
