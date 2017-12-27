@@ -61,19 +61,28 @@ public class TravelTicketActivity extends MenuActivity {
             gridLayout.setColumnCount(2);
             gridLayout.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
 
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = MATCH_PARENT;
-            params.height = WRAP_CONTENT;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
             params.setMargins(10, 10, 10, 10);
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
             gridLayout.setLayoutParams(params);
 
-            gridLayout.addView(createTextView(Float.toString(travelComponent.getLength())));
-            gridLayout.addView(createTextView(travelComponent.getTravelMean()));
-            gridLayout.addView(createTextView(DateUtility.getHHmmFromSeconds(travelComponent.getStartTime())));
-            gridLayout.addView(createTextView(DateUtility.getHHmmFromSeconds(travelComponent.getEndTime())));
-            gridLayout.addView(createTextView(travelComponent.getDepartureLocation()));
-            gridLayout.addView(createTextView(travelComponent.getArrivalLocation()));
+            gridLayout.addView(createTextView(
+                    "KM: ".concat(Float.toString(travelComponent.getLength()))
+            ));
+            gridLayout.addView(createTextView(
+                    "MEAN: ".concat(travelComponent.getTravelMean())
+            ));
+            gridLayout.addView(createTextView(
+                    "STARTS: ".concat(DateUtility.getHHmmFromSeconds(travelComponent.getStartTime()))
+            ));
+            gridLayout.addView(createTextView(
+                    "ENDS: ".concat(DateUtility.getHHmmFromSeconds(travelComponent.getEndTime()))
+            ));
+            gridLayout.addView(createTextView(
+                    "FROM: \n".concat(travelComponent.getDepartureLocation().replace(",", ",\n"))
+            ));
+            gridLayout.addView(createTextView(
+                    "TO: \n".concat(travelComponent.getArrivalLocation().replace(",", ",\n"))
+            ));
             travelComponents_linearLayout.addView(gridLayout);
         }
     }
@@ -86,9 +95,6 @@ public class TravelTicketActivity extends MenuActivity {
     private TextView createTextView(String content) {
         TextView textView = new TextView(getApplicationContext());
         textView.setText(content);
-        textView.setElegantTextHeight(true);
-        textView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        textView.setSingleLine(false);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
         textView.setLayoutParams(params);

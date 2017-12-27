@@ -122,7 +122,7 @@ public class TicketsViewerActivity extends MenuActivity {
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
         gridLayout.setLayoutParams(params);
         gridLayout.addView(createTextView(ticket.getType().getType().concat(" ticket")));
-        gridLayout.addView(createTextView("Cost: ".concat(Float.toString(ticket.getCost()))));
+        gridLayout.addView(createTextView("COST: ".concat(Float.toString(ticket.getCost()))));
 
         switch (ticket.getType()) {
             case GENERIC:
@@ -195,12 +195,11 @@ public class TicketsViewerActivity extends MenuActivity {
      * @param ticket Ticket containing details to be inserted.
      */
     private void insertPathTicketFields(GridLayout gridLayout, Ticket ticket) {
-        String lineName = ticket.getGenericTicket().getLineName();
-        gridLayout.addView(createTextView(lineName));
-        String startLocation = ticket.getGenericTicket().getPathTicket().getArrivalLocation();
-        String endLocation = ticket.getGenericTicket().getPathTicket().getDepartureLocation();
-        gridLayout.addView(createTextView("From: ".concat(startLocation)));
-        gridLayout.addView(createTextView("To: ".concat(endLocation)));
+        String startLocation = ticket.getGenericTicket().getPathTicket().getArrivalLocation().replace(",", ",\n");
+        String endLocation = ticket.getGenericTicket().getPathTicket().getDepartureLocation().replace(",", ",\n");
+        gridLayout.addView(createTextView("FROM: \n".concat(startLocation)));
+        gridLayout.addView(createTextView("TO: \n".concat(endLocation)));
+        gridLayout.addView(createTextView("LINE: \n".concat(ticket.getGenericTicket().getLineName())));
     }
 
     /**
@@ -211,12 +210,12 @@ public class TicketsViewerActivity extends MenuActivity {
     private void insertPeriodTicketFields(GridLayout gridLayout, Ticket ticket) {
         String name = ticket.getPeriodTicket().getName();
         gridLayout.addView(createTextView(
-                "Start: ".concat(
+                "START: \n".concat(
                         DateUtility.getInstantFromSeconds(ticket.getPeriodTicket().getStartDate()).substring(0, 10)
                 )
         ));
         gridLayout.addView(createTextView(
-                "End: ".concat(
+                "END: \n".concat(
                         DateUtility.getInstantFromSeconds(ticket.getPeriodTicket().getEndDate()).substring(0, 10)
                 )
         ));
