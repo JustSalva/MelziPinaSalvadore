@@ -49,7 +49,7 @@ public class PathRESTful {
     }
 
     /**
-     * It allows the  user to obtain the information of one path
+     * It allows the user to obtain the information of one path
      *
      * @param idEvent the identifier of the event associated to the requested path
      * @return an HTTP 400 Bad Request response status code if the specified event does not exist,

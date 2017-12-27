@@ -54,6 +54,15 @@ public class PathManager extends UserManager {
         preferenceManager.setCurrentUser( currentUser );
     }
 
+    /**
+     * Compute the best path relative to a given event calculating the schedule.
+     *
+     * @param event        event that need a feasible path.
+     * @param privateMeans allowed private travel means according to event preferences.
+     * @param publicMeans  allowed public travel means according to event preferences.
+     * @return the requested path if available by means of calcPathNoSetSchedule, null if it doesn't exists.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
+     */
     public PathCombination calculatePath ( Event event, List < TravelMeanEnum > privateMeans,
                                            List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         scheduleManager.setSchedule( event.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
@@ -61,13 +70,14 @@ public class PathManager extends UserManager {
     }
 
     /**
-     * Compute a the best path relative to a given event
+     * Compute the best path relative to a given event without calculate the schedule. It is used in swap function and
+     * it is called in all the other situations after that the schedule is calculated.
      *
-     * @param event        event that need a feasible path
-     * @param privateMeans allowed private travel means according to event preferences
-     * @param publicMeans  allowed public travel means according to event preferences
-     * @return the requested path if available, null otherwise
-     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable
+     * @param event        event that need a feasible path.
+     * @param privateMeans allowed private travel means according to event preferences.
+     * @param publicMeans  allowed public travel means according to event preferences.
+     * @return the requested path if available, null otherwise.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
      */
     private PathCombination calcPathNoSetSchedule ( Event event, List < TravelMeanEnum > privateMeans,
                                                     List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
@@ -90,6 +100,15 @@ public class PathManager extends UserManager {
         return bestPath;
     }
 
+    /**
+     * Defines the departure location for an event and calculates all possible paths according to the schedule.
+     *
+     * @param event        the event of which previous travels are calculated.
+     * @param privateMeans list of allowed private means.
+     * @param publicMeans  list of allowed public means.
+     * @return all possible previous paths according to the schedule.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
+     */
     private List < Travel > getPreviousTravels ( Event event, List < TravelMeanEnum > privateMeans,
                                                  List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         List < Travel > possiblePaths = new ArrayList < Travel >();
@@ -99,7 +118,7 @@ public class PathManager extends UserManager {
             event.setDeparture( ( previous != null ) ? previous.getEventLocation() : event.getEventLocation() );
         }
         try {
-            boolean prevDateAllowed = previousDateAllowed( previous, event );
+            boolean prevDateAllowed = previousDateAllowed( previous );
             // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallPreviousPath( event, previous, prevDateAllowed );
             boolean sameLoc = isBetweenSameLocations( event );
@@ -113,6 +132,15 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
+    /**
+     * Checks if an event is the last of the schedule and calculates all possible paths according to the schedule.
+     *
+     * @param event        the event of which following travels are calculated.
+     * @param privateMeans list of allowed private means.
+     * @param publicMeans  list of allowed public means.
+     * @return all possible following paths according to the schedule, null if it oesn't exist any following event.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
+     */
     private List < Travel > getFollowingTravels ( Event event, List < TravelMeanEnum > privateMeans,
                                                   List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         List < Travel > possiblePaths = new ArrayList < Travel >();
@@ -127,7 +155,7 @@ public class PathManager extends UserManager {
             if ( following.isPrevLocChoice() ) {
                 following.setDeparture( event.getEventLocation() );
             }
-            boolean prevDateAllowed = previousDateAllowed( event, following );
+            boolean prevDateAllowed = previousDateAllowed( event );
             // Obtaining baseCall string for previous paths, here locations and times are setted.
             String baseCall = directionsHandler.getBaseCallFollowingPath( event, following, prevDateAllowed );
             boolean sameLoc = isBetweenSameLocations( following );
@@ -141,9 +169,25 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
+
+    /**
+     * Calculates private and eventually public travels according to specified means, events, times and locations.
+     *
+     * @param baseCall        url to use containing info on locations and time of the path.
+     * @param privateMeans    list of allowed private means.
+     * @param publicMeans     list of allowed public means.
+     * @param eventA          event before the path.
+     * @param eventB          event after the path.
+     * @param sameLoc         boolean that indicates if the path starts and ends in the same location.
+     * @param prevDateAllowed boolean that indicates if the date related to previous event is not in the past, in this
+     *                        case it can be used to calculate the path.
+     * @return all the possible paths for a given travel, according to the user's schedule.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
+     */
     private List < Travel > possiblePathsAdder ( String baseCall, List < TravelMeanEnum > privateMeans,
                                                  List < TravelMeanEnum > publicMeans, Event eventA, Event eventB,
-                                                 boolean sameLoc, boolean prevDateAllowed ) throws GMapsGeneralException {
+                                                 boolean sameLoc, boolean prevDateAllowed )
+            throws GMapsGeneralException {
         ArrayList < Travel > possiblePaths = new ArrayList < Travel >();
         privatePathsHandler( possiblePaths, baseCall, eventA, eventB, privateMeans, sameLoc, prevDateAllowed );
         if ( !publicMeans.isEmpty() ) {
@@ -152,6 +196,22 @@ public class PathManager extends UserManager {
         return possiblePaths;
     }
 
+    /**
+     * Calculates possible paths whose travel means can be: car, bike or walking.
+     *
+     * @param possiblePaths   list of possible paths where the result found in the function must be added.
+     * @param baseCall        base url containing info on locations and time that must be enriched before perform the
+     *                        call.
+     * @param eventA          event before the path.
+     * @param eventB          event after the path.
+     * @param privateMeans    list of private means used in the calculated paths.
+     * @param sameLoc         boolean that indicates if the path starts and ends in the same location.
+     * @param prevDateAllowed boolean that indicates if the date related to previous event is not in the past, in this
+     *                        case it can be used to calculate the path.
+     * @throws GMapsUnavailableException if the path computation fails cause Google maps services are unavailable.
+     * @throws BadRequestException       if the path computation fails cause a wrong request.
+     * @throws LocationNotFoundException if the path computation fails cause the location specified is not found.
+     */
     private void privatePathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
                                        List < TravelMeanEnum > privateMeans, boolean sameLoc, boolean prevDateAllowed )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
@@ -171,11 +231,11 @@ public class PathManager extends UserManager {
                 2) eventA is the main event and eventB is the following event -> eventB is not NULL
                  because this case is managed above.*/
                 privatePaths = ( eventA != null && !eventB.isTravelAtLastChoice() && prevDateAllowed )
-                        ? reader.getTravelNoTransitMeans( privatePathJSON, mean, eventA.getEndingTime().getEpochSecond(),
-                        true, eventB.getDeparture(), eventB.getEventLocation() )
+                        ? reader.getTravelNoTransitMeans( privatePathJSON, mean, eventA.getEndingTime()
+                        .getEpochSecond(), true, eventB.getDeparture(), eventB.getEventLocation() )
                         // It is the case when the possible new event would be the first in the schedule.
-                        : reader.getTravelNoTransitMeans( privatePathJSON, mean, eventB.getStartingTime().getEpochSecond(),
-                        false, eventB.getDeparture(), eventB.getEventLocation() );
+                        : reader.getTravelNoTransitMeans( privatePathJSON, mean, eventB.getStartingTime()
+                        .getEpochSecond(), false, eventB.getDeparture(), eventB.getEventLocation() );
             } catch ( JSONException err ) {
                 Logger.getLogger( PathManager.class.getName() ).log( Level.SEVERE, err.getMessage(), err );
             }
@@ -188,16 +248,23 @@ public class PathManager extends UserManager {
         }
     }
 
-    private boolean previousDateAllowed ( Event eventA, Event eventB ) {
-        if ( eventA == null ) {
-            return false;
-        }
-        return eventA.getEndingTime().isAfter( Instant.ofEpochSecond( Instant.now().getEpochSecond() + MARGIN_TIME ) );
-
-    }
-
+    /**
+     * Calculates possible paths whose travel means can be: tram, train, bus or subway.
+     *
+     * @param possiblePaths list of possible paths where the result found in the function must be added.
+     * @param baseCall      base url containing info on locations and time that must be enriched before perform the
+     *                      call.
+     * @param eventA        event before the path.
+     * @param eventB        event after the path.
+     * @param publicMeans   list of public means used in the calculated paths.
+     * @param sameLoc       boolean that indicates if the path starts and ends in the same location.
+     * @throws GMapsUnavailableException if the path computation fails cause Google maps services are unavailable.
+     * @throws BadRequestException       if the path computation fails cause a wrong request.
+     * @throws LocationNotFoundException if the path computation fails cause the location specified is not found.
+     */
     private void publicPathsHandler ( List < Travel > possiblePaths, String baseCall, Event eventA, Event eventB,
-                                      List < TravelMeanEnum > publicMeans, boolean sameLoc ) throws GMapsGeneralException {
+                                      List < TravelMeanEnum > publicMeans, boolean sameLoc )
+            throws GMapsGeneralException {
         GMapsDirectionsHandler directionsHandler = new GMapsDirectionsHandler();
         if ( !sameLoc ) { // If departure location is the same of arrival location, the path can be done only
             // with private means.
@@ -218,6 +285,27 @@ public class PathManager extends UserManager {
         }
     }
 
+    /**
+     * States if the ending time of the event passed can be used as reference time to calculate paths.
+     *
+     * @param eventA event before the path.
+     * @return true if the ending time of the event is not in the past, false otherwise.
+     */
+    private boolean previousDateAllowed ( Event eventA ) {
+        if ( eventA == null ) {
+            return false;
+        }
+        return eventA.getEndingTime().isAfter( Instant.ofEpochSecond( Instant.now().getEpochSecond() + MARGIN_TIME ) );
+    }
+
+    /**
+     * States if travels are feasible in the time between two events.
+     *
+     * @param eventA the event before the travel.
+     * @param eventB the event after the travel.
+     * @param travel the travel to control.
+     * @return true if the travel can be done without overlapping in the schedule.
+     */
     private boolean travelFeasibleInTimeslot ( Event eventA, Event eventB, Travel travel ) {
         if ( eventA == null ) {
             return true;
@@ -226,11 +314,27 @@ public class PathManager extends UserManager {
                 ( eventB.isTravelAtLastChoice() && !travel.getStartingTime().isBefore( eventA.getEndingTime() ) );
     }
 
+    /**
+     * States if a path must be calculated between the same locations
+     *
+     * @param event the event involved into the calculation of path.
+     * @return true if departure locaction and event location are almost the same, false otherwise.
+     */
     private boolean isBetweenSameLocations ( Event event ) {
         return Math.abs( event.getDeparture().getLatitude() - event.getEventLocation().getLatitude() ) < 0.001 &&
                 Math.abs( event.getDeparture().getLongitude() - event.getEventLocation().getLongitude() ) < 0.001;
     }
 
+    /**
+     * Forces an overlapping event into the schedule and handles the swap out operations of any scheduled event that is
+     * in conflict with the forced one.
+     *
+     * @param forcedEvent  event that must be inserted into the schedule.
+     * @param privateMeans list of allowed private means for the forcedEvent.
+     * @param publicMeans  list of allowed public means for the forcedEvent.
+     * @return a list of modified events or a new ArrayList if the swap operation is not feasible.
+     * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
+     */
     public List < GenericEvent > swapEvents ( Event forcedEvent, List < TravelMeanEnum > privateMeans,
                                               List < TravelMeanEnum > publicMeans ) throws GMapsGeneralException {
         scheduleManager.setSchedule( forcedEvent.getStartingTime(), ScheduleManager.SECONDS_IN_A_DAY );
@@ -281,6 +385,14 @@ public class PathManager extends UserManager {
         return new ArrayList <>();
     }
 
+    /**
+     * Performs saving operations for the events modified after the swap operations.
+     *
+     * @param best        path combination calculated for the event swapped into the schedule.
+     * @param forcedEvent overlapping event forced into the schedule
+     * @param swapOut     events that must be swapped out due to the swapped in event.
+     * @return a list of modified events that can be used by the client application.
+     */
     private List < GenericEvent > conclusionForSwap ( PathCombination best, Event forcedEvent,
                                                       List < GenericEvent > swapOut ) {
         ArrayList < GenericEvent > response = new ArrayList < GenericEvent >();
@@ -299,6 +411,13 @@ public class PathManager extends UserManager {
         return response;
     }
 
+    /**
+     * Determines which break event must be swapped out, from the less overlapping one.
+     *
+     * @param forcedEvent event to swap into the schedule
+     * @return break event to remove in order to ensure the swap in of an event, null if there is no break event
+     * scheduled.
+     */
     private BreakEvent breakToRemove ( Event forcedEvent ) {
         if ( scheduleManager.getSchedule().getBreaks().isEmpty() ) {
             return null;
@@ -313,7 +432,13 @@ public class PathManager extends UserManager {
         return toRemove;
     }
 
-    // Removing events that overlap with forcedEvent
+    /**
+     * Removes from the schedule all the scheduled events that overlap with the forced event, without considering
+     * related-paths.
+     *
+     * @param forcedEvent   event to swap in.
+     * @param swapOutEvents a list where all swap out-events must be added.
+     */
     private void firstSwapPhase ( Event forcedEvent, List < GenericEvent > swapOutEvents ) {
         for ( Event event : scheduleManager.getSchedule().getEvents() ) {
             if ( !scheduleManager.areEventsOverlapFree( forcedEvent, event ) ) {
@@ -325,6 +450,13 @@ public class PathManager extends UserManager {
         }
     }
 
+    /**
+     * Controls the path calculation when starting and ending locations are the same: remove car  if it is in the list
+     * and add by_foot if it is not in the list.
+     *
+     * @param privateMeans list of allowed private travel means.
+     * @return the list with by_foot and without car.
+     */
     private List < TravelMeanEnum > privateMeansSameLoc ( List < TravelMeanEnum > privateMeans ) {
         ArrayList < TravelMeanEnum > copy = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : privateMeans ) {
