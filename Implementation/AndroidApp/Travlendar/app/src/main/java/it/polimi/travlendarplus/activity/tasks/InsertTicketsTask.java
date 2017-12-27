@@ -27,6 +27,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected Void doInBackground(Void... voids) {
+        database.ticketsDao().deleteAll();
         // Add generic tickets.
         for (GenericTicketResponse ticketResponse : tickets.getGenericTickets()) {
             // Create ticket.

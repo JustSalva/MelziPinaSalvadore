@@ -124,6 +124,8 @@
     <string name="generic_ticket">Generic ticket</string>
     <string name="valid_over_a_period_of_time">Valid over a period of time</string>
     <string name="path_ticket">Path ticket</string>
+    <string name="drag_here_to_remove">Drag here to remove</string>
+    <string name="information">Information</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

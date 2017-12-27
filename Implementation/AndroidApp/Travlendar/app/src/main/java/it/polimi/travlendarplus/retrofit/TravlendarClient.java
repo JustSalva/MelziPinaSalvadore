@@ -131,4 +131,8 @@ public interface TravlendarClient {
             @Body PeriodTicketBody periodTicketBody
     );
 
+    @DELETE("trip/{id}")
+    Call<Void> deleteTicket(
+            @Path("id") int id
+    );
 }
