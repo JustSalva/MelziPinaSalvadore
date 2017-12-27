@@ -159,6 +159,7 @@ public class PathManager extends UserManager {
         if ( sameLoc ) {
             privateMeans = privateMeansSameLoc( privateMeans );
         }
+        avoidLongWalkingCalculation( privateMeans, eventB );
         for ( TravelMeanEnum mean : privateMeans ) {
             ArrayList < Travel > privatePaths = new ArrayList < Travel >();
             try {
@@ -483,6 +484,24 @@ public class PathManager extends UserManager {
         event.setFeasiblePath( path );
         scheduleManager.saveEvent( event );
         response.add( event );
+    }
+
+    private void avoidLongWalkingCalculation ( List < TravelMeanEnum > privateMeans, Event event ) {
+        float pk = ( float ) ( 180.f / Math.PI );
+
+        double a1 = event.getDeparture().getLatitude() / pk;
+        double a2 = event.getDeparture().getLongitude() / pk;
+        double b1 = event.getEventLocation().getLatitude() / pk;
+        double b2 = event.getEventLocation().getLongitude() / pk;
+
+        double t1 = Math.cos( a1 ) * Math.cos( a2 ) * Math.cos( b1 ) * Math.cos( b2 );
+        double t2 = Math.cos( a1 ) * Math.sin( a2 ) * Math.cos( b1 ) * Math.sin( b2 );
+        double t3 = Math.sin( a1 ) * Math.sin( b1 );
+        double tt = Math.acos( t1 + t2 + t3 );
+
+        if ( 6366 * tt > 30 ) {
+            privateMeans.removeIf( e -> e.getParam().equals( "walking" ) );
+        }
     }
 
 }
