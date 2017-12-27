@@ -6,6 +6,9 @@
 
 2. **DD**: [Download here](https://github.com/JustSalva/MelziPinaSalvadore/blob/master/DeliveryFolder/DD1.pdf "DD")
 
+3. **ITD**: 
+    > Application Server JavaDoc documentation : [Application Server JavaDoc documentation](https://justsalva.github.io/MelziPinaSalvadore/ "Application Server JavaDoc documentation")
+
 ### Group Members:
 - Pietro Melzi
 - Alessandro Pina
