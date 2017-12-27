@@ -140,6 +140,20 @@ public class GenericEvent {
         this.period = period;
     }
 
+    @Override
+    public String toString() {
+        String genericInfo = "Name: " + name + '\n' +
+                "Date: " + DateUtility.getInstantFromSeconds(date).substring(0, 10) + '\n' +
+                "Starts at: " + DateUtility.getHHmmFromSeconds(startTime) + '\n' +
+                "Ends at: " + DateUtility.getHHmmFromSeconds(endTime) + '\n';
+        genericInfo = scheduled
+                ? genericInfo.concat("It is scheduled\n")
+                : genericInfo.concat("It is not scheduled\n");
+        return type.equals(EventType.EVENT)
+                ? genericInfo.concat(event.toString())
+                : genericInfo.concat(breakEvent.toString());
+    }
+
     public enum EventType {
         EVENT("event"),
         BREAK("break");

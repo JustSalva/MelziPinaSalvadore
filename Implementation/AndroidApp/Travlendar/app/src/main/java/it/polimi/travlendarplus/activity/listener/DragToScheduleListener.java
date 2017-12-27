@@ -40,6 +40,7 @@ public final class DragToScheduleListener implements View.OnDragListener {
                 viewReceiving.setBackgroundColor(Color.parseColor("#00FF00"));
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
+                viewReceiving.setBackgroundColor(Color.parseColor("#00FF00"));
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
                 viewReceiving.setBackgroundColor(color);

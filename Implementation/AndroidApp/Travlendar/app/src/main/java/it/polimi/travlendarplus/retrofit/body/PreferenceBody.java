@@ -30,6 +30,10 @@ public class PreferenceBody {
         this.deactivate = deactivate;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

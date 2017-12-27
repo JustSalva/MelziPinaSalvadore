@@ -81,4 +81,15 @@ public class Event {
     public void setDepartureLocation(String departureLocation) {
         this.departureLocation = departureLocation;
     }
+
+    @Override
+    public String toString() {
+        String info = "Description: " + description + '\n' +
+                "Location: " + eventLocation + '\n';
+        info = travelAtLastChoice ? info.concat("Travel at latest\n") : info.concat("Travel at earliest\n");
+        info = previousLocationChoice
+                ? info.concat("Starts from: Previous location")
+                : info.concat("Starts from: " + '\n' + departureLocation);
+        return info;
+    }
 }

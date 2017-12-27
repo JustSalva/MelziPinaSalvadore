@@ -92,7 +92,8 @@ public class DateUtility {
         long seconds = getSecondsFromHHmm(localString);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        calendar.setTime(new Date(seconds * 1000L));
+        long UTCSeconds = seconds * 1000L - (TimeZone.getDefault().getOffset(calendar.getTime().getTime()));
+        calendar.setTime(new Date(UTCSeconds));
         return sdf.format(calendar.getTime());
     }
 

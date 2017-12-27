@@ -35,7 +35,7 @@ public class DeletePreferenceController implements Callback<Void> {
             Call<Void> call = client.deletePreference(id);
             call.enqueue(this);
         } else {
-            // User is trying to delete the normal event.
+            // User is trying to delete the normal preference.
             Message msg = handler.obtainMessage(1);
             msg.sendToTarget();
         }

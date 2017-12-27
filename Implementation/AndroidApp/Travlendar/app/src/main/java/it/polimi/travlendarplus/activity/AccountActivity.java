@@ -46,11 +46,8 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
     private TextView email_textView;
     private Spinner locations_spinner;
     private TextView locationsAddressViewer_textView;
-    private ImageView deleteLocation_imageView;
     private TextView locationAddress_textView;
     private EditText locationName_editText;
-    private Button selectLocation_button;
-    private Button addLocation_button;
 
     private final int PLACE_PICKER_REQUEST = 1;
     private String token;
@@ -85,11 +82,8 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
         email_textView = findViewById(R.id.email);
         locations_spinner = findViewById(R.id.locations_spinner);
         locationsAddressViewer_textView = findViewById(R.id.locationsAddressViewer_textView);
-        deleteLocation_imageView = findViewById(R.id.deleteLocation_imageView);
         locationName_editText = findViewById(R.id.locationName_editText);
         locationAddress_textView = findViewById(R.id.locationAddress_textView);
-        selectLocation_button = findViewById(R.id.selectLocation_button);
-        addLocation_button = findViewById(R.id.addLocation_button);
 
         // Create a ViewModel the first time the system calls an activity's onCreate() method.
         // Re-created activity receive the same MyViewModel instance created by the first activity.
@@ -125,9 +119,9 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
         });
 
         // Setup button listeners.
-        deleteLocation_imageView.setOnClickListener(view -> deleteLocationFromServer());
-        selectLocation_button.setOnClickListener(view -> selectLocationAddress());
-        addLocation_button.setOnClickListener(view -> sendLocationToServer());
+        findViewById(R.id.deleteLocation_imageView).setOnClickListener(view -> deleteLocationFromServer());
+        findViewById(R.id.selectLocation_button).setOnClickListener(view -> selectLocationAddress());
+        findViewById(R.id.addLocation_button).setOnClickListener(view -> sendLocationToServer());
 
         // Handle server responses.
         getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
@@ -237,6 +231,7 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
      * Locations are stored in locationsMap.
      */
     public void populateLocationsSpinner() {
+        locationsAddressViewer_textView.setText("");
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),

@@ -32,6 +32,9 @@ public class ModifyPreferenceHandler extends DefaultHandler {
     public void handleMessage(Message msg){
         super.handleMessage(msg);
         switch (msg.what){
+            case 1:
+                Toast.makeText(context, "The normal type of event cannot be modified!", Toast.LENGTH_LONG).show();
+                break;
             case 200:
                 Toast.makeText(context, "Preference edited!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.

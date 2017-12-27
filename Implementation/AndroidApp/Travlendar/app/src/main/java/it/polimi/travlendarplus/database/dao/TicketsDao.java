@@ -26,6 +26,9 @@ public interface TicketsDao {
     @Delete
     void delete(Ticket ticket);
 
+    @Query("DELETE FROM ticket WHERE id LIKE :eventId")
+    void deleteFromId(int eventId);
+
     @Query("DELETE FROM ticket")
     void deleteAll();
 

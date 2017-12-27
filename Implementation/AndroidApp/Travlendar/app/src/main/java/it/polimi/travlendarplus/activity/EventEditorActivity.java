@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,11 +57,11 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
     private Spinner startTravelingAt_spinner;
     private Spinner departureLocation_spinner;
     // Locations.
-    private Map<String, Location> locationsMap;
+    private Map<String, Location> locationMap;
     private Location selectedEventLocation;
     private Location selectedDepartureLocation;
     // Preferences.
-    private Map<String, Preference> preferencesMap;
+    private Map<String, Preference> preferenceMap;
     private Preference selectedPreference;
     // Booleans.
     private boolean startTravelingAtLast;
@@ -110,7 +111,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         typeOfEvent_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedPreference = preferencesMap.get(adapterView.getSelectedItem().toString());
+                selectedPreference = preferenceMap.get(adapterView.getSelectedItem().toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -121,7 +122,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         eventLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedEventLocation = locationsMap.get(adapterView.getSelectedItem().toString());
+                selectedEventLocation = locationMap.get(adapterView.getSelectedItem().toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -132,7 +133,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         departureLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedDepartureLocation = locationsMap.get(adapterView.getSelectedItem().toString());
+                selectedDepartureLocation = locationMap.get(adapterView.getSelectedItem().toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -264,7 +265,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
 
     /**
      * Sends request to server to receive locations of the user.
-     * Locations received are saved in locationsMap.
+     * Locations received are saved in locationMap.
      */
     private void loadLocationsFromServer() {
         // Send request to server.
@@ -275,7 +276,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
 
     /**
      * Sends request to server to receive preferences of the user.
-     * Preferences received are saved in preferencesMap.
+     * Preferences received are saved in preferenceMap.
      */
     private void loadPreferencesFromServer() {
         // Send request to server.
@@ -285,14 +286,14 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
     }
 
     /**
-     * Populates the locations spinners with locations names from the locationsMap.
+     * Populates the locations spinners with locations names from the locationMap.
      */
     public void populateLocationsSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
                 android.R.layout.simple_spinner_item,
-                locationsMap.keySet().toArray(new String[locationsMap.size()])
+                locationMap.keySet().toArray(new String[locationMap.size()])
         );
         // Specify the layout to use when the list of choices appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -302,14 +303,14 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
     }
 
     /**
-     * Populates the typeOfEvent spinner with preferences names contained in preferencesMap.
+     * Populates the typeOfEvent spinner with preferences names contained in preferenceMap.
      */
     public void populatePreferencesSpinner() {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
                 android.R.layout.simple_spinner_item,
-                preferencesMap.keySet().toArray(new String[preferencesMap.size()])
+                preferenceMap.keySet().toArray(new String[preferenceMap.size()])
         );
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -398,14 +399,23 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
 
     @Override
     public void updateLocations(Map<String, Location> locationMap) {
-        this.locationsMap = locationMap;
+        // If there are no locations saved, redirect to the activity account.
+        if (locationMap.isEmpty()) {
+            Toast.makeText(
+                    getBaseContext(),
+                    "You need to add locations before you try to add an event!",
+                    Toast.LENGTH_LONG
+            ).show();
+            startActivity(new Intent(this, AccountActivity.class));
+        }
+        this.locationMap = locationMap;
         populateLocationsSpinner();
         resumeNormalMode();
     }
 
     @Override
     public void updatePreferences(Map<String, Preference> preferenceMap) {
-        this.preferencesMap = preferenceMap;
+        this.preferenceMap = preferenceMap;
         populatePreferencesSpinner();
         resumeNormalMode();
     }

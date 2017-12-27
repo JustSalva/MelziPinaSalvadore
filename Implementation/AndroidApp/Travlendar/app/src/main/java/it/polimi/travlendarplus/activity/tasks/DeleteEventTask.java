@@ -21,7 +21,7 @@ public class DeleteEventTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected Void doInBackground(Void... voids) {
-        // Update timestamp in the user table of the DB.
+        // Delete event from the DB.
         database.calendarDao().deleteEventFromId(eventId);
         return null;
     }

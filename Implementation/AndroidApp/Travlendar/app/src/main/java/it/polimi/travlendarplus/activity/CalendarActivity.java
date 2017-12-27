@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.activity;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,8 +21,10 @@ import it.polimi.travlendarplus.activity.handler.event.DeleteEventHandler;
 import it.polimi.travlendarplus.activity.handler.event.GetEventsHandler;
 import it.polimi.travlendarplus.activity.handler.event.ScheduleEventHandler;
 import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
+import it.polimi.travlendarplus.activity.listener.DragToInfoListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
-import it.polimi.travlendarplus.activity.listener.MyTouchListener;
+import it.polimi.travlendarplus.activity.listener.MyTouchEventListener;
+import it.polimi.travlendarplus.activity.listener.MyTouchTicketListener;
 import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
@@ -30,7 +33,6 @@ import it.polimi.travlendarplus.retrofit.controller.event.GetEventsController;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -54,6 +56,7 @@ public class CalendarActivity extends MenuActivity {
     private long timestamp;
     // Variable to check if the events have already been downloaded.
     private boolean eventsDownloaded = false;
+    private GenericEvent focusedEvent;
 
     private Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
     private List<GenericEvent> eventsList = new ArrayList<>();
@@ -130,8 +133,10 @@ public class CalendarActivity extends MenuActivity {
             date_textView.setText(dateString);
         }
 
+        // Set info textView as drop recipient for drag action to see event info.
+        findViewById(R.id.info_textView).setOnDragListener(new DragToInfoListener(CalendarActivity.this));
         // Set events relativeLayout as drop recipient for drag action to schedule.
-        events_relativeLayout.setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
+        findViewById(R.id.schedule_textView).setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
         // Set date textView as drop recipient for drag action to delete.
         date_textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
         // Set handlers.
@@ -219,7 +224,7 @@ public class CalendarActivity extends MenuActivity {
         textView = setColorTextView(textView, event);
         textView = setDimensionTextView(textView, event);
         // Add on touch listener to events.
-        textView.setOnTouchListener(new MyTouchListener());
+        textView.setOnTouchListener(new MyTouchEventListener(CalendarActivity.this, event));
         return textView;
     }
 
@@ -260,8 +265,11 @@ public class CalendarActivity extends MenuActivity {
         int height = minDuration * 2;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, height);
         // Sets the top margin depending on the starting time of the event.
-        int minutesOfDay = (((int) startingTime) % 86400) / 60;
-        int marginTop = minutesOfDay * 2;
+        long minutesOfDay = (
+                (startingTime + TimeZone.getDefault().getOffset(calendar.getTime().getTime())/1000)
+                        % 86400)
+                / 60;
+        int marginTop = (int)(minutesOfDay * 2);
         params.setMargins(30, marginTop, 30, 10);
         textView.setLayoutParams(params);
         return textView;
@@ -309,9 +317,12 @@ public class CalendarActivity extends MenuActivity {
         int minDuration = (int) (event.getEndTime() - event.getStartTime()) / 60;
         int height = minDuration * 2;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, height);
-        // Sets the top margin depending on the starting time of the event.
-        int minutesOfDay = (((int) event.getStartTime()) % 86400) / 60;
-        int marginTop = minutesOfDay * 2;
+        // Sets the top margin depending on the starting time of the event, considering time zones.
+        long minutesOfDay = (
+                (event.getStartTime() + TimeZone.getDefault().getOffset(calendar.getTime().getTime())/1000)
+                        % 86400)
+                / 60;
+        int marginTop = (int) (minutesOfDay * 2);
         // Set margins depending on the type of event.
         int marginSide = event.getType() == GenericEvent.EventType.EVENT ? 30 : 10;
         params.setMargins(marginSide, marginTop, marginSide, 10);
@@ -338,5 +349,17 @@ public class CalendarActivity extends MenuActivity {
 
     public Handler getScheduleEventHandler() {
         return scheduleEventHandler;
+    }
+
+    public GenericEvent getFocusedEvent() {
+        return focusedEvent;
+    }
+
+    public void setFocusedEvent(GenericEvent focusedEvent) {
+        this.focusedEvent = focusedEvent;
+    }
+
+    public void setInfoTextViewVisibility(int visibility) {
+        findViewById(R.id.info_textView).setVisibility(visibility);
     }
 }

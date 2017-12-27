@@ -34,9 +34,16 @@ public class ModifyPreferenceController implements Callback<Preference> {
      * @param preferenceBody Preference info.
      */
     public void start(String authToken, PreferenceBody preferenceBody) {
-        TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<Preference> call = client.modifyPreference(preferenceBody);
-        call.enqueue(this);
+        // User cannot modify the normal preference.
+        if (preferenceBody.getId() != 0) {
+            TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
+            Call<Preference> call = client.modifyPreference(preferenceBody);
+            call.enqueue(this);
+        } else {
+            // User is trying to modify the normal preference.
+            Message msg = handler.obtainMessage(1);
+            msg.sendToTarget();
+        }
     }
 
     @Override

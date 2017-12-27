@@ -11,15 +11,14 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.handler.ticket.DeleteTicketHandler;
 import it.polimi.travlendarplus.activity.handler.ticket.GetTicketsHandler;
+import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
+import it.polimi.travlendarplus.activity.listener.MyTouchTicketListener;
 import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import it.polimi.travlendarplus.database.view_model.TicketsViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
@@ -44,6 +43,7 @@ public class TicketsViewerActivity extends MenuActivity {
     private String token;
     // Server responses handlers.
     private Handler getTicketsHandler;
+    private Handler deleteTicketHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class TicketsViewerActivity extends MenuActivity {
         });
         // Setup handlers.
         getTicketsHandler = new GetTicketsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        deleteTicketHandler = new DeleteTicketHandler(Looper.getMainLooper(), getApplicationContext(), this);
 
         if (! ticketsDownloaded) {
             loadTicketsFromServer();
@@ -91,8 +92,17 @@ public class TicketsViewerActivity extends MenuActivity {
     private void fillTicketsLayout() {
         ticketsContainer_linearLayout.removeAllViews();
         for (Ticket ticket : ticketsList) {
-            ticketsContainer_linearLayout.addView(insertTicketGridLayout(ticket));
+            GridLayout ticketGridLayout = insertTicketGridLayout(ticket);
+            ticketGridLayout.setOnTouchListener(new MyTouchTicketListener());
+            ticketGridLayout.setId((int) ticket.getId());
+            ticketsContainer_linearLayout.addView(ticketGridLayout);
         }
+        // Add text view to remove ticket.
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText("Drag here to remove");
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
+        ticketsContainer_linearLayout.addView(textView);
     }
 
     /**
@@ -211,5 +221,13 @@ public class TicketsViewerActivity extends MenuActivity {
                 )
         ));
         gridLayout.addView(createTextView(name));
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public Handler getDeleteTicketHandler() {
+        return deleteTicketHandler;
     }
 }

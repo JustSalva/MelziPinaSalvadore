@@ -14,8 +14,8 @@ import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 /**
  * Adds on touch listener to a view, allowing it to be dragged around.
  */
-public final class MyTouchListener implements View.OnTouchListener {
-
+public final class MyTouchTicketListener implements View.OnTouchListener {
+    // Allows the view to be dragged around.
     public boolean onTouch(View viewDragged, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
