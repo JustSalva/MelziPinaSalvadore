@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -49,22 +50,7 @@ public class AddLocationController implements Callback<Void> {
 
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {
-        Bundle bundle = new Bundle();
-        if (!response.isSuccessful()) {
-            // Get the ErrorResponse containing error messages sent by the server.
-            try {
-                ErrorResponse errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
-                for (String message : errorResponse.getMessages()) {
-                    Log.d("ERROR_RESPONSE", message);
-                }
-                // Put the ErrorResponse in a Json to be sent to the handler.
-                bundle.putString("errorResponse", new Gson().toJson(errorResponse));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         Message msg = handler.obtainMessage(response.code());
-        msg.setData(bundle);
         msg.sendToTarget();
     }
 

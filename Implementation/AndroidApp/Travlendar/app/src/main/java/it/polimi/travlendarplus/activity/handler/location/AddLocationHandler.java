@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -42,6 +43,8 @@ public class AddLocationHandler extends DefaultHandler {
                 accountActivity.populateLocationsSpinner();
                 break;
             default:
+                Toast.makeText(context, "Error: " + Integer.toString(msg.what), Toast.LENGTH_LONG).show();
+                Log.d("ERROR", Integer.toString(msg.what));
                 break;
         }
         accountActivity.resumeNormalMode();

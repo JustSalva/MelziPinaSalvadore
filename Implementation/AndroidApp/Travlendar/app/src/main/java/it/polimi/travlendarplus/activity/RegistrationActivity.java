@@ -177,7 +177,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4 && password.length() < 10;
+        return password.length() > 4;
     }
 
     private boolean isNameValid(String name) {

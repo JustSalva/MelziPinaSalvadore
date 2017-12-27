@@ -37,7 +37,6 @@ public class GetPreferencesHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                Toast.makeText(context, "Preferences updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonPreferences = bundle.getString("jsonPreferences");

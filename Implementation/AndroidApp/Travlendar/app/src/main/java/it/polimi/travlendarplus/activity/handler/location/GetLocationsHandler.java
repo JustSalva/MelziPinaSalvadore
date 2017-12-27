@@ -39,7 +39,6 @@ public class GetLocationsHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what) {
             case 200:
-                Toast.makeText(context, "Locations updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonLocations = bundle.getString("jsonLocations");

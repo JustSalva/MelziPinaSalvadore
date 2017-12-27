@@ -18,7 +18,7 @@ import java.util.List;
 @Dao
 public interface TicketsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Ticket Ticket);
+    void insert(List<Ticket> tickets);
 
     @Update
     void update(Ticket ticket);

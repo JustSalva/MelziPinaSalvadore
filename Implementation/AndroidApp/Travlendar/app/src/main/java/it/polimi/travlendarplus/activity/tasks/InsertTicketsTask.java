@@ -4,6 +4,10 @@ package it.polimi.travlendarplus.activity.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import it.polimi.travlendarplus.activity.TicketsViewerActivity;
 import it.polimi.travlendarplus.database.AppDatabase;
 import it.polimi.travlendarplus.database.entity.ticket.DistanceTicket;
 import it.polimi.travlendarplus.database.entity.ticket.GenericTicket;
@@ -29,6 +33,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         database.ticketsDao().deleteAll();
         // Add generic tickets.
+        List<Ticket> ticketsToAdd = new ArrayList<>();
         for (GenericTicketResponse ticketResponse : tickets.getGenericTickets()) {
             // Create ticket.
             Ticket ticket = new Ticket(ticketResponse.getId(), ticketResponse.getCost());
@@ -37,7 +42,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
             GenericTicket genericTicket = new GenericTicket(ticketResponse.getLineName(), null);
             ticket.setGenericTicket(genericTicket);
             // Insert the generic ticket in the DB.
-            database.ticketsDao().insert(ticket);
+            ticketsToAdd.add(ticket);
         }
         // Add distance ticket.
         for (DistanceTicketResponse ticketResponse : tickets.getDistanceTickets()) {
@@ -48,7 +53,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
             DistanceTicket distanceTicket = new DistanceTicket(ticketResponse.getDistance());
             ticket.setDistanceTicket(distanceTicket);
             // Insert the distance ticket in the DB.
-            database.ticketsDao().insert(ticket);
+            ticketsToAdd.add(ticket);
         }
         // Add path tickets.
         for (PathTicketResponse ticketResponse : tickets.getPathTickets()) {
@@ -64,7 +69,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
             GenericTicket genericTicket = new GenericTicket(ticketResponse.getLineName(), pathTicket);
             ticket.setGenericTicket(genericTicket);
             // Insert the path ticket in the DB.
-            database.ticketsDao().insert(ticket);
+            ticketsToAdd.add(ticket);
         }
         // Add period ticket.
         for (PeriodTicketResponse ticketResponse : tickets.getPeriodTickets()) {
@@ -99,8 +104,9 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
                 ));
             }
             // Insert the path ticket in the DB.
-            database.ticketsDao().insert(ticket);
+            ticketsToAdd.add(ticket);
         }
+        database.ticketsDao().insert(ticketsToAdd);
         return null;
     }
 }

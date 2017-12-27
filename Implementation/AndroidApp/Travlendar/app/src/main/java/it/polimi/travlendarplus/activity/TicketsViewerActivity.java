@@ -89,7 +89,7 @@ public class TicketsViewerActivity extends MenuActivity {
     /**
      * Clears the layout, then adds views to it representing tickets.
      */
-    private void fillTicketsLayout() {
+    public void fillTicketsLayout() {
         ticketsContainer_linearLayout.removeAllViews();
         for (Ticket ticket : ticketsList) {
             GridLayout ticketGridLayout = insertTicketGridLayout(ticket);
@@ -132,7 +132,6 @@ public class TicketsViewerActivity extends MenuActivity {
                 insertDistanceTicketFields(gridLayout, ticket);
                 break;
             case PATH:
-                insertGenericTicketFields(gridLayout, ticket);
                 insertPathTicketFields(gridLayout, ticket);
                 break;
             case PERIOD:
@@ -145,7 +144,6 @@ public class TicketsViewerActivity extends MenuActivity {
                         insertDistanceTicketFields(gridLayout, ticket);
                         break;
                     case PATH:
-                        insertGenericTicketFields(gridLayout, ticket);
                         insertPathTicketFields(gridLayout, ticket);
                         break;
                     default:
@@ -197,6 +195,8 @@ public class TicketsViewerActivity extends MenuActivity {
      * @param ticket Ticket containing details to be inserted.
      */
     private void insertPathTicketFields(GridLayout gridLayout, Ticket ticket) {
+        String lineName = ticket.getGenericTicket().getLineName();
+        gridLayout.addView(createTextView(lineName));
         String startLocation = ticket.getGenericTicket().getPathTicket().getArrivalLocation();
         String endLocation = ticket.getGenericTicket().getPathTicket().getDepartureLocation();
         gridLayout.addView(createTextView("From: ".concat(startLocation)));

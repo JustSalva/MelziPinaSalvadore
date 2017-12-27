@@ -43,7 +43,6 @@ public class GetEventsHandler extends DefaultHandler {
                 Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
                 break;
             case 200:
-                Toast.makeText(context, "Events updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 Log.d("EVENTS_JSON", bundle.getString("jsonEvents"));
@@ -56,10 +55,15 @@ public class GetEventsHandler extends DefaultHandler {
                 Log.d("BREAK_EVENTS_JSON", bundle.getString("jsonBreakEvents"));
                 // Save break events from JSON.
                 String jsonBreakEvents = bundle.getString("jsonBreakEvents");
+
                 List<BreakEventResponse> breakEvents = new Gson().fromJson(
                         jsonBreakEvents,
                         new TypeToken<List<BreakEventResponse>>(){}.getType()
                 );
+                // If new events added, notify user.
+                if (! ((events != null && events.isEmpty()) && (breakEvents != null && breakEvents.isEmpty()))) {
+                    Toast.makeText(context, "Events updated!", Toast.LENGTH_LONG).show();
+                }
                 // Write new events into DB.
                 new InsertEventsTask(context, events).execute();
                 // Write new break events into DB.
