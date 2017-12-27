@@ -42,6 +42,9 @@ public class AddLocationHandler extends DefaultHandler {
                 accountActivity.getLocationsMap().put(accountActivity.getLocationName(), location);
                 accountActivity.populateLocationsSpinner();
                 break;
+            case 500:
+                Toast.makeText(context, "You already have a location with that name!", Toast.LENGTH_LONG).show();
+                break;
             default:
                 Toast.makeText(context, "Error: " + Integer.toString(msg.what), Toast.LENGTH_LONG).show();
                 Log.d("ERROR", Integer.toString(msg.what));

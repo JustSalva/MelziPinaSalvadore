@@ -24,6 +24,7 @@ import it.polimi.travlendarplus.activity.listener.DragToInfoListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchEventListener;
 import it.polimi.travlendarplus.database.entity.TravelComponent;
+import it.polimi.travlendarplus.database.entity.User;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
@@ -50,8 +51,7 @@ public class CalendarActivity extends MenuActivity {
 
     private CalendarViewModel calendarViewModel;
     private UserViewModel userViewModel;
-    private String token;
-    private long timestamp;
+    private User user;
     // Variable to check if the events have already been downloaded.
     private boolean eventsDownloaded = false;
     private GenericEvent focusedEvent;
@@ -83,8 +83,7 @@ public class CalendarActivity extends MenuActivity {
         // Observe token and timestamp values.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
-            token = user != null ? user.getToken() : "";
-            timestamp = user != null ? user.getTimestamp() : 0;
+            this.user = user;
             // To be called only on the first onCreate().
             if (! eventsDownloaded) {
                 loadEventsFromServer();
@@ -106,6 +105,11 @@ public class CalendarActivity extends MenuActivity {
                 }
         );
 
+        // Set handlers.
+        getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        scheduleEventHandler = new ScheduleEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+
         date_textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -119,6 +123,7 @@ public class CalendarActivity extends MenuActivity {
             public void afterTextChanged(Editable editable) {
                 // Update calendar.
                 calendar = DateUtility.getCalendarFromString(date_textView.getText().toString());
+                // Display them.
                 fillEventsRelativeLayout();
             }
         });
@@ -137,10 +142,6 @@ public class CalendarActivity extends MenuActivity {
         findViewById(R.id.schedule_textView).setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
         // Set date textView as drop recipient for drag action to delete.
         date_textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
-        // Set handlers.
-        getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        scheduleEventHandler = new ScheduleEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
     }
 
     /**
@@ -150,7 +151,7 @@ public class CalendarActivity extends MenuActivity {
         // Send request to server.
         waitForServerResponse();
         GetEventsController getEventsController = new GetEventsController(getEventsHandler);
-        getEventsController.start(token, timestamp);
+        getEventsController.start(user.getToken(), user.getTimestamp());
     }
 
     /**
@@ -347,7 +348,7 @@ public class CalendarActivity extends MenuActivity {
     }
 
     public String getToken() {
-        return token;
+        return user.getToken();
     }
 
     public Handler getDeleteEventHandler() {
