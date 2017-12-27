@@ -355,6 +355,7 @@ public class TripManager extends UserManager {
      *
      * @param periodTicketMessage message to be checked
      * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
+     * @return the ticket decorated by the period ticket
      */
     private Ticket checkPeriodTicketConsistency ( AddPeriodTicketMessage periodTicketMessage )
             throws InvalidFieldException {

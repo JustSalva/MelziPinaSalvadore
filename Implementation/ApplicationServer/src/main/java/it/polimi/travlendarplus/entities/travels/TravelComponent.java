@@ -66,7 +66,8 @@ public class TravelComponent extends EntityWithLongKey {
     public TravelComponent () {
     }
 
-    public TravelComponent ( Instant startingTime, Instant endingTime, float length, Location departure, Location arrival, TravelMean meanUsed ) {
+    public TravelComponent ( Instant startingTime, Instant endingTime, float length, Location departure,
+                             Location arrival, TravelMean meanUsed ) {
         this.startingTime = startingTime;
         this.endingTime = endingTime;
         this.length = length;

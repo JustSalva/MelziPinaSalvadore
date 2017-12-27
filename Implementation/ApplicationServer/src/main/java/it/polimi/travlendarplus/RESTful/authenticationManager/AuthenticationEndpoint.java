@@ -189,6 +189,7 @@ public class AuthenticationEndpoint {
      *
      * @param email username of the user
      * @param password password of the user
+     * @return the authenticated user class
      * @throws InvalidCredentialsException if not exist an user with the specified credentials
      * @throws UserNotRegisteredException  if the user credential specified are not registered in the system
      */

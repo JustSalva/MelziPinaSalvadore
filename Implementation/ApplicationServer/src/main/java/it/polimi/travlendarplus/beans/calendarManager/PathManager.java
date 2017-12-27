@@ -511,6 +511,7 @@ public class PathManager extends UserManager {
      * @throws EntityNotFoundException   if the event to be swapped does not exist
      * @throws AlreadyScheduledException if the event is already in the schedule,
      *                                   and so it can't be forced into it
+     * @throws GMapsGeneralException if Google Maps services are unavailable
      */
     public List < GenericEvent > swapGenericEvent ( long eventId )
             throws EntityNotFoundException, AlreadyScheduledException, GMapsGeneralException {

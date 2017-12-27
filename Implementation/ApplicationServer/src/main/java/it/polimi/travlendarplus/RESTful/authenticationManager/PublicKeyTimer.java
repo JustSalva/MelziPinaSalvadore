@@ -28,7 +28,7 @@ public class PublicKeyTimer implements PublicKeyTimerInterface {
     /**
      * Schedule a timer relative to a RSA key pair
      *
-     * @param rsaEncryption
+     * @param rsaEncryption class to be deleted after the timer exceed
      */
     public void scheduleSingleTimer ( RSAEncryption rsaEncryption ) {
         ctx.getTimerService().createTimer( TIMER_MILLISECONDS_DURATION, rsaEncryption.getIdDevice() );
