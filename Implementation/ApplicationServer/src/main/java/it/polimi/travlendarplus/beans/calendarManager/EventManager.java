@@ -219,8 +219,9 @@ public class EventManager extends UserManager {
                 }
             }
         }
-        // Setting previous location if prevLocChoice boolean param is true.
-        if ( event.isPrevLocChoice() ) {
+        else if ( event.isPrevLocChoice() ) {
+            // Setting previous location if prevLocChoice boolean param is true.
+            //and if the event is not scheduled
             event.setDeparture(
                     scheduleManager.getPossiblePreviousEvent( event.getStartingTime() ).getEventLocation() );
         }
