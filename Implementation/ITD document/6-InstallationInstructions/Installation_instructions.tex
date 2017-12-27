@@ -1,1 +1,126 @@
-\todo{TODO}
+\section{Application Server and DBMS}
+\label{sect:Application Server and DBMS}
+This section contains a short guide to proper install and test the software required to run Travlendar+'s Application Server and the DBMS.\\
+We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS), our implementation, but, if you want to run on your computer our Application server, the following sections contains details on how to install the required software on three operating systems: Linux, Windows and macOS.\\
+Notice that we want to provide instructions as generic as possible, so we will not provide any IDE-related instructions; feel free to use your own IDE to run both Glassfish 5.0 and MySQL 5.7, but if you never used/run these tools please stick to our instructions or simply use our online server.
+\subsection{Prerequisite}
+\label{subsect:Prerequisite}
+Check that your platform hardware meets the following prerequisites, we've written above, if you want to read the full prerequisite please head to: \href{https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}{\color{blue}https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}, in fact we've provided a brief summary of that document. As for MySQL, the developers do not provide any minimum requirement. 
+\begin{itemize}
+	\item \textbf{Required JDK Version:} GlassFish Server Open Source Edition Release 5.0 requires Oracle JDK 8 Update 144 or later;
+	\item \textbf{Required Disk Space:} The installation sizes will vary depending on your configuration, but the approximate amount of disk space used by GlassFish Server 5.0 is 138 MB;
+	\item \textbf{Required RAM memory:} It is recommended that any machine that is hosting a GlassFish Server instance have a minimum of 1 GB RAM (2 GB recommended); 
+	\item \textbf{Paths and Environment Settings for the JDK Software :}Ensure that your JDK configuration settings on all local and remote GlassFish Server hosts adhere to the guidelines listed below. Failure to adhere to these guidelines can cause various problems that may be difficult to trace.
+	\begin{itemize}
+		\item \textbf{Use the JDK Binaries:} The following binary files that are used with GlassFish Server must come from the JDK software, not the Java Runtime Environment (JRE) software: \textit{1. java}, \textit{2. keytool}. To meet this requirement, ensure that the bin directory for the JDK software precedes the bin directory for the JRE software in your path.
+		\item \textbf{Set the JAVA\textunderscore HOME Environment Variable:} Before performing any GlassFish Server installation or configuration procedures, set the JAVA\textunderscore HOME environment variable on the GlassFish Server host machine to point to the correct Java version. Also be sure to add the JAVA\textunderscore HOME/bin directory to the PATH variable for your environment.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Windows 10}
+\label{subsect:Windows 10}
+
+\subsubsection{Install and setup Glassfish 5.0}
+\begin{itemize}
+	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
+	\item Change to the directory where you downloaded the ZIP file;
+	\item Extract the file into the directory in which you want to install your GlassFish server;
+	\item Head to \path{'your Glassfish Main Folder'\bin} and double click on the asadmin.bat file in order to open glassfish command line terminal;
+	\item In the opened terminal type 'start-domain' and press enter in order to start GlassFish server;
+	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
+	\item Wait a few seconds and than the application server will be deployed;
+	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
+\end{itemize} 
+NB. To stop GlassFish type 'stop-domain domain1' in the same terminal you've started it.
+
+\subsubsection{Install and setup MySQL 5.7}
+\begin{itemize}
+	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
+	\item Open a terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysqld.exe' in order to start MySQL;
+	\item Open another terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysql -u root -p' in order to access to MySQL command line console;
+	\item MySQL command line console will ask for a password, just press 'enter';
+	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
+\end{itemize}
+	
+\subsection{Linux}
+\label{subsect:Linux}
+
+\subsubsection{Install and setup Glassfish 5.0}
+\begin{itemize}
+	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
+	\item Change to the directory where you downloaded the ZIP file;
+	\item Extract the file into the directory in which you want to install your GlassFish server;
+	\item Open a terminal and navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin start-domain' in order to start GlassFish server
+	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
+	\item Wait a few seconds and than the application server will be deployed;
+	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
+\end{itemize}
+NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin stop-domain domain1'.
+
+\subsubsection{Install and setup MySQL 5.7}
+\begin{itemize}
+	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
+	\item Open a terminal and run the command '/etc/init.d/mysql start' (or 'service mysql start') in order to start MySQL;
+	\item Open a terminal and run the command 'mysql -u root -p' in order to access to MySQL command line console;
+	\item MySQL command line console will ask for a password, just press 'enter';
+	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
+\end{itemize}
+
+\subsection{macOS}
+\label{subsect:macOS}
+
+\subsubsection{Install and setup Glassfish 5.0}
+\begin{itemize}
+	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
+	\item Change to the directory where you downloaded the ZIP file;
+	\item Extract the file into the directory in which you want to install your GlassFish server;
+	\item Open a terminal and navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin start-domain' in order to start GlassFish server
+	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
+	\item Wait a few seconds and than the application server will be deployed;
+	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
+\end{itemize}
+NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin stop-domain domain1'.
+
+\subsubsection{Install and setup MySQL 5.7}
+\begin{itemize}
+	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
+	\item Open a terminal and run the command 'mysql.server start' in order to start MySQL;
+	\item Open a terminal and run the command 'mysql -u root -p' in order to access to MySQL command line console;
+	\item MySQL command line console will ask for a password, just press 'enter';
+	\item In the MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server;
+\end{itemize}
+
+\section{Android App}
+\label{sect:Android App}
+This section contains a short guide to proper install the software required to run Travlendar+'s Android App.
+
+\subsection{Instructions to run the App on your computer (recommended)}
+\label{subsect:Computer Instructions}
+\begin{itemize}
+	\item Open your browser and head to \\ \href{https://developer.android.com/studio/index.html}{\color{blue}https://developer.android.com/studio/index.html};
+	\item Click on the 'Download Android Studio' green button;
+	\item Accept the license agreement ( check the box that states 'I have read and agree with the above terms and conditions';
+	\item Click on the 'Download Android Studio for \textless your OS name\textgreater' blue button (NB \textless your OS name\textgreater  \,represent the name of your Operating System);
+	\item The download process should automatically start and your browser should redirect you on the 'Install Android Studio' web page, if not head to: \href{https://developer.android.com/studio/install.html}{\color{blue}https://developer.android.com/studio/install.html};
+	\item Follow the instructions relative to your OS, and \textbf{make sure that 'Android virtual device' is selected for installation};
+	\item At the end of the installation process a Android Studio shows a window named 'Welcome to Android Studio', click on 'Profile or debug APK';
+	\item Select Travlendar+'s APK location \todo{TODO};
+	\item If 'Tips of the day' window opens up click on Close;
+	\item On the menu bar click on tools -\textgreater Android -\textgreater ADV manager;
+	\item Click on 'Create Virtual device...' button;
+	\item Select 'Phone as category' and then 'Pixel 2 XL';
+	\item Click Next;
+	\item Select Oreo system image (Android 8.0);
+	\item Click on the download link on the right of 'Oreo' in order to download the selected android OS, and wait until the download ends; \todo{TODO}
+	\item Click Next;
+	\item Click Finish;
+	\item Close the 'Android Virtual device Manager' window;
+	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
+	\item Select 'Pixel 2 XL API 26' virtual device;
+	\item Wait until your Android virtual device starts;
+	\item Enjoy Travlendar+'s Android App.	
+\end{itemize}
+
+\subsection{Instructions to run the App on your smartphone}
+\label{subsect:Smartphone Instructions}
+ \todo{TODO}
