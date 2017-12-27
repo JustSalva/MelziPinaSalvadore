@@ -21,11 +21,21 @@ public class GMapsDirectionsHandler {
         return callURL.toString();
     }
 
-    // getBaseCallPreviousPath() & getBaseCallFollowingPath() contain parameters for origin, destination and
-    // departure_time. They return a String that can be enriched with other params using the functions defined
-    // in this class.
+    /*
+     * getBaseCallPreviousPath() & getBaseCallFollowingPath() contain parameters for origin, destination and
+     * departure_time. They return a String that can be enriched with other params using the other functions defined
+     * in this class.
+     */
 
-    //it calculates eventual paths related to this event: the function requires the previous event
+    /**
+     * Builds the url used to calculate eventual previous paths related to a specified event:
+     * the function requires also the previous event.
+     *
+     * @param event           event of which calculate previous path.
+     * @param previousEvent   previous event.
+     * @param prevDateAllowed boolean that indicates if the ending time of previous event is in the past.
+     * @return the base url for a generic calculation of previous paths.
+     */
     public String getBaseCallPreviousPath ( Event event, Event previousEvent, boolean prevDateAllowed ) {
         addParam( "origin", event.getDeparture().getLatitude() + "," +
                 event.getDeparture().getLongitude() );
@@ -39,7 +49,15 @@ public class GMapsDirectionsHandler {
         return callURL.toString();
     }
 
-    //it calculates eventual paths after this event: the function requires the following event
+    /**
+     * Builds the url used to calculate eventual following paths related to a specified event:
+     * the function requires also the following event.
+     *
+     * @param event           event of which calculate previous path.
+     * @param followingEvent  following event.
+     * @param prevDateAllowed boolean that indicates if the ending time of the event is in the past.
+     * @return the base url for a generic calculation of following paths.
+     */
     public String getBaseCallFollowingPath ( Event event, Event followingEvent, boolean prevDateAllowed ) {
         addParam( "origin", followingEvent.getDeparture().getLatitude() + "," +
                 followingEvent.getDeparture().getLongitude() );
@@ -53,20 +71,24 @@ public class GMapsDirectionsHandler {
         return callURL.toString();
     }
 
-    //it calculates eventual paths given a departure location, an arrival location and a departure time;
-    //locations are specified with address
-    public String getBaseCallLocationTime ( double depLat, double depLng, double arrLat, double arrlLng,
-                                            long departureTime ) {
-        addParam( "origin", depLat + "," + depLng );
-        addParam( "destination", arrLat + "," + arrlLng );
-        addParam( "departure_time", departureTime + "" );
-        return callURL.toString();
-    }
-
+    /**
+     * Concatenates the private travel mean required in the call to google mpas APIs.
+     *
+     * @param tempCall base call obtained from other functions of the class
+     * @param type     key word to specify the private mean to use for the path calculation.
+     * @return a url ready for the request to google maps with a specified private travel mean.
+     */
     public String getCallWithNoTransit ( String tempCall, TravelMeanEnum type ) {
         return tempCall + "&mode=" + type.getParam();
     }
 
+    /**
+     * Concatenates all the public travel means required in the call to google mpas APIs.
+     *
+     * @param tempCall     base call obtained from other functions of the class
+     * @param transitMeans a list that specify all the public means to use for the path calculation.
+     * @return a url ready for the request to google maps with the specified public travel means.
+     */
     public String getCallByTransit ( String tempCall, List < TravelMeanEnum > transitMeans ) {
         StringBuilder callWithTravel = new StringBuilder( tempCall );
         if ( transitMeans.size() > 0 ) {
@@ -79,6 +101,12 @@ public class GMapsDirectionsHandler {
         return callWithTravel.toString();
     }
 
+    /**
+     * Concatenates a parameter to the url.
+     *
+     * @param param   parameter to concatenate in the URL.
+     * @param address value of the parameter added.
+     */
     private void addParam ( String param, String address ) {
         if ( callURL.charAt( getCallURL().length() - 1 ) != '?' ) {
             callURL.append( "&" );
@@ -86,6 +114,9 @@ public class GMapsDirectionsHandler {
         callURL.append( param ).append( "=" ).append( address );
     }
 
+    /**
+     * Creates the base call that is used in any direction call made by Travlendar+.
+     */
     private void baseCall () {
         addParam( "key", "AIzaSyBNIQeUu-paVMsVbybXDK8fEfg0RL7uZgo" );
         addParam( "alternatives", "true" );

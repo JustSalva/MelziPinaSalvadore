@@ -15,12 +15,32 @@ import java.util.logging.Logger;
  */
 public class GMapsGeocoder {
 
+    /**
+     * Creates a Location object from a pair of coordinates.
+     *
+     * @param lat latitude of the location.
+     * @param lng longitude of the location.
+     * @return a location, according to the specified coordinates.
+     * @throws GMapsUnavailableException if the path computation fails cause Google maps services are unavailable.
+     * @throws BadRequestException       if the path computation fails cause a wrong request.
+     * @throws LocationNotFoundException if the path computation fails cause the location specified is not found.
+     */
     public static Location getLocationObject ( double lat, double lng )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         return new Location( lat, lng, getLatLngAddress( lat, lng ) );
     }
 
-    //TODO check if it is the best option
+
+    /**
+     * Creates the string url for geocode service, used to obtain the address of the specified location.
+     *
+     * @param lat latitude of the location.
+     * @param lng longitude of the location.
+     * @return the call for geocode service used to obtain the address of the specified location.
+     * @throws GMapsUnavailableException if the path computation fails cause Google maps services are unavailable.
+     * @throws BadRequestException       if the path computation fails cause a wrong request.
+     * @throws LocationNotFoundException if the path computation fails cause the location specified is not found.
+     */
     public static String getLatLngAddress ( double lat, double lng )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         String call = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng +
@@ -37,6 +57,15 @@ public class GMapsGeocoder {
         }
     }
 
+    /**
+     * Creates a Location object from an address string.
+     *
+     * @param address address of the location.
+     * @return the Location object according to the address specified
+     * @throws GMapsUnavailableException if the path computation fails cause Google maps services are unavailable.
+     * @throws BadRequestException       if the path computation fails cause a wrong request.
+     * @throws LocationNotFoundException if the path computation fails cause the location specified is not found.
+     */
     public static Location getLocationByString ( String address )
             throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
         address = address.replace( " ", "+" );
