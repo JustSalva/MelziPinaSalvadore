@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.activity;
 
-import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +23,6 @@ import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
 import it.polimi.travlendarplus.activity.listener.DragToInfoListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchEventListener;
-import it.polimi.travlendarplus.activity.listener.MyTouchTicketListener;
 import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
@@ -251,6 +249,10 @@ public class CalendarActivity extends MenuActivity {
                 startingTime = travelComponent.getStartTime();
             }
         }
+        // Draw travel only in current date.
+        if (startingTime < event.getDate()) {
+            startingTime = event.getDate();
+        }
         // Set style.
         TextView textView = new TextView(getApplicationContext());
         textView.setText(event.getName().concat("'s travel"));
@@ -270,6 +272,11 @@ public class CalendarActivity extends MenuActivity {
                         % 86400)
                 / 60;
         int marginTop = (int)(minutesOfDay * 2);
+        // If travel spans on two days, draw it right.
+        if (startingTime == event.getDate()) {
+            marginTop = 0;
+            params.height = (int) (endingTime - startingTime + TimeZone.getDefault().getOffset(calendar.getTime().getTime())/1000) / 30;
+        }
         params.setMargins(30, marginTop, 30, 10);
         textView.setLayoutParams(params);
         return textView;
