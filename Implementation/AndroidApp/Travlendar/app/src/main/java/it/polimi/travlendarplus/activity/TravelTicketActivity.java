@@ -5,25 +5,27 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
+import it.polimi.travlendarplus.activity.handler.event.SelectTravelHandler;
 import it.polimi.travlendarplus.activity.handler.ticket.GetCompatibleTicketsHandler;
 import it.polimi.travlendarplus.database.entity.TravelComponent;
-import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import it.polimi.travlendarplus.database.view_model.EventViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
+import it.polimi.travlendarplus.retrofit.controller.event.SelectTicketController;
 import it.polimi.travlendarplus.retrofit.controller.ticket.GetCompatibleTicketsController;
 import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
 import it.polimi.travlendarplus.retrofit.response.ticket.TicketResponse;
@@ -43,9 +45,11 @@ public class TravelTicketActivity extends MenuActivity {
     // Travel components list.
     private List<TravelComponent> travelComponentList;
     private Map<Integer, List<TicketResponse>> compatibleTicketsMap;
+    private Map<Integer, LinearLayout> travelComponentsLLMap = new HashMap<>();
 
     // Handlers for server requests.
     private Handler getCompatibleTicketsHandler;
+    private Handler selectTravelHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class TravelTicketActivity extends MenuActivity {
 
         // Handlers.
         getCompatibleTicketsHandler = new GetCompatibleTicketsHandler(getMainLooper(), getApplicationContext(), this);
+        selectTravelHandler = new SelectTravelHandler(getMainLooper(), getApplicationContext(), this);
     }
 
 
@@ -109,8 +114,9 @@ public class TravelTicketActivity extends MenuActivity {
             // Button with on click load list of compatible tickets.
             if (travelComponent.getTravelMean().equals("Bus") ||
                     travelComponent.getTravelMean().equals("Subway") ||
-                    travelComponent.getTravelMean().equals(""))
-            gridLayout.addView(createTicketLL());
+                    travelComponent.getTravelMean().equals("Train") ||
+                    travelComponent.getTravelMean().equals("Tram"))
+            gridLayout.addView(createTicketLL(travelComponent.getId()));
             travelComponents_linearLayout.addView(gridLayout);
         }
     }
@@ -120,22 +126,27 @@ public class TravelTicketActivity extends MenuActivity {
      * @param content Content to be written in the TextView.
      * @return The TextView created in right way.
      */
-    private TextView createTextView(String content) {
-        TextView textView = new TextView(getApplicationContext());
-        textView.setText(content);
+    private LinearLayout createTextView(String content) {
+        LinearLayout linearLayout = new LinearLayout(getApplicationContext());
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        textView.setLayoutParams(params);
+        params.setGravity(Gravity.CENTER);
+        linearLayout.setLayoutParams(params);
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText(content);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        return textView;
+        linearLayout.addView(textView);
+        return linearLayout;
     }
 
     /**
-     * Creates a button to load tickets from the server compatible with the travel component.
-     * @return A button.
+     * Creates a linearLayout to load tickets from the server compatible with the travel component.
+     * @return A linearLayout containing a button.
      */
-    private LinearLayout createTicketLL() {
+    private LinearLayout createTicketLL(long travelComponentId) {
         LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        travelComponentsLLMap.put((int) travelComponentId, linearLayout);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
         params.setGravity(Gravity.CENTER);
@@ -149,7 +160,7 @@ public class TravelTicketActivity extends MenuActivity {
                     new GetCompatibleTicketsController(getCompatibleTicketsHandler);
             getCompatibleTicketsController.start(
                     token,
-                    eventId
+                    (int) travelComponentId
             );
         });
         linearLayout.addView(button);
@@ -162,6 +173,8 @@ public class TravelTicketActivity extends MenuActivity {
      * @param allTicketsResponse Server response with all the compatible tickets.
      */
     public void fillCompatibleTickets(int travelComponentId, AllTicketsResponse allTicketsResponse) {
+        // Get all ticket from response.
+        compatibleTicketsMap = new HashMap<>();
         List<TicketResponse> tickets = new ArrayList<>();
         tickets.addAll(allTicketsResponse.getGenericTickets());
         tickets.addAll(allTicketsResponse.getDistanceTickets());
@@ -169,6 +182,47 @@ public class TravelTicketActivity extends MenuActivity {
         tickets.addAll(allTicketsResponse.getPeriodTickets());
         if (! tickets.isEmpty()) {
             compatibleTicketsMap.put(travelComponentId, tickets);
+        } else {
+            Toast.makeText(this, "No tickets compatible!", Toast.LENGTH_LONG).show();
+        }
+        // Show compatible tickets.
+        LinearLayout linearLayout = travelComponentsLLMap.get(travelComponentId);
+        linearLayout.removeAllViews();
+        for (TicketResponse ticketResponse : tickets) {
+            // Create LinearLayout to display each one of them.
+            LinearLayout ticketLL = new LinearLayout(this);
+            TextView ticketName_TV = new TextView(getApplicationContext());
+            ticketName_TV.setText(ticketResponse.toString());
+            Button selectButton = new Button(this);
+            selectButton.setText("Select");
+            selectButton.setOnClickListener(click -> {
+                // Send request to server.
+                waitForServerResponse();
+                SelectTicketController selectTicketController =
+                        new SelectTicketController(selectTravelHandler);
+                selectTicketController.selectTravel(
+                        token,
+                        (int) ticketResponse.getId(),
+                        travelComponentId
+                );
+            });
+            Button deselectButton = new Button(this);
+            deselectButton.setText("Deselect");
+            deselectButton.setOnClickListener(click -> {
+                // Send request to server.
+                waitForServerResponse();
+                SelectTicketController selectTicketController =
+                        new SelectTicketController(selectTravelHandler);
+                selectTicketController.deselectTravel(
+                        token,
+                        (int) ticketResponse.getId(),
+                        travelComponentId
+                );
+            });
+            ticketLL.addView(ticketName_TV);
+            ticketLL.addView(selectButton);
+            ticketLL.addView(deselectButton);
+            linearLayout.addView(ticketLL);
         }
     }
 }

@@ -13,11 +13,11 @@ import com.google.gson.Gson;
 import it.polimi.travlendarplus.activity.TravelTicketActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 
-public class SelectTicketHandler extends DefaultHandler {
+public class SelectTravelHandler extends DefaultHandler {
 
     private TravelTicketActivity activity;
 
-    public SelectTicketHandler(Looper looper, Context context, TravelTicketActivity activity) {
+    public SelectTravelHandler(Looper looper, Context context, TravelTicketActivity activity) {
         super(looper, context);
         this.activity = activity;
     }
@@ -30,9 +30,6 @@ public class SelectTicketHandler extends DefaultHandler {
                 int eventId = msg.getData().getInt("Id");
                 // Notify the user that the event has been removed.
                 Toast.makeText(context, "Event removed!", Toast.LENGTH_LONG).show();
-                break;
-            case 503:
-                Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

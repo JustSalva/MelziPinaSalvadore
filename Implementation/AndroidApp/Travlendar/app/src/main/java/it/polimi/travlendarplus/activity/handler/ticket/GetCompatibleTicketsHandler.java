@@ -27,7 +27,6 @@ public class GetCompatibleTicketsHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                Toast.makeText(context, "Tickets updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 int eventId = bundle.getInt("travelComponentId");
