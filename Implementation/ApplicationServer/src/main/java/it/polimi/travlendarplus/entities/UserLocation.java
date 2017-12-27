@@ -8,14 +8,13 @@ import javax.persistence.*;
  * This JPA class represent a preferred user location
  */
 @Entity( name = "USER_LOCATIONS" )
-public class UserLocation extends GenericEntity {
+public class UserLocation extends EntityWithLongKey {
 
     private static final long serialVersionUID = -6196594264279775552L;
 
     /**
      * Name of the preferred location, chosen by the user
      */
-    @Id
     private String name;
 
     /**
@@ -63,18 +62,8 @@ public class UserLocation extends GenericEntity {
         this.location = location;
     }
 
-    /**
-     * Checks if an userLocation is already present in the database
-     *
-     * @return true if present, false otherwise
-     */
-    @Override
-    public boolean isAlreadyInDb () {
-        try {
-            load( name );
-        } catch ( EntityNotFoundException e ) {
-            return false;
-        }
-        return true;
+
+    public static UserLocation load ( long key ) throws EntityNotFoundException {
+        return GenericEntity.load( UserLocation.class, key );
     }
 }
