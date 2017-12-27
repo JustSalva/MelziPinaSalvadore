@@ -22,4 +22,9 @@ public class TicketResponse {
     public List<TravelMeanUsed> getRelatedTo() {
         return relatedTo;
     }
+
+    @Override
+    public String toString() {
+        return "Cost("+cost+") ";
+    }
 }

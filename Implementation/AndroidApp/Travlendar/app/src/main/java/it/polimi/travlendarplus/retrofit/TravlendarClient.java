@@ -135,4 +135,21 @@ public interface TravlendarClient {
     Call<Void> deleteTicket(
             @Path("id") int id
     );
+
+    @GET("trip/{travelComponentId}")
+    Call<AllTicketsResponse> getCompatibleTickets(
+            @Path("travelComponentId") int travelComponentId
+    );
+
+    @PATCH("trip/selectTicket/{ticketId}/{travelComponentId}")
+    Call<Void> selectTravel(
+            @Path("ticketId") int ticketId,
+            @Path("travelComponentId") int travelComponentId
+    );
+
+    @PATCH("trip/deselectTicket/{ticketId}/{travelComponentId}")
+    Call<Void> deselectTravel(
+            @Path("ticketId") int ticketId,
+            @Path("travelComponentId") int travelComponentId
+    );
 }

@@ -86,8 +86,8 @@ public class CalendarActivity extends MenuActivity {
             this.user = user;
             // To be called only on the first onCreate().
             if (! eventsDownloaded) {
-                loadEventsFromServer();
                 eventsDownloaded = true;
+                loadEventsFromServer();
             }
         });
 
@@ -141,7 +141,7 @@ public class CalendarActivity extends MenuActivity {
         // Set events relativeLayout as drop recipient for drag action to schedule.
         findViewById(R.id.schedule_textView).setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
         // Set date textView as drop recipient for drag action to delete.
-        date_textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
+        findViewById(R.id.delete_textView).setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
     }
 
     /**

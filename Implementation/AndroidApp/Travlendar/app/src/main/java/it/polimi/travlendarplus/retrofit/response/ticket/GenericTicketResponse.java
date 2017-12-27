@@ -8,4 +8,9 @@ public class GenericTicketResponse extends TicketResponse {
     public String getLineName() {
         return lineName;
     }
+
+    @Override
+    public String toString() {
+        return super.toString().concat(" LineName("+lineName+") ");
+    }
 }

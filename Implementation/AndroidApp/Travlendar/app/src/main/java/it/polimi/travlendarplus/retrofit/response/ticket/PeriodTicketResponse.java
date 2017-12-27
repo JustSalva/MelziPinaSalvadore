@@ -36,4 +36,9 @@ public class PeriodTicketResponse extends TicketResponse {
     public PathTicketResponse getPathTicket() {
         return pathTicket;
     }
+
+    @Override
+    public String toString() {
+        return super.toString().concat("Name("+name+")");
+    }
 }

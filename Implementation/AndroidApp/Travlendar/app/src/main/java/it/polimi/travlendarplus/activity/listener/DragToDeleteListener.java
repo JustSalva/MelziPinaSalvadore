@@ -33,6 +33,7 @@ public final class DragToDeleteListener implements View.OnDragListener {
         int id = viewDragged.getId();
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
+                viewReceiving.setVisibility(View.VISIBLE);
                 viewReceiving.setBackgroundColor(Color.parseColor("#FF0000"));
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
@@ -61,6 +62,7 @@ public final class DragToDeleteListener implements View.OnDragListener {
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 viewReceiving.setBackgroundColor(color);
+                viewReceiving.setVisibility(View.GONE);
                 viewDragged.setVisibility(View.VISIBLE);
             default:
                 break;

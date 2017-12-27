@@ -126,6 +126,7 @@
     <string name="path_ticket">Path ticket</string>
     <string name="drag_here_to_remove">Drag here to remove</string>
     <string name="information">Information</string>
+    <string name="delete">Delete</string>
 
     <!-- SPINNER POPULATION -->
     <string-array name="travelMeans_array">

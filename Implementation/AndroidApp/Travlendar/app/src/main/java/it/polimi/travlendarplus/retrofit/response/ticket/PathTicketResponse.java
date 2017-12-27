@@ -15,4 +15,9 @@ public class PathTicketResponse extends GenericTicketResponse {
     public Position getEndingLocation() {
         return endingLocation;
     }
+
+    @Override
+    public String toString() {
+        return super.toString().concat(startingLocation.getAddress()+" to "+endingLocation.getAddress());
+    }
 }

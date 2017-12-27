@@ -76,7 +76,9 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
             }
         }
         // Update timestamp in the user table of the DB.
-        database.userDao().setTimestamp(System.currentTimeMillis()/1000L);
+        if (!events.isEmpty()) {
+            database.userDao().setTimestamp(System.currentTimeMillis()/1000L);
+        }
         return null;
     }
 }

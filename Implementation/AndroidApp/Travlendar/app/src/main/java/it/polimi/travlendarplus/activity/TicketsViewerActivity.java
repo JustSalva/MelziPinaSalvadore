@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Map;
 
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
@@ -29,7 +30,6 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Activity that shows a ticket info.
- * To be implemented.
  */
 public class TicketsViewerActivity extends MenuActivity {
     // UI references.
