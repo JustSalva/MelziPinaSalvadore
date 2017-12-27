@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -401,6 +403,12 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
     public void updateLocations(Map<String, Location> locationMap) {
         // If there are no locations saved, redirect to the activity account.
         if (locationMap.isEmpty()) {
+            // Double toast for double time showed.
+            Toast.makeText(
+                    getBaseContext(),
+                    "You need to add locations before you try to add an event!",
+                    Toast.LENGTH_LONG
+            ).show();
             Toast.makeText(
                     getBaseContext(),
                     "You need to add locations before you try to add an event!",
@@ -418,5 +426,16 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         this.preferenceMap = preferenceMap;
         populatePreferencesSpinner();
         resumeNormalMode();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            startActivity(new Intent(this, CalendarActivity.class));
+        }
     }
 }

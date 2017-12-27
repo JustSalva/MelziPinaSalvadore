@@ -280,6 +280,12 @@ public class CalendarActivity extends MenuActivity {
         }
         params.setMargins(30, marginTop, 30, 10);
         textView.setLayoutParams(params);
+        // Setup onClickListener to see travel components.
+        textView.setOnClickListener(click -> {
+            Intent intent = new Intent(CalendarActivity.this, TravelTicketActivity.class)
+                    .putExtra("EVENT_ID", event.getId());
+            startActivity(intent);
+        });
         return textView;
     }
 

@@ -14,7 +14,9 @@ import com.google.gson.Gson;
 
 import it.polimi.travlendarplus.activity.CalendarActivity;
 import it.polimi.travlendarplus.activity.LoginActivity;
+import it.polimi.travlendarplus.activity.MainActivity;
 import it.polimi.travlendarplus.activity.tasks.InsertUserTask;
+import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.database.entity.User;
 import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
 
@@ -33,8 +35,10 @@ public class LoginHandler extends DefaultHandler {
 
     @Override
     public void handleMessage(Message msg){
-        super.handleMessage(msg);
         switch (msg.what){
+            case 0:
+                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
+                break;
             case 200:
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
@@ -45,6 +49,9 @@ public class LoginHandler extends DefaultHandler {
                 // Insert new User into the local DB.
                 User user = new User(email, name, surname, token);
                 new InsertUserTask(context).execute(user);
+                break;
+            case 401:
+                Toast.makeText(context, "This user does not exist!", Toast.LENGTH_LONG).show();
                 break;
             case 403:
                 Toast.makeText(context, "Credentials inserted are not correct!", Toast.LENGTH_LONG).show();

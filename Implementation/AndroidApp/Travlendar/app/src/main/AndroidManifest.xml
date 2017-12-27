@@ -62,6 +62,8 @@
             android:label="@string/arrange_trip"/>
         <activity android:name="it.polimi.travlendarplus.activity.TicketsViewerActivity"
             android:label="@string/tickets_viewer"/>
+        <activity android:name=".activity.TravelTicketActivity"
+            android:label="Travel components"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
