@@ -27,9 +27,11 @@ public class SelectTravelHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                int eventId = msg.getData().getInt("Id");
-                // Notify the user that the event has been removed.
-                Toast.makeText(context, "Event removed!", Toast.LENGTH_LONG).show();
+                if (msg.getData().getBoolean("Select")) {
+                    Toast.makeText(context, "Ticket associated to travel!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Ticket removed from travel!", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 break;

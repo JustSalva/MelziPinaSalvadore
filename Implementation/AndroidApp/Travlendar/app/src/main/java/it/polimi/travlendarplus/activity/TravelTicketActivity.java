@@ -25,7 +25,7 @@ import it.polimi.travlendarplus.activity.handler.ticket.GetCompatibleTicketsHand
 import it.polimi.travlendarplus.database.entity.TravelComponent;
 import it.polimi.travlendarplus.database.view_model.EventViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
-import it.polimi.travlendarplus.retrofit.controller.event.SelectTicketController;
+import it.polimi.travlendarplus.retrofit.controller.event.SelectTravelController;
 import it.polimi.travlendarplus.retrofit.controller.ticket.GetCompatibleTicketsController;
 import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
 import it.polimi.travlendarplus.retrofit.response.ticket.TicketResponse;
@@ -193,27 +193,29 @@ public class TravelTicketActivity extends MenuActivity {
             LinearLayout ticketLL = new LinearLayout(this);
             TextView ticketName_TV = new TextView(getApplicationContext());
             ticketName_TV.setText(ticketResponse.toString());
+            // Add select button.
             Button selectButton = new Button(this);
             selectButton.setText("Select");
             selectButton.setOnClickListener(click -> {
                 // Send request to server.
                 waitForServerResponse();
-                SelectTicketController selectTicketController =
-                        new SelectTicketController(selectTravelHandler);
-                selectTicketController.selectTravel(
+                SelectTravelController selectTravelController =
+                        new SelectTravelController(selectTravelHandler);
+                selectTravelController.selectTravel(
                         token,
                         (int) ticketResponse.getId(),
                         travelComponentId
                 );
             });
+            // Add deselect button.
             Button deselectButton = new Button(this);
             deselectButton.setText("Deselect");
             deselectButton.setOnClickListener(click -> {
                 // Send request to server.
                 waitForServerResponse();
-                SelectTicketController selectTicketController =
-                        new SelectTicketController(selectTravelHandler);
-                selectTicketController.deselectTravel(
+                SelectTravelController selectTravelController =
+                        new SelectTravelController(selectTravelHandler);
+                selectTravelController.deselectTravel(
                         token,
                         (int) ticketResponse.getId(),
                         travelComponentId
@@ -222,6 +224,7 @@ public class TravelTicketActivity extends MenuActivity {
             ticketLL.addView(ticketName_TV);
             ticketLL.addView(selectButton);
             ticketLL.addView(deselectButton);
+            // Add to main layout.
             linearLayout.addView(ticketLL);
         }
     }

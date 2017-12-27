@@ -12,13 +12,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SelectTicketController implements Callback<Void> {
+public class SelectTravelController implements Callback<Void> {
 
     private Handler handler;
     private int ticketId;
     private int travelComponentId;
+    private boolean select;
 
-    public SelectTicketController(Handler handler) {
+    public SelectTravelController(Handler handler) {
         this.handler = handler;
     }
 
@@ -32,6 +33,7 @@ public class SelectTicketController implements Callback<Void> {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         this.ticketId = ticketId;
         this.travelComponentId = travelComponentId;
+        this.select = true;
         Call<Void> call = client.selectTravel(ticketId, travelComponentId);
         call.enqueue(this);
     }
@@ -46,14 +48,18 @@ public class SelectTicketController implements Callback<Void> {
         TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
         this.ticketId = ticketId;
         this.travelComponentId = travelComponentId;
+        this.select = false;
         Call<Void> call = client.deselectTravel(ticketId, travelComponentId);
         call.enqueue(this);
     }
 
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {
+        Bundle bundle = new Bundle();
         if (! response.isSuccessful()) {
             Log.d("ERROR_RESPONSE", response.toString());
+        } else {
+            bundle.putBoolean("Select", select);
         }
         Message msg = handler.obtainMessage(response.code());
         msg.sendToTarget();
