@@ -9,13 +9,12 @@ To explain it we will use the following terms:
 \newpage
 \noindent The algorithm works in this way:
 \begin{enumerate}
-	\item Checks if there are ScheduledEvents with: \\ \textit{startingTime(ScheduledEvent) \textless startingTime(ForcedEvent) \textless endingTime(ScheduledEvent)} \\ or \\ \textit{startingTime(ScheduledEvent) \textless endingTime(ForcedEvent) \textless endingTime(ScheduledEvent)} \\
-or \\ \textit{startingTime(ForcedEvent) \textless startingTime(ScheduledEvent) AND \\endingTime(ScheduledEvent) \textless endingTime(ForcedEvent)}. \\
-	If the condition results True for one or more scheduled events, it removes them from the schedule and puts them in the overlapping list;
-	\item Computes the travel of ForcedEvent, depending on the previousLocation inserted or, if a previous starting location for the travel is not defined, on the location of the previous ScheduledEvent;
-	\item If the travel used to reach the ForcedEvent requires a departure time that is less than the previous ScheduledEvent ending time, the previous ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
-	\item Repeats 2 and 3 until a ScheduledEvent considered is still feasible after the insertion of the ForcedEvent;
-	\item Recomputes the travel of the ScheduledEvent that follows ForcedEvent. If that ScheduledEvent's location is not reachable in time for its starting time anymore, this ScheduledEvent is removed from the ScheduleList and added to the OverlappingList;
-	\item Repeats 5 until the ScheduledEvent following ForcedEvent in the ScheduleList is still a feasible one after the recomputation of its travel;
-	\item ForcedEvent has been successfully inserted in the schedule.
+	\item Checks if there are \textit{ScheduledEvents} with: \\\\ \textit{startingTime(ScheduledEvent) \textless endingTime(ForcedEvent)} \\ and \\ \textit{startingTime(ForcedEvent) \textless endingTime(ScheduledEvent)} \\\\
+	If the condition results True for one or more scheduled events, it removes them from the schedule and puts them in the \textit{OverlappingList};
+	\item Computes the possible travels before and after the \textit{ForcedEvent}, depending on the information inserted about event location and departure location, and eventually depending also on previous and following existing events into the schedule;
+	\item If the travel used to reach the \textit{ForcedEvent} requires a time that is greater than the available time, the previous \textit{ScheduledEvent} is removed from the \textit{ScheduleList} and added to the \textit{OverlappingList}. \underline{Repeat 2};
+	\item Else if the travel used to reach the event after the \textit{ForcedEvent} in the schedule requires a time that is greater than the available time, the \textit{following ScheduledEvent} is removed from the \textit{ScheduleList} and added to the \textit{OverlappingList}. \underline{Repeat 2};
+	\item Else if it is not possible to find a combination of paths (before and after the \textit{ForcedEvent}) such that the minimum amount of free time for an involved \textit{break event} can be ensured, the break event is removed from the \textit{ScheduleList} and added to the \textit{OverlappingList}. \underline{Repeat 2};
+	\item Else it is the case in which at least one feasible path combination is found: the best one, according to user preferences, can be chosen and assigned to related events;
+	\item \textit{ForcedEvent} has been successfully inserted in the schedule. Database is updated with all the modifications made on user’s events.
 \end{enumerate}
