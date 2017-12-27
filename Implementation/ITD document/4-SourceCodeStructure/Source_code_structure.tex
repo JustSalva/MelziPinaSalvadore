@@ -1,1 +1,61 @@
-\todo{TODO}
+In this chapter we explain how our source code is structured. \\
+In our GitHub repository we've put both Application Server and Android app source code into two different folder contained into the Implementation folder (\href{https://github.com/JustSalva/MelziPinaSalvadore/tree/master/Implementation}{\color{blue}link}). 
+Since they are structured as separate projects we'll explain their internal structure in two different sections:
+
+\section{ApplicationServer}
+\begin{figure}
+	\dirtree{%
+		.1 /.
+		.2 src.
+		.3 main.
+		.4 java/it/polimi/travlendarplus \DTcomment{main application server's package}.
+		.5 RESTful \DTcomment{contains all REST interfaces}.
+		.6 RESTfulCalendar \DTcomment{contains all calendar REST interfaces}.
+		.6 authenticationManager \DTcomment{contains all authentication REST interfaces}.
+		.6 messages \DTcomment{contains all exchanged messages with clients}.
+		.7 authenticationMessages.
+		.7 calendarMessages.
+		.7 tripMessages.
+		.5 beans \DTcomment{contains all the java beans source code}.
+		.6 calendarManager \DTcomment{source code of calendar related Java beans}.
+		.7 googleMapsUtilities \DTcomment{source code of GMaps requests}.
+		.7 support \DTcomment{source code of path computation support classes}.
+		.6 emailManager \DTcomment{source code that handle email forwarding}.
+		.6 tripManager \DTcomment{source code of trip related Java beans}.
+		.5 entities \DTcomment{source code of JPA entity classes}.
+		.6 calendar.
+		.6 preferences.
+		.6 tickets.
+		.6 travelMeans.
+		.6 travels.
+		.5 exceptions \DTcomment{custom exception classes}.
+		.6 authenticationExceptions.
+		.6 calendarExceptions.
+		.6 encryptionExceptions.
+		.6 googleMapsExceptions.
+		.6 persistenceExceptions.
+		.6 tripManagerExceptions.
+		.4 resources.
+		.5 META-INF.
+		.6 beans.xml \DTcomment{configuration file of bean classes}.
+		.6 persistence.xml \DTcomment{configuration file of JPA}.
+		.3 test.
+		.4 java/it/polimi/travlendarplus \DTcomment{main test package}.
+		.5 beans \DTcomment{contains all the Java beans test code}.
+		.6 calendarManager.
+		.7 googleMapsUtilities.
+		.7 pathManager.
+		.7 preferenceManager.
+		.7 scheduleManager.
+		.7 support.
+		.5 entities \DTcomment{contains all the JPA entities test code}.
+		.6 calendar.
+		.6 preferences.
+		.6 tickets.
+		.6 travelMeans.
+		.6 travels.
+		.4 resources-glassfish-embedded \DTcomment{contains glassfish-embedded arquillian profile config files}.
+		.4 resources \DTcomment{contains arquillian config files}.
+		.2 pom.xml.
+}
+\end{figure}
