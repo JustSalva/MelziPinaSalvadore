@@ -60,8 +60,11 @@ public class SelectTravelController implements Callback<Void> {
             Log.d("ERROR_RESPONSE", response.toString());
         } else {
             bundle.putBoolean("Select", select);
+            bundle.putInt("TravelComponentId", travelComponentId);
+            bundle.putInt("TicketId", ticketId);
         }
         Message msg = handler.obtainMessage(response.code());
+        msg.setData(bundle);
         msg.sendToTarget();
     }
 

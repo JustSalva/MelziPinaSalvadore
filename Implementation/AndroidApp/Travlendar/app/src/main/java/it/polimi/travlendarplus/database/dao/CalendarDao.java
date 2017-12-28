@@ -70,4 +70,10 @@ public interface CalendarDao {
 
     @Query("DELETE FROM travel_component WHERE event_id LIKE :eventId")
     void deleteEventTravelComponents(long eventId);
+
+    @Query("UPDATE travel_component SET ticket_id = :ticketId WHERE id LIKE :travelComponentId")
+    void selectTicket(int ticketId, int travelComponentId);
+
+    @Query("UPDATE travel_component SET ticket_id = 0 WHERE id LIKE :travelComponentId")
+    void deselectTicket(int travelComponentId);
 }

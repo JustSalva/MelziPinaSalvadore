@@ -46,6 +46,4 @@ public interface TicketsDao {
 
     @Query("SELECT * from ticket WHERE type LIKE 'Path'")
     LiveData<List<Ticket>> getPathTickets();
-
-
 }
