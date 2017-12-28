@@ -68,10 +68,11 @@ public abstract class GenericEntity implements Serializable {
      */
     public void save () throws EntityExistsException {
         EntityManager entityManager = startTransaction();
-        if ( !this.isAlreadyInDb() )
+        if ( !this.isAlreadyInDb() ) {
             entityManager.persist( this );
-        else
+        } else {
             entityManager.merge( this );
+        }
         commitTransaction( entityManager );
     }
 

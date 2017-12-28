@@ -5,13 +5,14 @@ import it.polimi.travlendarplus.RESTful.authenticationManager.AuthenticatedUser;
 import it.polimi.travlendarplus.RESTful.authenticationManager.Secured;
 import it.polimi.travlendarplus.beans.calendarManager.ScheduleManager;
 import it.polimi.travlendarplus.entities.User;
-import it.polimi.travlendarplus.exceptions.calendarManagerExceptions.AlreadyScheduledException;
-import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

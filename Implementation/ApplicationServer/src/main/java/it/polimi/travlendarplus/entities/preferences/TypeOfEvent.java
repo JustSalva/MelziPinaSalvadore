@@ -30,6 +30,7 @@ public class TypeOfEvent extends GenericEntity {
 
     /**
      * Priority given to path calculation in a specific type of event
+     *
      * @see ParamFirstPath
      */
     @Column( nullable = false, name = "PARAM_FIRST_PATH" )
@@ -177,6 +178,7 @@ public class TypeOfEvent extends GenericEntity {
 
     /**
      * Checks if a typeOfEvent is already present in the database
+     *
      * @return true if present, false otherwise
      */
     @Override

@@ -138,6 +138,7 @@ public class Travel extends EntityWithLongKey {
      * Since some walking components are not provided with start and end time but
      * only with a duration this method take into account this and compute a
      * correct ending time
+     *
      * @return the UNIX time at which the travel ends
      */
     private Instant correctEndingTime () {

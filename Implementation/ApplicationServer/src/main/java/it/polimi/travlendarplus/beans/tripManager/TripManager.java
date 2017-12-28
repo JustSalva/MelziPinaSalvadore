@@ -58,14 +58,14 @@ public class TripManager extends UserManager {
      * @return all the tickets saved by the user
      * @throws EntityNotFoundException if the specified travel component does not exist
      */
-    public List < Ticket > getCompatibleTickets( long travelComponentId ) throws EntityNotFoundException {
+    public List < Ticket > getCompatibleTickets ( long travelComponentId ) throws EntityNotFoundException {
 
         TravelComponent travelComponent = retrieveUsersTravelComponent( travelComponentId );
         List < Ticket > userTickets = getTickets();
         List < Ticket > compatibleTickets = new ArrayList <>();
         //the ticket list have to be scanned in order to find the compatible tickets
-        for ( Ticket ticket : userTickets ){
-            if( ticket.isCompatible( travelComponent.getMeanUsed().getType() )){
+        for ( Ticket ticket : userTickets ) {
+            if ( ticket.isCompatible( travelComponent.getMeanUsed().getType() ) ) {
                 try {
                     ticket.checkTicketValidityAfterTravelAssociation( travelComponent );
                     //if compatible the ticket is added into the list of compatible ones
@@ -218,7 +218,7 @@ public class TripManager extends UserManager {
      * Given a period ticket message and his decorated ticket creates the relative period ticket
      *
      * @param periodTicketMessage message representing the instance of period ticket to be created
-     * @param decorator generic ticket that have to be decorated by the path ticket
+     * @param decorator           generic ticket that have to be decorated by the path ticket
      * @return the requested period ticket
      * @see PathTicket
      */
@@ -245,12 +245,12 @@ public class TripManager extends UserManager {
     /**
      * Mark a ticket as to-be-used in a specific travel
      *
-     * @param ticketId identifier of the ticket to be selected
+     * @param ticketId          identifier of the ticket to be selected
      * @param travelComponentId identifier of the travel the ticket is to be connected with
-     * @throws EntityNotFoundException if either the ticket or the travel specified does not exist
+     * @throws EntityNotFoundException          if either the ticket or the travel specified does not exist
      * @throws IncompatibleTravelMeansException if the ticket is incompatible with the specified travel
-     * @throws TicketNotValidException if the ticket can't be linked to the given travel component
-     *                                 ( why is explained inside the exception instance )
+     * @throws TicketNotValidException          if the ticket can't be linked to the given travel component
+     *                                          ( why is explained inside the exception instance )
      */
     public void selectTicket ( long ticketId, long travelComponentId )
             throws EntityNotFoundException, IncompatibleTravelMeansException, TicketNotValidException {
@@ -265,7 +265,7 @@ public class TripManager extends UserManager {
     /**
      * Deselect a ticket, previously marked as to-be-used in a specific travel
      *
-     * @param ticketId identifier of the ticket to be deselected
+     * @param ticketId          identifier of the ticket to be deselected
      * @param travelComponentId identifier of the travel the ticket is to be connected with
      * @throws EntityNotFoundException if either the ticket or the travel specified does not exist
      */
@@ -354,8 +354,8 @@ public class TripManager extends UserManager {
      * Checks that the fields of a periodTicketMessage are correct
      *
      * @param periodTicketMessage message to be checked
-     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
      * @return the ticket decorated by the period ticket
+     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
      */
     private Ticket checkPeriodTicketConsistency ( AddPeriodTicketMessage periodTicketMessage )
             throws InvalidFieldException {
@@ -429,7 +429,7 @@ public class TripManager extends UserManager {
      *
      * @param errors list that might contains all possible errors
      * @throws InvalidFieldException if the list actually contains one or more errors,
-     * which one is specified inside the exception thrown
+     *                               which one is specified inside the exception thrown
      */
     private void checkErrorExistence ( List < String > errors ) throws InvalidFieldException {
         if ( errors.size() > 0 ) {
@@ -441,10 +441,10 @@ public class TripManager extends UserManager {
      * Modifies a distance ticket that is already present in the user's profile
      *
      * @param distanceTicketMessage message representing the info that are to be updated
-     * @param ticketId identifier of the ticket that is to be updated
+     * @param ticketId              identifier of the ticket that is to be updated
      * @return the updated distance ticket instance
-     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
-     * @throws EntityNotFoundException if the ticket to-be-modified does not exist
+     * @throws InvalidFieldException            if some fields are wrong ( which one is specified in the error class )
+     * @throws EntityNotFoundException          if the ticket to-be-modified does not exist
      * @throws IncompatibleTravelMeansException if after the update one or more public travel means would become incompatible
      */
     public DistanceTicket modifyDistanceTicket ( AddDistanceTicketMessage distanceTicketMessage, long ticketId )
@@ -461,10 +461,10 @@ public class TripManager extends UserManager {
      * Modifies a generic ticket that is already present in the user's profile
      *
      * @param genericTicketMessage message representing the info that are to be updated
-     * @param ticketId identifier of the ticket that is to be updated
+     * @param ticketId             identifier of the ticket that is to be updated
      * @return the updated generic ticket instance
-     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
-     * @throws EntityNotFoundException if the ticket to-be-modified does not exist
+     * @throws InvalidFieldException            if some fields are wrong ( which one is specified in the error class )
+     * @throws EntityNotFoundException          if the ticket to-be-modified does not exist
      * @throws IncompatibleTravelMeansException if after the update one or more public travel means would become incompatible
      */
     public GenericTicket modifyGenericTicket ( AddGenericTicketMessage genericTicketMessage, long ticketId )
@@ -481,10 +481,10 @@ public class TripManager extends UserManager {
      * Modifies a path ticket that is already present in the user's profile
      *
      * @param pathTicketMessage message representing the info that are to be updated
-     * @param ticketId identifier of the ticket that is to be updated
+     * @param ticketId          identifier of the ticket that is to be updated
      * @return the updated path ticket instance
-     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
-     * @throws EntityNotFoundException if the ticket to-be-modified does not exist
+     * @throws InvalidFieldException            if some fields are wrong ( which one is specified in the error class )
+     * @throws EntityNotFoundException          if the ticket to-be-modified does not exist
      * @throws IncompatibleTravelMeansException if after the update one or more public travel means would become incompatible
      */
     public PathTicket modifyPathTicket ( AddPathTicketMessage pathTicketMessage, long ticketId )
@@ -501,10 +501,10 @@ public class TripManager extends UserManager {
      * Modifies a period ticket that is already present in the user's profile
      *
      * @param periodTicketMessage message representing the info that are to be updated
-     * @param ticketId identifier of the ticket that is to be updated
+     * @param ticketId            identifier of the ticket that is to be updated
      * @return the updated period ticket instance
-     * @throws InvalidFieldException if some fields are wrong ( which one is specified in the error class )
-     * @throws EntityNotFoundException if the ticket to-be-modified does not exist
+     * @throws InvalidFieldException            if some fields are wrong ( which one is specified in the error class )
+     * @throws EntityNotFoundException          if the ticket to-be-modified does not exist
      * @throws IncompatibleTravelMeansException if after the update one or more public travel means would become incompatible
      */
     public PeriodTicket modifyPeriodTicket ( AddPeriodTicketMessage periodTicketMessage, long ticketId )
@@ -534,18 +534,18 @@ public class TripManager extends UserManager {
      * incompatible with his previously connected travels
      *
      * @param linkedTravels travels to be linked to the ticket
-     * @param ticket ticket that is to be connected with the list of travels
+     * @param ticket        ticket that is to be connected with the list of travels
      * @throws IncompatibleTravelMeansException if the ticket would become incompatible with his previously connected travels
      */
     private void addLinkedTravels ( List < TravelComponent > linkedTravels, Ticket ticket )
             throws IncompatibleTravelMeansException {
 
-        try{
+        try {
             for ( TravelComponent travelComponent : linkedTravels ) {
                 ticket.addLinkedTravel( travelComponent );
             }
             ticket.save();
-        }catch ( IncompatibleTravelMeansException e ){
+        } catch ( IncompatibleTravelMeansException e ) {
             currentUser.deleteTicket( ticket.getId() );
             currentUser.save();
             ticket.remove();

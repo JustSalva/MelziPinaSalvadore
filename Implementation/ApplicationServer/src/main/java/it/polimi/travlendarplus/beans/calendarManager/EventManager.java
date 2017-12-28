@@ -218,8 +218,7 @@ public class EventManager extends UserManager {
                     followingEvent.setFeasiblePath( feasiblePaths.getFollPath() );
                 }
             }
-        }
-        else if ( event.isPrevLocChoice() ) {
+        } else if ( event.isPrevLocChoice() ) {
             // Setting previous location if prevLocChoice boolean param is true.
             //and if the event is not scheduled
             event.setDeparture(
@@ -385,10 +384,10 @@ public class EventManager extends UserManager {
      * @param id identifier of the event
      * @return a list of modified events, due to the deletion, it might be an empty list
      * @throws EntityNotFoundException if the event to be deleted does not exists
-     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
-     * services are unavailable
+     * @throws GMapsGeneralException   if the re-computation of the path of the following event fails cause Google maps
+     *                                 services are unavailable
      */
-    public  List < Event > deleteEvent ( long id ) throws EntityNotFoundException, GMapsGeneralException {
+    public List < Event > deleteEvent ( long id ) throws EntityNotFoundException, GMapsGeneralException {
         List < Event > modifiedEvents = new ArrayList <>();
         GenericEvent genericEvent;
         try {
@@ -399,7 +398,7 @@ public class EventManager extends UserManager {
             /* if the following event has selected the previous location choice as
                departure location, his travel must be recomputed */
             if ( eventToBeUpdated != null && eventToBeUpdated.isPrevLocChoice() ) {
-                Event following  = addEventAndModifyFollowingEvent( eventToBeUpdated );
+                Event following = addEventAndModifyFollowingEvent( eventToBeUpdated );
                 if ( following != null ) {
                     following.save();
                     modifiedEvents.add( following );
@@ -443,8 +442,8 @@ public class EventManager extends UserManager {
      * @return the modified events
      * @throws InvalidFieldException   if some fields are wrong ( which one is written inside the exception class)
      * @throws EntityNotFoundException if the event to be modified does not exists
-     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
-     * services are unavailable
+     * @throws GMapsGeneralException   if the re-computation of the path of the following event fails cause Google maps
+     *                                 services are unavailable
      */
     public List < Event > modifyEvent ( ModifyEventMessage eventMessage )
             throws InvalidFieldException, EntityNotFoundException, GMapsGeneralException {
@@ -452,9 +451,9 @@ public class EventManager extends UserManager {
         checkEventFields( eventMessage );
         Event event = getEventInformation( eventMessage.getEventId() );
         List < Event > eventsModified = deleteEvent( event.getId() );
-        List < Event >  eventsModifiedAfterInsertion = addEvent( eventMessage );
-        for ( Event event1 : eventsModifiedAfterInsertion){
-            eventsModified = eventsModified.stream().filter( eventModified -> eventModified.getId() != event1.getId())
+        List < Event > eventsModifiedAfterInsertion = addEvent( eventMessage );
+        for ( Event event1 : eventsModifiedAfterInsertion ) {
+            eventsModified = eventsModified.stream().filter( eventModified -> eventModified.getId() != event1.getId() )
                     .collect( Collectors.toCollection( ArrayList::new ) );
         }
 
@@ -569,8 +568,8 @@ public class EventManager extends UserManager {
      * @throws InvalidFieldException   if some fields are wrong
      *                                 ( which one is written inside the exception class)
      * @throws EntityNotFoundException if the break event does not exist
-     * @throws GMapsGeneralException if the re-computation of the path of the following event fails cause Google maps
-     * services are unavailable
+     * @throws GMapsGeneralException   if the re-computation of the path of the following event fails cause Google maps
+     *                                 services are unavailable
      */
     public BreakEvent modifyBreakEvent ( ModifyBreakEventMessage eventMessage )
             throws InvalidFieldException, EntityNotFoundException, GMapsGeneralException {

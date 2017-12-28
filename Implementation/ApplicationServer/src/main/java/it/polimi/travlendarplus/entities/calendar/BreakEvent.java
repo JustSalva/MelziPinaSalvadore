@@ -78,17 +78,20 @@ public class BreakEvent extends GenericEvent {
      * @return true if the minimum time is guaranteed, false otherwise
      */
     public boolean isMinimumEnsuredNoPathRegard ( List < Event > events ) {
-        if ( events.size() == 0 )
+        if ( events.size() == 0 ) {
             return true;
+        }
         // Checking if there is enough time before the first event.
         if ( minimumTime <= Duration.between( getStartingTime(),
-                events.get( 0 ).getStartingTime() ).getSeconds() )
+                events.get( 0 ).getStartingTime() ).getSeconds() ) {
             return true;
+        }
         // Checking if there is enough time between two events.
         for ( int i = 0; i < events.size() - 1; i++ )
             if ( minimumTime <= Duration.between( events.get( i ).getEndingTime(),
-                    events.get( i + 1 ).getStartingTime() ).getSeconds() )
+                    events.get( i + 1 ).getStartingTime() ).getSeconds() ) {
                 return true;
+            }
         //checking if there is enough time after the last event
         return minimumTime <= Duration.between(
                 events.get( events.size() - 1 ).getEndingTime(),
@@ -104,24 +107,28 @@ public class BreakEvent extends GenericEvent {
      * @return true if the minimum time is guaranteed, false otherwise
      */
     public boolean isMinimumEnsuredWithPathRegard ( List < Event > events ) {
-        if ( events.size() == 0 )
+        if ( events.size() == 0 ) {
             return true;
+        }
         /* Checking if there is enough time between the first event and its path or before the first event.
          */
-        if ( enoughTimeBeforeFirstEvent( events.get( 0 ) ) )
+        if ( enoughTimeBeforeFirstEvent( events.get( 0 ) ) ) {
             return true;
+        }
         if ( events.size() > 1 ) {
             // Checking between first event and following path.
             if ( minimumTime <= Duration.between( events.get( 0 ).getEndingTime(),
-                    events.get( 1 ).getFeasiblePath().getStartingTime() ).getSeconds() )
+                    events.get( 1 ).getFeasiblePath().getStartingTime() ).getSeconds() ) {
                 return true;
+            }
             // Checking if there is enough time between an event and the previous/following paths.
             for ( int i = 1; i < events.size() - 1; i++ ) {
                 if ( minimumTime <= Duration.between( events.get( i ).getFeasiblePath().getEndingTime(),
                         events.get( i ).getStartingTime() ).getSeconds() ||
                         minimumTime <= Duration.between( events.get( i ).getEndingTime(),
-                                events.get( i + 1 ).getFeasiblePath().getStartingTime() ).getSeconds() )
+                                events.get( i + 1 ).getFeasiblePath().getStartingTime() ).getSeconds() ) {
                     return true;
+                }
             }
         }
         // Checking if there is enough time between the last event and its path or after the last event.

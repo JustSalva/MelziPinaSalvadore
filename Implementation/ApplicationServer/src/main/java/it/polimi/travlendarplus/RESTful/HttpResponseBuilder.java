@@ -138,11 +138,12 @@ public class HttpResponseBuilder {
     /**
      * Builds a response with a 400 Bad Request status code and a list errors
      * ( List of Strings)
+     *
      * @param errors list of errors
      * @return the requested response message
      */
-    private static Response buildErrorsMessage( List<String> errors){
-        return responseBuilder( Response.Status.BAD_REQUEST, new ErrorListResponse( errors ));
+    private static Response buildErrorsMessage ( List < String > errors ) {
+        return responseBuilder( Response.Status.BAD_REQUEST, new ErrorListResponse( errors ) );
     }
 
     /**

@@ -194,7 +194,7 @@ public class Event extends GenericEvent {
      * {@inheritDoc}
      */
     @Override
-    public List< GenericEvent > swap ( PathManager pathManager ) throws GMapsGeneralException {
+    public List < GenericEvent > swap ( PathManager pathManager ) throws GMapsGeneralException {
         return pathManager.swapEvent( this );
     }
 

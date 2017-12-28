@@ -365,8 +365,9 @@ public class PreferenceManager extends UserManager {
                 default:
                     return combs.get( 0 );
             }
-        } else
+        } else {
             return combs.get( 0 );
+        }
     }
 
     /**
@@ -376,12 +377,14 @@ public class PreferenceManager extends UserManager {
      * @return the travel path with less distance traveled
      */
     private PathCombination getPathsWithMinLength ( List < PathCombination > combs ) {
-        if ( combs == null )
+        if ( combs == null ) {
             return null;
+        }
         PathCombination best = combs.get( 0 );
         for ( PathCombination singleComb : combs )
-            if ( singleComb.getTotalLength() < best.getTotalLength() )
+            if ( singleComb.getTotalLength() < best.getTotalLength() ) {
                 best = singleComb;
+            }
         return best;
     }
 
@@ -392,12 +395,14 @@ public class PreferenceManager extends UserManager {
      * @return the travel path with less travel time
      */
     private PathCombination getPathsWithMinTime ( List < PathCombination > combs ) {
-        if ( combs == null )
+        if ( combs == null ) {
             return null;
+        }
         PathCombination best = combs.get( 0 );
         for ( PathCombination singleComb : combs )
-            if ( singleComb.getTotalTime() < best.getTotalTime() )
+            if ( singleComb.getTotalTime() < best.getTotalTime() ) {
                 best = singleComb;
+            }
         return best;
     }
 
@@ -412,8 +417,9 @@ public class PreferenceManager extends UserManager {
     public List < TravelMeanEnum > getAllowedMeans ( Event event, TravelMeanEnum[] list ) {
         ArrayList < TravelMeanEnum > privateMeans = new ArrayList < TravelMeanEnum >();
         for ( TravelMeanEnum mean : list )
-            if ( isVehicleAllowed( event, mean ) )
+            if ( isVehicleAllowed( event, mean ) ) {
                 privateMeans.add( mean );
+            }
         return privateMeans;
     }
 

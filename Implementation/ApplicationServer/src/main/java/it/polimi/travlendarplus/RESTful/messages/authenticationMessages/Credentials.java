@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.RESTful.messages.authenticationMessages;
 
-import it.polimi.travlendarplus.entities.RSAEncryption;
 import it.polimi.travlendarplus.exceptions.encryptionExceptions.DecryptionFailedException;
 import it.polimi.travlendarplus.exceptions.persistenceExceptions.EntityNotFoundException;
 

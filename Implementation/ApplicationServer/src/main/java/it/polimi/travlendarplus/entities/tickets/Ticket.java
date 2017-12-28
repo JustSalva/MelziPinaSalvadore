@@ -118,7 +118,7 @@ public abstract class Ticket extends EntityWithLongKey {
     public void addLinkedTravel ( TravelComponent travelComponent )
             throws IncompatibleTravelMeansException {
 
-        if ( ! isCompatible( travelComponent.getMeanUsed().getType() ) ) {
+        if ( !isCompatible( travelComponent.getMeanUsed().getType() ) ) {
             throw new IncompatibleTravelMeansException();
         }
         linkedTravels.add( travelComponent );

@@ -41,7 +41,7 @@ public class HTMLCallAndResponse {
         } catch ( MalformedURLException e ) {
             Logger.getLogger( HTMLCallAndResponse.class.getName() ).log( Level.SEVERE, e.getMessage(), e );
         } catch ( IOException e ) {
-            throw new GMapsUnavailableException( );
+            throw new GMapsUnavailableException();
         }
 
         return new JSONObject( html );
