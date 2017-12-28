@@ -17,7 +17,6 @@ import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.handler.ticket.DeleteTicketHandler;
 import it.polimi.travlendarplus.activity.handler.ticket.GetTicketsHandler;
-import it.polimi.travlendarplus.activity.listener.DragToDeleteEventListener;
 import it.polimi.travlendarplus.activity.listener.DragToDeleteTicketListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchTicketListener;
 import it.polimi.travlendarplus.database.entity.ticket.Ticket;
