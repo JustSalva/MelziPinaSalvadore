@@ -21,6 +21,16 @@ Check that your platform hardware meets the following prerequisites, we've writt
 \subsection{Windows 10}
 \label{subsect:Windows 10}
 
+\subsubsection{Install and setup MySQL 5.7}
+\begin{itemize}
+	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
+	\item Open a terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysqld.exe' in order to start MySQL;
+	\item Open another terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysql -u root -p' in order to access to MySQL command line console;
+	\item MySQL command line console will ask for a password, just press 'enter';
+	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
+	\item Before starting to use the Android app, please follow the provided steps to install and setup Glassfish.
+\end{itemize}
+
 \subsubsection{Install and setup Glassfish 5.0}
 \begin{itemize}
 	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
@@ -30,33 +40,11 @@ Check that your platform hardware meets the following prerequisites, we've writt
 	\item In the opened terminal type 'start-domain' and press enter in order to start GlassFish server;
 	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
 	\item Wait a few seconds and than the application server will be deployed;
-	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
 \end{itemize} 
 NB. To stop GlassFish type 'stop-domain domain1' in the same terminal you've started it.
-
-\subsubsection{Install and setup MySQL 5.7}
-\begin{itemize}
-	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
-	\item Open a terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysqld.exe' in order to start MySQL;
-	\item Open another terminal and navigate to \path{'your MySQL Installation Folder'\bin} and run the command 'mysql -u root -p' in order to access to MySQL command line console;
-	\item MySQL command line console will ask for a password, just press 'enter';
-	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
-\end{itemize}
 	
 \subsection{Linux}
 \label{subsect:Linux}
-
-\subsubsection{Install and setup Glassfish 5.0}
-\begin{itemize}
-	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
-	\item Change to the directory where you downloaded the ZIP file;
-	\item Extract the file into the directory in which you want to install your GlassFish server;
-	\item Open a terminal and navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin start-domain' in order to start GlassFish server
-	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
-	\item Wait a few seconds and than the application server will be deployed;
-	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
-\end{itemize}
-NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin stop-domain domain1'.
 
 \subsubsection{Install and setup MySQL 5.7}
 \begin{itemize}
@@ -65,10 +53,8 @@ NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Fo
 	\item Open a terminal and run the command 'mysql -u root -p' in order to access to MySQL command line console;
 	\item MySQL command line console will ask for a password, just press 'enter';
 	\item In MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server.
+	\item Before starting to use the Android app, please follow the provided steps to install and setup Glassfish.
 \end{itemize}
-
-\subsection{macOS}
-\label{subsect:macOS}
 
 \subsubsection{Install and setup Glassfish 5.0}
 \begin{itemize}
@@ -78,18 +64,32 @@ NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Fo
 	\item Open a terminal and navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin start-domain' in order to start GlassFish server
 	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
 	\item Wait a few seconds and than the application server will be deployed;
-	\item Before starting to use the Android app, please follow the provided steps to install and setup MySQL.
 \end{itemize}
 NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin stop-domain domain1'.
+
+\subsection{macOS}
+\label{subsect:macOS}
 
 \subsubsection{Install and setup MySQL 5.7}
 \begin{itemize}
 	\item Please follow the guide provided in beep course web page in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 3.3) in order to proper install MySQL;
-	\item Open a terminal and run the command 'mysql.server start' in order to start MySQL;
+	\item Open your System Preferences, click on MySQL icon and click on "Start MySQL server" or open a terminal and run the command 'mysql.server start' in order to start MySQL;
 	\item Open a terminal and run the command 'mysql -u root -p' in order to access to MySQL command line console;
 	\item MySQL command line console will ask for a password, just press 'enter';
 	\item In the MySQL command line console window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server;
+	\item Before starting to use the Android app, please follow the provided steps to install and setup Glassfish.
 \end{itemize}
+
+\subsubsection{Install and setup Glassfish 5.0}
+\begin{itemize}
+	\item Download GlassFish Server 5.0 ZIP file from here: \\ \href{http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip}{\color{blue}http://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip};
+	\item Change to the directory where you downloaded the ZIP file;
+	\item Extract the file into the directory in which you want to install your GlassFish server;
+	\item Open a terminal and navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin start-domain' in order to start GlassFish server
+	\item Head to \path{'your Glassfish Main Folder'\glassfish\domains\domain1\autodeploy} and copy in this folder the ApplicationServerArchive.war file \todo{TODO};
+	\item Wait a few seconds and than the application server will be deployed;
+\end{itemize}
+NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Folder'\bin} and run the command './asadmin stop-domain domain1'.
 
 \section{Android App}
 \label{sect:Android App}
@@ -122,6 +122,7 @@ This section contains a short guide to proper install the software required to r
 	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
 	\item Select 'Pixel 2 XL API 26' virtual device;
 	\item Wait until your Android virtual device starts;
+	\item Make sure that your computer current time and the Android virtual device are the same, if not go to Settings app, click on system -\textgreater Date \& Time -\textgreater, deselect 'Automatic time zone' and Select manually your current time zone, now the two clocks should display the same current time;
 	\item Enjoy Travlendar+'s Android App.	
 \end{itemize}
 
@@ -146,5 +147,6 @@ This section contains a short guide to proper install the software required to r
 	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
 	\item Select 'Pixel 2 XL API 26' virtual device;
 	\item Wait until your Android virtual device starts;
+	\item Make sure that your computer current time and the Android virtual device are the same, if not go to Settings app, click on system -\textgreater Date \& Time -\textgreater, deselect 'Automatic time zone' and Select manually your current time zone, now the two clocks should display the same current time;
 	\item Enjoy Travlendar+'s Android App.	
 \end{itemize}
