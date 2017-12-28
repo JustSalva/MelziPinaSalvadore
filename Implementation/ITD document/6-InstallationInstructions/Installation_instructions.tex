@@ -1,10 +1,11 @@
 \section{Application Server and DBMS}
 \label{sect:Application Server and DBMS}
 This section contains a short guide to proper install and test the software required to run Travlendar+'s Application Server and the DBMS.\\
-We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS), our implementation, but, if you want to run on your computer our Application server, the following sections contains details on how to install the required software on three operating systems: Linux, Windows and macOS.\\
+{\large \textbf{We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS), our implementation, and we recommend you to use it}} , if you want to run on your computer our Application server, the following sections contains details on how to install the required software on three operating systems: Linux, Windows and macOS.\\
+{\large \textbf{If you want to test our application using our server, please jump to section  \ref{sect:Android App}}}.\\
 Notice that we want to provide instructions as generic as possible, so we will not provide any IDE-related instructions; feel free to use your own IDE to run both Glassfish 5.0 and MySQL 5.7, but if you never used/run these tools please stick to our instructions or simply use our online server.
-\subsection{Prerequisite}
-\label{subsect:Prerequisite}
+\subsection{Server Prerequisites}
+\label{subsect:ServerPrerequisites}
 Check that your platform hardware meets the following prerequisites, we've written above, if you want to read the full prerequisite please head to: \href{https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}{\color{blue}https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf}, in fact we've provided a brief summary of that document. As for MySQL, the developers do not provide any minimum requirement. 
 \begin{itemize}
 	\item \textbf{Required JDK Version:} GlassFish Server Open Source Edition Release 5.0 requires Oracle JDK 8 Update 144 or later;
@@ -94,7 +95,7 @@ NB. To stop GlassFish open a terminal, navigate to \path{'your Glassfish Main Fo
 \label{sect:Android App}
 This section contains a short guide to proper install the software required to run Travlendar+'s Android App.
 
-\subsection{Instructions to run the App on your computer (recommended)}
+\subsection{Instructions to run the App on your computer}
 \label{subsect:Computer Instructions}
 \begin{itemize}
 	\item Open your browser and head to \\ \href{https://developer.android.com/studio/index.html}{\color{blue}https://developer.android.com/studio/index.html};
@@ -103,7 +104,10 @@ This section contains a short guide to proper install the software required to r
 	\item Click on the 'Download Android Studio for \textless your OS name\textgreater' blue button (NB \textless your OS name\textgreater  \,represent the name of your Operating System);
 	\item The download process should automatically start and your browser should redirect you on the 'Install Android Studio' web page, if not head to: \href{https://developer.android.com/studio/install.html}{\color{blue}https://developer.android.com/studio/install.html};
 	\item Follow the instructions relative to your OS, and \textbf{make sure that 'Android virtual device' is selected for installation};
-	\item At the end of the installation process a Android Studio shows a window named 'Welcome to Android Studio', click on 'Profile or debug APK';
+\end{itemize}
+\subsubsection{If you're using our deployed server (no local server - RECOMMENDED)}
+\begin{itemize}
+	\item At the end of the installation process Android Studio shows a window named 'Welcome to Android Studio', click on 'Profile or debug APK';
 	\item Select Travlendar+'s APK location \todo{TODO};
 	\item If 'Tips of the day' window opens up click on Close;
 	\item On the menu bar click on tools -\textgreater Android -\textgreater ADV manager;
@@ -121,6 +125,26 @@ This section contains a short guide to proper install the software required to r
 	\item Enjoy Travlendar+'s Android App.	
 \end{itemize}
 
-\subsection{Instructions to run the App on your smartphone}
-\label{subsect:Smartphone Instructions}
- \todo{TODO}
+\subsubsection{If you're not using our deployed server (local server)}
+\begin{itemize}
+	\item While android studio installation goes on, clone our GitHub repo:  \href{https://github.com/JustSalva/MelziPinaSalvadore}{\color{blue}link} and take note of the location where the repo will be cloned at;
+	
+	\item At the end of the installation process Android Studio shows a window named 'Welcome to Android Studio', click on 'Open an existing Android studio project';
+	\item Select \path{'cloneLocation '\Implementation\AndroidApp\Travlendar} and click Ok;
+	\item If 'Tips of the day' window opens up click on Close;
+	\item In the 'Android tab' (top right of the window)  Select  \path{app\java\it\polimi\travlendarplus\retrofit\} and open ServiceGenerator.java;
+	\item Change, in the constant BASE\textunderscore URL the address '151.236.60.56' with 'localhost', or with the IP address of the computer where you have deployed our server;
+	\item On the menu bar click on tools -\textgreater Android -\textgreater ADV manager;
+	\item Click on 'Create Virtual device...' button;
+	\item Select 'Phone as category' and then 'Pixel 2 XL';
+	\item Click Next;
+	\item Select Oreo system image (Android 8.0);
+	\item Click on the download link on the right of 'Oreo' in order to download the selected android OS, and wait until the download ends; \todo{TODO}
+	\item Click Next;
+	\item Click Finish;
+	\item Close the 'Android Virtual device Manager' window;
+	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
+	\item Select 'Pixel 2 XL API 26' virtual device;
+	\item Wait until your Android virtual device starts;
+	\item Enjoy Travlendar+'s Android App.	
+\end{itemize}
