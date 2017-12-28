@@ -151,47 +151,33 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RadioGroup
+                    android:id="@+id/typeofEvent_radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_horizontal"
+                    android:checkedButton="@+id/normalEvent_radioButton"
                     android:orientation="horizontal">
 
-                    <RadioGroup
-                        android:id="@+id/typeofEvent_radioGroup"
+                    <RadioButton
+                        android:id="@+id/normalEvent_radioButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checkedButton="@+id/normalEvent_radioButton"
-                        android:orientation="vertical">
+                        android:onClick="onRadioButtonClicked"
+                        android:text="@string/normal_event" />
 
-                        <RadioButton
-                            android:id="@+id/normalEvent_radioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:onClick="onRadioButtonClicked"
-                            android:text="@string/normal_event" />
-
-                        <RadioButton
-                            android:id="@+id/breakEvent_radioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:onClick="onRadioButtonClicked"
-                            android:text="@string/break_event" />
-
-                    </RadioGroup>
-
-                    <CheckBox
-                        android:id="@+id/periodical_checkBox"
+                    <RadioButton
+                        android:id="@+id/breakEvent_radioButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="@string/periodical_event"
-                        android:textStyle="bold" />
+                        android:onClick="onRadioButtonClicked"
+                        android:text="@string/break_event" />
 
-                </LinearLayout>
+                </RadioGroup>
 
                 <LinearLayout
                     android:id="@+id/normalEvent_linearLayout"

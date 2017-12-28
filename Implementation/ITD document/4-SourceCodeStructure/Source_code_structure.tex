@@ -1,6 +1,35 @@
 In this chapter we explain how our source code is structured. \\
 In our GitHub repository we've put both Application Server and Android app source code into two different folder contained into the Implementation folder (\href{https://github.com/JustSalva/MelziPinaSalvadore/tree/master/Implementation}{\color{blue}link}). 
 Since they are structured as separate projects we'll explain their internal structure in two different sections:
+\section{Android app}
+\begin{figure}
+	\dirtree{%
+		.1 /.
+		.2 app.
+		.3 src.
+		.4 main.
+		.5 java/it/polimi/travlendarplus.\DTcomment{main Android app's package}
+		.6 activity.
+		.7 fragment.
+		.7 handler.
+		.8 event.
+		.8 location.
+		.8 preference.
+		.8 ticket.
+		.7 listener.
+		.7 tasks.
+		.6 database.
+		.7 converters.
+		.7 dao.
+		.7 entity.
+		.7 viewModel.
+		.6 retrofit.
+		.5 res.
+		.5 AndroidManifest.xml.
+		.4 test/java/it/polimi/travlendarplus.
+		.3 build.gradle.
+	}
+\end{figure}
 
 \section{ApplicationServer}
 \begin{figure}
@@ -8,7 +37,7 @@ Since they are structured as separate projects we'll explain their internal stru
 		.1 /.
 		.2 src.
 		.3 main.
-		.4 java/it/polimi/travlendarplus \DTcomment{main application server's package}.
+		.4 java/it/polimi/travlendarplus \DTcomment{main ApplicationServer's package}.
 		.5 RESTful \DTcomment{contains all REST interfaces}.
 		.6 RESTfulCalendar \DTcomment{contains all calendar REST interfaces}.
 		.6 authenticationManager \DTcomment{contains all authentication REST interfaces}.

@@ -103,13 +103,15 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/preferred_path"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:visibility="gone"/>
 
                         <Spinner
                             android:id="@+id/preferredPath_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:entries="@array/preferredPath_array" />
+                            android:entries="@array/preferredPath_array"
+                            android:visibility="gone"/>
 
                         <TextView
                             android:layout_width="match_parent"
