@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.polimi.travlendarplus.DateUtility;
+import it.polimi.travlendarplus.MiniTravel;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.handler.event.SelectTravelHandler;
 import it.polimi.travlendarplus.activity.handler.ticket.GetCompatibleTicketsHandler;
@@ -33,6 +35,9 @@ import it.polimi.travlendarplus.retrofit.response.ticket.TicketResponse;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+/**
+ * Activity that shows travel components of a travel and allows the user to link tickets to them.
+ */
 public class TravelTicketActivity extends MenuActivity {
     // UI references.
     private LinearLayout travelComponents_linearLayout;
@@ -46,6 +51,7 @@ public class TravelTicketActivity extends MenuActivity {
     private List<TravelComponent> travelComponentList;
     private Map<Integer, List<TicketResponse>> compatibleTicketsMap;
     private Map<Integer, LinearLayout> travelComponentsLLMap = new HashMap<>();
+    private Map<Integer, Integer> travelComponentSelectedTicket;
 
     // Handlers for server requests.
     private Handler getCompatibleTicketsHandler;
@@ -70,6 +76,12 @@ public class TravelTicketActivity extends MenuActivity {
         userViewModel.getUser().observe(this, user -> token = user != null ? user.getToken() : "");
         eventViewModel.getTravelComponents(eventId).observe(this, travelComponents -> {
             travelComponentList = travelComponents;
+            travelComponentSelectedTicket = new HashMap<>();
+            for (TravelComponent travelComponent : travelComponents) {
+                if (travelComponent.getTicketId() != 0) {
+                    travelComponentSelectedTicket.put((int) travelComponent.getId(), (int) travelComponent.getTicketId());
+                }
+            }
             fillTravelComponentsLayout();
         });
 
@@ -151,6 +163,7 @@ public class TravelTicketActivity extends MenuActivity {
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
         params.setGravity(Gravity.CENTER);
         linearLayout.setLayoutParams(params);
+        // Add button that loads compatible tickets from server.
         Button button = new Button(getApplicationContext());
         button.setText("Tickets");
         button.setOnClickListener(click -> {
@@ -193,37 +206,42 @@ public class TravelTicketActivity extends MenuActivity {
             LinearLayout ticketLL = new LinearLayout(this);
             TextView ticketName_TV = new TextView(getApplicationContext());
             ticketName_TV.setText(ticketResponse.toString());
-            // Add select button.
-            Button selectButton = new Button(this);
-            selectButton.setText("Select");
-            selectButton.setOnClickListener(click -> {
-                // Send request to server.
-                waitForServerResponse();
-                SelectTravelController selectTravelController =
-                        new SelectTravelController(selectTravelHandler);
-                selectTravelController.selectTravel(
-                        token,
-                        (int) ticketResponse.getId(),
-                        travelComponentId
-                );
-            });
-            // Add deselect button.
-            Button deselectButton = new Button(this);
-            deselectButton.setText("Deselect");
-            deselectButton.setOnClickListener(click -> {
-                // Send request to server.
-                waitForServerResponse();
-                SelectTravelController selectTravelController =
-                        new SelectTravelController(selectTravelHandler);
-                selectTravelController.deselectTravel(
-                        token,
-                        (int) ticketResponse.getId(),
-                        travelComponentId
-                );
-            });
             ticketLL.addView(ticketName_TV);
-            ticketLL.addView(selectButton);
-            ticketLL.addView(deselectButton);
+            // Check if the ticket is already selected.
+            if (! travelComponentSelectedTicket.containsKey(travelComponentId)) {
+                // Add select button.
+                Button selectButton = new Button(this);
+                selectButton.setText("Select");
+                selectButton.setOnClickListener(click -> {
+                    // Send request to server.
+                    waitForServerResponse();
+                    SelectTravelController selectTravelController =
+                            new SelectTravelController(selectTravelHandler);
+                    selectTravelController.selectTravel(
+                            token,
+                            (int) ticketResponse.getId(),
+                            travelComponentId
+                    );
+                });
+                ticketLL.addView(selectButton);
+            } else if (ticketResponse.getId() == travelComponentSelectedTicket.get(travelComponentId)){
+                ticketName_TV.setTypeface(null, Typeface.BOLD);
+                // Add deselect button.
+                Button deselectButton = new Button(this);
+                deselectButton.setText("Deselect");
+                deselectButton.setOnClickListener(click -> {
+                    // Send request to server.
+                    waitForServerResponse();
+                    SelectTravelController selectTravelController =
+                            new SelectTravelController(selectTravelHandler);
+                    selectTravelController.deselectTravel(
+                            token,
+                            (int) ticketResponse.getId(),
+                            travelComponentId
+                    );
+                });
+                ticketLL.addView(deselectButton);
+            }
             // Add to main layout.
             linearLayout.addView(ticketLL);
         }
