@@ -47,7 +47,7 @@ Here we provide a list of use cases, taken from our RASD document (section 3.2.3
 
 \section{Application Server and Database Server}
 \label{sec:ApplAndDBServers}
-In this section we specify what requirements are actually implemented in our ApplicationServer subsystem; we will also examine every sub-component and state which requirements that are related to them are implemented in this first release of Travlendar+, and we also state the motivations for including them and excluding others. (see also chapter 5 of DD - requirement traceability).
+In this section we specify what requirements are actually implemented in our ApplicationServer subsystem, examining every sub-component and state which requirements that are related to them are implemented in this first release of Travlendar+, and we also state the motivations for including them and excluding others. (see also chapter 5 of DD - requirement traceability).
 \begin{figure}[H]
 	\begin{center}
 		\hspace*{-60pt}
@@ -70,6 +70,7 @@ All the requirements related to the authentication manager are fulfilled in this
 Event manager handle the insertion, deletion and modification of both events and break events into the user's calendar.
 It interacts with both path and schedule manager in order to provide feasible paths to the events and to decide whether they can be scheduled or not.
 In the application server is also handled properly the propagation of periodical events through the time.
+In our system is not yet handled the possibility to modify and delete with one operation all the periodic events generated from one single event, due to time-related issues.
 In our system is not yet handled the possibility to define events without an ending time since we do not consider this feature essential but just an optional and not so necessary feature. 
 As specified in the previous documents, these are the requirement met by this manager:
 \begin{itemize}
@@ -101,7 +102,7 @@ As specified in the previous documents, these are the requirement met by this ma
 
 \subsection{Path Manager}
 This module manage the feasible travels computation, after the insertion or the modification of an event. It interacts with the \textit{PreferenceManager} in order to obtain the information needed to guarantee that the user preferences are respected in every proposed path.
-The functionalities that allows to change a selected path, choosing between a set of feasible alternatives, and to obtain also options that include sharing vehicles are not yet available; we've chosen to not include them due to time-related issued and since they would be nice-to-have features but not essential for an initial release.
+The functionalities that allows to change a selected path, choosing between a set of feasible alternatives, to obtain info that allow to draw a feasible path on a map, and to obtain also options that include sharing vehicles are not yet available; we've chosen to not include them due to time-related issued and since they would be nice-to-have features but not essential for an initial release.
 As specified in the previous documents, these are the requirement met by this manager:
 \begin{itemize}
 	\item \textbf{[R10]} every travel path proposed must be feasible in the available time (the interval between two consecutive events);
@@ -159,6 +160,61 @@ And these are the requirement not yet implemented in this manager:
 
 \subsection{Complication manager and Notification Manager}
 Both Complication and Notification manager are not implemented in this first release of Travlendar+, since we've considered their functionalities not essential for the  first release of our system and since we had to make a choice due to limited implementation time. 
+
 \section{Android App}
 \label{sec:AndroidApp}
-\todo{TODO}
+In this section we specify what requirements are actually implemented in our first release of Travlendar+'s Android app.
+Our Android application implements all the functionalities that are offered by our application server (for more details please refer to the previous sections) except: 
+\begin{itemize}
+	\item periodical events insertion;
+	\item modifications of already inserted events and break events, only their deletion is available;
+	\item ??? \todo{TODO} modifications of already inserted events, only their deletion is available;
+	\item user profile deletion and modification.
+\end{itemize}
+Furthermore the map interface does not work yet.
+
+These are the requirement met by our Android application:
+\begin{itemize}
+	\item \textbf{[R1]} the system checks if the e-mail inserted is real;
+	\item \textbf{[R2]} a user cannot sign up with the same e-mail twice;
+	\item \textbf{[R3]} the e-mail and password inserted must be correct;
+	\item \textbf{[R4]} incorrect credentials prevent the user from logging in; 
+	\item \textbf{[R5]} a user must specify all mandatory fields to add the new event;
+	\item \textbf{[R6]} the system reserves the specified time-slot for the event;
+	\item \textbf{[R7]} the system warns the user if the inserted event overlaps with an already existing one;
+	\item \textbf{[R10]} every travel path proposed must be feasible in the available time (the interval between two consecutive events);
+	\item \textbf{[R11]} if the travel involves two or more travel means, the starting location of the first proposed travel path and the ending location of the last proposed travel path must coincide respectively with the starting location and the ending location of the whole planned travel;
+	\item \textbf{[R12]} the system does not consider paths that violate constraints on travel means defined by the user;
+	\item \textbf{[R13]} the system checks user preferences to decide which feasible travel path is the best;
+	\item \textbf{[R14]} the system warns the user if it is not possible to arrive at an event location before its starting time;
+	\item \textbf{[R15]} appropriate travel means must be suggested according to the type of event that they are related to; 
+	\item \textbf{[R20]} the combination of the travel paths proposed for the day must be feasible in the allotted time;
+	\item \textbf{[R21]} if there are multiple events at the same time the system will propose in the schedule only the first event added;
+	\item \textbf{[R22]} if the user forces into the schedule an event that overlaps with events already present in the schedule, these are removed from the schedule;
+	\item \textbf{[R23]} the system requires minimum and maximum length allowed for a path to impose a constraint on a travel mean;
+	\item \textbf{[R24]} the system requires an interval of time allowed to impose a constraint on a travel mean;
+	\item \textbf{[R25]} the system does not consider solutions that violate constraints;
+	\item \textbf{[R26]} the system allows the user to specify one or more travel means that cannot be used;
+	\item \textbf{[R27]} the system does not consider solutions that include deactivated travel means; 
+	\item \textbf{[R29]} the system allows the user to specify a flexible interval and a minimum amount of time to schedule a break;
+	\item \textbf{[R30]} if there is enough time for a break, the system reserves it within the specified flexible interval;
+	\item \textbf{[R31]} if there is not enough time into the flexible interval specified, a warning is thrown;
+	\item \textbf{[R32]} the system allows the user to specify all the ticket he already owns;
+	\item \textbf{[R33]} the system shows to the user if he already holds a ticket for a proposed travel;
+	\item \textbf{[R35]} the system provides information about time of departure and arrival of the proposed travels;
+	\item \textbf{[R38]} a user must be logged. 
+\end{itemize}
+
+And these are the requirement not yet implemented in our Android application:
+\begin{itemize}
+	\item \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;
+	\item \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8];
+	\item \textbf{[R16]} if a strike occurs, the system will not consider travel means involved in it;
+	\item \textbf{[R17]} if the weather forecasts rain or other adverse conditions, the system will not consider paths involving the bicycle;
+	\item \textbf{ [R18]} the system must show to the user all possibilities to reach a location in according with the requirements of [G4];
+	\item \textbf{[R19]} alternative feasible travel paths must not generate overlappings with other events of the schedule;
+	\item \textbf{[R28]} for each travel path, the system estimates its carbon footprint produced;
+	\item \textbf{[R34]} the system allows the user to buy public transportation tickets according to proposed travels;
+	\item \textbf{[R36]} the system shows to the user where sharing vehicles are located;
+	\item \textbf{[R37]} the system provides information about travel time with shared vehicles;
+\end{itemize}
