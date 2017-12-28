@@ -79,7 +79,7 @@ public class GMapsDirectionsHandler {
      * @return a url ready for the request to google maps with a specified private travel mean.
      */
     public String getCallWithNoTransit ( String tempCall, TravelMeanEnum type ) {
-        return tempCall + "&mode=" + type.getParam();
+        return tempCall + "&mode=" + type.getParam() + "&alternatives=true";
     }
 
     /**
@@ -97,6 +97,9 @@ public class GMapsDirectionsHandler {
             for ( int i = 1; i < transitMeans.size(); i++ ) {
                 callWithTravel.append( "|" + transitMeans.get( i ).getParam() );
             }
+        }
+        if ( transitMeans.size() > 1 ) {
+            callWithTravel.append( "&alternatives=true" );
         }
         return callWithTravel.toString();
     }
@@ -119,7 +122,6 @@ public class GMapsDirectionsHandler {
      */
     private void baseCall () {
         addParam( "key", "AIzaSyBNIQeUu-paVMsVbybXDK8fEfg0RL7uZgo" );
-        addParam( "alternatives", "true" );
         addParam( "units", "metric" );
         addParam( "avoid", "ferries" );
     }
