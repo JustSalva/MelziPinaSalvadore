@@ -36,7 +36,7 @@ public abstract class DefaultHandler extends Handler {
         switch (msg.what){
             case 0:
                 Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
-                context.startActivity(new Intent(context, MainActivity.class));
+                //context.startActivity(new Intent(context, MainActivity.class));
                 break;
             case 400:
                 // Shows the user which invalid fields have been sent to server.
