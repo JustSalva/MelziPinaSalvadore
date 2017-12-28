@@ -110,8 +110,7 @@
                             android:id="@+id/preferredPath_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:entries="@array/preferredPath_array"
-                            android:visibility="gone"/>
+                            android:entries="@array/preferredPath_array"/>
 
                         <TextView
                             android:layout_width="match_parent"
