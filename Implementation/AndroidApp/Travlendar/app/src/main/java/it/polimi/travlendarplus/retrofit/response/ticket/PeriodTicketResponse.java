@@ -39,6 +39,8 @@ public class PeriodTicketResponse extends TicketResponse {
 
     @Override
     public String toString() {
-        return super.toString().concat("Name("+name+")");
+        return "PERIOD TICKET \n" +
+                super.toString() +
+                "Name("+name+")";
     }
 }

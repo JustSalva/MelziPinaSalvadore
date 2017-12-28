@@ -25,6 +25,6 @@ public class TicketResponse {
 
     @Override
     public String toString() {
-        return "Cost("+cost+") ";
+        return "Cost("+cost+" EUR)\n";
     }
 }

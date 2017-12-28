@@ -11,6 +11,8 @@ public class GenericTicketResponse extends TicketResponse {
 
     @Override
     public String toString() {
-        return super.toString().concat(" LineName("+lineName+") ");
+        return "GENERIC TICKET\n" +
+                super.toString() +
+                " LineName("+lineName+")\n";
     }
 }

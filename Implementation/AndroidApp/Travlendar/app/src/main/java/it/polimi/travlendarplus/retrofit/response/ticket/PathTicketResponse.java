@@ -18,6 +18,8 @@ public class PathTicketResponse extends GenericTicketResponse {
 
     @Override
     public String toString() {
-        return super.toString().concat(startingLocation.getAddress()+" to "+endingLocation.getAddress());
+        return "PATH TICKET \n" +
+                super.toString() +
+                startingLocation.getAddress() + " to " + endingLocation.getAddress();
     }
 }
