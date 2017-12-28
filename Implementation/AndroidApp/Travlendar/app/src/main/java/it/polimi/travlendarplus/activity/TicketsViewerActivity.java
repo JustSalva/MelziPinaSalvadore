@@ -12,17 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Map;
 
 import it.polimi.travlendarplus.DateUtility;
 import it.polimi.travlendarplus.R;
 import it.polimi.travlendarplus.activity.handler.ticket.DeleteTicketHandler;
 import it.polimi.travlendarplus.activity.handler.ticket.GetTicketsHandler;
-import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
+import it.polimi.travlendarplus.activity.listener.DragToDeleteEventListener;
+import it.polimi.travlendarplus.activity.listener.DragToDeleteTicketListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchTicketListener;
 import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 import it.polimi.travlendarplus.database.view_model.TicketsViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
+import it.polimi.travlendarplus.retrofit.controller.ticket.DeleteTicketController;
 import it.polimi.travlendarplus.retrofit.controller.ticket.GetTicketsController;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -87,6 +88,16 @@ public class TicketsViewerActivity extends MenuActivity {
     }
 
     /**
+     * Sends request to delete a tickets to the server.
+     */
+    public void deleteTicket(int ticketId) {
+        waitForServerResponse();
+        DeleteTicketController deleteTicketController =
+                new DeleteTicketController(deleteTicketHandler);
+        deleteTicketController.start(token, ticketId);
+    }
+
+    /**
      * Clears the layout, then adds views to it representing tickets.
      */
     public void fillTicketsLayout() {
@@ -101,7 +112,7 @@ public class TicketsViewerActivity extends MenuActivity {
         TextView textView = new TextView(getApplicationContext());
         textView.setText("Drag here to remove");
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        textView.setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
+        textView.setOnDragListener(new DragToDeleteTicketListener(this));
         ticketsContainer_linearLayout.addView(textView);
     }
 

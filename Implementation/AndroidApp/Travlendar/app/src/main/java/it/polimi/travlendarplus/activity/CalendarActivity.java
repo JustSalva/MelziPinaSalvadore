@@ -19,7 +19,7 @@ import it.polimi.travlendarplus.activity.fragment.DatePickerFragment;
 import it.polimi.travlendarplus.activity.handler.event.DeleteEventHandler;
 import it.polimi.travlendarplus.activity.handler.event.GetEventsHandler;
 import it.polimi.travlendarplus.activity.handler.event.ScheduleEventHandler;
-import it.polimi.travlendarplus.activity.listener.DragToDeleteListener;
+import it.polimi.travlendarplus.activity.listener.DragToDeleteEventListener;
 import it.polimi.travlendarplus.activity.listener.DragToInfoListener;
 import it.polimi.travlendarplus.activity.listener.DragToScheduleListener;
 import it.polimi.travlendarplus.activity.listener.MyTouchEventListener;
@@ -28,6 +28,7 @@ import it.polimi.travlendarplus.database.entity.User;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.database.view_model.CalendarViewModel;
 import it.polimi.travlendarplus.database.view_model.UserViewModel;
+import it.polimi.travlendarplus.retrofit.controller.event.DeleteEventController;
 import it.polimi.travlendarplus.retrofit.controller.event.GetEventsController;
 
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class CalendarActivity extends MenuActivity {
         // Set events relativeLayout as drop recipient for drag action to schedule.
         findViewById(R.id.schedule_textView).setOnDragListener(new DragToScheduleListener(getApplicationContext(), this));
         // Set date textView as drop recipient for drag action to delete.
-        findViewById(R.id.delete_textView).setOnDragListener(new DragToDeleteListener(getApplicationContext(), this));
+        findViewById(R.id.delete_textView).setOnDragListener(new DragToDeleteEventListener(this));
     }
 
     /**
@@ -152,6 +153,16 @@ public class CalendarActivity extends MenuActivity {
         waitForServerResponse();
         GetEventsController getEventsController = new GetEventsController(getEventsHandler);
         getEventsController.start(user.getToken(), user.getTimestamp());
+    }
+
+    /**
+     * Sends request to delete an event to the server.
+     */
+    public void deleteEvent(int eventId) {
+        // Send request to server.
+        waitForServerResponse();
+        DeleteEventController deleteEventController = new DeleteEventController(deleteEventHandler);
+        deleteEventController.start(user.getToken(), eventId);
     }
 
     /**
@@ -373,7 +384,8 @@ public class CalendarActivity extends MenuActivity {
         this.focusedEvent = focusedEvent;
     }
 
-    public void setInfoTextViewVisibility(int visibility) {
+    public void setInfoDeleteTVVisibility(int visibility) {
         findViewById(R.id.info_textView).setVisibility(visibility);
+        findViewById(R.id.delete_textView).setVisibility(visibility);
     }
 }

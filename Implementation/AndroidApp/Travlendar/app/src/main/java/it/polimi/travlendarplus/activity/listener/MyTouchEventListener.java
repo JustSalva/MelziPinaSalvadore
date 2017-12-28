@@ -1,7 +1,6 @@
 package it.polimi.travlendarplus.activity.listener;
 
 import android.content.ClipData;
-import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,7 +29,7 @@ public class MyTouchEventListener implements View.OnTouchListener {
                 viewDragged.startDrag(data, shadowBuilder, viewDragged, 0);
                 viewDragged.setVisibility(View.INVISIBLE);
                 activity.setFocusedEvent(genericEvent);
-                activity.setInfoTextViewVisibility(View.VISIBLE);
+                activity.setInfoDeleteTVVisibility(View.VISIBLE);
                 return true;
             case MotionEvent.ACTION_UP:
                 viewDragged.performClick();

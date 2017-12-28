@@ -37,6 +37,7 @@
                 android:layout_weight="1"
                 android:text="@string/information"
                 android:textStyle="bold"
+                android:textAlignment="center"
                 android:visibility="gone"/>
 
             <TextView
@@ -46,6 +47,7 @@
                 android:layout_weight="1"
                 android:text="@string/delete"
                 android:textStyle="bold"
+                android:textAlignment="center"
                 android:visibility="gone"/>
 
         </LinearLayout>
