@@ -18,7 +18,7 @@ However, Java EE requires a server heavier than other possible solutions and for
 Java for Android is, of course, the same programming language described in the previous chapter, but Android is a different platform and uses a different virtual machine (Dalvik). \\
 Java is the programming language for the Android SDK. \\\\
 To develop the application to work on Android devices the two main language possibilities are Java and Kotlin, the latter just recently been added by Google as an officially supported language.\\
-The two languages are compatible and can be used side by side, but in this case we decided that Java was enough to realize the implementation of this project.\\\\s
+The two languages are compatible and can be used side by side, but in this case we decided that Java was enough to realize the implementation of this project.\\\\
 Kotlin offers some advantages like more succinct code, but given the limited amount of time given for the implementation, we decided, in order to avoid confusion by inserting a previously not known language, to stick with Java, a programming language already known by all the members of the group.
 \subsection{XML}
 \label{subsect:XML}
@@ -37,5 +37,16 @@ Instead, the found XML disadvantages are:
 \item hierarchical model for representation is limited in comparison to an object-oriented graph;
 \item encourages non-relational data structures (data non-normalized).
 \end{itemize}
-
+\subsection{XML for Android}
+\label{subsect:XML for Android}
+XML is used in an Android application in activity layouts, defining the visual structure for a user interface. \\
+You can declare layouts in two ways:
+\begin{itemize}
+\item By using XML;
+\item By instantiating them at runtime.
+\end{itemize}
+The advantage to declaring them in XML is that it enables you to better separate the presentation of your application from the code that controls its behavior. \\
+UI descriptions are external to the application code, meaning that can be modified without altering your source code and recompile. This makes it easier to debug problems. \\\\
+The XML vocabulary for declaring UI elements follows the structure and naming of the classes and methods.\\
+In this way, you can quickly design UI layouts and the screen elements they contain, with a series of nested elements. Each layout file must contain exactly one root element.
 
