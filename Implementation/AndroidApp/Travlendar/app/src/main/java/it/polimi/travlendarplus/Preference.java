@@ -136,10 +136,10 @@ public class Preference {
     public static class DistanceConstraint {
         private long id;
         private TravelMeanEnum concerns;
-        private float minLength;
-        private float maxLength;
+        private int minLength;
+        private int maxLength;
 
-        public DistanceConstraint(long id, TravelMeanEnum concerns, float minLength, float maxLength) {
+        public DistanceConstraint(long id, TravelMeanEnum concerns, int minLength, int maxLength) {
             this.id = id;
             this.concerns = concerns;
             this.minLength = minLength;
@@ -154,19 +154,19 @@ public class Preference {
             return concerns;
         }
 
-        public float getMinLength() {
+        public int getMinLength() {
             return minLength;
         }
 
-        public void setMinLength(float minLength) {
+        public void setMinLength(int minLength) {
             this.minLength = minLength;
         }
 
-        public float getMaxLength() {
+        public int getMaxLength() {
             return maxLength;
         }
 
-        public void setMaxLength(float maxLength) {
+        public void setMaxLength(int maxLength) {
             this.maxLength = maxLength;
         }
     }

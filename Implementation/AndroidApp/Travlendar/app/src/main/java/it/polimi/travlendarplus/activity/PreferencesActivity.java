@@ -257,8 +257,8 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
         }
         if (distanceConstraint != null) {
             if (distanceConstraint.getConcerns().getTravelMean().equals(selectedTravelMean)) {
-                minDistance_editText.setText(Float.toString(distanceConstraint.getMinLength()));
-                maxDistance_editText.setText(Float.toString(distanceConstraint.getMaxLength()));
+                minDistance_editText.setText(Integer.toString(distanceConstraint.getMinLength()));
+                maxDistance_editText.setText(Integer.toString(distanceConstraint.getMaxLength()));
             }
         }
     }
