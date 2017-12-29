@@ -9,25 +9,41 @@ Since they are structured as separate projects we will explain their internal st
 		.3 src.
 		.4 main.
 		.5 java/it/polimi/travlendarplus \DTcomment{main Android app's package}.
-		.6 activity.
-		.7 fragment.
-		.7 handler.
-		.8 event.
-		.8 location.
-		.8 preference.
-		.8 ticket.
-		.7 listener.
-		.7 tasks.
-		.6 database.
-		.7 converters.
+		.6 activity
+\DTcomment{contains activities related to layouts}.
+		.7 fragment
+\DTcomment{contains fragments classes}.
+		.7 handler
+\DTcomment{contains classes that handle server responses}.
+		.8 event
+\DTcomment{handlers related to event responses}.
+		.8 location
+\DTcomment{handlers related to location responses}.
+		.8 preference
+\DTcomment{handlers related to preference responses}.
+		.8 ticket
+\DTcomment{handlers related to ticket responses}.
+		.7 listener
+\DTcomment{contains listeners that allow click and drag actions}.
+		.7 tasks
+\DTcomment{contains classes that write on the local DB}.
+		.6 database
+\DTcomment{contains components of the local DB used by Room}.
+		.7 converters
+\DTcomment{converters from boxed to primitive data}.
 		.7 dao.
 		.7 entity.
-		.7 viewModel.
-		.6 retrofit.
-		.5 res.
-		.5 AndroidManifest.xml.
+		.7 viewModel
+\DTcomment{contains classes that store UI-related data}.
+		.6 retrofit
+\DTcomment{contains classes used to perform requests to the server}.
+		.5 res
+\DTcomment{contains all the resources}.
+		.5 AndroidManifest.xml
+\DTcomment{provides information about your app}.
 		.4 test/java/it/polimi/travlendarplus.
-		.3 build.gradle.
+		.3 build.gradle
+\DTcomment{defines build configurations}.
 	}
 \end{figure}
 
