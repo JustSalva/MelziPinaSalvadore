@@ -195,17 +195,14 @@ public class TicketEditorActivity extends MenuActivity implements LocationLoader
         }
         float cost = Float.parseFloat(cost_editText.getText().toString());
 
-        // Is it a generic ticket?
+        // Check if there is a generic/path ticket or a distance one to be added.
         GenericTicketBody genericTicketBody = null;
         PathTicketBody pathTicketBody = null;
         DistanceTicketBody distanceTicketBody = null;
         if (genericTicket_radioButton.isChecked()) {
-            genericTicketBody = new GenericTicketBody(
-                    cost,
-                    relatedTo,
-                    lineName_editText.getText().toString()
-            );
+            // Check if there is a path ticket to be added.
             if (path_checkBox.isChecked()) {
+                // Add generic ticket.
                 pathTicketBody = new PathTicketBody(
                         cost,
                         relatedTo,
@@ -213,8 +210,15 @@ public class TicketEditorActivity extends MenuActivity implements LocationLoader
                         startingLocation.getLocation(),
                         endingLocation.getLocation()
                 );
+            } else {
+                // Add path ticket.
+                genericTicketBody = new GenericTicketBody(
+                        cost,
+                        relatedTo,
+                        lineName_editText.getText().toString()
+                );
             }
-        } else if (distanceTicket_radioButton.isChecked()) { // or is it distance?
+        } else if (distanceTicket_radioButton.isChecked()) {
             distanceTicketBody = new DistanceTicketBody(
                     cost,
                     relatedTo,
