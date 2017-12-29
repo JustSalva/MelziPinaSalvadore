@@ -114,7 +114,6 @@ public class GenericEvent {
 
     public void setEvent(Event event) {
         this.event = event;
-        this.type = EventType.EVENT;
     }
 
     public BreakEvent getBreakEvent() {
@@ -123,7 +122,6 @@ public class GenericEvent {
 
     public void setBreakEvent(BreakEvent breakEvent) {
         this.breakEvent = breakEvent;
-        this.type = EventType.BREAK;
     }
 
     public boolean isPeriodical() {

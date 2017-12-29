@@ -60,7 +60,6 @@ public class Ticket {
 
     public void setPeriodTicket(PeriodTicket periodTicket) {
         this.periodTicket = periodTicket;
-        this.type = TicketType.PERIOD;
     }
 
     public DistanceTicket getDistanceTicket() {
@@ -69,7 +68,6 @@ public class Ticket {
 
     public void setDistanceTicket(DistanceTicket distanceTicket) {
         this.distanceTicket = distanceTicket;
-        this.type = TicketType.DISTANCE;
     }
 
     public GenericTicket getGenericTicket() {
@@ -78,7 +76,6 @@ public class Ticket {
 
     public void setGenericTicket(GenericTicket genericTicket) {
         this.genericTicket = genericTicket;
-        this.type = TicketType.GENERIC;
     }
 
     public enum TicketType {

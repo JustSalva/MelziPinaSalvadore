@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.database.view_model;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import it.polimi.travlendarplus.database.AppDatabase;
@@ -32,7 +33,7 @@ public class EventViewModel extends AndroidViewModel {
      */
     public LiveData<List<TravelComponent>> getTravelComponents(int eventId) {
         if (travelComponents == null) {
-            travelComponents = database.calendarDao().getTravelComponentsByEventId(eventId);
+            travelComponents = database.calendarDao().getTravelComponents(eventId);
         }
         return travelComponents;
     }
