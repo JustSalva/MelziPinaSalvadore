@@ -15,9 +15,9 @@ There are three major components in Room:
 \end{itemize}
 \subsection{GlassFish}
 \label{subsec:GlassFish}
-GlassFish is the server used to run our server-side code, it is open source and allows the execution of Java EE functions.\\
-Moreover it is possible, by means of EJB APIs, to perform security functions and, by means of JAX-RS, to provide RESTful services. \\
-Unfortunately, we encountered some difficulties related to GlassFish:
+GlassFish is the server used to run our server-side code, it is open source and allows the execution of Java EE functions.\\ 
+Moreover it is possible, by means of EJB APIs, to perform security functions and, by means of JAX-RS, to provide RESTful services. \\ 
+Unfortunately, we encountered some difficulties related to GlassFish: 
 \begin{itemize}
 \item we installed GlassFish 5.0 on a virtual server with a low amount of RAM: 1GB. GlassFish 5.0 require 1GB of RAM (but 2GB are recommended) to run, so it was often down due to our virtual server. We resolved this problem increasing the virtual server RAM with a swap in local memory mass.
 \item GF 5.0 is relatively recent and contains some bugs that will be fixed in the following updates. For instance, we found that GF 5.0 is incompatible with JodaTime library. 
