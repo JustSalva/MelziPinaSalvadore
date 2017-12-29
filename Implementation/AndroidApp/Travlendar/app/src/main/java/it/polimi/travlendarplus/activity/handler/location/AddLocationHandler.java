@@ -39,7 +39,7 @@ public class AddLocationHandler extends DefaultHandler<AccountActivity> {
                 Location location = new Location(
                         activity.getLocationName(),
                         new Position(activity.getLocationAddress()));
-                activity.getLocationsMap().put(activity.getLocationName().replace(" ", "_"), location);
+                activity.getLocationsMap().put(activity.getLocationName(), location);
                 activity.populateLocationsSpinner();
                 break;
             case 500:
