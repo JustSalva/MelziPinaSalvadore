@@ -1,5 +1,36 @@
+\subsection{Java}
+\label{subsect:Java}
+We chose Java as programming language in order to build the Application Server with Java EE, a set of specifications used to develop enterprise applications. Java EE is suitable for our needs and it is part of the arguments taught during laboratory lessons.\\
+About Java, we can state that the advantages are greater than the disadvantages. The main qualities of Java are:
+\begin{itemize}
+\item \textit{Object-oriented}: the programming code is based on the concept of object. Each object can contain several fields (attributes) and functionalities (methods). The code is widely reusable and it is possible to establish a sort of hierarchy and relations between the different objects. Travlendar+, moreover, is made up of different entities linked to each other that can be easily represented as objects;
+\item \textit{simple}: syntax is easy to understand and doesn’t include confusing features, as explicit pointers or operator overloading. Also, unreferenced objects are automatically removed by Java Garbage Collector;
+\item \textit{platform-independent}: the ability to be used in different platforms. Java code is converted in bytecode and follows the “Write Once Run Anywhere” principle. In this case the code runs on a Linux-based server, but it is written and tested at first in Windows environments. 
+\end{itemize}
+As drawback, Java is significantly slower and more memory-consuming than natively compiled languages such as C or C++.\\\\
+About Java EE, we can confirm what we wrote in Design Document:\\
+\textit{''The Application Server may be implemented using Java Enterprise Edition (JEE) 8; this choice could allow the developers to focus on the logic to be provided while being supported by reliable APIs and tools, in order to reduce the complexity of the development phase. Using JEE 8 the developers could also guarantee the main non-functional requirements, which are stated in RASD document''.}\\\\
+In fact, we observe that Java EE includes a set of services and APIs that can facilitate quick development of stable and powerful enterprise level applications. Java EE is widespread among developers and it is also supported by different test tools and frameworks.\\
+However, Java EE requires a server heavier than other possible solutions and for some issue that we encountered during the implementation, the documentation available online is quite poor. 
+\subsection{Java for Android}
+\label{subsect:Java for Android}
 \todo{TODO}
-\subsection{Advantages}
-\todo{TODO}
-\subsection{Disadvantages}
-\todo{TODO}
+\subsection{XML}
+\label{subsect:XML}
+XML is a mark-up language used in the Application Server to describe properties or dependencies of the project. The main advantages about XML, that we found in the implementation phase, are:
+\begin{itemize}
+\item it supports Unicode, allowing almost any information in any written human language to be communicated;
+\item it can represent common computer science data structures: records, lists and trees;
+\item its self-documenting format describes structure and field names as well as specific values;
+\item the strict syntax and parsing requirements make the necessary parsing algorithms extremely simple, efficient, and consistent;
+\item the hierarchical structure is suitable for most types of documents;
+\item it is platform-independent, thus relatively immune to changes in technology.
+\end{itemize}
+Instead, the found XML disadvantages are:
+\begin{itemize}
+\item XML syntax is redundant or large relative to binary representations of similar data, especially with tabular data;
+\item hierarchical model for representation is limited in comparison to an object-oriented graph;
+\item encourages non-relational data structures (data non-normalized).
+\end{itemize}
+
+
