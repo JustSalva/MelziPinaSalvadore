@@ -22,7 +22,7 @@ public class DeleteEventTask extends AsyncTask<Void, Void, Void> {
 
     protected Void doInBackground(Void... voids) {
         // Delete event from the DB.
-        database.calendarDao().deleteEventFromId(eventId);
+        database.calendarDao().deleteGenericEventFromId(eventId);
         return null;
     }
 }

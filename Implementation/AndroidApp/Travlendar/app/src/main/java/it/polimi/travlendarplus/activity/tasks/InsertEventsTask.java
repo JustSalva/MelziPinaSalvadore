@@ -11,7 +11,6 @@ import it.polimi.travlendarplus.database.entity.event.Event;
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
 import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         for (EventResponse eventResponse : events) {
             // If the event is already present, delete it.
-            database.calendarDao().deleteEventFromId((int) eventResponse.getId());
+            database.calendarDao().deleteGenericEventFromId((int) eventResponse.getId());
             // Create generic event.
             GenericEvent genericEvent = new GenericEvent(
                     eventResponse.getId(),
@@ -52,7 +51,7 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
             genericEvent.setType(GenericEvent.EventType.EVENT);
             genericEvent.setEvent(event);
             // Insert the generic event in the DB.
-            database.calendarDao().insert(genericEvent);
+            database.calendarDao().insertGenericEvent(genericEvent);
 
             // Delete all the old travel components for the event.
             database.calendarDao().deleteEventTravelComponents(eventResponse.getId());
@@ -71,7 +70,7 @@ public class InsertEventsTask extends AsyncTask<Void, Void, Void> {
                             miniTravel.getEndingTime().getSeconds()
                     );
                     // Insert travel component in the DB.
-                    database.calendarDao().insert(travelComponent);
+                    database.calendarDao().insertTravelComponent(travelComponent);
                 }
             }
         }

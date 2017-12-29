@@ -20,8 +20,8 @@ public class RemoveUserTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         database.userDao().delete();
-        database.calendarDao().deleteTravelComponents();
-        database.calendarDao().deleteAll();
+        database.calendarDao().deleteAllTravelComponents();
+        database.calendarDao().deleteAllGenericEvents();
         database.ticketsDao().deleteAll();
         return null;
     }

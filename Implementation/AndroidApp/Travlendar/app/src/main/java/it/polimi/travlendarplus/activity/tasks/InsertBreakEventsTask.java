@@ -27,7 +27,7 @@ public class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         for (BreakEventResponse breakEventResponse : breakEvents) {
             // If the break event is already present, delete it.
-            database.calendarDao().deleteEventFromId((int) breakEventResponse.getId());
+            database.calendarDao().deleteGenericEventFromId((int) breakEventResponse.getId());
             // Create break event.
             GenericEvent genericEvent = new GenericEvent(
                     breakEventResponse.getId(),
@@ -42,7 +42,7 @@ public class InsertBreakEventsTask extends AsyncTask<Void, Void, Void> {
             genericEvent.setType(GenericEvent.EventType.BREAK);
             genericEvent.setBreakEvent(breakEvent);
             // Insert break event in the DB.
-            database.calendarDao().insert(genericEvent);
+            database.calendarDao().insertGenericEvent(genericEvent);
         }
         database.userDao().setTimestamp(System.currentTimeMillis()/1000L);
         return null;

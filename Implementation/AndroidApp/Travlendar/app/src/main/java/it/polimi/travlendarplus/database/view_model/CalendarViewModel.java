@@ -36,7 +36,7 @@ public class CalendarViewModel extends AndroidViewModel {
     public LiveData<List<GenericEvent>> getAllEvents() {
         if (events == null) {
             events = new MutableLiveData<>();
-            events = database.calendarDao().getAllEvents();
+            events = database.calendarDao().getAllGenericEvents();
         }
         return events;
     }
@@ -48,7 +48,7 @@ public class CalendarViewModel extends AndroidViewModel {
     public LiveData<List<GenericEvent>> getEvents(long date) {
         if (events == null) {
             events = new MutableLiveData<>();
-            events = database.calendarDao().getEvents(date);
+            events = database.calendarDao().getGenericEventsByDate(date);
         }
         return events;
     }
@@ -60,7 +60,7 @@ public class CalendarViewModel extends AndroidViewModel {
     public LiveData<List<GenericEvent>> getScheduledEvents(long date) {
         if (scheduledEvents == null) {
             scheduledEvents = new MutableLiveData<>();
-            scheduledEvents = database.calendarDao().getScheduledEvents(date);
+            scheduledEvents = database.calendarDao().getScheduledEventsByDate(date);
         }
         return scheduledEvents;
     }
@@ -72,7 +72,7 @@ public class CalendarViewModel extends AndroidViewModel {
     public LiveData<List<GenericEvent>> getOverlappingEvents(long date) {
         if (overlappingEvents == null) {
             overlappingEvents = new MutableLiveData<>();
-            overlappingEvents = database.calendarDao().getOverlappingEvents(date);
+            overlappingEvents = database.calendarDao().getOverlappingEventsByDate(date);
         }
         return overlappingEvents;
     }
@@ -84,7 +84,7 @@ public class CalendarViewModel extends AndroidViewModel {
     public LiveData<List<GenericEvent>> getBreakEvents(long date) {
         if (breakEvents == null) {
             breakEvents = new MutableLiveData<>();
-            breakEvents = database.calendarDao().getBreakEvents(date);
+            breakEvents = database.calendarDao().getBreakEventsByDate(date);
         }
         return breakEvents;
     }

@@ -18,62 +18,145 @@ import java.util.List;
  */
 @Dao
 public interface CalendarDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(GenericEvent genericEvent);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(TravelComponent travelComponent);
+    // EVENTS.
 
+    /**
+     * Inserts a generic event.
+     * @param genericEvent Generic event to be inserted.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertGenericEvent(GenericEvent genericEvent);
+
+    /**
+     * @return Number of generic events present in the DB.
+     */
+    @Query("SELECT COUNT(*) FROM generic_event")
+    int countGenericEvents();
+
+    /**
+     * Updates a generic event.
+     * @param genericEvent Generic event to be updated.
+     */
     @Update
-    void update(GenericEvent genericEvent);
+    void updateGenericEvent(GenericEvent genericEvent);
 
+    /**
+     * Deletes a generic event.
+     * @param genericEvent Generic event to be deleted.
+     */
     @Delete
-    void delete(GenericEvent genericEvent);
+    void deleteGenericEvent(GenericEvent genericEvent);
 
+    /**
+     * Deletes a generic event with a certain id.
+     * @param id Id of the generic event to be deleted.
+     */
     @Query("DELETE FROM generic_event WHERE id LIKE :id")
-    void deleteEventFromId(int id);
+    void deleteGenericEventFromId(int id);
 
+    /**
+     * Deletes all the generic events present in the DB.
+     */
     @Query("DELETE FROM generic_event")
-    void deleteAll();
+    void deleteAllGenericEvents();
 
+    /**
+     * Gets all the generic events present in the DB.
+     * @return A list of all the generic events.
+     */
     @Query("SELECT * FROM generic_event " +
             "ORDER BY start_time")
-    LiveData<List<GenericEvent>> getAllEvents();
+    LiveData<List<GenericEvent>> getAllGenericEvents();
 
+    /**
+     * Gets all the generic events happening on a specific date.
+     * @param date UTC time of the date.
+     * @return A list of generic events happening on a date.
+     */
     @Query("SELECT * FROM generic_event WHERE date LIKE :date " +
             "ORDER BY start_time")
-    LiveData<List<GenericEvent>> getEvents(long date);
+    LiveData<List<GenericEvent>> getGenericEventsByDate(long date);
 
+    /**
+     * Gets all the scheduled events happening on a specific date.
+     * @param date UTC time of the date.
+     * @return A list of all the scheduled events happening on a date.
+     */
     @Query("SELECT * FROM generic_event WHERE type LIKE 'event' " +
             "AND date LIKE :date " +
             "AND scheduled LIKE 'true' " +
             "ORDER BY start_time")
-    LiveData<List<GenericEvent>> getScheduledEvents(long date);
+    LiveData<List<GenericEvent>> getScheduledEventsByDate(long date);
 
+    /**
+     * Gets all the overlapping events happening on a specific date.
+     * @param date UTC time of the date.
+     * @return A list of all the overlapping events happening on a date.
+     */
     @Query("SELECT * FROM generic_event WHERE type LIKE 'event' " +
             "AND date LIKE :date " +
             "AND scheduled LIKE 'false' " +
             "ORDER BY start_time")
-    LiveData<List<GenericEvent>> getOverlappingEvents(long date);
+    LiveData<List<GenericEvent>> getOverlappingEventsByDate(long date);
 
+    /**
+     * Gets all the break events happening on a specific date.
+     * @param date UTC time of the date.
+     * @return A list of all the break events happening on a date.
+     */
     @Query("SELECT * FROM generic_event WHERE type LIKE 'break' AND date LIKE :date")
-    LiveData<List<GenericEvent>> getBreakEvents(long date);
+    LiveData<List<GenericEvent>> getBreakEventsByDate(long date);
 
+    // TRAVEL COMPONENTS.
+
+    /**
+     * Inserts a travel component in the DB.
+     * @param travelComponent Travel component to be inserted.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertTravelComponent(TravelComponent travelComponent);
+
+    /**
+     * Gets all the travel components related to an event.
+     * @param eventId Id of the event related.
+     * @return List of the travel components related to an event.
+     */
     @Query("SELECT * FROM travel_component WHERE event_id LIKE :eventId")
-    LiveData<List<TravelComponent>> getTravelComponents(long eventId);
+    LiveData<List<TravelComponent>> getTravelComponentsByEventId(long eventId);
 
+    /**
+     * Gets all the travel components present in the DB.
+     * @return A list of all the travel component.
+     */
     @Query("SELECT * FROM travel_component")
     LiveData<List<TravelComponent>> getAllTravelComponents();
 
+    /**
+     * Deletes all the travel components present in the DB.
+     */
     @Query("DELETE FROM travel_component")
-    void deleteTravelComponents();
+    void deleteAllTravelComponents();
 
+    /**
+     * Deletes all the travel components related to an event.
+     * @param eventId Id of the event related.
+     */
     @Query("DELETE FROM travel_component WHERE event_id LIKE :eventId")
     void deleteEventTravelComponents(long eventId);
 
+    /**
+     * Add a ticket to a travel component.
+     * @param ticketId Id of the ticket.
+     * @param travelComponentId Id of the travel component.
+     */
     @Query("UPDATE travel_component SET ticket_id = :ticketId WHERE id LIKE :travelComponentId")
     void selectTicket(int ticketId, int travelComponentId);
 
+    /**
+     * Remove a ticket from a travel component.
+     * @param travelComponentId Id of the travel component.
+     */
     @Query("UPDATE travel_component SET ticket_id = 0 WHERE id LIKE :travelComponentId")
     void deselectTicket(int travelComponentId);
 }
