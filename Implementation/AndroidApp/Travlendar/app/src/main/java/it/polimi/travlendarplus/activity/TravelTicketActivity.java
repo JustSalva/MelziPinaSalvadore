@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -162,7 +163,9 @@ public class TravelTicketActivity extends MenuActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         travelComponentsLLMap.put((int) travelComponentId, linearLayout);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.CENTER, 0.5f);
+        params.height = WRAP_CONTENT;
+        params.width = MATCH_PARENT;
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
         params.setGravity(Gravity.CENTER);
         linearLayout.setLayoutParams(params);
         // Add button that loads compatible tickets from server.
@@ -206,8 +209,13 @@ public class TravelTicketActivity extends MenuActivity {
         for (TicketResponse ticketResponse : tickets) {
             // Create LinearLayout to display each one of them.
             LinearLayout ticketLL = new LinearLayout(this);
-            TextView ticketName_TV = new TextView(getApplicationContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+            ticketLL.setLayoutParams(params);
+            LinearLayout.LayoutParams insideParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+            TextView ticketName_TV = new TextView(this);
+            ticketName_TV.setLayoutParams(insideParams);
             ticketName_TV.setText(ticketResponse.toString());
+            ticketName_TV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             ticketName_TV.setTextColor(Color.parseColor("#000000"));
             ticketLL.addView(ticketName_TV);
             // Check if the ticket is already selected.
@@ -226,6 +234,7 @@ public class TravelTicketActivity extends MenuActivity {
                             travelComponentId
                     );
                 });
+                selectButton.setLayoutParams(insideParams);
                 ticketLL.addView(selectButton);
             } else if (ticketResponse.getId() == travelComponentSelectedTicket.get(travelComponentId)){
                 ticketName_TV.setTypeface(null, Typeface.BOLD);
@@ -243,6 +252,7 @@ public class TravelTicketActivity extends MenuActivity {
                             travelComponentId
                     );
                 });
+                deselectButton.setLayoutParams(insideParams);
                 ticketLL.addView(deselectButton);
             }
             // Add to main layout.
