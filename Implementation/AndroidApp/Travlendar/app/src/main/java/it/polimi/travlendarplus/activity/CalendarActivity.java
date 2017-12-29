@@ -173,6 +173,7 @@ public class CalendarActivity extends MenuActivity {
         for (int i = 0; i < 24; i++) {
             TextView textView = new TextView(getApplicationContext());
             textView.setText(Integer.toString(i));
+            textView.setTextColor(Color.parseColor("#000000"));
             textView.setTypeface(null, Typeface.BOLD);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, 200);
@@ -269,6 +270,7 @@ public class CalendarActivity extends MenuActivity {
         // Set style.
         TextView textView = new TextView(getApplicationContext());
         textView.setText(event.getName().concat("'s travel"));
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTypeface(null, Typeface.BOLD);
         // Set colors.

@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -110,6 +111,7 @@ public class TicketsViewerActivity extends MenuActivity {
         // Add text view to remove ticket.
         TextView textView = new TextView(getApplicationContext());
         textView.setText("Drag here to remove");
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setOnDragListener(new DragToDeleteTicketListener(this));
         ticketsContainer_linearLayout.addView(textView);
@@ -124,12 +126,11 @@ public class TicketsViewerActivity extends MenuActivity {
         GridLayout gridLayout = new GridLayout(getApplicationContext());
         gridLayout.setColumnCount(2);
         gridLayout.setBackground(getResources().getDrawable(R.drawable.rectangle, getTheme()));
-
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.width = MATCH_PARENT;
         params.height = WRAP_CONTENT;
         params.setMargins(10, 10, 10, 10);
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.CENTER, 0.5f);
         gridLayout.setLayoutParams(params);
         gridLayout.addView(createTextView(ticket.getType().getType().concat(" ticket")));
         gridLayout.addView(createTextView("COST: ".concat(Float.toString(ticket.getCost()))));
@@ -172,6 +173,7 @@ public class TicketsViewerActivity extends MenuActivity {
     private TextView createTextView(String content) {
         TextView textView = new TextView(getApplicationContext());
         textView.setText(content);
+        textView.setTextColor(Color.parseColor("#000000"));
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
         textView.setLayoutParams(params);

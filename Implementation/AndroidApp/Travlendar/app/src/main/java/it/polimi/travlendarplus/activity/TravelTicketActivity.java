@@ -3,6 +3,7 @@ package it.polimi.travlendarplus.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -146,6 +147,7 @@ public class TravelTicketActivity extends MenuActivity {
         linearLayout.setLayoutParams(params);
         TextView textView = new TextView(getApplicationContext());
         textView.setText(content);
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         linearLayout.addView(textView);
         return linearLayout;
@@ -160,7 +162,7 @@ public class TravelTicketActivity extends MenuActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         travelComponentsLLMap.put((int) travelComponentId, linearLayout);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.CENTER, 0.5f);
         params.setGravity(Gravity.CENTER);
         linearLayout.setLayoutParams(params);
         // Add button that loads compatible tickets from server.
@@ -206,6 +208,7 @@ public class TravelTicketActivity extends MenuActivity {
             LinearLayout ticketLL = new LinearLayout(this);
             TextView ticketName_TV = new TextView(getApplicationContext());
             ticketName_TV.setText(ticketResponse.toString());
+            ticketName_TV.setTextColor(Color.parseColor("#000000"));
             ticketLL.addView(ticketName_TV);
             // Check if the ticket is already selected.
             if (! travelComponentSelectedTicket.containsKey(travelComponentId)) {
