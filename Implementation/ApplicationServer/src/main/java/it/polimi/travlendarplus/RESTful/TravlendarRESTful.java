@@ -1,6 +1,5 @@
 package it.polimi.travlendarplus.RESTful;
 
-import it.polimi.travlendarplus.HelloWorld;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -24,8 +23,6 @@ public class TravlendarRESTful extends ResourceConfig {
         // Register resources and providers using package-scanning.
         packages( "it.polimi.travlendarplus.RESTful" );
 
-        // Register a specific class
-        register( HelloWorld.class );
         // Register an instance of LoggingFilter.
         register( new LoggingFeature( Logger.getLogger( "inbound" ),
                 Level.ALL, LoggingFeature.Verbosity.PAYLOAD_ANY, 8192 ) );
