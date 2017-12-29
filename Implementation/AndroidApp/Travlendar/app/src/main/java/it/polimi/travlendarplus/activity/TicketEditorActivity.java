@@ -105,8 +105,8 @@ public class TicketEditorActivity extends MenuActivity implements LocationLoader
             }
         });
         //Handlers setup.
-        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        addTicketHandler = new AddTicketHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(),  this);
+        addTicketHandler = new AddTicketHandler(Looper.getMainLooper(), this);
         // Spinners listeners.
         // Setup travel mean constrained spinner listener.
         startingLocation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

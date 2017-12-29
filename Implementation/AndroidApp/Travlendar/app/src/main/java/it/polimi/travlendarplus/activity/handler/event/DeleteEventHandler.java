@@ -16,13 +16,13 @@ import it.polimi.travlendarplus.activity.tasks.DeleteEventTask;
  * Handler that handles the server response to the event deletion.
  * It is used by the CalendarActivity.
  */
-public class DeleteEventHandler extends DefaultHandler {
+public class DeleteEventHandler extends DefaultHandler<CalendarActivity> {
 
-    private CalendarActivity calendarActivity;
+    //private CalendarActivity calendarActivity;
 
-    public DeleteEventHandler(Looper looper, Context context, CalendarActivity calendarActivity) {
-        super(looper, context);
-        this.calendarActivity = calendarActivity;
+    public DeleteEventHandler(Looper looper, CalendarActivity calendarActivity) {
+        super(looper, calendarActivity);
+        //this.calendarActivity = calendarActivity;
     }
 
     @Override
@@ -32,18 +32,18 @@ public class DeleteEventHandler extends DefaultHandler {
             case 200:
                 int eventId = msg.getData().getInt("Id");
                 // Notify the user that the event has been removed.
-                Toast.makeText(context, "Event removed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Event removed!", Toast.LENGTH_LONG).show();
                 // Remove event from the DB.
-                new DeleteEventTask(context, eventId).execute();
+                new DeleteEventTask(activity.getApplicationContext(), eventId).execute();
                 // Reload calendar activity.
-                context.startActivity(new Intent(context, CalendarActivity.class));
+                activity.startActivity(new Intent(activity, CalendarActivity.class));
                 break;
             case 503:
-                Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;
         }
-        calendarActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

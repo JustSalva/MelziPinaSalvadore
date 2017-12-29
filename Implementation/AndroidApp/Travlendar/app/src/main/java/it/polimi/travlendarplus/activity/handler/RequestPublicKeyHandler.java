@@ -1,6 +1,8 @@
 package it.polimi.travlendarplus.activity.handler;
 
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ActionMenuView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -28,13 +31,13 @@ import it.polimi.travlendarplus.activity.PublicKeyActivity;
  * Handler that handles the server response to the public key request.
  * It is used by the PublicKeyActivity.
  */
-public class RequestPublicKeyHandler extends DefaultHandler {
+public class RequestPublicKeyHandler extends DefaultHandler<Activity> {
 
-    private PublicKeyActivity activity;
+    //private PublicKeyActivity activity;
 
-    public RequestPublicKeyHandler(Looper looper, Context context, PublicKeyActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public RequestPublicKeyHandler(Looper looper, PublicKeyActivity activity) {
+        super(looper, (Activity)activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -55,16 +58,16 @@ public class RequestPublicKeyHandler extends DefaultHandler {
                 } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
-                activity.setPublicKey(publicKey);
+                ((PublicKeyActivity)activity).setPublicKey(publicKey);
                 break;
             case 503:
-                Toast.makeText(context, "Service unavailable!", Toast.LENGTH_LONG).show();
-                context.startActivity(new Intent(context, LoginActivity.class));
+                Toast.makeText(activity, "Service unavailable!", Toast.LENGTH_LONG).show();
+                activity.startActivity(new Intent(activity, LoginActivity.class));
                 break;
             default:
-                context.startActivity(new Intent(context, LoginActivity.class));
+                activity.startActivity(new Intent(activity, LoginActivity.class));
                 break;
         }
-        activity.resumeNormalMode();
+        ((PublicKeyActivity)activity).resumeNormalMode();
     }
 }

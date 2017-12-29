@@ -1,5 +1,6 @@
 package it.polimi.travlendarplus.activity.handler.event;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -19,13 +20,13 @@ import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
  * Handler that handles the server response to the event addition.
  * It is used by the EventEditorActivity.
  */
-public class AddEventHandler extends DefaultHandler {
+public class AddEventHandler extends DefaultHandler<EventEditorActivity> {
 
-    private EventEditorActivity eventEditorActivity;
+    //private EventEditorActivity eventEditorActivity;
 
-    public AddEventHandler(Looper looper, Context context, EventEditorActivity eventEditorActivity) {
-        super(looper, context);
-        this.eventEditorActivity = eventEditorActivity;
+    public AddEventHandler(Looper looper, EventEditorActivity eventEditorActivity) {
+        super(looper, eventEditorActivity);
+        //this.eventEditorActivity = eventEditorActivity;
     }
 
     @Override
@@ -34,15 +35,15 @@ public class AddEventHandler extends DefaultHandler {
         switch (msg.what){
             case 200:
                 // Notify the user that the event has been added.
-                Toast.makeText(context, "Event added!", Toast.LENGTH_LONG).show();
-                context.startActivity(new Intent(context, CalendarActivity.class));
+                Toast.makeText(activity, "Event added!", Toast.LENGTH_LONG).show();
+                activity.startActivity(new Intent(activity, CalendarActivity.class));
                 break;
             case 503:
-                Toast.makeText(context, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Google Maps not reachable!", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;
         }
-        eventEditorActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

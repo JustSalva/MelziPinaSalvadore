@@ -15,13 +15,13 @@ import it.polimi.travlendarplus.activity.handler.DefaultHandler;
  * Handler that handles the server response to the preference deletion.
  * It is used by the PreferencesActivity.
  */
-public class DeletePreferenceHandler extends DefaultHandler {
+public class DeletePreferenceHandler extends DefaultHandler<PreferencesActivity> {
 
-    private PreferencesActivity preferencesActivity;
+    //private PreferencesActivity preferencesActivity;
 
-    public DeletePreferenceHandler(Looper looper, Context context, PreferencesActivity preferencesActivity) {
-        super(looper, context);
-        this.preferencesActivity = preferencesActivity;
+    public DeletePreferenceHandler(Looper looper, PreferencesActivity preferencesActivity) {
+        super(looper, preferencesActivity);
+        //this.preferencesActivity = preferencesActivity;
     }
 
     @Override
@@ -29,17 +29,17 @@ public class DeletePreferenceHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 1:
-                Toast.makeText(context, "The normal type of event cannot be deleted!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "The normal type of event cannot be deleted!", Toast.LENGTH_LONG).show();
                 break;
             case 200:
                 // Notify the user that the preference has been removed.
-                Toast.makeText(context, "Preference removed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Preference removed!", Toast.LENGTH_LONG).show();
                 // Remove preference from the list.
-                preferencesActivity.getPreferencesMap().remove(preferencesActivity.getSelectedPreference().getName());
+                activity.getPreferencesMap().remove(activity.getSelectedPreference().getName());
                 break;
             default:
                 break;
         }
-        preferencesActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

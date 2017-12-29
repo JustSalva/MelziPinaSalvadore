@@ -153,10 +153,10 @@ public class PreferencesActivity extends MenuActivity implements PreferenceLoade
         findViewById(R.id.addNewPreference_button).setOnClickListener(view -> addPreferenceToServer());
 
         // Handle server responses.
-        getPreferencesHandler = new GetPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        addPreferenceHandler = new AddPreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        modifyPreferenceHandler = new ModifyPreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        deletePreferenceHandler = new DeletePreferenceHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getPreferencesHandler = new GetPreferencesHandler(Looper.getMainLooper(), this);
+        addPreferenceHandler = new AddPreferenceHandler(Looper.getMainLooper(),  this);
+        modifyPreferenceHandler = new ModifyPreferenceHandler(Looper.getMainLooper(),  this);
+        deletePreferenceHandler = new DeletePreferenceHandler(Looper.getMainLooper(),  this);
     }
 
     /**

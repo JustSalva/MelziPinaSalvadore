@@ -63,8 +63,8 @@ public class TicketsViewerActivity extends MenuActivity {
             fillTicketsLayout();
         });
         // Setup handlers.
-        getTicketsHandler = new GetTicketsHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        deleteTicketHandler = new DeleteTicketHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getTicketsHandler = new GetTicketsHandler(Looper.getMainLooper(), this);
+        deleteTicketHandler = new DeleteTicketHandler(Looper.getMainLooper(), this);
 
         if (! ticketsDownloaded) {
             loadTicketsFromServer();

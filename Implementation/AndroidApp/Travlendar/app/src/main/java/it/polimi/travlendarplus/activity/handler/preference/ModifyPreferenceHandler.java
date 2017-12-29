@@ -19,13 +19,13 @@ import it.polimi.travlendarplus.activity.handler.DefaultHandler;
  * Handler that handles the server response to the preference modification.
  * It is used by the PreferencesActivity.
  */
-public class ModifyPreferenceHandler extends DefaultHandler {
+public class ModifyPreferenceHandler extends DefaultHandler<PreferencesActivity> {
 
-    private PreferencesActivity preferencesActivity;
+    //private PreferencesActivity preferencesActivity;
 
-    public ModifyPreferenceHandler(Looper looper, Context context, PreferencesActivity preferencesActivity) {
-        super(looper, context);
-        this.preferencesActivity = preferencesActivity;
+    public ModifyPreferenceHandler(Looper looper, PreferencesActivity preferencesActivity) {
+        super(looper, preferencesActivity);
+        //this.preferencesActivity = preferencesActivity;
     }
 
     @Override
@@ -33,21 +33,21 @@ public class ModifyPreferenceHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 1:
-                Toast.makeText(context, "The normal type of event cannot be modified!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "The normal type of event cannot be modified!", Toast.LENGTH_LONG).show();
                 break;
             case 200:
-                Toast.makeText(context, "Preference edited!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Preference edited!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonPreference = bundle.getString("jsonPreference");
                 Preference preference = new Gson()
                         .fromJson(jsonPreference, Preference.class);
-                preferencesActivity.getPreferencesMap().put(preference.getName(), preference);
-                preferencesActivity.populatePreferencesSpinner();
+                activity.getPreferencesMap().put(preference.getName(), preference);
+                activity.populatePreferencesSpinner();
                 break;
             default:
                 break;
         }
-        preferencesActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

@@ -88,10 +88,10 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
         idDevice = FirebaseInstanceId.getInstance().getToken();
 
         // Public key handler.
-        requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        requestPublicKeyHandler = new RequestPublicKeyHandler(Looper.getMainLooper(), this);
 
         // Handle server responses.
-        loginHandler = new LoginHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        loginHandler = new LoginHandler(Looper.getMainLooper(), this);
 
         /* PUBLIC KEY REQUEST: to be removed when encryption works.
         if (publicKey == null) {

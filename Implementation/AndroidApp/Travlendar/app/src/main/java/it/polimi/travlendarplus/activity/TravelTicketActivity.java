@@ -86,8 +86,8 @@ public class TravelTicketActivity extends MenuActivity {
         });
 
         // Handlers.
-        getCompatibleTicketsHandler = new GetCompatibleTicketsHandler(getMainLooper(), getApplicationContext(), this);
-        selectTravelHandler = new SelectTravelHandler(getMainLooper(), getApplicationContext(), this);
+        getCompatibleTicketsHandler = new GetCompatibleTicketsHandler(getMainLooper(), this);
+        selectTravelHandler = new SelectTravelHandler(getMainLooper(),  this);
     }
 
 

@@ -20,14 +20,14 @@ import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
  * Handler that handles the server response to the preference addition.
  * It is used by the PreferencesActivity.
  */
-public class AddPreferenceHandler extends DefaultHandler {
+public class AddPreferenceHandler extends DefaultHandler<PreferencesActivity> {
 
-    private PreferencesActivity preferencesActivity;
+    //private PreferencesActivity preferencesActivity;
 
-    public AddPreferenceHandler(Looper looper, Context context, PreferencesActivity preferencesActivity) {
-        super(looper, context);
-        this.context = context;
-        this.preferencesActivity = preferencesActivity;
+    public AddPreferenceHandler(Looper looper, PreferencesActivity preferencesActivity) {
+        super(looper, preferencesActivity);
+        //this.context = context;
+        //this.preferencesActivity = preferencesActivity;
     }
 
     @Override
@@ -35,18 +35,18 @@ public class AddPreferenceHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                Toast.makeText(context, "Preference added!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Preference added!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonPreference = bundle.getString("jsonPreference");
                 Preference preference = new Gson()
                         .fromJson(jsonPreference, Preference.class);
-                preferencesActivity.getPreferencesMap().put(preference.getName(), preference);
-                preferencesActivity.populatePreferencesSpinner();
+                activity.getPreferencesMap().put(preference.getName(), preference);
+                activity.populatePreferencesSpinner();
                 break;
             default:
                 break;
         }
-        preferencesActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

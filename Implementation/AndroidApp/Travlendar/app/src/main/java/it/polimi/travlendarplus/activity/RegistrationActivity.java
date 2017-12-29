@@ -80,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
         registration_button.setOnClickListener(view -> signUp());
 
         // Handle server responses.
-        registrationHandler = new RegistrationHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        registrationHandler = new RegistrationHandler(Looper.getMainLooper(), this);
     }
 
 

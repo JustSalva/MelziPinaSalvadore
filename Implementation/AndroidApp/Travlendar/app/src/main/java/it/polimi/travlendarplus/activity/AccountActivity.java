@@ -124,9 +124,9 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
         findViewById(R.id.addLocation_button).setOnClickListener(view -> sendLocationToServer());
 
         // Handle server responses.
-        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        addLocationHandler = new AddLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getLocationsHandler = new GetLocationsHandler(Looper.getMainLooper(), this);
+        addLocationHandler = new AddLocationHandler(Looper.getMainLooper(), this);
+        deleteLocationHandler = new DeleteLocationHandler(Looper.getMainLooper(),  this);
     }
 
     /**

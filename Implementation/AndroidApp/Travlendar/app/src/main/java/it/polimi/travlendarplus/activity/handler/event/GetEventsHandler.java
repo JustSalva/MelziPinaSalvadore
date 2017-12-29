@@ -27,20 +27,20 @@ import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
  * Handler that handles the server response to the events request.
  * It is used by the CalendarActivity.
  */
-public class GetEventsHandler extends DefaultHandler {
+public class GetEventsHandler extends DefaultHandler<CalendarActivity> {
 
-    private CalendarActivity calendarActivity;
+    //private CalendarActivity calendarActivity;
 
-    public GetEventsHandler(Looper looper, Context context, CalendarActivity calendarActivity) {
-        super(looper, context);
-        this.calendarActivity = calendarActivity;
+    public GetEventsHandler(Looper looper, CalendarActivity calendarActivity) {
+        super(looper, calendarActivity);
+        //this.calendarActivity = calendarActivity;
     }
 
     @Override
     public void handleMessage(Message msg){
         switch (msg.what){
             case 0:
-                Toast.makeText(context, "No internet connection available!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "No internet connection available!", Toast.LENGTH_LONG).show();
                 break;
             case 200:
                 // Retrieve data from bundle.
@@ -62,21 +62,21 @@ public class GetEventsHandler extends DefaultHandler {
                 );
                 // If new events added, notify user.
                 if (! ((events != null && events.isEmpty()) && (breakEvents != null && breakEvents.isEmpty()))) {
-                    Toast.makeText(context, "Events updated!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Events updated!", Toast.LENGTH_LONG).show();
                 }
                 // Write new events into DB.
-                new InsertEventsTask(context, events).execute();
+                new InsertEventsTask(activity, events).execute();
                 // Write new break events into DB.
-                new InsertBreakEventsTask(context, breakEvents).execute();
+                new InsertBreakEventsTask(activity, breakEvents).execute();
                 break;
             case 401:
-                Toast.makeText(context, "You logged in from another device!", Toast.LENGTH_LONG).show();
-                new RemoveUserTask(context).execute();
-                context.startActivity(new Intent(context, LoginActivity.class));
+                Toast.makeText(activity, "You logged in from another device!", Toast.LENGTH_LONG).show();
+                new RemoveUserTask(activity.getApplicationContext()).execute();
+                activity.startActivity(new Intent(activity, LoginActivity.class));
                 break;
             default:
                 break;
         }
-        calendarActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

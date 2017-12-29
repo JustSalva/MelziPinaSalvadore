@@ -22,14 +22,14 @@ import it.polimi.travlendarplus.retrofit.response.event.EventResponse;
  * Handler that handles the server response to the scheduling request.
  * It is used by the CalendarActivity.
  */
-public class ScheduleEventHandler extends DefaultHandler {
+public class ScheduleEventHandler extends DefaultHandler<CalendarActivity> {
 
-    private CalendarActivity calendarActivity;
+    //private CalendarActivity calendarActivity;
 
-    public ScheduleEventHandler(Looper looper, Context context, CalendarActivity calendarActivity) {
-        super(looper, context);
-        this.context = context;
-        this.calendarActivity = calendarActivity;
+    public ScheduleEventHandler(Looper looper, CalendarActivity calendarActivity) {
+        super(looper, calendarActivity);
+        //this.context = context;
+        //this.calendarActivity = calendarActivity;
     }
 
     @Override
@@ -38,21 +38,21 @@ public class ScheduleEventHandler extends DefaultHandler {
         switch (msg.what){
             case 200:
                 // Retrieve data from bundle.
-                Toast.makeText(context, "Event scheduled successfully!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Event scheduled successfully!", Toast.LENGTH_LONG).show();
                 // Update DB with received events.
                 String jsonEvents = msg.getData().getString("jsonEvents");
                 List<EventResponse> events = new Gson()
                         .fromJson(jsonEvents, new TypeToken<List<EventResponse>>(){}.getType());
-                new InsertEventsTask(context, events).execute();
+                new InsertEventsTask(activity, events).execute();
                 // Update DB with received break events.
                 String jsonBreakEvents = msg.getData().getString("jsonBreakEvents");
                 List<BreakEventResponse> breakEvents = new Gson()
                         .fromJson(jsonBreakEvents, new TypeToken<List<BreakEventResponse>>(){}.getType());
-                new InsertBreakEventsTask(context, breakEvents).execute();
+                new InsertBreakEventsTask(activity, breakEvents).execute();
                 break;
             default:
                 break;
         }
-        calendarActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

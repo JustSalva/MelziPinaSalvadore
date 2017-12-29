@@ -20,13 +20,13 @@ import it.polimi.travlendarplus.retrofit.response.ErrorResponse;
  * Handler that handles the server response to the location addition.
  * It is used by the AccountActivity.
  */
-public class AddLocationHandler extends DefaultHandler {
+public class AddLocationHandler extends DefaultHandler<AccountActivity> {
 
-    private AccountActivity accountActivity;
+    //private AccountActivity accountActivity;
 
-    public AddLocationHandler(Looper looper, Context context, AccountActivity accountActivity) {
-        super(looper, context);
-        this.accountActivity = accountActivity;
+    public AddLocationHandler(Looper looper, AccountActivity accountActivity) {
+        super(looper, accountActivity);
+        //this.accountActivity = accountActivity;
     }
 
     @Override
@@ -34,22 +34,22 @@ public class AddLocationHandler extends DefaultHandler {
         switch (msg.what){
             case 200:
                 // Notify the user that the location has been added.
-                Toast.makeText(context, "Location added!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Location added!", Toast.LENGTH_LONG).show();
                 // Add location to the list.
                 Location location = new Location(
-                        accountActivity.getLocationName(),
-                        new Position(accountActivity.getLocationAddress()));
-                accountActivity.getLocationsMap().put(accountActivity.getLocationName(), location);
-                accountActivity.populateLocationsSpinner();
+                        activity.getLocationName(),
+                        new Position(activity.getLocationAddress()));
+                activity.getLocationsMap().put(activity.getLocationName(), location);
+                activity.populateLocationsSpinner();
                 break;
             case 500:
-                Toast.makeText(context, "You already have a location with that name!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "You already have a location with that name!", Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(context, "Error: " + Integer.toString(msg.what), Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Error: " + Integer.toString(msg.what), Toast.LENGTH_LONG).show();
                 Log.d("ERROR", Integer.toString(msg.what));
                 break;
         }
-        accountActivity.resumeNormalMode();
+        activity.resumeNormalMode();
     }
 }

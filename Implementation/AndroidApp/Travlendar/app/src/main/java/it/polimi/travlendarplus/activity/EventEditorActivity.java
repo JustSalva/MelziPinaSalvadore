@@ -154,11 +154,11 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
             }
         });
         getEventLocationsHandler =
-                new GetLocationsHandler(Looper.getMainLooper(), getApplicationContext(), this);
+                new GetLocationsHandler(Looper.getMainLooper(), this);
         getEventPreferencesHandler =
-                new GetPreferencesHandler(Looper.getMainLooper(), getApplicationContext(), this);
+                new GetPreferencesHandler(Looper.getMainLooper(),  this);
         addEventHandler =
-                new AddEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+                new AddEventHandler(Looper.getMainLooper(), this);
 
         findViewById(R.id.confirm_button).setOnClickListener(click -> sendEventToServer());
     }

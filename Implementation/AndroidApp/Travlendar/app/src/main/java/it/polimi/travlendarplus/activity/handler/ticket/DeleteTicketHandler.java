@@ -10,13 +10,13 @@ import it.polimi.travlendarplus.activity.TicketsViewerActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.activity.tasks.DeleteTicketTask;
 
-public class DeleteTicketHandler extends DefaultHandler {
+public class DeleteTicketHandler extends DefaultHandler<TicketsViewerActivity> {
 
-    private TicketsViewerActivity activity;
+    //private TicketsViewerActivity activity;
 
-    public DeleteTicketHandler(Looper looper, Context context, TicketsViewerActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public DeleteTicketHandler(Looper looper, TicketsViewerActivity activity) {
+        super(looper, activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -26,9 +26,9 @@ public class DeleteTicketHandler extends DefaultHandler {
         switch (msg.what){
             case 200:
                 // Notify the user that the ticket has been removed.
-                Toast.makeText(context, "Ticket removed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Ticket removed!", Toast.LENGTH_LONG).show();
                 // Remove ticket from the DB.
-                new DeleteTicketTask(context, ticketId).execute();
+                new DeleteTicketTask(activity.getApplicationContext(), ticketId).execute();
                 break;
             default:
                 break;

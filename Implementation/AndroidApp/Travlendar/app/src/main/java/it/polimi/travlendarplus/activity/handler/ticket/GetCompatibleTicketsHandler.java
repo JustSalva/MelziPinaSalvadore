@@ -13,13 +13,13 @@ import it.polimi.travlendarplus.activity.TravelTicketActivity;
 import it.polimi.travlendarplus.activity.handler.DefaultHandler;
 import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
 
-public class GetCompatibleTicketsHandler extends DefaultHandler {
+public class GetCompatibleTicketsHandler extends DefaultHandler<TravelTicketActivity> {
 
-    private TravelTicketActivity activity;
+    //private TravelTicketActivity activity;
 
-    public GetCompatibleTicketsHandler(Looper looper, Context context, TravelTicketActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public GetCompatibleTicketsHandler(Looper looper, TravelTicketActivity activity) {
+        super(looper, activity);
+        //this.activity = activity;
     }
 
     @Override

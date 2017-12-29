@@ -107,9 +107,9 @@ public class CalendarActivity extends MenuActivity {
         );
 
         // Set handlers.
-        getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
-        scheduleEventHandler = new ScheduleEventHandler(Looper.getMainLooper(), getApplicationContext(), this);
+        getEventsHandler = new GetEventsHandler(Looper.getMainLooper(), this);
+        deleteEventHandler = new DeleteEventHandler(Looper.getMainLooper(), this);
+        scheduleEventHandler = new ScheduleEventHandler(Looper.getMainLooper(), this);
 
         date_textView.addTextChangedListener(new TextWatcher() {
             @Override

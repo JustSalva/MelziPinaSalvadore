@@ -1,6 +1,7 @@
 package it.polimi.travlendarplus.activity.handler.location;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,13 +26,13 @@ import it.polimi.travlendarplus.activity.handler.LocationLoader;
  * Handler that handles the server response to the locations request.
  * It is used by the AccountActivity.
  */
-public class GetLocationsHandler extends DefaultHandler {
+public class GetLocationsHandler extends DefaultHandler<Activity> {
 
-    private LocationLoader activity;
+    //private LocationLoader activity;
 
-    public GetLocationsHandler(Looper looper, Context context, LocationLoader activity) {
-        super(looper, context);
-        this.activity = activity;
+    public GetLocationsHandler(Looper looper, LocationLoader activity) {
+        super(looper, (Activity)activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class GetLocationsHandler extends DefaultHandler {
                 for (Location location : locations) {
                     locationMap.put(location.getName(), location);
                 }
-                activity.updateLocations(locationMap);
+                ((LocationLoader)activity).updateLocations(locationMap);
                 break;
             default:
                 break;

@@ -17,13 +17,13 @@ import it.polimi.travlendarplus.database.entity.ticket.Ticket;
  * Handler that handles the server response to the addTicket request.
  * It is used by the TicketEditorActivity.
  */
-public class AddTicketHandler extends DefaultHandler {
+public class AddTicketHandler extends DefaultHandler<TicketEditorActivity> {
 
-    private TicketEditorActivity activity;
+    //private TicketEditorActivity activity;
 
-    public AddTicketHandler(Looper looper, Context context, TicketEditorActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public AddTicketHandler(Looper looper, TicketEditorActivity activity) {
+        super(looper, activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -31,9 +31,9 @@ public class AddTicketHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                Toast.makeText(context, "Tickets added!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Tickets added!", Toast.LENGTH_LONG).show();
                 // Launch TicketViewerActivity where tickets are updated.
-                context.startActivity(new Intent(context, TicketsViewerActivity.class));
+                activity.startActivity(new Intent(activity, TicketsViewerActivity.class));
                 break;
             default:
                 break;

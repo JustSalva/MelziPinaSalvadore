@@ -17,13 +17,13 @@ import it.polimi.travlendarplus.activity.tasks.SelectTicketTask;
 /**
  * Handler that handles the server response to the selectTicket request.
  */
-public class SelectTravelHandler extends DefaultHandler {
+public class SelectTravelHandler extends DefaultHandler<TravelTicketActivity> {
 
-    private TravelTicketActivity activity;
+    //private TravelTicketActivity activity;
 
-    public SelectTravelHandler(Looper looper, Context context, TravelTicketActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public SelectTravelHandler(Looper looper, TravelTicketActivity activity) {
+        super(looper, activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -35,18 +35,18 @@ public class SelectTravelHandler extends DefaultHandler {
                 int travelComponentId = msg.getData().getInt("TravelComponentId");
                 if (msg.getData().getBoolean("Select")) {
                     // Select went good.
-                    Toast.makeText(context, "Ticket associated to travel!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Ticket associated to travel!", Toast.LENGTH_LONG).show();
                     // Add linked ticket to travelComponent.
-                    new SelectTicketTask(context, true, ticketId, travelComponentId).execute();
+                    new SelectTicketTask(activity, true, ticketId, travelComponentId).execute();
                 } else {
                     // Deselect went good.
-                    Toast.makeText(context, "Ticket removed from travel!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Ticket removed from travel!", Toast.LENGTH_LONG).show();
                     // Remove linked ticket from travelComponent.
-                    new SelectTicketTask(context, false, ticketId, travelComponentId).execute();
+                    new SelectTicketTask(activity, false, ticketId, travelComponentId).execute();
                 }
                 break;
             case 500:
-                Toast.makeText(context, "Wrong operation!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Wrong operation!", Toast.LENGTH_LONG).show();
                 Log.d("ERROR", "Ticket already selected/deselected");
                 break;
             default:

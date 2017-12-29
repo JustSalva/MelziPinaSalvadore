@@ -21,13 +21,13 @@ import it.polimi.travlendarplus.retrofit.response.ticket.AllTicketsResponse;
  * Handler that handles the server response to the getTickets request.
  * It is used by the TicketsViewerActivity.
  */
-public class GetTicketsHandler extends DefaultHandler {
+public class GetTicketsHandler extends DefaultHandler<TicketsViewerActivity> {
 
-    private TicketsViewerActivity activity;
+    //private TicketsViewerActivity activity;
 
-    public GetTicketsHandler(Looper looper, Context context, TicketsViewerActivity activity) {
-        super(looper, context);
-        this.activity = activity;
+    public GetTicketsHandler(Looper looper, TicketsViewerActivity activity) {
+        super(looper, activity);
+        //this.activity = activity;
     }
 
     @Override
@@ -35,14 +35,14 @@ public class GetTicketsHandler extends DefaultHandler {
         super.handleMessage(msg);
         switch (msg.what){
             case 200:
-                Toast.makeText(context, "Tickets updated!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Tickets updated!", Toast.LENGTH_LONG).show();
                 // Retrieve data from bundle.
                 Bundle bundle = msg.getData();
                 String jsonTickets = bundle.getString("jsonTickets");
                 AllTicketsResponse tickets = new Gson()
                         .fromJson(jsonTickets, AllTicketsResponse.class);
                 // Saves tickets in the DB.
-                new InsertTicketsTask(context, tickets).execute();
+                new InsertTicketsTask(activity, tickets).execute();
                 break;
             default:
                 break;
