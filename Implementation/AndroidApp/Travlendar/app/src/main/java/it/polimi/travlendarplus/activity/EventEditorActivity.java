@@ -294,7 +294,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         // Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
-                android.R.layout.simple_spinner_item,
+                R.layout.black_spinner_item,
                 locationMap.keySet().toArray(new String[locationMap.size()])
         );
         // Specify the layout to use when the list of choices appears.
@@ -311,7 +311,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
-                android.R.layout.simple_spinner_item,
+                R.layout.black_spinner_item,
                 preferenceMap.keySet().toArray(new String[preferenceMap.size()])
         );
         // Specify the layout to use when the list of choices appears
@@ -328,7 +328,7 @@ public class EventEditorActivity extends MenuActivity implements LocationLoader,
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(),
-                android.R.layout.simple_spinner_item,
+                R.layout.black_spinner_item,
                 choices
         );
         // Specify the layout to use when the list of choices appears
