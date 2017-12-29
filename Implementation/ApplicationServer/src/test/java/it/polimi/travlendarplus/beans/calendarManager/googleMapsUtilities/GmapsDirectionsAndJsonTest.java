@@ -38,10 +38,17 @@ public class GmapsDirectionsAndJsonTest {
 
     @Before
     public void init () throws GMapsUnavailableException, BadRequestException, LocationNotFoundException {
-        for ( String name : locations )
-            loc.add( GMapsGeocoder.getLocationByString( name ) );
-        for ( long time : times )
+        /*for ( String name : locations )
+            loc.add( GMapsGeocoder.getLocationByString( name ) );*/
+        loc.add( new Location( 51.5074, 0.1278, "London,England" ) );
+        loc.add( new Location( 45.4642, 9.1900, "Milan,Italy" ) );
+        loc.add( new Location( 48.8566, 2.3522, "Paris,France" ) );
+        loc.add( new Location( 45.5845, 9.2744, "Monza,Italy" ) );
+        loc.add( new Location( 45.5326, 9.0396, "Rho,Italy" ) );
+        loc.add( new Location( 45.5328, 9.2257, "Sesto San Giovanni,Italy" ) );
+        for ( long time : times ) {
             instantTimes.add( Instant.ofEpochSecond( time ) );
+        }
     }
 
     @Test
@@ -57,62 +64,72 @@ public class GmapsDirectionsAndJsonTest {
 
         setTravelMeans();
         setEvents();
-        String baseCallPrev = gmdh.getBaseCallPreviousPath( ev, prev , true);
+        String baseCallPrev = gmdh.getBaseCallPreviousPath( ev, prev, true );
         for ( TravelMeanEnum priM : priAL ) {
             JSONObject response = HTMLCallAndResponse.performCall( gmdh.getCallWithNoTransit( baseCallPrev, priM ) );
             System.out.println( gmdh.getCallWithNoTransit( baseCallPrev, priM ) );
             for ( Travel t : jsonReader.getTravelNoTransitMeans( response, priM, ( ev.isTravelAtLastChoice() ) ?
                             ev.getStartingTime().getEpochSecond() : prev.getEndingTime().getEpochSecond(),
-                    !ev.isTravelAtLastChoice(), ev.getDeparture(), ev.getEventLocation() ) )
+                    !ev.isTravelAtLastChoice(), ev.getDeparture(), ev.getEventLocation() ) ) {
                 prevTravels.add( t );
+            }
         }
 
         JSONObject response = HTMLCallAndResponse.performCall( gmdh.getCallByTransit( baseCallPrev, pubAL ) );
         System.out.println( gmdh.getCallByTransit( baseCallPrev, pubAL ) );
-        for ( Travel t : jsonReader.getTravelWithTransitMeans( response ) )
+        for ( Travel t : jsonReader.getTravelWithTransitMeans( response ) ) {
             prevTravels.add( t );
+        }
 
         if ( foll != null ) {
             gmdh = new GMapsDirectionsHandler();
-            String baseCallFoll = gmdh.getBaseCallFollowingPath( ev, foll , true);
+            String baseCallFoll = gmdh.getBaseCallFollowingPath( ev, foll, true );
             for ( TravelMeanEnum priM : priAL ) {
                 response = HTMLCallAndResponse.performCall( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );
                 System.out.println( gmdh.getCallWithNoTransit( baseCallFoll, priM ) );
                 for ( Travel t : jsonReader.getTravelNoTransitMeans( response, priM, ( foll.isTravelAtLastChoice() )
                                 ? foll.getStartingTime().getEpochSecond()
                                 : ev.getEndingTime().getEpochSecond(), !foll.isTravelAtLastChoice(),
-                        ( foll.isPrevLocChoice() ) ? ev.getEventLocation() : foll.getDeparture(), foll.getEventLocation() ) )
+                        ( foll.isPrevLocChoice() ) ? ev.getEventLocation() : foll.getDeparture(), foll.getEventLocation() ) ) {
                     follTravels.add( t );
+                }
             }
 
-            response = HTMLCallAndResponse.performCall( gmdh.getCallByTransit( baseCallFoll, pubAL ) );
-            System.out.println( gmdh.getCallByTransit( baseCallFoll, pubAL ) );
-            for ( Travel t : jsonReader.getTravelWithTransitMeans( response ) )
-                follTravels.add( t );
+            if ( !sameLocation( foll.getDeparture(), foll.getEventLocation() ) ) {
+                response = HTMLCallAndResponse.performCall( gmdh.getCallByTransit( baseCallFoll, pubAL ) );
+                System.out.println( gmdh.getCallByTransit( baseCallFoll, pubAL ) );
+                for ( Travel t : jsonReader.getTravelWithTransitMeans( response ) ) {
+                    follTravels.add( t );
+                }
+            }
         }
 
         for ( Travel t : prevTravels ) {
-            if ( ev.isPrevLocChoice() && prev != null )
+            if ( ev.isPrevLocChoice() && prev != null ) {
                 assertTrue( sameLocation( t.getMiniTravels().get( 0 ).getDeparture(), prev.getEventLocation() ) );
-            else if ( ev.isPrevLocChoice() && prev == null )
+            } else if ( ev.isPrevLocChoice() && prev == null ) {
                 assertTrue( sameLocation( t.getMiniTravels().get( 0 ).getDeparture(), ev.getEventLocation() ) );
-            else
+            } else {
                 assertTrue( sameLocation( t.getMiniTravels().get( 0 ).getDeparture(), ev.getDeparture() ) );
-            if ( ev.isTravelAtLastChoice() )
+            }
+            if ( ev.isTravelAtLastChoice() ) {
                 assertTrue( !t.getEndingTime().isAfter( ev.getStartingTime() ) );
-            else if ( prev != null )
+            } else if ( prev != null ) {
                 assertTrue( !t.getStartingTime().isBefore( prev.getEndingTime() ) );
+            }
         }
 
         for ( Travel t : follTravels ) {
-            if ( foll.isPrevLocChoice() )
+            if ( foll.isPrevLocChoice() ) {
                 assertTrue( sameLocation( t.getMiniTravels().get( 0 ).getDeparture(), ev.getEventLocation() ) );
-            else
+            } else {
                 assertTrue( sameLocation( t.getMiniTravels().get( 0 ).getDeparture(), foll.getDeparture() ) );
-            if ( foll.isTravelAtLastChoice() )
+            }
+            if ( foll.isTravelAtLastChoice() ) {
                 assertTrue( !t.getEndingTime().isAfter( foll.getStartingTime() ) );
-            else
+            } else {
                 assertTrue( !t.getStartingTime().isBefore( ev.getEndingTime() ) );
+            }
         }
 
     }
@@ -143,8 +160,9 @@ public class GmapsDirectionsAndJsonTest {
             prev.setEventLocation( prevLocat );
             ev.setDeparture( prevLocat );
             prev.setEndingTime( instantTimes.get( randomGenerator.nextInt( times.length ) ) );
-        } else
+        } else {
             ev.setTravelAtLastChoice( true );
+        }
 
         if ( true /*randomGenerator.nextInt( 2 ) == 1*/ ) {
             foll = new Event();
