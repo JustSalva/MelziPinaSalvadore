@@ -228,6 +228,7 @@ public class CalendarActivity extends MenuActivity {
     private TextView createEventTextView(GenericEvent event) {
         TextView textView = new TextView(getApplicationContext());
         textView.setText(event.getName());
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setId((int) event.getId());
