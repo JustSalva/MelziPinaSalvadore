@@ -9,16 +9,19 @@ import it.polimi.travlendarplus.database.AppDatabase;
 public class DeleteTicketTask extends AsyncTask<Void, Void, Void> {
 
     private AppDatabase database;
-    private int eventId;
+    private int ticketId;
 
-    public DeleteTicketTask(Context context, int eventId) {
+    public DeleteTicketTask(Context context, int ticketId) {
         this.database = AppDatabase.getInstance(context);
-        this.eventId = eventId;
+        this.ticketId = ticketId;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        database.ticketsDao().deleteFromId(eventId);
+        // Delete ticket from tickets table.
+        database.ticketsDao().deleteFromId(ticketId);
+        // Delete ticket from travel component table.
+        database.ticketsDao().removeTicketFromTravelComponent(ticketId);
         return null;
     }
 }

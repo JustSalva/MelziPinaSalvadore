@@ -46,4 +46,7 @@ public interface TicketsDao {
 
     @Query("SELECT * from ticket WHERE type LIKE 'Path'")
     LiveData<List<Ticket>> getPathTickets();
+
+    @Query("UPDATE travel_component SET ticket_id = 0 WHERE ticket_id LIKE :ticketId")
+    void removeTicketFromTravelComponent(int ticketId);
 }

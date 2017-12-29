@@ -34,12 +34,6 @@ public class InsertUserTask extends AsyncTask<User, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                context.startActivity(new Intent(context, CalendarActivity.class));
-            }
-        });
-
+        context.runOnUiThread(() -> context.startActivity(new Intent(context, CalendarActivity.class)));
     }
 }
