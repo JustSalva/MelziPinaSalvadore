@@ -1,13 +1,10 @@
 package it.polimi.travlendarplus;
 
+
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-
-import it.polimi.travlendarplus.database.AppDatabase;
-import it.polimi.travlendarplus.database.dao.UserDao;
-import it.polimi.travlendarplus.database.entity.User;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,9 +12,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Objects;
+
+import it.polimi.travlendarplus.database.AppDatabase;
+import it.polimi.travlendarplus.database.dao.UserDao;
+import it.polimi.travlendarplus.database.entity.User;
 
 @RunWith(AndroidJUnit4.class)
-public class DatabaseTest {
+public class UserDaoTest {
 
     private UserDao userDao;
     private AppDatabase database;
@@ -35,10 +37,21 @@ public class DatabaseTest {
     }
 
     @Test
-    public void writeUserAndReadInList() throws Exception {
-        User user = new User("10486221@polimi.it", "Alessandro", "Pina");
+    public void addAndRemoveUser() throws Exception {
+        User user = new User("10486221@polimi.it", "Alessandro", "Pina", "token");
         userDao.insert(user);
         assert userDao.countUsers() == 1;
-        assert userDao.getUser().getValue().getName().equals("Alessandro");
+        assert Objects.equals(userDao.getUser().getValue(), user);
+        userDao.delete();
+        assert userDao.countUsers() == 0;
+    }
+
+    @Test
+    public void setTimestamp() throws Exception {
+        User user = new User("10486221@polimi.it", "Alessandro", "Pina", "token");
+        userDao.insert(user);
+        long timestamp = 1000;
+        userDao.setTimestamp(timestamp);
+        assert Objects.equals(userDao.getUser().getValue().getTimestamp(), timestamp);
     }
 }
