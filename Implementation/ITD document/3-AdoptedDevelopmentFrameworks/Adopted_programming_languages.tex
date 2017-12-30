@@ -1,34 +1,34 @@
 \subsection{Java}
 \label{subsect:Java}
 We chose Java as programming language in order to build the Application Server with Java EE, a set of specifications used to develop enterprise applications. Java EE is suitable for our needs and it is part of the arguments taught during laboratory lessons.\\
-About Java, we can state that the advantages are greater than the disadvantages. \\
+For what Java concerns, we can state that the advantages are greater than the disadvantages. \\
 The main qualities of Java are:
 \begin{itemize}
-\item \textit{object-oriented}: the programming code is based on the concept of object. Each object can contain several fields (attributes) and functionalities (methods). The code is widely reusable and it is possible to establish a sort of hierarchy and relations between the different objects. Travlendar+, moreover, is made up of different entities linked to each other that can be easily represented as objects;
-\item \textit{simple}: syntax is easy to understand and doesn’t include confusing features, as explicit pointers or operator overloading. Also, unreferenced objects are automatically removed by Java Garbage Collector;
+\item \textit{object-oriented}: the programming code is based on the concept of object. Each object can contain several fields (attributes) and functionalities (methods). The code is widely reusable and it is possible to establish a sort of hierarchy and relations between the different objects. Travlendar+, moreover, is made up of different entities, linked to each other, that can be easily represented as objects;
+\item \textit{simple}: syntax is easy to understand and does not include confusing features, such as explicit pointers or operator overloading. Also, unreferenced objects are automatically removed by Java Garbage Collector;
 \item \textit{platform-independent}: the ability to be used in different platforms. Java code is converted in bytecode and follows the “Write Once Run Anywhere” principle. In this case the code runs on a Linux-based server, but it is written and tested at first in Windows environments. 
 \end{itemize}
-As drawback, Java is significantly slower and more memory-consuming than natively compiled languages such as C or C++.\\\\
+As a drawback, Java is significantly slower and more memory-consuming than natively compiled languages such as C or C++.\\\\
 About Java EE, we can confirm what we wrote in Design Document:\\
 \textit{''The Application Server may be implemented using Java Enterprise Edition (JEE) 8; this choice could allow the developers to focus on the logic to be provided while being supported by reliable APIs and tools, in order to reduce the complexity of the development phase. Using JEE 8 the developers could also guarantee the main non-functional requirements, which are stated in RASD document''.}\\\\
 In fact, we observe that Java EE includes a set of services and APIs that can facilitate quick development of stable and powerful enterprise level applications. Java EE is widespread among developers and it is also supported by different test tools and frameworks.\\
-However, Java EE requires a server heavier than other possible solutions and for some issues that we encountered during the implementation, the documentation available online is quite poor. 
+However, Java EE requires a heavier server than other possible solutions and for some issues that we encountered during the implementation, the documentation available online is quite poor. 
 \subsection{Java for Android}
 \label{subsect:Java for Android}
 Java for Android is, of course, the same programming language described in the previous section, but Android is a different platform and uses a different virtual machine (Dalvik). \\
 Java is the programming language for the Android SDK. \\\\
-To develop an application working on Android devices the two main language possibilities are Java and Kotlin, the latter just recently been added by Google as an officially supported language.\\
+To develop an application for Android devices the two main language possibilities are Java and Kotlin, the latter has just recently been added by Google as an officially supported language.\\
 The two languages are compatible and can be used side by side, but in this case we decided that Java was enough to realize the implementation of this project.\\\\
-Kotlin offers some advantages like more succinct code, but given the limited amount of time given for the implementation, we decided, in order to avoid confusion by inserting a previously not known language, to stick with Java, a programming language already known by all the members of the group. \\\\
+Kotlin offers some advantages like more succinct code, but given the limited amount of time for the implementation, we decided, in order to avoid confusion by inserting a previously not known language, to stick with Java, a programming language already known by all the members of the group. \\\\
 One of the main challenges of coding in Android is the support needed by multiple versions of the operating system: it is difficult to find a compromise between reaching a big amount of devices and effectively supporting different platform versions.
 \subsection{XML}
 \label{subsect:XML}
-XML is a mark-up language used in the Application Server to describe properties or dependencies of the project. The main advantages about XML, that we found in the implementation phase, are:
+XML is a mark-up language used in the Application Server to describe properties or dependencies of the project. The main advantages about XML we found in the implementation phase are:
 \begin{itemize}
 \item it supports Unicode, allowing almost any information in any written human language to be communicated;
 \item it can represent common computer science data structures: records, lists and trees;
 \item its self-documenting format describes structure and field names as well as specific values;
-\item the strict syntax and parsing requirements make the necessary parsing algorithms extremely simple, efficient, and consistent;
+\item the strict syntax and parsing requirements make the necessary parsing algorithms extremely simple, efficient and consistent;
 \item the hierarchical structure is suitable for most types of documents;
 \item it is platform-independent, thus relatively immune to changes in technology.
 \end{itemize}
@@ -36,7 +36,7 @@ Instead, the found XML disadvantages are:
 \begin{itemize}
 \item XML syntax is redundant or large relative to binary representations of similar data, especially with tabular data;
 \item hierarchical model for representation is limited in comparison to an object-oriented graph;
-\item encourages non-relational data structures (data non-normalized).
+\item encourages non-relational data structures (non-normalized data).
 \end{itemize}
 \subsection{XML for Android}
 \label{subsect:XML for Android}
@@ -47,7 +47,7 @@ Layouts can be declared in two ways:
 \item By instantiating them at runtime.
 \end{itemize}
 The advantage to declaring them in XML is that it enables you to better separate the presentation of your application from the code that controls its behavior. \\
-UI descriptions are external to the application code, meaning that can be modified without altering your source code and recompile. This makes it easier to debug problems. \\\\
-The XML vocabulary for declaring UI elements follows the structure and naming of the classes and methods.\\
+UI descriptions are external to the application code, meaning that they can be modified without altering your source code and recompile them. This is helpful when it comes to debug problems. \\\\
+The XML vocabulary for declaring UI elements follows structure and naming of classes and methods.\\
 In this way, you can quickly design UI layouts and the screen elements they contain, with a series of nested elements. Each layout file must contain exactly one root element.
 

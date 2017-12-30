@@ -1,12 +1,12 @@
 \subsection{MySQL}
 \label{subsec:Middleware}
-MySQL is a very popular and open source DBMS, it is easy to install and configure and we used it to manage the server database. MySQL doesn't present particular disadvantages.\\
-We have linked MySQL with our Application Server by means of JPA, and we haven't encountered relevant difficulties while performing this integration.
+MySQL is a very popular and open source DBMS, it is easy to install and configure and we used it to manage the server database. Moreover MySQL doesn't present particular disadvantages.\\
+We have linked MySQL with our Application Server by means of JPA, and we did not encounter relevant difficulties while performing this integration.
 
 \subsection{SQLite and Room}
 \label{subsec:SQLite and Room}
 SQLite is a relational DBMS widely used as embedded database software for local/client storage in application software. It is ACID-compliant and implements most of the SQL standard, using a dynamically and weakly typed SQL syntax. \\\\
-In this implementation we also used the Room persistence library, that provides an abstraction layer over SQLite to allow fluent database access while harnessing the full power of SQLite. \\\\
+In this implementation we also used the Room persistence library, which provides an abstraction layer over SQLite to allow fluent database access while harnessing the full power of SQLite. \\\\
 There are three major components in Room:
 \begin{itemize}
 \item \textit{Database}: Contains the database holder and serves as the main access point for the underlying connection to the relational data;
@@ -16,7 +16,7 @@ There are three major components in Room:
 
 \subsection{GlassFish}
 \label{subsec:GlassFish}
-GlassFish is the server used to run our server-side application, it is open source and allows the execution of Java EE functions. By means of EJB APIs it is possible to perform security functions. 
+GlassFish is the server used to run our server-side application, it is open source and allows the execution of Java EE functions. By means of EJB APIs, it is possible to perform security functions. 
 By means of JAX-RS APIs, moreover, it is possible to provide RESTful services. 
 Unfortunately, we encountered some difficulties related to GlassFish:
 \begin{itemize}
