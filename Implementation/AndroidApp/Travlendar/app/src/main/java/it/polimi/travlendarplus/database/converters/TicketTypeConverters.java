@@ -2,9 +2,9 @@ package it.polimi.travlendarplus.database.converters;
 
 import android.arch.persistence.room.TypeConverter;
 
-import it.polimi.travlendarplus.database.entity.ticket.Ticket;
-
 import java.util.Objects;
+
+import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 
 import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.DISTANCE;
 import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.GENERIC;
@@ -16,22 +16,22 @@ import static it.polimi.travlendarplus.database.entity.ticket.Ticket.TicketType.
  */
 public class TicketTypeConverters {
     @TypeConverter
-    public static Ticket.TicketType toTicketType(String type) {
-        if (Objects.equals(type, GENERIC.getType())) {
+    public static Ticket.TicketType toTicketType ( String type ) {
+        if ( Objects.equals( type, GENERIC.getType() ) ) {
             return GENERIC;
-        } else if (Objects.equals(type, PERIOD.getType())) {
+        } else if ( Objects.equals( type, PERIOD.getType() ) ) {
             return PERIOD;
-        } else if (Objects.equals(type, DISTANCE.getType())) {
+        } else if ( Objects.equals( type, DISTANCE.getType() ) ) {
             return DISTANCE;
-        } else if (Objects.equals(type, PATH.getType())) {
+        } else if ( Objects.equals( type, PATH.getType() ) ) {
             return PATH;
         } else {
-            throw new IllegalArgumentException("Could not recognize type");
+            throw new IllegalArgumentException( "Could not recognize type" );
         }
     }
 
     @TypeConverter
-    public static String toString(Ticket.TicketType type) {
+    public static String toString ( Ticket.TicketType type ) {
         return type.getType();
     }
 }

@@ -14,22 +14,23 @@ public class PeriodTicketBody extends TicketBody {
     private GenericTicketBody genericDecorator;
     private PathTicketBody pathDecorator;
 
-    public PeriodTicketBody(float cost, List<TravelMeanUsed> relatedTo, String name, String startingDate, String endingDate) {
-        super(cost, relatedTo);
+    public PeriodTicketBody ( float cost, List < TravelMeanUsed > relatedTo,
+                              String name, String startingDate, String endingDate ) {
+        super( cost, relatedTo );
         this.name = name;
         this.startingDate = startingDate;
         this.endingDate = endingDate;
     }
 
-    public void setDistanceDecorator(DistanceTicketBody distanceDecorator) {
+    public void setDistanceDecorator ( DistanceTicketBody distanceDecorator ) {
         this.distanceDecorator = distanceDecorator;
     }
 
-    public void setGenericDecorator(GenericTicketBody genericDecorator) {
+    public void setGenericDecorator ( GenericTicketBody genericDecorator ) {
         this.genericDecorator = genericDecorator;
     }
 
-    public void setPathDecorator(PathTicketBody pathDecorator) {
+    public void setPathDecorator ( PathTicketBody pathDecorator ) {
         this.pathDecorator = pathDecorator;
     }
 }

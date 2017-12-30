@@ -13,34 +13,34 @@ public class PeriodTicketResponse extends TicketResponse {
     private DistanceTicketResponse distanceTicket;
     private PathTicketResponse pathTicket;
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public Timestamp getStartingDate() {
+    public Timestamp getStartingDate () {
         return startingDate;
     }
 
-    public Timestamp getEndingDate() {
+    public Timestamp getEndingDate () {
         return endingDate;
     }
 
-    public GenericTicketResponse getGenericTicket() {
+    public GenericTicketResponse getGenericTicket () {
         return genericTicket;
     }
 
-    public DistanceTicketResponse getDistanceTicket() {
+    public DistanceTicketResponse getDistanceTicket () {
         return distanceTicket;
     }
 
-    public PathTicketResponse getPathTicket() {
+    public PathTicketResponse getPathTicket () {
         return pathTicket;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "PERIOD TICKET \n" +
                 super.toString() +
-                "Name("+name+")";
+                "Name(" + name + ")";
     }
 }

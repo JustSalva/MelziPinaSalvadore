@@ -7,11 +7,11 @@ public class Timestamp {
     private long seconds;
     private long nanos;
 
-    public long getSeconds() {
+    public long getSeconds () {
         return seconds;
     }
 
-    public long getNanos() {
+    public long getNanos () {
         return nanos;
     }
 }

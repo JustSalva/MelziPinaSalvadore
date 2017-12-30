@@ -9,8 +9,8 @@ public class DistanceTicketBody extends TicketBody {
 
     private int distance;
 
-    public DistanceTicketBody(float cost, List<TravelMeanUsed> relatedTo, int distance) {
-        super(cost, relatedTo);
+    public DistanceTicketBody ( float cost, List < TravelMeanUsed > relatedTo, int distance ) {
+        super( cost, relatedTo );
         this.distance = distance;
     }
 }

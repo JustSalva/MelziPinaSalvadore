@@ -5,14 +5,14 @@ public class DistanceTicketResponse extends TicketResponse {
 
     private int distance;
 
-    public int getDistance() {
+    public int getDistance () {
         return distance;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "DISTANCE TICKET \n" +
                 super.toString() +
-                Integer.toString(distance);
+                Integer.toString( distance );
     }
 }

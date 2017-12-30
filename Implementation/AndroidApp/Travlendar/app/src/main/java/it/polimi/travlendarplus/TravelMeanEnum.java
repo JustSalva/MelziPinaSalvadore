@@ -5,28 +5,24 @@ package it.polimi.travlendarplus;
  * Enum containing travel means that can be used by the user.
  */
 public enum TravelMeanEnum {
-    BIKE("Bike"),
-    BUS("Bus"),
-    BY_FOOT("By Foot"),
-    CAR("Car"),
-    SUBWAY("Subway"),
-    TRAIN("Train"),
-    TRAM("Tram"),
-    SHARING_BIKE("Sharing Bike"),
-    SHARING_CAR("Sharing Car");
+    BIKE( "Bike" ),
+    BUS( "Bus" ),
+    BY_FOOT( "By Foot" ),
+    CAR( "Car" ),
+    SUBWAY( "Subway" ),
+    TRAIN( "Train" ),
+    TRAM( "Tram" ),
+    SHARING_BIKE( "Sharing Bike" ),
+    SHARING_CAR( "Sharing Car" );
 
     private final String travelMean;
 
-    TravelMeanEnum(String travelMean) {
+    TravelMeanEnum ( String travelMean ) {
         this.travelMean = travelMean;
     }
 
-    public String getTravelMean() {
-        return travelMean;
-    }
-
-    public static TravelMeanEnum getEnumFromString(String text) {
-        switch (text) {
+    public static TravelMeanEnum getEnumFromString ( String text ) {
+        switch ( text ) {
             case "Bike":
                 return BIKE;
             case "Bus":
@@ -46,5 +42,9 @@ public enum TravelMeanEnum {
             default:
                 return SHARING_CAR;
         }
+    }
+
+    public String getTravelMean () {
+        return travelMean;
     }
 }

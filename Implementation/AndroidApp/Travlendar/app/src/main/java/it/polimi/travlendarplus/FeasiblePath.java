@@ -9,13 +9,13 @@ import java.util.List;
 public class FeasiblePath {
 
     private long id;
-    private List<MiniTravel> miniTravels;
+    private List < MiniTravel > miniTravels;
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public List<MiniTravel> getMiniTravels() {
+    public List < MiniTravel > getMiniTravels () {
         return miniTravels;
     }
 }

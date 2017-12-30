@@ -15,27 +15,27 @@ public class BreakEventResponse {
     private Timestamp endingTime;
     private boolean isScheduled;
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public long getMinimumTime() {
+    public long getMinimumTime () {
         return minimumTime;
     }
 
-    public Timestamp getStartingTime() {
+    public Timestamp getStartingTime () {
         return startingTime;
     }
 
-    public Timestamp getEndingTime() {
+    public Timestamp getEndingTime () {
         return endingTime;
     }
 
-    public boolean isScheduled() {
+    public boolean isScheduled () {
         return isScheduled;
     }
 }

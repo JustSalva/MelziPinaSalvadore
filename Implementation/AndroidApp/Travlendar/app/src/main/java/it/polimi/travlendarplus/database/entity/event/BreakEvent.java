@@ -9,25 +9,25 @@ import it.polimi.travlendarplus.DateUtility;
  */
 public class BreakEvent {
 
-    @ColumnInfo(name = "minimum_time")
+    @ColumnInfo( name = "minimum_time" )
     private long minimumTime;
 
-    public BreakEvent(long minimumTime) {
+    public BreakEvent ( long minimumTime ) {
         this.minimumTime = minimumTime;
     }
 
-    public long getMinimumTime() {
+    public long getMinimumTime () {
         return minimumTime;
     }
 
-    public void setMinimumTime(long minimumTime) {
+    public void setMinimumTime ( long minimumTime ) {
         this.minimumTime = minimumTime;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "Minimum duration: " + DateUtility.getUTCHHmmFromLocalHHmm(
-                DateUtility.getHHmmFromSeconds(minimumTime)
-        )+ "\n";
+                DateUtility.getHHmmFromSeconds( minimumTime )
+        ) + "\n";
     }
 }

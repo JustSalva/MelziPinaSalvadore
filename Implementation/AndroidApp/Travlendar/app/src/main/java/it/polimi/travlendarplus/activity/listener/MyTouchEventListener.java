@@ -15,21 +15,21 @@ public class MyTouchEventListener implements View.OnTouchListener {
     private CalendarActivity activity;
     private GenericEvent genericEvent;
 
-    public MyTouchEventListener(CalendarActivity activity, GenericEvent genericEvent) {
+    public MyTouchEventListener ( CalendarActivity activity, GenericEvent genericEvent ) {
         this.activity = activity;
         this.genericEvent = genericEvent;
     }
 
     // Allows the view to be dragged around.
-    public boolean onTouch(View viewDragged, MotionEvent motionEvent) {
-        switch (motionEvent.getAction()) {
+    public boolean onTouch ( View viewDragged, MotionEvent motionEvent ) {
+        switch ( motionEvent.getAction() ) {
             case MotionEvent.ACTION_DOWN:
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(viewDragged);
-                viewDragged.startDrag(data, shadowBuilder, viewDragged, 0);
-                viewDragged.setVisibility(View.INVISIBLE);
-                activity.setFocusedEvent(genericEvent);
-                activity.setInfoDeleteTVVisibility(View.VISIBLE);
+                ClipData data = ClipData.newPlainText( "", "" );
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder( viewDragged );
+                viewDragged.startDrag( data, shadowBuilder, viewDragged, 0 );
+                viewDragged.setVisibility( View.INVISIBLE );
+                activity.setFocusedEvent( genericEvent );
+                activity.setInfoDeleteTVVisibility( View.VISIBLE );
                 return true;
             case MotionEvent.ACTION_UP:
                 viewDragged.performClick();

@@ -11,7 +11,7 @@ public class BreakEventBody {
     private String endingTime;
     private long minimumTime;
 
-    public BreakEventBody(String name, String startingTime, String endingTime, long minimumTime) {
+    public BreakEventBody ( String name, String startingTime, String endingTime, long minimumTime ) {
         this.name = name;
         this.startingTime = startingTime;
         this.endingTime = endingTime;

@@ -25,7 +25,7 @@ public class EventsListResponse extends CalendarResponse {
     public EventsListResponse ( List < GenericEvent > updatedEvents ) {
         this.updatedEvents = new ArrayList <>();
         this.updatedBreakEvents = new ArrayList <>();
-        for ( GenericEvent genericEvent : updatedEvents ){
+        for ( GenericEvent genericEvent : updatedEvents ) {
             genericEvent.serializeResponse( this );
         }
     }

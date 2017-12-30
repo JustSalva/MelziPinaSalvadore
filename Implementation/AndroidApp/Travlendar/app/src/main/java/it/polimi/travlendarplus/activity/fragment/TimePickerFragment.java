@@ -20,27 +20,28 @@ public class TimePickerFragment extends DialogFragment
     private TextView textView;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog ( Bundle savedInstanceState ) {
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        int hour = c.get( Calendar.HOUR_OF_DAY );
+        int minute = c.get( Calendar.MINUTE );
         // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(getActivity(), this, hour, minute,true);
+        return new TimePickerDialog( getActivity(), this, hour, minute, true );
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    public void onTimeSet ( TimePicker view, int hourOfDay, int minute ) {
         // Set the time in the textView.
-        String chosenTime = String.format(Locale.ENGLISH, "%02d:%02d", hourOfDay, minute);
-        textView.setText(chosenTime);
+        String chosenTime = String.format( Locale.ENGLISH, "%02d:%02d", hourOfDay, minute );
+        textView.setText( chosenTime );
     }
 
     /**
      * Sets the textView text.
+     *
      * @param textView TextView to be modified.
      */
-    public void setTextView(TextView textView) {
+    public void setTextView ( TextView textView ) {
         this.textView = textView;
     }
 }

@@ -6,15 +6,13 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import it.polimi.travlendarplus.database.entity.event.GenericEvent;
-import it.polimi.travlendarplus.database.entity.ticket.Ticket;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
-import static android.arch.persistence.room.ForeignKey.SET_NULL;
 
 /**
  * DB travel component entity.
  */
-@Entity(foreignKeys = {
+@Entity( foreignKeys = {
         @ForeignKey(
                 entity = GenericEvent.class,
                 parentColumns = "id",
@@ -22,35 +20,35 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
                 onUpdate = CASCADE,
                 onDelete = CASCADE
         )
-}, tableName = "travel_component")
+}, tableName = "travel_component" )
 public class TravelComponent {
 
     @PrimaryKey
     private long id;
 
     private float length;
-    @ColumnInfo(name = "event_id")
+    @ColumnInfo( name = "event_id" )
     private long eventId;
 
-    @ColumnInfo(name = "ticket_id")
+    @ColumnInfo( name = "ticket_id" )
     private long ticketId;
 
-    @ColumnInfo(name = "travel_mean")
+    @ColumnInfo( name = "travel_mean" )
     private String travelMean;
 
-    @ColumnInfo(name = "departure_location")
+    @ColumnInfo( name = "departure_location" )
     private String departureLocation;
-    @ColumnInfo(name = "arrival_location")
+    @ColumnInfo( name = "arrival_location" )
     private String arrivalLocation;
 
-    @ColumnInfo(name = "start_time")
+    @ColumnInfo( name = "start_time" )
     private long startTime;
-    @ColumnInfo(name = "end_time")
+    @ColumnInfo( name = "end_time" )
     private long endTime;
 
-    public TravelComponent(long id, float length, long eventId, String travelMean,
-                           String departureLocation, String arrivalLocation,
-                           long startTime, long endTime) {
+    public TravelComponent ( long id, float length, long eventId, String travelMean,
+                             String departureLocation, String arrivalLocation,
+                             long startTime, long endTime ) {
         this.id = id;
         this.length = length;
         this.eventId = eventId;
@@ -62,75 +60,75 @@ public class TravelComponent {
         this.endTime = endTime;
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId ( long id ) {
         this.id = id;
     }
 
-    public float getLength() {
+    public float getLength () {
         return length;
     }
 
-    public void setLength(float length) {
+    public void setLength ( float length ) {
         this.length = length;
     }
 
-    public long getEventId() {
+    public long getEventId () {
         return eventId;
     }
 
-    public void setEventId(long eventId) {
+    public void setEventId ( long eventId ) {
         this.eventId = eventId;
     }
 
-    public long getTicketId() {
+    public long getTicketId () {
         return ticketId;
     }
 
-    public void setTicketId(long ticketId) {
+    public void setTicketId ( long ticketId ) {
         this.ticketId = ticketId;
     }
 
-    public String getTravelMean() {
+    public String getTravelMean () {
         return travelMean;
     }
 
-    public void setTravelMean(String travelMean) {
+    public void setTravelMean ( String travelMean ) {
         this.travelMean = travelMean;
     }
 
-    public String getDepartureLocation() {
+    public String getDepartureLocation () {
         return departureLocation;
     }
 
-    public void setDepartureLocation(String departureLocation) {
+    public void setDepartureLocation ( String departureLocation ) {
         this.departureLocation = departureLocation;
     }
 
-    public String getArrivalLocation() {
+    public String getArrivalLocation () {
         return arrivalLocation;
     }
 
-    public void setArrivalLocation(String arrivalLocation) {
+    public void setArrivalLocation ( String arrivalLocation ) {
         this.arrivalLocation = arrivalLocation;
     }
 
-    public long getStartTime() {
+    public long getStartTime () {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime ( long startTime ) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public long getEndTime () {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime ( long endTime ) {
         this.endTime = endTime;
     }
 }

@@ -11,7 +11,7 @@ public class LocationBody {
     private String latitude;
     private String longitude;
 
-    public LocationBody(String name, String address, String latitude, String longitude) {
+    public LocationBody ( String name, String address, String latitude, String longitude ) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;

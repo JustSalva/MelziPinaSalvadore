@@ -7,15 +7,15 @@ public class DistanceTicket {
 
     private float distance;
 
-    public DistanceTicket(float distance) {
+    public DistanceTicket ( float distance ) {
         this.distance = distance;
     }
 
-    public float getDistance() {
+    public float getDistance () {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance ( float distance ) {
         this.distance = distance;
     }
 }

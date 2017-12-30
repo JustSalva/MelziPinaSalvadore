@@ -63,7 +63,7 @@ public class TripRESTful {
     /**
      * Allows the user to obtain all the tickets that are compatible with the specified travel component
      *
-     * @param travelComponentId identifier of the travel component 
+     * @param travelComponentId identifier of the travel component
      * @return an HTTP 200 OK success status response code and all the compatible tickets of the user
      * ( in the message body ) or HTTP 400 Bad Request response status code
      * if the travel specified does not exist

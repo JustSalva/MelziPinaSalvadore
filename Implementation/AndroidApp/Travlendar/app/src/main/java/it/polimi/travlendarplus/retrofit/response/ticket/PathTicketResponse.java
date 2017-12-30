@@ -8,16 +8,16 @@ public class PathTicketResponse extends GenericTicketResponse {
     private Position startingLocation;
     private Position endingLocation;
 
-    public Position getStartingLocation() {
+    public Position getStartingLocation () {
         return startingLocation;
     }
 
-    public Position getEndingLocation() {
+    public Position getEndingLocation () {
         return endingLocation;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "PATH TICKET \n" +
                 super.toString() +
                 startingLocation.getAddress() + " to " + endingLocation.getAddress();

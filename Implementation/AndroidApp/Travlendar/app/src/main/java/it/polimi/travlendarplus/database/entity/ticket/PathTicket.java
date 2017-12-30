@@ -7,29 +7,29 @@ import android.arch.persistence.room.ColumnInfo;
  */
 public class PathTicket {
 
-    @ColumnInfo(name = "departure_location")
+    @ColumnInfo( name = "departure_location" )
     private String departureLocation;
-    @ColumnInfo(name = "arrival_location")
+    @ColumnInfo( name = "arrival_location" )
     private String arrivalLocation;
 
-    public PathTicket(String departureLocation, String arrivalLocation) {
+    public PathTicket ( String departureLocation, String arrivalLocation ) {
         this.departureLocation = departureLocation;
         this.arrivalLocation = arrivalLocation;
     }
 
-    public String getDepartureLocation() {
+    public String getDepartureLocation () {
         return departureLocation;
     }
 
-    public void setDepartureLocation(String departureLocation) {
+    public void setDepartureLocation ( String departureLocation ) {
         this.departureLocation = departureLocation;
     }
 
-    public String getArrivalLocation() {
+    public String getArrivalLocation () {
         return arrivalLocation;
     }
 
-    public void setArrivalLocation(String arrivalLocation) {
+    public void setArrivalLocation ( String arrivalLocation ) {
         this.arrivalLocation = arrivalLocation;
     }
 }

@@ -16,7 +16,7 @@ public class Ticket {
     private long id;
     private float cost;
 
-    @TypeConverters(TicketTypeConverters.class)
+    @TypeConverters( TicketTypeConverters.class )
     private TicketType type;
     @Embedded
     private PeriodTicket periodTicket;
@@ -25,72 +25,72 @@ public class Ticket {
     @Embedded
     private GenericTicket genericTicket;
 
-    public Ticket(long id, float cost) {
+    public Ticket ( long id, float cost ) {
         this.id = id;
         this.cost = cost;
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId ( long id ) {
         this.id = id;
     }
 
-    public float getCost() {
+    public float getCost () {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost ( float cost ) {
         this.cost = cost;
     }
 
-    public TicketType getType() {
+    public TicketType getType () {
         return type;
     }
 
-    public void setType(TicketType type) {
+    public void setType ( TicketType type ) {
         this.type = type;
     }
 
-    public PeriodTicket getPeriodTicket() {
+    public PeriodTicket getPeriodTicket () {
         return periodTicket;
     }
 
-    public void setPeriodTicket(PeriodTicket periodTicket) {
+    public void setPeriodTicket ( PeriodTicket periodTicket ) {
         this.periodTicket = periodTicket;
     }
 
-    public DistanceTicket getDistanceTicket() {
+    public DistanceTicket getDistanceTicket () {
         return distanceTicket;
     }
 
-    public void setDistanceTicket(DistanceTicket distanceTicket) {
+    public void setDistanceTicket ( DistanceTicket distanceTicket ) {
         this.distanceTicket = distanceTicket;
     }
 
-    public GenericTicket getGenericTicket() {
+    public GenericTicket getGenericTicket () {
         return genericTicket;
     }
 
-    public void setGenericTicket(GenericTicket genericTicket) {
+    public void setGenericTicket ( GenericTicket genericTicket ) {
         this.genericTicket = genericTicket;
     }
 
     public enum TicketType {
-        GENERIC("Generic"),
-        DISTANCE("Distance"),
-        PERIOD("Period"),
-        PATH("Path");
+        GENERIC( "Generic" ),
+        DISTANCE( "Distance" ),
+        PERIOD( "Period" ),
+        PATH( "Path" );
 
         private String type;
 
-        TicketType(String type) {
+        TicketType ( String type ) {
             this.type = type;
         }
 
-        public String getType() {
+        public String getType () {
             return type;
         }
     }

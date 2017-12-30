@@ -87,11 +87,12 @@ public class BreakEvent extends GenericEvent {
             return true;
         }
         // Checking if there is enough time between two events.
-        for ( int i = 0; i < events.size() - 1; i++ )
+        for ( int i = 0; i < events.size() - 1; i++ ) {
             if ( minimumTime <= Duration.between( events.get( i ).getEndingTime(),
                     events.get( i + 1 ).getStartingTime() ).getSeconds() ) {
                 return true;
             }
+        }
         //checking if there is enough time after the last event
         return minimumTime <= Duration.between(
                 events.get( events.size() - 1 ).getEndingTime(),

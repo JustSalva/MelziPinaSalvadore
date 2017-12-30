@@ -5,14 +5,14 @@ public class GenericTicketResponse extends TicketResponse {
 
     private String lineName;
 
-    public String getLineName() {
+    public String getLineName () {
         return lineName;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "GENERIC TICKET\n" +
                 super.toString() +
-                " LineName("+lineName+")\n";
+                " LineName(" + lineName + ")\n";
     }
 }

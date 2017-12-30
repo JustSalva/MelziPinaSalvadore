@@ -9,15 +9,15 @@ public class LoginResponse {
     private String name;
     private String surname;
 
-    public String getToken() {
+    public String getToken () {
         return token;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public String getSurname() {
+    public String getSurname () {
         return surname;
     }
 }

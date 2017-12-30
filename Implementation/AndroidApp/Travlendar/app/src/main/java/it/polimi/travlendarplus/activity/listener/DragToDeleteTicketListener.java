@@ -1,7 +1,6 @@
 package it.polimi.travlendarplus.activity.listener;
 
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.DragEvent;
 import android.view.View;
@@ -15,32 +14,32 @@ public final class DragToDeleteTicketListener implements View.OnDragListener {
 
     private TicketsViewerActivity activity;
 
-    public DragToDeleteTicketListener(TicketsViewerActivity activity) {
+    public DragToDeleteTicketListener ( TicketsViewerActivity activity ) {
         this.activity = activity;
     }
 
     @Override
-    public boolean onDrag(View viewReceiving, DragEvent event) {
+    public boolean onDrag ( View viewReceiving, DragEvent event ) {
         int color = viewReceiving.getDrawingCacheBackgroundColor();
-        View viewDragged = (View) event.getLocalState();
+        View viewDragged = ( View ) event.getLocalState();
         int ticketId = viewDragged.getId();
-        switch (event.getAction()) {
+        switch ( event.getAction() ) {
             case DragEvent.ACTION_DRAG_STARTED:
-                viewReceiving.setBackgroundColor(Color.parseColor("#FF0000"));
+                viewReceiving.setBackgroundColor( Color.parseColor( "#FF0000" ) );
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                viewReceiving.setBackgroundColor(Color.parseColor("#FF0000"));
+                viewReceiving.setBackgroundColor( Color.parseColor( "#FF0000" ) );
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
-                viewReceiving.setBackgroundColor(color);
+                viewReceiving.setBackgroundColor( color );
                 break;
             case DragEvent.ACTION_DROP:
                 // Send request to server to delete ticket.
-                activity.deleteTicket(ticketId);
+                activity.deleteTicket( ticketId );
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                viewReceiving.setBackgroundColor(color);
-                viewDragged.setVisibility(View.VISIBLE);
+                viewReceiving.setBackgroundColor( color );
+                viewDragged.setVisibility( View.VISIBLE );
             default:
                 break;
         }

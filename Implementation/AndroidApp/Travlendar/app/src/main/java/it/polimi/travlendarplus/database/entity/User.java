@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  */
 @Entity
 public class User {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey( autoGenerate = true )
     private long id;
 
     private String email;
@@ -17,7 +17,7 @@ public class User {
     private String token;
     private long timestamp;
 
-    public User(String email, String name, String surname, String token) {
+    public User ( String email, String name, String surname, String token ) {
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -25,51 +25,51 @@ public class User {
         this.timestamp = 0;
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId ( long id ) {
         this.id = id;
     }
 
-    public String getEmail() {
+    public String getEmail () {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail ( String email ) {
         this.email = email;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName ( String name ) {
         this.name = name;
     }
 
-    public String getSurname() {
+    public String getSurname () {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public void setSurname ( String surname ) {
         this.surname = surname;
     }
 
-    public String getToken() {
+    public String getToken () {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken ( String token ) {
         this.token = token;
     }
 
-    public long getTimestamp() {
+    public long getTimestamp () {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp ( long timestamp ) {
         this.timestamp = timestamp;
     }
 }

@@ -15,40 +15,40 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ScheduleEventController implements Callback<GetGenericEventsResponse> {
+public class ScheduleEventController implements Callback < GetGenericEventsResponse > {
 
     private Handler handler;
 
-    public ScheduleEventController(Handler handler) {
+    public ScheduleEventController ( Handler handler ) {
         this.handler = handler;
     }
 
-    public void start(String authToken, int idEvent) {
-        TravlendarClient client = ServiceGenerator.createService(TravlendarClient.class, authToken);
-        Call<GetGenericEventsResponse> call = client.scheduleEvent(idEvent);
-        call.enqueue(this);
+    public void start ( String authToken, int idEvent ) {
+        TravlendarClient client = ServiceGenerator.createService( TravlendarClient.class, authToken );
+        Call < GetGenericEventsResponse > call = client.scheduleEvent( idEvent );
+        call.enqueue( this );
     }
 
     @Override
-    public void onResponse(Call<GetGenericEventsResponse> call, Response<GetGenericEventsResponse> response) {
+    public void onResponse ( Call < GetGenericEventsResponse > call, Response < GetGenericEventsResponse > response ) {
         Bundle bundle = new Bundle();
-        if (response.isSuccessful()) {
-            String jsonEvents = new Gson().toJson(response.body().getUpdatedEvents());
-            bundle.putString("jsonEvents", jsonEvents);
-            String jsonBreakEvents = new Gson().toJson(response.body().getUpdatedBreakEvents());
-            bundle.putString("jsonBreakEvents", jsonBreakEvents);
+        if ( response.isSuccessful() ) {
+            String jsonEvents = new Gson().toJson( response.body().getUpdatedEvents() );
+            bundle.putString( "jsonEvents", jsonEvents );
+            String jsonBreakEvents = new Gson().toJson( response.body().getUpdatedBreakEvents() );
+            bundle.putString( "jsonBreakEvents", jsonBreakEvents );
         } else {
-            Log.d("ERROR_RESPONSE", response.toString());
+            Log.d( "ERROR_RESPONSE", response.toString() );
         }
-        Message msg = handler.obtainMessage(response.code());
-        msg.setData(bundle);
+        Message msg = handler.obtainMessage( response.code() );
+        msg.setData( bundle );
         msg.sendToTarget();
     }
 
     @Override
-    public void onFailure(Call<GetGenericEventsResponse> call, Throwable t) {
-        Log.d("INTERNET_CONNECTION", "ABSENT");
-        Message msg = handler.obtainMessage(0);
+    public void onFailure ( Call < GetGenericEventsResponse > call, Throwable t ) {
+        Log.d( "INTERNET_CONNECTION", "ABSENT" );
+        Message msg = handler.obtainMessage( 0 );
         msg.sendToTarget();
     }
 }

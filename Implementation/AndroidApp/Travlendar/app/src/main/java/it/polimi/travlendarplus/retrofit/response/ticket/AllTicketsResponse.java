@@ -5,24 +5,24 @@ import java.util.List;
 
 public class AllTicketsResponse {
 
-    private List<DistanceTicketResponse> distanceTickets;
-    private List<GenericTicketResponse> genericTickets;
-    private List<PathTicketResponse> pathTickets;
-    private List<PeriodTicketResponse> periodTickets;
+    private List < DistanceTicketResponse > distanceTickets;
+    private List < GenericTicketResponse > genericTickets;
+    private List < PathTicketResponse > pathTickets;
+    private List < PeriodTicketResponse > periodTickets;
 
-    public List<DistanceTicketResponse> getDistanceTickets() {
+    public List < DistanceTicketResponse > getDistanceTickets () {
         return distanceTickets;
     }
 
-    public List<GenericTicketResponse> getGenericTickets() {
+    public List < GenericTicketResponse > getGenericTickets () {
         return genericTickets;
     }
 
-    public List<PathTicketResponse> getPathTickets() {
+    public List < PathTicketResponse > getPathTickets () {
         return pathTickets;
     }
 
-    public List<PeriodTicketResponse> getPeriodTickets() {
+    public List < PeriodTicketResponse > getPeriodTickets () {
         return periodTickets;
     }
 }

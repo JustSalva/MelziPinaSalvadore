@@ -17,16 +17,9 @@ public class EventBody {
     private boolean prevLocChoice;
     private boolean travelAtLastChoice;
 
-    public EventBody(
-            String name,
-            String description,
-            String startingTime,
-            String endingTime,
-            Position eventLocation,
-            Position departure,
-            long idTypeOfEvent,
-            boolean prevLocChoice,
-            boolean travelAtLastChoice) {
+    public EventBody ( String name, String description, String startingTime, String endingTime,
+                       Position eventLocation, Position departure, long idTypeOfEvent, boolean prevLocChoice,
+                       boolean travelAtLastChoice ) {
         this.name = name;
         this.description = description;
         this.startingTime = startingTime;

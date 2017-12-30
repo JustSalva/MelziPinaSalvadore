@@ -5,9 +5,9 @@ import java.util.List;
 
 public class ErrorResponse {
 
-    private List<String> messages;
+    private List < String > messages;
 
-    public List<String> getMessages() {
+    public List < String > getMessages () {
         return messages;
     }
 }

@@ -14,34 +14,34 @@ public final class DragToDeleteEventListener implements View.OnDragListener {
 
     private CalendarActivity activity;
 
-    public DragToDeleteEventListener(CalendarActivity activity) {
+    public DragToDeleteEventListener ( CalendarActivity activity ) {
         this.activity = activity;
     }
 
     @Override
-    public boolean onDrag(View viewReceiving, DragEvent event) {
+    public boolean onDrag ( View viewReceiving, DragEvent event ) {
         int color = viewReceiving.getDrawingCacheBackgroundColor();
-        View viewDragged = (View) event.getLocalState();
+        View viewDragged = ( View ) event.getLocalState();
         int eventId = viewDragged.getId();
-        switch (event.getAction()) {
+        switch ( event.getAction() ) {
             case DragEvent.ACTION_DRAG_STARTED:
-                viewReceiving.setVisibility(View.VISIBLE);
-                viewReceiving.setBackgroundColor(Color.parseColor("#FF0000"));
+                viewReceiving.setVisibility( View.VISIBLE );
+                viewReceiving.setBackgroundColor( Color.parseColor( "#FF0000" ) );
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                viewReceiving.setBackgroundColor(Color.parseColor("#FF0000"));
+                viewReceiving.setBackgroundColor( Color.parseColor( "#FF0000" ) );
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
-                viewReceiving.setBackgroundColor(color);
+                viewReceiving.setBackgroundColor( color );
                 break;
             case DragEvent.ACTION_DROP:
                 // Send request to server to delete the event.
-                activity.deleteEvent(eventId);
+                activity.deleteEvent( eventId );
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                viewReceiving.setBackgroundColor(color);
-                viewReceiving.setVisibility(View.GONE);
-                viewDragged.setVisibility(View.VISIBLE);
+                viewReceiving.setBackgroundColor( color );
+                viewReceiving.setVisibility( View.GONE );
+                viewDragged.setVisibility( View.VISIBLE );
             default:
                 break;
         }

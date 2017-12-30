@@ -22,58 +22,58 @@ public class EventResponse {
     private boolean prevLocChoice;
     private boolean travelAtLastChoice;
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public String getDescription() {
+    public String getDescription () {
         return description;
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public EventType getType() {
+    public EventType getType () {
         return type;
     }
 
-    public Position getEventLocation() {
+    public Position getEventLocation () {
         return eventLocation;
     }
 
-    public Position getDeparture() {
+    public Position getDeparture () {
         return departure;
     }
 
-    public FeasiblePath getFeasiblePath() {
+    public FeasiblePath getFeasiblePath () {
         return feasiblePath;
     }
 
-    public Timestamp getStartingTime() {
+    public Timestamp getStartingTime () {
         return startingTime;
     }
 
-    public Timestamp getEndingTime() {
+    public Timestamp getEndingTime () {
         return endingTime;
     }
 
-    public boolean isScheduled() {
+    public boolean isScheduled () {
         return isScheduled;
     }
 
-    public boolean isPrevLocChoice() {
+    public boolean isPrevLocChoice () {
         return prevLocChoice;
     }
 
-    public boolean isTravelAtLastChoice() {
+    public boolean isTravelAtLastChoice () {
         return travelAtLastChoice;
     }
 
     public class EventType {
         private long id;
 
-        public long getId() {
+        public long getId () {
             return id;
         }
     }

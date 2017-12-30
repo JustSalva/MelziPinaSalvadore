@@ -17,10 +17,8 @@ import java.util.List;
 @Stateless
 public class ScheduleManager extends UserManager {
 
-    private final static float MAX_WALKING_LENGTH = 2.5f;
-
     public final static long SECONDS_IN_A_DAY = 24 * 60 * 60;
-
+    private final static float MAX_WALKING_LENGTH = 2.5f;
     private ScheduleHolder schedule;
 
     public ScheduleHolder getSchedule () {

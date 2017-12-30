@@ -117,7 +117,7 @@ public class EventRESTful {
             return HttpResponseBuilder.buildOkResponse( eventManager.addEvent( eventMessage ) );
         } catch ( InvalidFieldException e ) {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
-        } catch ( GMapsGeneralException e1 ){
+        } catch ( GMapsGeneralException e1 ) {
             return HttpResponseBuilder.notAvailable();
         }
     }
@@ -141,7 +141,7 @@ public class EventRESTful {
             return HttpResponseBuilder.buildInvalidFieldResponse( e );
         } catch ( EntityNotFoundException e ) {
             return HttpResponseBuilder.badRequest();
-        } catch ( GMapsGeneralException e1 ){
+        } catch ( GMapsGeneralException e1 ) {
             return HttpResponseBuilder.notAvailable();
         }
 

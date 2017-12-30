@@ -8,24 +8,24 @@ import android.arch.persistence.room.ColumnInfo;
 public class Event {
 
     private String description;
-    @ColumnInfo(name = "type_of_event_id")
+    @ColumnInfo( name = "type_of_event_id" )
     private long typeOfEventId;
-    @ColumnInfo(name = "event_location")
+    @ColumnInfo( name = "event_location" )
     private String eventLocation;
-    @ColumnInfo(name = "previous_location_choice")
+    @ColumnInfo( name = "previous_location_choice" )
     private boolean previousLocationChoice;
-    @ColumnInfo(name = "travel_at_last_choice")
+    @ColumnInfo( name = "travel_at_last_choice" )
     private boolean travelAtLastChoice;
-    @ColumnInfo(name = "departure_location")
+    @ColumnInfo( name = "departure_location" )
     private String departureLocation;
 
-    public Event(
+    public Event (
             String description,
             long typeOfEventId,
             String eventLocation,
             boolean previousLocationChoice,
             boolean travelAtLastChoice,
-            String departureLocation) {
+            String departureLocation ) {
         this.description = description;
         this.typeOfEventId = typeOfEventId;
         this.eventLocation = eventLocation;
@@ -34,62 +34,62 @@ public class Event {
         this.departureLocation = departureLocation;
     }
 
-    public String getDescription() {
+    public String getDescription () {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription ( String description ) {
         this.description = description;
     }
 
-    public long getTypeOfEventId() {
+    public long getTypeOfEventId () {
         return typeOfEventId;
     }
 
-    public void setTypeOfEventId(long typeOfEventId) {
+    public void setTypeOfEventId ( long typeOfEventId ) {
         this.typeOfEventId = typeOfEventId;
     }
 
-    public String getEventLocation() {
+    public String getEventLocation () {
         return eventLocation;
     }
 
-    public void setEventLocation(String eventLocation) {
+    public void setEventLocation ( String eventLocation ) {
         this.eventLocation = eventLocation;
     }
 
-    public boolean isPreviousLocationChoice() {
+    public boolean isPreviousLocationChoice () {
         return previousLocationChoice;
     }
 
-    public void setPreviousLocationChoice(boolean previousLocationChoice) {
+    public void setPreviousLocationChoice ( boolean previousLocationChoice ) {
         this.previousLocationChoice = previousLocationChoice;
     }
 
-    public boolean isTravelAtLastChoice() {
+    public boolean isTravelAtLastChoice () {
         return travelAtLastChoice;
     }
 
-    public void setTravelAtLastChoice(boolean travelAtLastChoice) {
+    public void setTravelAtLastChoice ( boolean travelAtLastChoice ) {
         this.travelAtLastChoice = travelAtLastChoice;
     }
 
-    public String getDepartureLocation() {
+    public String getDepartureLocation () {
         return departureLocation;
     }
 
-    public void setDepartureLocation(String departureLocation) {
+    public void setDepartureLocation ( String departureLocation ) {
         this.departureLocation = departureLocation;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         String info = "Description: " + description + '\n' +
                 "Location: " + eventLocation + '\n';
-        info = travelAtLastChoice ? info.concat("Travel at latest\n") : info.concat("Travel at earliest\n");
+        info = travelAtLastChoice ? info.concat( "Travel at latest\n" ) : info.concat( "Travel at earliest\n" );
         info = previousLocationChoice
-                ? info.concat("Starts from: Previous location")
-                : info.concat("Starts from: " + '\n' + departureLocation);
+                ? info.concat( "Starts from: Previous location" )
+                : info.concat( "Starts from: " + '\n' + departureLocation );
         return info;
     }
 }

@@ -14,31 +14,31 @@ public class MiniTravel {
     private Position arrival;
     private TravelMeanUsed meanUsed;
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public Timestamp getStartingTime() {
+    public Timestamp getStartingTime () {
         return startingTime;
     }
 
-    public Timestamp getEndingTime() {
+    public Timestamp getEndingTime () {
         return endingTime;
     }
 
-    public float getLength() {
+    public float getLength () {
         return length;
     }
 
-    public Position getDeparture() {
+    public Position getDeparture () {
         return departure;
     }
 
-    public Position getArrival() {
+    public Position getArrival () {
         return arrival;
     }
 
-    public TravelMeanUsed getMeanUsed() {
+    public TravelMeanUsed getMeanUsed () {
         return meanUsed;
     }
 }

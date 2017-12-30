@@ -9,19 +9,19 @@ public class Position {
     private float longitude;
     private String address;
 
-    public Position(String address) {
+    public Position ( String address ) {
         this.address = address;
     }
 
-    public float getLatitude() {
+    public float getLatitude () {
         return latitude;
     }
 
-    public float getLongitude() {
+    public float getLongitude () {
         return longitude;
     }
 
-    public String getAddress() {
+    public String getAddress () {
         return address;
     }
 }

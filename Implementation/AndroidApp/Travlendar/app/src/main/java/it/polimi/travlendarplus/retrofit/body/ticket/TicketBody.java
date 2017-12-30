@@ -8,18 +8,18 @@ import it.polimi.travlendarplus.TravelMeanUsed;
 public class TicketBody {
 
     private float cost;
-    private List<TravelMeanUsed> relatedTo;
+    private List < TravelMeanUsed > relatedTo;
 
-    public TicketBody(float cost, List<TravelMeanUsed> relatedTo) {
+    public TicketBody ( float cost, List < TravelMeanUsed > relatedTo ) {
         this.cost = cost;
         this.relatedTo = relatedTo;
     }
 
-    public void setCost(float cost) {
+    public void setCost ( float cost ) {
         this.cost = cost;
     }
 
-    public List<TravelMeanUsed> getRelatedTo() {
+    public List < TravelMeanUsed > getRelatedTo () {
         return relatedTo;
     }
 }

@@ -12,7 +12,7 @@ public class RegisterBody {
     private String name;
     private String surname;
 
-    public RegisterBody(String email, String password, String idDevice, String name, String surname) {
+    public RegisterBody ( String email, String password, String idDevice, String name, String surname ) {
         this.email = email;
         this.password = password;
         this.idDevice = idDevice;

@@ -18,8 +18,8 @@ public class TypeOfEventResponse extends CalendarResponse {
     private long id;
     private String name;
     private ParamFirstPath paramFirstPath;
-    private List< PeriodOfDayConstraint > periodOfDayConstraints;
-    private List< DistanceConstraint > distanceConstraints;
+    private List < PeriodOfDayConstraint > periodOfDayConstraints;
+    private List < DistanceConstraint > distanceConstraints;
     private List < TravelMeanEnum > deactivate;
 
     public TypeOfEventResponse () {
@@ -32,7 +32,7 @@ public class TypeOfEventResponse extends CalendarResponse {
         this.deactivate = typeOfEvent.getDeactivate();
         this.distanceConstraints = new ArrayList <>();
         this.periodOfDayConstraints = new ArrayList <>();
-        for ( Constraint constraint : typeOfEvent.getLimitedBy() ){
+        for ( Constraint constraint : typeOfEvent.getLimitedBy() ) {
             constraint.serializeResponse( this );
         }
 
@@ -82,7 +82,7 @@ public class TypeOfEventResponse extends CalendarResponse {
         this.distanceConstraints = distanceConstraints;
     }
 
-    public void addDistanceConstraint (  DistanceConstraint  distanceConstraint ) {
+    public void addDistanceConstraint ( DistanceConstraint distanceConstraint ) {
         this.distanceConstraints.add( distanceConstraint );
     }
 

@@ -9,8 +9,8 @@ public class GenericTicketBody extends TicketBody {
 
     private String lineName;
 
-    public GenericTicketBody(float cost, List<TravelMeanUsed> relatedTo, String lineName) {
-        super(cost, relatedTo);
+    public GenericTicketBody ( float cost, List < TravelMeanUsed > relatedTo, String lineName ) {
+        super( cost, relatedTo );
         this.lineName = lineName;
     }
 }

@@ -9,11 +9,11 @@ public class GetLocationsResponse {
     private String name;
     private Position location;
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public Position getLocation() {
+    public Position getLocation () {
         return location;
     }
 
@@ -22,15 +22,15 @@ public class GetLocationsResponse {
         private float longitude;
         private String address;
 
-        public float getLatitude() {
+        public float getLatitude () {
             return latitude;
         }
 
-        public float getLongitude() {
+        public float getLongitude () {
             return longitude;
         }
 
-        public String getAddress() {
+        public String getAddress () {
             return address;
         }
     }

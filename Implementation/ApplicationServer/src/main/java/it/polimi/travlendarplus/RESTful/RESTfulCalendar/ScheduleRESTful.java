@@ -25,17 +25,16 @@ import javax.ws.rs.core.Response;
 public class ScheduleRESTful {
 
     /**
-     * Enterprise Java beans that offers the logic related to schedule management functionalities
-     */
-    @EJB
-    private ScheduleManager scheduleManager;
-
-    /**
      * User that performs a request, automatically injected after his authentication
      */
     @Inject
     @AuthenticatedUser
     User authenticatedUser;
+    /**
+     * Enterprise Java beans that offers the logic related to schedule management functionalities
+     */
+    @EJB
+    private ScheduleManager scheduleManager;
 
     /**
      * This method initialize the injected schedule manager with the user to be handled

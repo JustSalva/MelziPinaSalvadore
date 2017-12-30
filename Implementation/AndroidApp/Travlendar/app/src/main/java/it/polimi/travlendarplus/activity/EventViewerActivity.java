@@ -16,14 +16,14 @@ public class EventViewerActivity extends MenuActivity {
     private EventViewModel eventViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_viewer);
+    protected void onCreate ( Bundle savedInstanceState ) {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_event_viewer );
         super.setupMenuToolbar();
     }
 
-    public void goToArrangeTrip(View view) {
-        Intent intent = new Intent(this, ArrangeTripActivity.class);
-        startActivity(intent);
+    public void goToArrangeTrip ( View view ) {
+        Intent intent = new Intent( this, ArrangeTripActivity.class );
+        startActivity( intent );
     }
 }

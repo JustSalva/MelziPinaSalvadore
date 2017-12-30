@@ -7,7 +7,7 @@ public class RegisterResponse {
 
     private String token;
 
-    public String getToken() {
+    public String getToken () {
         return token;
     }
 }

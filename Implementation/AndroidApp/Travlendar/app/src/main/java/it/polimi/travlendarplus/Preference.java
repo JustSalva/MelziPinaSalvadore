@@ -11,39 +11,39 @@ public class Preference {
     private long id;
     private String name;
     private ParamFirstPath paramFirstPath;
-    private List<PeriodConstraint> periodOfDayConstraints;
-    private List<DistanceConstraint> distanceConstraints;
-    private List<TravelMeanEnum> deactivate;
+    private List < PeriodConstraint > periodOfDayConstraints;
+    private List < DistanceConstraint > distanceConstraints;
+    private List < TravelMeanEnum > deactivate;
 
     /**
      * Constructor to create the standard preference with id = 0;
      */
-    public Preference() {
+    public Preference () {
         this.id = 0;
         this.name = "Normal";
         this.paramFirstPath = ParamFirstPath.MIN_TIME;
-        this.periodOfDayConstraints = new ArrayList<>();
-        this.distanceConstraints = new ArrayList<>();
-        this.deactivate = new ArrayList<>();
+        this.periodOfDayConstraints = new ArrayList <>();
+        this.distanceConstraints = new ArrayList <>();
+        this.deactivate = new ArrayList <>();
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public ParamFirstPath getParamFirstPath() {
+    public ParamFirstPath getParamFirstPath () {
         return paramFirstPath;
     }
 
-    public void setParamFirstPath(ParamFirstPath paramFirstPath) {
+    public void setParamFirstPath ( ParamFirstPath paramFirstPath ) {
         this.paramFirstPath = paramFirstPath;
     }
 
-    public List<PeriodConstraint> getPeriodOfDayConstraints() {
+    public List < PeriodConstraint > getPeriodOfDayConstraints () {
         return periodOfDayConstraints;
     }
 
@@ -51,16 +51,16 @@ public class Preference {
      * @param travelMean travel mean related to the constraint.
      * @return periodConstraint related to the travel mean.
      */
-    public PeriodConstraint getPeriodOfDayConstraint(String travelMean) {
-        for (PeriodConstraint constraint : periodOfDayConstraints) {
-            if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
+    public PeriodConstraint getPeriodOfDayConstraint ( String travelMean ) {
+        for ( PeriodConstraint constraint : periodOfDayConstraints ) {
+            if ( constraint.getConcerns().equals( TravelMeanEnum.getEnumFromString( travelMean ) ) ) {
                 return constraint;
             }
         }
         return null;
     }
 
-    public List<DistanceConstraint> getDistanceConstraints() {
+    public List < DistanceConstraint > getDistanceConstraints () {
         return distanceConstraints;
     }
 
@@ -68,9 +68,9 @@ public class Preference {
      * @param travelMean travel mean related to the constraint.
      * @return distanceConstraint relateed to the travel mean.
      */
-    public DistanceConstraint getDistanceConstraint(String travelMean) {
-        for (DistanceConstraint constraint : distanceConstraints) {
-            if (constraint.getConcerns().equals(TravelMeanEnum.getEnumFromString(travelMean))) {
+    public DistanceConstraint getDistanceConstraint ( String travelMean ) {
+        for ( DistanceConstraint constraint : distanceConstraints ) {
+            if ( constraint.getConcerns().equals( TravelMeanEnum.getEnumFromString( travelMean ) ) ) {
                 return constraint;
             }
         }
@@ -81,11 +81,11 @@ public class Preference {
      * @param travelMean travel mean related to the constraint.
      * @return true if the travel mean is activated in a constraint, false otherwise.
      */
-    public boolean isActivated(TravelMeanEnum travelMean) {
-        return !deactivate.contains(travelMean);
+    public boolean isActivated ( TravelMeanEnum travelMean ) {
+        return !deactivate.contains( travelMean );
     }
 
-    public List<TravelMeanEnum> getDeactivate() {
+    public List < TravelMeanEnum > getDeactivate () {
         return deactivate;
     }
 
@@ -98,34 +98,34 @@ public class Preference {
         private long minHour;
         private long maxHour;
 
-        public PeriodConstraint(long id, TravelMeanEnum concerns, long minHour, long maxHour) {
+        public PeriodConstraint ( long id, TravelMeanEnum concerns, long minHour, long maxHour ) {
             this.id = id;
             this.concerns = concerns;
             this.minHour = minHour;
             this.maxHour = maxHour;
         }
 
-        public long getId() {
+        public long getId () {
             return id;
         }
 
-        public TravelMeanEnum getConcerns() {
+        public TravelMeanEnum getConcerns () {
             return concerns;
         }
 
-        public long getMinHour() {
+        public long getMinHour () {
             return minHour;
         }
 
-        public void setMinHour(long minHour) {
+        public void setMinHour ( long minHour ) {
             this.minHour = minHour;
         }
 
-        public long getMaxHour() {
+        public long getMaxHour () {
             return maxHour;
         }
 
-        public void setMaxHour(long maxHour) {
+        public void setMaxHour ( long maxHour ) {
             this.maxHour = maxHour;
         }
     }
@@ -139,34 +139,34 @@ public class Preference {
         private int minLength;
         private int maxLength;
 
-        public DistanceConstraint(long id, TravelMeanEnum concerns, int minLength, int maxLength) {
+        public DistanceConstraint ( long id, TravelMeanEnum concerns, int minLength, int maxLength ) {
             this.id = id;
             this.concerns = concerns;
             this.minLength = minLength;
             this.maxLength = maxLength;
         }
 
-        public long getId() {
+        public long getId () {
             return id;
         }
 
-        public TravelMeanEnum getConcerns() {
+        public TravelMeanEnum getConcerns () {
             return concerns;
         }
 
-        public int getMinLength() {
+        public int getMinLength () {
             return minLength;
         }
 
-        public void setMinLength(int minLength) {
+        public void setMinLength ( int minLength ) {
             this.minLength = minLength;
         }
 
-        public int getMaxLength() {
+        public int getMaxLength () {
             return maxLength;
         }
 
-        public void setMaxLength(int maxLength) {
+        public void setMaxLength ( int maxLength ) {
             this.maxLength = maxLength;
         }
     }
