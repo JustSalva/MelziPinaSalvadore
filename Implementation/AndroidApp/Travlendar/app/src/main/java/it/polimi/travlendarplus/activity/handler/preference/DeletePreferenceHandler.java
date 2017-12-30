@@ -36,6 +36,7 @@ public class DeletePreferenceHandler extends DefaultHandler<PreferencesActivity>
                 Toast.makeText(activity, "Preference removed!", Toast.LENGTH_LONG).show();
                 // Remove preference from the list.
                 activity.getPreferencesMap().remove(activity.getSelectedPreference().getName());
+                activity.populatePreferencesSpinner();
                 break;
             default:
                 break;
