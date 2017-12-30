@@ -248,11 +248,19 @@ public class TicketsViewerActivity extends MenuActivity {
      * @return String modified.
      */
     public String stringSplitter(String string) {
-        String[] split = string.split("(?<=\\G.{12,50}\\s)");
+        // Split string between spaces.
+        String[] split = string.split(" ");
         String tobeReturned = "";
+        String partialString = "";
+        // For each part, add to partialString. When partialString is larger than 12 character,
+        // add it to toBeReturned and clear it.
         for (String s : split) {
-            tobeReturned = tobeReturned.concat(s+"\n");
+            partialString = partialString.concat(s + " ");
+            if (partialString.length() > 12) {
+                tobeReturned = tobeReturned.concat(partialString.concat("\n"));
+                partialString = "";
+            }
         }
-        return tobeReturned;
+        return tobeReturned.concat(partialString);
     }
 }
