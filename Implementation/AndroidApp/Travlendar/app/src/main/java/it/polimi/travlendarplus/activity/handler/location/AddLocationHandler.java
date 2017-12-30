@@ -37,7 +37,7 @@ public class AddLocationHandler extends DefaultHandler<AccountActivity> {
                 Toast.makeText(activity, "Location added!", Toast.LENGTH_LONG).show();
                 // Add location to the list.
                 Location location = new Location(
-                        activity.getLocationName(),
+                        activity.getLocationName().replace(" ", "_"),
                         new Position(activity.getLocationAddress()));
                 activity.getLocationsMap().put(activity.getLocationName().replace(" ", "_"), location);
                 activity.populateLocationsSpinner();
