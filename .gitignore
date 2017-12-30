@@ -111,7 +111,6 @@ Thumbs.db
 .mtj.tmp/
 
 # Package Files #
-*.war
 *.ear
 
 # virtual machine crash logs (Reference: http://www.java.com/en/download/help/error_hotspot.xml)
