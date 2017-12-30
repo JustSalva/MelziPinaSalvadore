@@ -87,7 +87,8 @@ public class PathManager extends UserManager {
         // Filtering obtained paths according to constraints defined
         previousPaths = previousPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
                 .collect( Collectors.toCollection( ArrayList::new ) );
-        followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
+        followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p,
+                scheduleManager.getPossibleFollowingEvent( event.getStartingTime() ).getType() ) )
                 .collect( Collectors.toCollection( ArrayList::new ) );
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         List < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
@@ -349,7 +350,8 @@ public class PathManager extends UserManager {
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
                     .collect( Collectors.toCollection( ArrayList::new ) );
-            foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
+            foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p,
+                    scheduleManager.getPossibleFollowingEvent( forcedEvent.getStartingTime() ).getType() ) )
                     .collect( Collectors.toCollection( ArrayList::new ) );
             // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if ( !prev.isEmpty() && ( !foll.isEmpty() || scheduleManager.getPossibleFollowingEvent(
@@ -470,12 +472,13 @@ public class PathManager extends UserManager {
         return copy;
     }
 
-    /** Retrives information about the specified path.
+    /**
+     * Retrives information about the specified path.
      *
      * @param pathId the identifier of the event associated to the requested path.
      * @return the travel requested
      * @throws EntityNotFoundException if the entity is not found
-     * @throws NotScheduledException if the related-event is not scheduled
+     * @throws NotScheduledException   if the related-event is not scheduled
      */
     public Travel getBestPathInfo ( long pathId ) throws EntityNotFoundException, NotScheduledException {
         Event requestedEvent = currentUser.getEvents()
@@ -511,7 +514,7 @@ public class PathManager extends UserManager {
      * @throws EntityNotFoundException   if the event to be swapped does not exist
      * @throws AlreadyScheduledException if the event is already in the schedule,
      *                                   and so it can't be forced into it
-     * @throws GMapsGeneralException if Google Maps services are unavailable
+     * @throws GMapsGeneralException     if Google Maps services are unavailable
      */
     public List < GenericEvent > swapGenericEvent ( long eventId )
             throws EntityNotFoundException, AlreadyScheduledException, GMapsGeneralException {
@@ -542,6 +545,7 @@ public class PathManager extends UserManager {
     /**
      * Forces an overlapping break event into the schedule and handles the swap out operations of any scheduled event
      * or break that is in conflict with the forced one.
+     *
      * @param forcedBreak break that must be inserted into the schedule.
      * @return a list of modified events.
      * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
@@ -568,8 +572,10 @@ public class PathManager extends UserManager {
     }
 
 
-    /** Removes from schedule all the overlapping breaks.
-     * @param response list where any modified event must be added.
+    /**
+     * Removes from schedule all the overlapping breaks.
+     *
+     * @param response    list where any modified event must be added.
      * @param forcedBreak break event to add.
      */
     private void swapOutOverlappingBreaks ( List < GenericEvent > response, BreakEvent forcedBreak ) {
@@ -589,7 +595,8 @@ public class PathManager extends UserManager {
 
     /**
      * Determines which event to remove, first the most overlapping with the break to swap in.
-     * @param involved list of events overlapping with break event.
+     *
+     * @param involved    list of events overlapping with break event.
      * @param forcedBreak break event to swap in.
      * @return the event that overlap at most with the break event, among the events passed.
      */
@@ -606,7 +613,8 @@ public class PathManager extends UserManager {
 
     /**
      * Adjusts the path of the event that follows a deleted event.
-     * @param response list where any modified event must be added.
+     *
+     * @param response  list where any modified event must be added.
      * @param following the event whose related-path must be recalculated.
      * @throws GMapsGeneralException if the path computation fails cause Google maps services are unavailable.
      */
@@ -642,8 +650,9 @@ public class PathManager extends UserManager {
 
     /**
      * Adds to the ArrayList of response an event that must be removed from the schedule.
+     *
      * @param response list where any modified event must be added.
-     * @param event event to remove.
+     * @param event    event to remove.
      */
     private void addRemovingEventToResponse ( List < GenericEvent > response, GenericEvent event ) {
         event.setScheduled( false );
@@ -654,9 +663,10 @@ public class PathManager extends UserManager {
 
     /**
      * Adds to the ArrayList of response an event whose path must be recalculated.
+     *
      * @param response list where any modified event must be added.
-     * @param event event to update.
-     * @param path path that must be added to event.
+     * @param event    event to update.
+     * @param path     path that must be added to event.
      */
     private void addEventWithNewPathToResponse ( List < GenericEvent > response, Event event, Travel path ) {
         event.setScheduled( true );
@@ -666,9 +676,11 @@ public class PathManager extends UserManager {
         response.add( event );
     }
 
-    /** Avoids the calculation of path for very very long distances....
+    /**
+     * Avoids the calculation of path for very very long distances....
+     *
      * @param privateMeans list of private means, used to remove walking in case of long distance.
-     * @param event event whose path must be calculated.
+     * @param event        event whose path must be calculated.
      */
     private void avoidLongWalkingCalculation ( List < TravelMeanEnum > privateMeans, Event event ) {
         float pk = ( float ) ( 180.f / Math.PI );
