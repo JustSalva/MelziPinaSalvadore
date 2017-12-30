@@ -17,36 +17,51 @@ import java.util.List;
  */
 @Dao
 public interface TicketsDao {
+    /**
+     * Insert a list of tickets in the DB.
+     * @param tickets A list of tickets to be inserted.
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Ticket> tickets);
 
+    /**
+     * Update a ticket already present in the DB.
+     * @param ticket Ticket to be updated.
+     */
     @Update
     void update(Ticket ticket);
 
+    /**
+     * Delete a ticket from the DB.
+     * @param ticket Ticket to be deleted.
+     */
     @Delete
     void delete(Ticket ticket);
 
+    /**
+     * Delete a ticket from the DB.
+     * @param eventId Id of the ticket to be deleted.
+     */
     @Query("DELETE FROM ticket WHERE id LIKE :eventId")
     void deleteFromId(int eventId);
 
+    /**
+     * Deletes all the tickets present from the DB.
+     */
     @Query("DELETE FROM ticket")
     void deleteAll();
 
+    /**
+     * Returns all the tickets present in the DB.
+     * @return A list of ticket.
+     */
     @Query("SELECT * from ticket")
     LiveData<List<Ticket>> getTickets();
 
-    @Query("SELECT * from ticket WHERE type LIKE 'Generic'")
-    LiveData<List<Ticket>> getGenericTickets();
-
-    @Query("SELECT * from ticket WHERE type LIKE 'Period'")
-    LiveData<List<Ticket>> getPeriodTickets();
-
-    @Query("SELECT * from ticket WHERE type LIKE 'Distance'")
-    LiveData<List<Ticket>> getDistanceTickets();
-
-    @Query("SELECT * from ticket WHERE type LIKE 'Path'")
-    LiveData<List<Ticket>> getPathTickets();
-
+    /**
+     * Removes a ticket from all the travel components.
+     * @param ticketId Id of the ticket to be removed.
+     */
     @Query("UPDATE travel_component SET ticket_id = 0 WHERE ticket_id LIKE :ticketId")
     void removeTicketFromTravelComponent(int ticketId);
 }
