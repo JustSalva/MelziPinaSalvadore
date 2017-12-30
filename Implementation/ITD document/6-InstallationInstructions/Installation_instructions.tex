@@ -48,9 +48,14 @@ NB. To stop GlassFish type 'stop-domain domain1' in the same terminal you've sta
 \label{subsect:Linux}
 
 \subsubsection{Install and setup MySQL 5.7}
+We have encountered several problems following the guide provided by our instructors about MySQL on a linux OS, so we will provide some alternatives to be sure that you succeed to install it; you can either:
 \begin{itemize}
-	\item Please follow the guide provided in beep course's web page, in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 2.3) in order to proper install MySQL;
-	\item Open a terminal and run the command '/etc/init.d/mysql start' (or 'service mysql start') in order to start MySQL;
+	\item follow the guide provided in beep course's web page, in slides folder: "JEE Tools Instructions for Lab.pdf", (only section 2.3) in order to proper install MySQL, or
+	\item follow the official guide provided on MySQL official website: \\ \href{https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html}{\color{blue}https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html}.
+\end{itemize} 
+Once you have successfully installed MySQL you have to:
+\begin{itemize}
+	\item Open a terminal and run the command '/etc/init.d/mysql start' (or 'service mysql start', or 'mysql.server start') in order to start MySQL;
 	\item Open a terminal and run the command 'mysql -u root -p' in order to access to MySQL's command line console;
 	\item MySQL's command line console will ask for a password, just press 'enter';
 	\item In MySQL's command line console's window type 'create database mps\textunderscore travlendar;' and press 'enter' in order to create the database needed by the application server;
