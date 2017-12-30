@@ -87,9 +87,11 @@ public class PathManager extends UserManager {
         // Filtering obtained paths according to constraints defined
         previousPaths = previousPaths.stream().filter( p -> preferenceManager.checkConstraints( p, event.getType() ) )
                 .collect( Collectors.toCollection( ArrayList::new ) );
-        followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p,
-                scheduleManager.getPossibleFollowingEvent( event.getStartingTime() ).getType() ) )
-                .collect( Collectors.toCollection( ArrayList::new ) );
+        if ( scheduleManager.getPossibleFollowingEvent( event.getStartingTime() ) != null ) {
+            followingPaths = followingPaths.stream().filter( p -> preferenceManager.checkConstraints( p,
+                    scheduleManager.getPossibleFollowingEvent( event.getStartingTime() ).getType() ) )
+                    .collect( Collectors.toCollection( ArrayList::new ) );
+        }
         // Selecting only combinations of paths that ensure feasibility for each scheduled break event.
         List < PathCombination > possibleCombinations = scheduleManager.getFeasiblePathCombinations( event,
                 previousPaths, followingPaths );
@@ -350,9 +352,11 @@ public class PathManager extends UserManager {
             List < Travel > foll = getFollowingTravels( forcedEvent, privateMeans, publicMeans );
             prev = prev.stream().filter( p -> preferenceManager.checkConstraints( p, forcedEvent.getType() ) )
                     .collect( Collectors.toCollection( ArrayList::new ) );
-            foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p,
-                    scheduleManager.getPossibleFollowingEvent( forcedEvent.getStartingTime() ).getType() ) )
-                    .collect( Collectors.toCollection( ArrayList::new ) );
+            if ( scheduleManager.getPossibleFollowingEvent( forcedEvent.getStartingTime() ) != null ) {
+                foll = foll.stream().filter( p -> preferenceManager.checkConstraints( p,
+                        scheduleManager.getPossibleFollowingEvent( forcedEvent.getStartingTime() ).getType() ) )
+                        .collect( Collectors.toCollection( ArrayList::new ) );
+            }
             // Prev and foll paths are founded. Checking the feasibility with scheduled break events.
             if ( !prev.isEmpty() && ( !foll.isEmpty() || scheduleManager.getPossibleFollowingEvent(
                     forcedEvent.getStartingTime() ) == null ) ) {
