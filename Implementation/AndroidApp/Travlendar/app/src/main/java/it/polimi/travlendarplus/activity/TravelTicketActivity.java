@@ -120,10 +120,10 @@ public class TravelTicketActivity extends MenuActivity {
                     "ENDS: ".concat(DateUtility.getHHmmFromSeconds(travelComponent.getEndTime()))
             ));
             gridLayout.addView(createTextView(
-                    "FROM: \n".concat(travelComponent.getDepartureLocation().replace(",", ",\n"))
+                    "FROM: \n".concat(stringSplitter(travelComponent.getDepartureLocation()))
             ));
             gridLayout.addView(createTextView(
-                    "TO: \n".concat(travelComponent.getArrivalLocation().replace(",", ",\n"))
+                    "TO: \n".concat(stringSplitter(travelComponent.getArrivalLocation()))
             ));
             // Button with on click load list of compatible tickets.
             if (travelComponent.getTravelMean().equals("Bus") ||
@@ -258,5 +258,19 @@ public class TravelTicketActivity extends MenuActivity {
             // Add to main layout.
             linearLayout.addView(ticketLL);
         }
+    }
+
+    /**
+     * Add returns \n to a string after a white space, if at least 12 characters have been read.
+     * @param string String to be modified.
+     * @return String modified.
+     */
+    public String stringSplitter(String string) {
+        String[] split = string.split("(?<=\\G.{12,50}\\s)");
+        String tobeReturned = "";
+        for (String s : split) {
+            tobeReturned = tobeReturned.concat(s+"\n");
+        }
+        return tobeReturned;
     }
 }

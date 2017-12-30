@@ -207,8 +207,8 @@ public class TicketsViewerActivity extends MenuActivity {
      * @param ticket Ticket containing details to be inserted.
      */
     private void insertPathTicketFields(GridLayout gridLayout, Ticket ticket) {
-        String startLocation = ticket.getGenericTicket().getPathTicket().getArrivalLocation().replace(",", ",\n");
-        String endLocation = ticket.getGenericTicket().getPathTicket().getDepartureLocation().replace(",", ",\n");
+        String startLocation = stringSplitter(ticket.getGenericTicket().getPathTicket().getArrivalLocation());
+        String endLocation = stringSplitter(ticket.getGenericTicket().getPathTicket().getDepartureLocation());
         gridLayout.addView(createTextView("FROM: \n".concat(startLocation)));
         gridLayout.addView(createTextView("TO: \n".concat(endLocation)));
         gridLayout.addView(createTextView("LINE: \n".concat(ticket.getGenericTicket().getLineName())));
@@ -240,5 +240,19 @@ public class TicketsViewerActivity extends MenuActivity {
 
     public Handler getDeleteTicketHandler() {
         return deleteTicketHandler;
+    }
+
+    /**
+     * Add returns \n to a string after a white space, if at least 12 characters have been read.
+     * @param string String to be modified.
+     * @return String modified.
+     */
+    public String stringSplitter(String string) {
+        String[] split = string.split("(?<=\\G.{12,50}\\s)");
+        String tobeReturned = "";
+        for (String s : split) {
+            tobeReturned = tobeReturned.concat(s+"\n");
+        }
+        return tobeReturned;
     }
 }
