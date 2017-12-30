@@ -1,7 +1,7 @@
 \section{Application Server and DBMS}
 \label{sect:Application Server and DBMS}
 This section contains a short guide to install properly and test the software required to run Travlendar+'s Application Server and the DBMS.\\
-{\large \textbf{We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS), our implementation and we recommend you to use it}}.\\
+{\large \textbf{We've already deployed in a virtual server, with a Linux OS (Ubuntu 16.04.2 LTS), our Application Server and we recommend you to use it}}.\\
 If you want to run on your computer our Application server, the following sections contain details on how to install the required software on three operating systems: Linux, Windows and macOS.\\
 {\large \textbf{If you want to test our application using our server, please jump to section  \ref{sect:Android App}}}.\\
 Notice that we want to provide instructions as generic as possible, so we will not provide any IDE - related instructions; feel free to use your own IDE to run both Glassfish 5.0 and MySQL 5.7, but if you never used/run these tools please follow strictly our instructions or simply use our online server.
@@ -120,14 +120,14 @@ This section contains a short guide to proper install the software required to r
 	\item Click on the 'Create Virtual device...' button;
 	\item Select 'Phone as category' and then 'Pixel 2 XL';
 	\item Click Next;
-	\item Select Oreo system image (Android 8.0);
-	\item Click on the download link to the right of 'Oreo' in order to download the selected Android OS and wait until the download ends; \todo{TODO}
+	\item Select Oreo system image (Android 8.0) in 'Recommended' tab;
+	\item Click on the download link to the right of 'Oreo' in order to download the selected Android OS and wait until the download ends; 
 	\item Click Next;
 	\item Click Finish;
 	\item Close the 'Android Virtual device Manager' window;
 	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
-	\item Select 'Pixel 2 XL API 26' virtual device;
-	\item Wait until your Android virtual device starts;
+	\item Select 'Pixel 2 XL API 26' virtual device and click 'Ok';
+	\item Wait until your Android virtual device starts and installs our App;
 	\item Make sure that the Android virtual device's and your computer's current time are the same, if not go to Settings app, click on system -\textgreater Date \& Time, deselect 'Automatic time zone' and Select manually your current time zone. Now the two clocks should display the same current time;
 	\item Enjoy Travlendar+'s Android App.	
 \end{itemize}
@@ -135,7 +135,6 @@ This section contains a short guide to proper install the software required to r
 \subsubsection{If you're not using our deployed server (local server):}
 \begin{itemize}
 	\item While Android Studio installation's goes on, clone our GitHub repo (\href{https://github.com/JustSalva/MelziPinaSalvadore}{\color{blue}link}) and take note of the location where the repo will be cloned at;
-	
 	\item At the end of the installation process Android Studio will show a window named 'Welcome to Android Studio', click on 'Open an existing Android studio project';
 	\item Select \path{'cloneLocation '\Implementation\AndroidApp\Travlendar} and then click Ok;
 	\item If 'Tips of the day' window opens up click on Close;
@@ -145,14 +144,26 @@ This section contains a short guide to proper install the software required to r
 	\item Click on 'Create Virtual device...' button;
 	\item Select 'Phone as category' and then 'Pixel 2 XL';
 	\item Click Next;
-	\item Select Oreo system image (Android 8.0);
-	\item Click on the download link to the right of 'Oreo' in order to download the selected android OS and wait until the download ends; \todo{TODO}
+	\item Select Oreo system image (Android 8.0) in 'Recommended' tab;
+	\item Click on the download link to the right of 'Oreo' in order to download the selected android OS and wait until the download ends;
 	\item Click Next;
 	\item Click Finish;
 	\item Close the 'Android Virtual device Manager' window;
 	\item On the menu bar click on Run -\textgreater Run ..... \todo{TODO};
-	\item Select 'Pixel 2 XL API 26' virtual device;
-	\item Wait until your Android virtual device starts;
+	\item Select 'Pixel 2 XL API 26' virtual device and click 'Ok';
+	\item Wait until your Android virtual device starts and installs our App;
 	\item Make sure that the Android virtual device's and your computer's current time are the same, if not go to Settings app, click on system -\textgreater Date \& Time, deselect 'Automatic time zone' and Select manually your current time zone. Now the two clocks should display the same current time;
 	\item Enjoy Travlendar+'s Android App.	
 \end{itemize}
+
+\subsection{Instructions to run the App on your Android device}
+\label{subsect:Android device Instructions}
+\textbf{(from Android version 6.0)}
+\begin{itemize}
+	\item Download the APK of Travlendar+ from here (substitute here with link); \todo{TODO}
+	\item Verify that the Android version of your Android device is greater or equal to 6.0 version. You can find out the Android version that is currently running on you device in Settings -\textgreater  About phone -\textgreater  Android version;
+	\item Open the downloaded APK file, than click on "Install" button;
+	\item Register your account specifying the email address in a valid format;
+	\item Enjoy Travlendar+'s Android App.	\\
+\end{itemize}
+Remember that our application is supported from 6.0 Android version; however, it has been developed and mainly tested on a virtual device with 8.0 version. For this reason, \textbf{we don't ensure that the use of Travlendar+ on previous than 8.0 Android versions is error free}.
