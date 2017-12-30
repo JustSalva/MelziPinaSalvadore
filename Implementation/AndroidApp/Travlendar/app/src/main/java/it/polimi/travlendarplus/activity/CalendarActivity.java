@@ -365,6 +365,7 @@ public class CalendarActivity extends MenuActivity {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setTextView(findViewById(R.id.date_textView));
         newFragment.show(getFragmentManager(), "datePicker");
+        loadEventsFromServer();
     }
 
     public String getToken() {
