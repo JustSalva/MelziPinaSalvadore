@@ -88,7 +88,7 @@ public class CalendarActivity extends MenuActivity {
         userViewModel.getUser().observe( this, user -> {
             this.user = user;
             // To be called only on the first onCreate().
-            if ( !eventsDownloaded ) {
+            if ( !eventsDownloaded && user.getToken()!= null) {
                 eventsDownloaded = true;
                 loadEventsFromServer();
             }
