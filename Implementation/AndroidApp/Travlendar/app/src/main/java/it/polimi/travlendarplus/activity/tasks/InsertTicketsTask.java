@@ -96,7 +96,7 @@ public class InsertTicketsTask extends AsyncTask<Void, Void, Void> {
             } else if (ticketResponse.getPathTicket() != null) {
                 periodTicket.setDecoratorType(Ticket.TicketType.PATH);
                 ticket.setGenericTicket(new GenericTicket(
-                        ticketResponse.getGenericTicket().getLineName(),
+                        ticketResponse.getPathTicket().getLineName(),
                         new PathTicket(
                                 ticketResponse.getPathTicket().getStartingLocation().getAddress(),
                                 ticketResponse.getPathTicket().getEndingLocation().getAddress()
