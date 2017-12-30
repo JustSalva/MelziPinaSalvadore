@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements PublicKeyActivit
         // Send request to server.
         waitForServerResponse();
         LoginController loginController = new LoginController(loginHandler);
-        loginController.start(email, password, idDevice);
+        loginController.start(email, password, email);
     }
 
     /**
