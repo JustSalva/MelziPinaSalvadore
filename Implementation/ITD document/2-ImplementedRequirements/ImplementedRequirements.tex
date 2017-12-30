@@ -58,7 +58,7 @@ In this section we specify which requirements are actually implemented in our Ap
 
 \subsection{Authentication Manager}
 All the requirements related to the authentication manager are fulfilled in this first release: the user can register himself into the system, log in from any device he prefers (but only one at the time), modify his account's info, delete his account and request a new password. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R1]} the system checks if the e-mail inserted is real;
 	\item \textbf{[R2]} a user cannot sign up with the same e-mail twice;
@@ -73,14 +73,14 @@ It interacts with both path and schedule manager in order to provide feasible pa
 In the application server also the propagation of periodical events through the time is handled properly. \\
 In our system is not yet handled the possibility to modify and delete with one operation all the periodic events generated from one single event, due to time-related issues.
 In our system is not yet handled the possibility to define events without an ending time since we do not consider this feature essential, but just an optional and not so necessary feature. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R5]} a user must specify all mandatory fields to add the new event;
 	\item \textbf{[R6]} the system reserves the specified time-slot for the event;
 	\item \textbf{[R7]} the system warns the user if the inserted event overlaps with an already existing one;
 	\item \textbf{[R29]} the system allows the user to specify a flexible interval and a minimum amount of time to schedule a break.
 \end{itemize}
-And these are the requirements not yet implemented in this manager:
+\noindent And these are the requirements not yet implemented in this manager:
 \begin{itemize}
 	\item \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;
 	\item \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8].
@@ -89,7 +89,7 @@ And these are the requirements not yet implemented in this manager:
 \subsection{Preference Manager}
 All the requirements related to the preference manager are fulfilled.
 This module offers all the functionalities needed to insert, modify and delete the user's event profiles and the user's preferred locations. It is also able to apply the user's preferences to the feasible travels computed by our system. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R12]} the system does not consider paths that violate constraints on travel means defined by the user;
 	\item \textbf{[R13]} the system checks user preferences to decide which feasible travel path is the best;
@@ -104,7 +104,7 @@ As specified in the previous documents, these are the requirements met by this m
 \subsection{Path Manager}
 This module manages the feasible travels computation, after the insertion or the modification of an event. It interacts with the \textit{PreferenceManager} in order to obtain the information needed to guarantee that the user preferences are respected in every proposed path.\\
 The functionalities that allow to change a selected path, choosing between a set of feasible alternatives, to obtain info that allow to draw a feasible path on a map and to obtain also options that include sharing vehicles are not yet available; we've chosen not to include them due to time-related issues and because they would have been nice-to-have features but not essential for an initial release. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R10]} every travel path proposed must be feasible in the available time (the interval between two consecutive events);
 	\item \textbf{[R11]} if the travel involves two or more travel means, the starting location of the first proposed travel path and the ending location of the last proposed travel path must coincide respectively with the starting location and the ending location of the whole planned travel;
@@ -115,7 +115,7 @@ As specified in the previous documents, these are the requirements met by this m
 	\item \textbf{[R27]} the system does not consider solutions that include deactivated travel means;
 	\item \textbf{[R35]} the system provides information about time of departure and arrival of the proposed travels.
 \end{itemize}
-And these are the requirements not yet implemented in this manager:
+\noindent And these are the requirements not yet implemented in this manager:
 \begin{itemize}
 	\item \textbf{[R18]} the system must show to the user all possibilities to reach a location in according with the requirements of [G4];
 	\item \textbf{[R19]} alternative feasible travel paths must not generate overlappings with other events of the schedule;
@@ -126,7 +126,7 @@ And these are the requirements not yet implemented in this manager:
 \subsection{Schedule Manager}
 This module is able to check if an event overlaps with other events and to guarantee that the flexible breaks are respected. It also checks that the user's travels do not overlap with other events. When an event overlaps with another one, the schedule manager puts it in a separate list of non scheduled events and it manages the user's requests of rescheduling those events. \\
 As specified in the previous sections, events without an ending time and alternative travels are not yet implemented into our system since, due to time-related issues, we've decided to exclude them from our first release of Travlendar+. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R6]} the system reserves the specified time-slot for the event;
 	\item \textbf{[R7]} the system warns the user if the inserted event overlaps with an already existing one;
@@ -138,7 +138,7 @@ As specified in the previous documents, these are the requirements met by this m
 	\item \textbf{[R31]} if there is not enough time into the flexible interval specified, a warning is thrown.
 \end{itemize}
 
-And these are the requirements not yet implemented in this manager:
+\noindent And these are the requirements not yet implemented in this manager:
 \begin{itemize}
 	\item \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;
 	\item \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8];
@@ -148,12 +148,12 @@ And these are the requirements not yet implemented in this manager:
 \subsection{Trip Manager}
 Trip manager is the last module we have implemented and offers only the functionalities that allow the user to save and visualize his tickets and to associate them to travel components for which they are applicable. \\
 This module does not yet provide functionalities that allow the user to buy public transportation tickets and to locate the nearest sharing vehicles, since they would have required the integration of other external APIs and we have decided to allocate our time in other functionalities that we consider more important than these ones. \\
-As specified in the previous documents, these are the requirements met by this manager:
+\noindent As specified in the previous documents, these are the requirements met by this manager:
 \begin{itemize}
 	\item \textbf{[R32]} the system allows the user to specify all the ticket he already owns;
 	\item \textbf{[R33]} the system shows to the user if he already holds a ticket for a proposed travel;
 \end{itemize}
-And these are the requirements not yet implemented in this manager:
+\noindent And these are the requirements not yet implemented in this manager:
 \begin{itemize}
 	\item \textbf{[R34]} the system allows the user to buy public transportation tickets according to proposed travels;
 	\item \textbf{[R36]} the system shows to the user where sharing vehicles are located.
@@ -206,7 +206,7 @@ These are the requirements met by our Android application:
 	\item \textbf{[R38]} a user must be logged. 
 \end{itemize}
 
-And these are the requirements not yet implemented in our Android application:
+\noindent And these are the requirements not yet implemented in our Android application:
 \begin{itemize}
 	\item \textbf{[R8]} if the ending time of an event is not specified, the systems considers as ending time the hour of departure for the successive event;
 	\item \textbf{[R9]} when an event is inserted after an event without a specified ending time, the ending time  of the first event is anticipated as stated in [R8];
