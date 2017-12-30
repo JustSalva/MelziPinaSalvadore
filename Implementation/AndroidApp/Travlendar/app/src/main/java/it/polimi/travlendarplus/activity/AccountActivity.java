@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -266,5 +268,16 @@ public class AccountActivity extends MenuActivity implements LocationLoader {
         this.locationsMap = locationMap;
         populateLocationsSpinner();
         resumeNormalMode();
+    }
+
+    @Override
+    public void onBackPressed () {
+        DrawerLayout drawer = findViewById( R.id.drawer_layout );
+        if ( drawer.isDrawerOpen( GravityCompat.START ) ) {
+            drawer.closeDrawer( GravityCompat.START );
+        } else {
+            super.onBackPressed();
+            startActivity( new Intent( this, CalendarActivity.class ) );
+        }
     }
 }

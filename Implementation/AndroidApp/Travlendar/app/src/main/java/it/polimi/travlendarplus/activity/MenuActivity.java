@@ -98,8 +98,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             new RemoveUserTask( getApplicationContext() ).execute();
             Intent intent = new Intent( this, LoginActivity.class );
             startActivity( intent );
-        } else if ( id == R.id.action_settings ) {
-            return true;
         }
 
         return super.onOptionsItemSelected( item );

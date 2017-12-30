@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -269,5 +271,16 @@ public class TicketsViewerActivity extends MenuActivity {
             }
         }
         return tobeReturned.concat( partialString );
+    }
+
+    @Override
+    public void onBackPressed () {
+        DrawerLayout drawer = findViewById( R.id.drawer_layout );
+        if ( drawer.isDrawerOpen( GravityCompat.START ) ) {
+            drawer.closeDrawer( GravityCompat.START );
+        } else {
+            super.onBackPressed();
+            startActivity( new Intent( this, CalendarActivity.class ) );
+        }
     }
 }
