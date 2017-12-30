@@ -26,6 +26,8 @@ public class BreakEvent {
 
     @Override
     public String toString() {
-        return "Minimum duration: " + DateUtility.getHHmmFromSeconds(minimumTime) + "\n";
+        return "Minimum duration: " + DateUtility.getUTCHHmmFromLocalHHmm(
+                DateUtility.getHHmmFromSeconds(minimumTime)
+        )+ "\n";
     }
 }
