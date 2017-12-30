@@ -1,13 +1,17 @@
 package it.polimi.travlendarplus.activity.handler;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
+import it.polimi.travlendarplus.activity.LoginActivity;
 import it.polimi.travlendarplus.activity.RegistrationActivity;
 import it.polimi.travlendarplus.activity.tasks.InsertUserTask;
+import it.polimi.travlendarplus.activity.tasks.RemoveUserTask;
 import it.polimi.travlendarplus.database.entity.User;
 
 /**
@@ -25,7 +29,6 @@ public class RegistrationHandler extends DefaultHandler < RegistrationActivity >
 
     @Override
     public void handleMessage ( Message msg ) {
-        super.handleMessage( msg );
         switch ( msg.what ) {
             case 200:
                 // Retrieve data from bundle.
@@ -41,8 +44,16 @@ public class RegistrationHandler extends DefaultHandler < RegistrationActivity >
                 new InsertUserTask( activity ).execute( user );
                 //activity.startActivity(new Intent(activity, CalendarActivity.class));
                 break;
-            default:
+            case 401:
+                Toast.makeText( activity, "This email is already registered",
+                        Toast.LENGTH_LONG ).show();
                 break;
+            case 408:
+                Toast.makeText( activity, "Registration timeout expired",
+                        Toast.LENGTH_LONG ).show();
+                break;
+            default:
+                super.handleMessage( msg );
         }
         activity.resumeNormalMode();
     }

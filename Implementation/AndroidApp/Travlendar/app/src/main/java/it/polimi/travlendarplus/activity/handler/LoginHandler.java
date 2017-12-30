@@ -51,6 +51,10 @@ public class LoginHandler extends DefaultHandler < LoginActivity > {
                 activity.getPassword_editText().setError( "Wrong password!" );
                 activity.getPassword_editText().requestFocus();
                 break;
+            case 408:
+                Toast.makeText( activity, "Registration timeout expired",
+                        Toast.LENGTH_LONG ).show();
+                break;
             default:
                 break;
         }

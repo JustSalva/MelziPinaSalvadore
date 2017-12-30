@@ -107,7 +107,7 @@ public class RegistrationActivity extends AppCompatActivity implements PublicKey
         // Send request to server.
         waitForServerResponse();
         RegisterController registerController = new RegisterController( registrationHandler );
-        registerController.start( email, password1, idDevice, name, surname );
+        registerController.start( email, password1, email, name, surname );
     }
 
     /**
