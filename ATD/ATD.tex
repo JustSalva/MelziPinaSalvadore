@@ -1,0 +1,75 @@
+\documentclass[11pt]{report}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=25mm,
+ right=25mm,
+ top=30mm,
+ bottom=25mm,
+ headsep=7mm}
+
+\interfootnotelinepenalty=10000
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{todonotes}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{microtype}
+\usepackage{dirtree}
+
+\graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+	\begin{titlepage}
+		\centering
+		\includegraphics{logo.png}\par\vspace{1cm}
+		{\scshape\LARGE\bfseries Politecnico di Milano \par}
+		\vspace{1cm}
+		{\scshape\Large Software Engineering 2\par}
+		\vspace{1.5cm}
+		{\Huge\bfseries Acceptance Test Document\par}
+		\vspace{1cm}
+		{\small Version 1.0 - 30/12/2017\par} \todo{TODO}
+		\vspace{1cm}
+		{\Large\itshape Pietro Melzi, Alessandro Pina, Matteo Salvadore\par}
+
+		\vfill
+
+		% Bottom of the page
+		{\large AA 2017-2018\par}
+	\end{titlepage}
+
+	\tableofcontents{}
+
+	\chapter{PROJECT ANALYZED}
+	\label{ch:PROJECT ANALYZED}
+		\input{./1-Project/group_info.tex}
+			
+	\chapter{INSTALLATION SETUP}
+	\label{ch:INSTALLATION SETUP}
+		\input{./2-InstallationSetup/installation_setup.tex}
+			
+	\chapter{ACCEPTANCE TEST CASES}
+	\label{ch:ACCEPTANCE TEST CASES}
+		\input{./3-AcceptanceTestCases/test_cases.tex}
+	
+	\chapter{ADDITIONAL CONSIDERATIONS}
+	\label{ch:ADDITIONAL CONSIDERATIONS}	
+		\input{./4-AdditionalConsiderations/considerations.tex}
+
+\end{document}
