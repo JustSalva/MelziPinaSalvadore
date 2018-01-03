@@ -2,6 +2,326 @@
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
+		Test case ID & T.C.1\\
+		\hline
+		Feature tested & Login  \\
+		\hline
+		Functional requirements & 1.1  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item load Travlendar's home page in a browser;
+				\item insert the credentials of a registered user;
+				\item click on login.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The user is correctly logged.\\
+		\hline
+		Actual Result & The user is correctly logged.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.2\\
+		\hline
+		Feature tested & Visualize Calendar  \\
+		\hline
+		Functional requirements & 1.3  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item observe the user's calendar.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The calendar is shown correctly, according to RASD and DD documents.\\
+		\hline
+		Actual Result & The calendar is shown correctly, according to RASD and DD documents.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & Maybe it would be better to display also the selected travels.  \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.3\\
+		\hline
+		Feature tested & Visualize event's details  \\
+		\hline
+		Functional requirements & 1.4  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on "arrow" icon inside an event box.
+			\end{enumerate} \\
+		\hline
+		Expected Result & Further details about the journey are displayed.\\
+		\hline
+		Actual Result & A new tab is opened to display a path using Google Maps's website but the path is not the selected one. The opened tab display all possible paths, computed by Gmaps.  \\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & We have considered the test passed but only because in the end some travel information are shown, including the requested one.\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.4\\
+		\hline
+		Feature tested & Travel means supported: walking, biking (own, or shared), bus, train, tram, taxis, driving (own or shared)  \\
+		\hline
+		Functional requirements & 2.1   \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on "+" button and fill the required fields;
+				\item click on "generate" button in order to obtain feasible paths;
+				\item repeat 10 or more times in order to obtain options related to all possible travel means.
+			\end{enumerate} \\
+		\hline
+		Expected Result & All supported travel means are proposed to the user.\\
+		\hline
+		Actual Result & Only results with only generic info (duration and traveled distance).  \\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments & For all the created events we have never observed proposed path with means different from walking, driving and "transit" that is the raw type used by GMaps to identify all public travel means, no additional info are shown to the user (ex. actual proposed public travel means) \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.5\\
+		\hline
+		Feature tested & Deselect transportation options  \\
+		\hline
+		Functional requirements & 2.2   \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on setting's button;
+				\item click on "available" check box of some means in order to deselect a travel mean;
+				\item add an event and observe that deselected travel means are not proposed.
+			\end{enumerate} \\
+		\hline
+		Expected Result & Deselected travel means are not shown as possible paths.\\
+		\hline
+		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments &\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.6\\
+		\hline
+		Feature tested & Maximum walking
+distance\\
+		\hline
+		Functional requirements & 2.3  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on setting's button;
+				\item in "Max walking distance" insert a max value;
+				\item add an event and observe that the max value is respected.
+			\end{enumerate} \\
+		\hline
+		Expected Result & Max walking distance is respected in the proposed feasible paths.\\
+		\hline
+		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments &\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.7\\
+		\hline
+		Feature tested & Impose constraint that limits the usage of a specific public travel mean in a defined period of the day\\
+		\hline
+		Functional requirements & 2.4  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on setting's button;
+				\item set a time slot value and select the relative travel mean as available (ex. on "car");
+				\item add an event and observe that preference is respected.
+			\end{enumerate} \\
+		\hline
+		Expected Result & If the requested paths are in the period of the day in which the user does not want to use them the specified travel mean, they not include it.\\
+		\hline
+		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments &\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.8\\
+		\hline
+		Feature tested & Choice to avoid walking or biking if the forecast is rain\\
+		\hline
+		Functional requirements & 2.6  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on setting's button;
+				\item set the "Dryness" value as "high";
+				\item  add an event in a rainy day observe that preference is respected.
+			\end{enumerate} \\
+		\hline
+		Expected Result & Walking and biking are ignored in rainy days.\\
+		\hline
+		Actual Result & Only a "rainy level" under a "drop" icon is displayed.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments & We looked into the project's code and we've seen that an arbitrary value is set in this field \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.9\\
+		\hline
+		Feature tested & Obtain environmentally-friendly travels\\
+		\hline
+		Functional requirements & 2.7 and 3.1\\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on "+" button and fill the required fields;
+				\item click on "generate" button in order to obtain feasible paths.
+			\end{enumerate} \\
+		\hline
+		Expected Result & Environmentally-friendly travels are signaled.\\
+		\hline
+		Actual Result & Only a "environmental value" is displayed, we do not understand what it means.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments & We looked into the project's code and we've seen that a value is computed, but we have observed that different values for different travels are incoherent form one another \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.10\\
+		\hline
+		Feature tested & Prioritize a favorite travel mean\\
+		\hline
+		Functional requirements & 2.8\\
+		\hline
+		Test Steps & ???\\
+		\hline
+		Expected Result & Favorite travel means are handled in some way.\\
+		\hline
+		Actual Result & We have not observed such a functionality.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments & We've seen that a relevance value is assigned to the proposed travels but we have not found where we should specify our preferred travel means. \\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & T.C.11\\
+		\hline
+		Feature tested & Specify a preferred location\\
+		\hline
+		Functional requirements & 2.9\\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item open the Travlendar's home page while logged;
+				\item click on setting's button;
+				\item specify in the "home address" field a specific location
+				\item ??? the specified location can not be selected while an user creates an event.
+			\end{enumerate} \\
+		\hline
+		Expected Result & While creating an event there is an option that allows to select the "home location".\\
+		\hline
+		Actual Result & We have not observed such a functionality.\\ 
+		\hline
+		Test Status & \color{Red}failed.\\ 
+		\hline
+		Comments &\\ 
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+--------------------------------------------------------------------
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
 		Test case ID & id\\
 		\hline
 		Feature tested & Breaks creation.\\
