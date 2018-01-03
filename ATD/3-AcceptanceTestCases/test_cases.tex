@@ -3,24 +3,307 @@
 
 \begin{table}[H]
 	\begin{center}
-		\begin{tabular}{ | p{0.2\textwidth} | p{0.7\textwidth} | }
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
 		Test case ID & id\\
 		\hline
-		Feature tested & feature\\
+		Feature tested & Breaks creation.\\
+    	\hline
+		Functional requirements & 5  \\
 		\hline
 		Test Steps & 
 			\begin{enumerate}
-				\item steps;
+				\item go to the settings page;
+				\item click the add break button;
+				\item fill the empty fields regarding the break information;
+				\item ???.
 			\end{enumerate} \\
 		\hline
-		Expected Result & result.\\
+		Expected Result & A break event is inserted.\\
 		\hline
-		Actual Result & result.\\ 
+		Actual Result & A break event is not inserted.\\ 
 		\hline
-		Test Status & failed / success.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
-		Comments & comment\\ 
+		Comments & The button that should be used to save a break does not work. By looking at the code we found out that the function called on the button's onclick does not exist.\\
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Events collision.\\
+    	\hline
+		Functional requirements & 6.1  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item go to the add event page;
+				\item add an event;
+				\item go to the add event page;
+				\item try to add another event that takes place in the same time slot of the previously inserted one;
+				\item a warning shows up saying that there is a collision detected;
+				\item the event is not saved.
+			\end{enumerate} \\
+		\hline
+		Expected Result & A warning shows up, the event is not saved.\\
+		\hline
+		Actual Result & A warning shows up, the event is not saved.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & If no break event is inserted, various other warnings show up, unrelated to the expected one. \\
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Event collision with a break.\\
+    	\hline
+		Functional requirements & 6.2  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item add a break event;
+				\item go to the add event page;
+				\item try to add another event that takes place in the same time slot of the break event previously inserted;
+				\item a warning shows up saying that there is a collision detected;
+				\item the event is not saved.
+			\end{enumerate} \\
+		\hline
+		Expected Result & A warning shows up, the event is not saved.\\
+		\hline
+		Actual Result & A warning shows up, the event is not saved.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & It is not possible to add a break event via the web application, we did that manually via PhpMyAdmin. The break event collision does not keep track of the event travel, e.g. it is possible to schedule a break during an event travel. \\
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Changing an appointment.\\
+    	\hline
+		Functional requirements & 6.3  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item go to the calendar page;
+				\item click on the pencil image of an event;
+				\item edit the information of an event;
+				\item click the save button;
+				\item the event is saved.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The information edited about an event are saved.\\
+		\hline
+		Actual Result & The information edited about an event are saved.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & There are the same issues present also when trying to add an event.
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Shortest travels calculation.\\
+    	\hline
+		Functional requirements & 7.1, 7.2  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+			\item go to the settings page;
+			\item insert and save your preferences regarding travel means;
+				\item go to the add event page;
+				\item fill the required fields;
+				\item click on 'generate';
+				\item select the travel option wanted;
+				\item save the event.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The application calculates the shortest travels and shows the alternatives available.\\
+		\hline
+		Actual Result & The application calculates the shortest travels, but the alternatives do not respect settings previously saved.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & Settings previously saved are not considered in the showing of possible travels.\\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Purchasing of tickets.\\
+    	\hline
+		Functional requirements & 8.1  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item go to the add event page;
+				\item fill the required fields;
+				\item click on 'generate';
+				\item if there is a 'Transit travel' related to bus, train or tram, a link to the ATM website is showed;
+				\item if that link is clicked, the user gets redirected (in the same tab) to the ATM website;
+			\end{enumerate} \\
+		\hline
+		Expected Result & The user can purchase tickets.\\
+		\hline
+		Actual Result & The user can purchase tickets.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & It is not clear when the link to the ATM shows up, often it does not. \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Additions of passes.\\
+    	\hline
+		Functional requirements & 8.2  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item ???;
+			\end{enumerate} \\
+		\hline
+		Expected Result & The user can add information about his passes.\\
+		\hline
+		Actual Result & It is not possible to add information about passes.\\ 
+		\hline
+		Test Status & \color{Red}Failed.\\ 
+		\hline
+		Comments & It is not clear where this option is implemented. \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Information about the nearest shared vehicle.\\
+    	\hline
+		Functional requirements & 8.3  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item ???;
+			\end{enumerate} \\
+		\hline
+		Expected Result & The user can add find the nearest shared vehicle.\\
+		\hline
+		Actual Result & It is not possible to find the nearest shared vehicle.\\ 
+		\hline
+		Test Status & \color{Red}Failed.\\ 
+		\hline
+		Comments & It is not clear where this option is implemented. The option about adding a sharing vehicle doesn't even show up when a user is trying to add a new event. \\
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Warning message showed when destination is unreachable.\\
+    	\hline
+		Functional requirements & 9.1  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item go to the add event page;
+				\item fill the required fields;
+				\item click on 'Generate';
+			\end{enumerate} \\
+		\hline
+		Expected Result & A warning message is shown.\\
+		\hline
+		Actual Result & No warning message is shown.\\ 
+		\hline
+		Test Status & \color{Red}Failed.\\ 
+		\hline
+		Comments & The locations selection is unclear, often when inserting popular locations like Como, the wrong city gets selected. This leads to no travels showing up. It is not clear what is the difference between an unreachable destination and a not found one. It is impossible to insert an unreachable destination given that the user settings do not impact on the creation of a travel. \\
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Profile creation.\\
+    	\hline
+		Functional requirements & 10.1  \\
+		\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item go to the login page;
+				\item click on 'Create a user';
+				\item fill the required fields;
+				\item click on create.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The user can create a profile.\\
+		\hline
+		Actual Result & The user can create a profile.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & What is inserted in the registration fields is not controlled. For instance, it is possible to leave the fields empty and create a new profile with username, password and email empty. \\
 		\hline
 		
 		\end{tabular}
