@@ -105,7 +105,7 @@
 		\hline
 		Actual Result & Only results with only generic info (duration and traveled distance).  \\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments & For all the created events we have never observed proposed path with means different from walking, driving and "transit" that is the raw type used by GMaps to identify all public travel means, no additional info are shown to the user (ex. actual proposed public travel means) \\ 
 		\hline
@@ -135,7 +135,7 @@
 		\hline
 		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments &\\ 
 		\hline
@@ -166,7 +166,7 @@ distance\\
 		\hline
 		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments &\\ 
 		\hline
@@ -196,7 +196,7 @@ distance\\
 		\hline
 		Actual Result & No paths filtering is performed, the user's preferences are basically ignored.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments &\\ 
 		\hline
@@ -226,7 +226,7 @@ distance\\
 		\hline
 		Actual Result & Only a "rainy level" under a "drop" icon is displayed.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments & We looked into the project's code and we've seen that an arbitrary value is set in this field \\ 
 		\hline
@@ -254,7 +254,7 @@ distance\\
 		\hline
 		Actual Result & Only a "environmental value" is displayed, we do not understand what it means.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments & We looked into the project's code and we've seen that a value is computed, but we have observed that different values for different travels are incoherent form one another \\ 
 		\hline
@@ -278,7 +278,7 @@ distance\\
 		\hline
 		Actual Result & We have not observed such a functionality.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments & We've seen that a relevance value is assigned to the proposed travels but we have not found where we should specify our preferred travel means. \\ 
 		\hline
@@ -308,7 +308,7 @@ distance\\
 		\hline
 		Actual Result & We have not observed such a functionality.\\ 
 		\hline
-		Test Status & \color{Red}failed.\\ 
+		Test Status & \color{Red}Failed.\\ 
 		\hline
 		Comments &\\ 
 		\hline
@@ -316,7 +316,188 @@ distance\\
 	\end{center}
 \end{table}
 
---------------------------------------------------------------------
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Event creation\\
+		\hline
+		Functional requirements & 4.1  \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on '+' icon;
+				\item in the new window, fill the showed fields with valid values;
+				\item click on 'Generate' button;
+				\item select one of the proposed travels and click 'Save' button. 
+			\end{enumerate} \\
+		\hline
+		Expected Result & The event appears into the calendar, with correct date and time.\\
+		\hline
+		Actual Result & The event appears into the calendar, with correct date and time.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Lack of travelling time warning\\
+		\hline
+		Functional requirements & 4.1.2 \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on '+' icon;
+				\item in the new window, fill the showed fields with valid values;
+				\item click on 'Generate' button and select a proposed travel;
+				\item the starting or ending time of the event to be added doesn't allow to perform the selected travel in the available time;
+				\item click on 'Save' button.
+			\end{enumerate} \\
+		\hline
+		Expected Result & A warning message appears.\\
+		\hline
+		Actual Result & A warning message ('Collision with event') appears.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Specifying addresses of an event\\
+		\hline
+		Functional requirements & 4.1.4 \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on '+' icon;
+				\item in the new window, there are two fields ('Where:' and 'Coming from:') where the user can specify starting and ending locations of the travel;
+				\item click on 'Generate' button in order to visualize the proposed travels.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The proposed travels refer to the specified locations.\\
+		\hline
+		Actual Result & The proposed travels refer to the specified locations.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & The fields 'Where:' and 'Coming from:' allow the user to insert any kind of string. For this reason it could happen, usually when more locations have the same name, that Google Maps considers a location different from what the user expects. \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Specifying event time and duration\\
+		\hline
+		Functional requirements & 4.1.5 \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on '+' icon;
+				\item in the new window, there are two fields ('From:' and 'To:') where the user can specify starting and ending time of the travel;
+				\item click on 'Generate' button in order to visualize the proposed travels;
+				\item select one of the proposed travels and click 'Save' button. 
+			\end{enumerate} \\
+		\hline
+		Expected Result & The proposed solutions should consider the times specified by the user. A warning message must appear if the event to add is too close to the previous or following event.\\
+		\hline
+		Actual Result & A warning message appears if the event to add is too close to the previous or following event. No information on travel time are given, especially for travels with public means, but we assume that the proposed travels are consistent with the specified times.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & I don't have information on the time of travel: if I click on the button that redirect to Google Maps only general time-solutions are shown. No solution related to a specific time is shown. \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Path calculation\\
+		\hline
+		Functional requirements & 4.1.6 \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on '+' icon;
+				\item in the new window, fill the showed fields with valid values;
+				\item click on 'Generate' button.
+			\end{enumerate} \\
+		\hline
+		Expected Result & A list of feasible travels.\\
+		\hline
+		Actual Result & A list of feasible travels.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & In the more general case four solutions are shown, with  walking, bicycling, driving and transit as travel mode. \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
+		\hline
+		Test case ID & id\\
+		\hline
+		Feature tested & Delete event\\
+		\hline
+		Functional requirements & 4.3 \\
+    	\hline
+		Test Steps & 
+			\begin{enumerate}
+				\item click on the 'pencil image' of an event into the calendar;
+				\item in the new window, click on the 'bin image'.
+			\end{enumerate} \\
+		\hline
+		Expected Result & The event is deleted.\\
+		\hline
+		Actual Result & The event is deleted.\\ 
+		\hline
+		Test Status & \color{ForestGreen}Success.\\ 
+		\hline
+		Comments & \\ 
+		\hline
+		
+		\end{tabular}
+	\end{center}
+\end{table}
 
 \begin{table}[H]
 	\begin{center}
@@ -439,7 +620,8 @@ distance\\
 		\hline
 		Test Status & \color{ForestGreen}Success.\\ 
 		\hline
-		Comments & There are the same issues present also when trying to add an event.
+		Comments & There are the same issues present also when trying to add an event.\\
+		\hline
 		\end{tabular}
 	\end{center}
 \end{table}
