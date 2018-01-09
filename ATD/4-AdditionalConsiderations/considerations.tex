@@ -1,1 +1,10 @@
-\todo{TODO}
+This is a list of considerations regarding what was given to us to test:
+\begin{itemize}
+\item there are a lot of functional requirements checked as implemented that we did not understand where to find (or if they are present), e.g. break events, sharing vehicles, tickets and passes, weather service;
+\item the measurement units are not specified, e.g. distance is in meters, but we had to check the code to understand that;
+\item the code is not documented well, e.g. the file 'getTransportation.php' does not even have a line of comment, except for 4 lines of useless code;
+\item the reasoning behind the preferences calculation algorithms is not clear, also the classification used to express the level of importance of eco, speed, dryness and money is questionable, e.g. high importance to speed causes an higher relevance for slower paths.
+\item warnings thrown by the code and errors are not handled and they are displayed in the page, e.g. in the add event page there is a warning that keep on showing each time you try to calculate a path. After looking at the code we found out that it could have been easily removed;
+\item locations are often misinterpreted because the user can insert strings that are not checked before being sent to the Google Maps APIs;
+\item elements like the home location do not seem to have a relevance.
+\end{itemize}

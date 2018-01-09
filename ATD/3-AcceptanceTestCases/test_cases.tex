@@ -1,3 +1,7 @@
+These are the acceptance test cases we have applied in order to validate this project. \\
+We have extracted the test cases from the list of implemented features the other team provided in their ITD document and from their RASD document. \\
+For each test case we have specified the feature we have tested, its relative functional requirements, the steps we have followed using the team's application to test such a feature, the result we expected and the actual result we have observed. A single test can be either successful or not.\\
+We will add, if necessary, a brief comment to every test case. 
 \begin{table}[H]
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
@@ -301,7 +305,7 @@ distance\\
 				\item open the Travlendar's home page while logged;
 				\item click on setting's button;
 				\item specify in the "home address" field a specific location
-				\item ??? the specified location can not be selected while an user creates an event.
+				\item the specified location can not be selected while an user creates an event.
 			\end{enumerate} \\
 		\hline
 		Expected Result & While creating an event there is an option that allows to select the "home location".\\
@@ -310,7 +314,7 @@ distance\\
 		\hline
 		Test Status & \color{Red}Failed.\\ 
 		\hline
-		Comments &\\ 
+		Comments & It seems that the application just allows to save the home address in the database.\\ 
 		\hline
 		\end{tabular}
 	\end{center}
@@ -320,7 +324,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.12\\
 		\hline
 		Feature tested & Event creation\\
 		\hline
@@ -351,9 +355,9 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.13\\
 		\hline
-		Feature tested & Lack of travelling time warning\\
+		Feature tested & Warning if there is not enough time to travel from one event to the following one\\
 		\hline
 		Functional requirements & 4.1.2 \\
     	\hline
@@ -383,7 +387,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.14\\
 		\hline
 		Feature tested & Specifying addresses of an event\\
 		\hline
@@ -413,7 +417,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.15\\
 		\hline
 		Feature tested & Specifying event time and duration\\
 		\hline
@@ -444,7 +448,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.16\\
 		\hline
 		Feature tested & Path calculation\\
 		\hline
@@ -474,7 +478,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.17\\
 		\hline
 		Feature tested & Delete event\\
 		\hline
@@ -503,9 +507,9 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.18\\
 		\hline
-		Feature tested & Breaks creation.\\
+		Feature tested & Break events creation.\\
     	\hline
 		Functional requirements & 5  \\
 		\hline
@@ -514,7 +518,7 @@ distance\\
 				\item go to the settings page;
 				\item click the add break button;
 				\item fill the empty fields regarding the break information;
-				\item ???.
+				\item the user in unable to save its break event (???).
 			\end{enumerate} \\
 		\hline
 		Expected Result & A break event is inserted.\\
@@ -534,7 +538,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.19\\
 		\hline
 		Feature tested & Events collision.\\
     	\hline
@@ -567,7 +571,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.20\\
 		\hline
 		Feature tested & Event collision with a break.\\
     	\hline
@@ -599,7 +603,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.21\\
 		\hline
 		Feature tested & Changing an appointment.\\
     	\hline
@@ -630,7 +634,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.22\\
 		\hline
 		Feature tested & Shortest travels calculation.\\
     	\hline
@@ -664,7 +668,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.23\\
 		\hline
 		Feature tested & Purchasing of tickets.\\
     	\hline
@@ -696,7 +700,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.24\\
 		\hline
 		Feature tested & Additions of passes.\\
     	\hline
@@ -713,7 +717,7 @@ distance\\
 		\hline
 		Test Status & \color{Red}Failed.\\ 
 		\hline
-		Comments & It is not clear where this option is implemented. \\ 
+		Comments & It is not clear where (or if) this option is implemented. \\ 
 		\hline
 		
 		\end{tabular}
@@ -724,7 +728,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.25\\
 		\hline
 		Feature tested & Information about the nearest shared vehicle.\\
     	\hline
@@ -741,7 +745,7 @@ distance\\
 		\hline
 		Test Status & \color{Red}Failed.\\ 
 		\hline
-		Comments & It is not clear where this option is implemented. The option about adding a sharing vehicle doesn't even show up when a user is trying to add a new event. \\
+		Comments & It is not clear where (or if) this option is implemented. The option about adding a sharing vehicle doesn't even show up when a user is trying to add a new event. \\
 		\hline
 		
 		\end{tabular}
@@ -752,7 +756,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.26\\
 		\hline
 		Feature tested & Warning message showed when destination is unreachable.\\
     	\hline
@@ -771,7 +775,7 @@ distance\\
 		\hline
 		Test Status & \color{Red}Failed.\\ 
 		\hline
-		Comments & The locations selection is unclear, often when inserting popular locations like Como, the wrong city gets selected. This leads to no travels showing up. It is not clear what is the difference between an unreachable destination and a not found one. It is impossible to insert an unreachable destination given that the user settings do not impact on the creation of a travel. \\
+		Comments & The locations selection is unclear, often when inserting popular locations like Como, the wrong city gets selected (since some cities names corresponds to multiple cities). This leads to no travels showing up. It is not clear what is the difference between an unreachable destination and a not found one. It is impossible to insert an unreachable destination given that the user settings do not impact on the creation of a travel. \\
 		\hline
 		
 		\end{tabular}
@@ -782,7 +786,7 @@ distance\\
 	\begin{center}
 		\begin{tabular}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
 		\hline
-		Test case ID & id\\
+		Test case ID & T.C.27\\
 		\hline
 		Feature tested & Profile creation.\\
     	\hline
